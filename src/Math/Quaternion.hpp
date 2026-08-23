@@ -19,6 +19,8 @@ struct Quaternion {
     Quaternion Inverse() const;
     Quaternion Normalized() const;
     Vector3 Transform(const Vector3 vec3);
+    float Angle() const;
+    Vector3 Axis() const;
     AxisAngle ToAxisAngle() const;
 
     bool NearlyEquals(const Quaternion& p, float epsilon = EPSILON) const;

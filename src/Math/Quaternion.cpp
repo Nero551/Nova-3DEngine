@@ -53,16 +53,25 @@ Vector3 Quaternion::Transform(const Vector3 vec3) {
     return { result.x, result.y, result.z };
 }
 
-AxisAngle Quaternion::ToAxisAngle() const {
+float Quaternion::Angle() const {
     Quaternion q = Normalized();
-
     float angle = 2 * std::acos(q.w);
+    return angle;
+}
+
+Vector3 Quaternion::Axis() const {
+    Quaternion q = Normalized();
+    float angle = Angle();
     float sine = std::sin(angle / 2);
     Vector3 axis;
     axis.x = q.x / sine;
     axis.y = q.y / sine;
     axis.z = q.z / sine;
-    return { axis, angle };
+    return axis;
+}
+
+AxisAngle Quaternion::ToAxisAngle() const {
+    return { Axis(), Angle() };
 }
 
 bool Quaternion::NearlyEquals(const Quaternion& p, const float epsilon) const {
