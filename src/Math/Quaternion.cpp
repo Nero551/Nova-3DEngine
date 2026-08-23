@@ -56,6 +56,22 @@ Quaternion Quaternion::operator-(const Quaternion& p) const {
     return *this + (-p);
 }
 
+Quaternion& Quaternion::operator*=(const Quaternion& p) {
+    return *this = *this * p;
+}
+
+Quaternion& Quaternion::operator/=(const Quaternion& p) {
+    return *this = *this / p;
+}
+
+Quaternion& Quaternion::operator+=(const Quaternion& p) {
+    return *this = *this + p;
+}
+
+Quaternion& Quaternion::operator-=(const Quaternion& p) {
+    return *this = *this - p;
+}
+
 Quaternion Quaternion::operator*(const Quaternion& p) const {
     Quaternion result;
     result.w = (w * p.w) - (x * p.x) - (y * p.y) - (z * p.z);
@@ -78,12 +94,52 @@ Quaternion Quaternion::operator/(float scalar) const {
     return { w / scalar, x / scalar, y / scalar, z / scalar };
 }
 
+Quaternion Quaternion::operator+(float scalar) const {
+    return { w + scalar, x, y, z };
+}
+
+Quaternion Quaternion::operator-(float scalar) const {
+    return { w - scalar, x, y, z };
+}
+
+Quaternion& Quaternion::operator*=(float scalar) {
+    return *this = *this * scalar;
+}
+
+Quaternion& Quaternion::operator/=(float scalar) {
+    return *this = *this / scalar;
+}
+
+Quaternion& Quaternion::operator+=(float scalar) {
+    return *this = *this + scalar;
+}
+
+Quaternion& Quaternion::operator-=(float scalar) {
+    return *this = *this - scalar;
+}
+
 bool Quaternion::operator==(const Quaternion& p) const {
     return w == p.w && x == p.x && y == p.y && z == p.z;
 }
 
 bool Quaternion::operator!=(const Quaternion& p) const {
     return !(*this == p);
+}
+
+Quaternion operator*(float scalar, const Quaternion& q) {
+    return q * scalar;
+}
+
+Quaternion operator/(float scalar, const Quaternion& q) {
+    return scalar * q.Inverse();
+}
+
+Quaternion operator+(float scalar, const Quaternion& q) {
+    return q + scalar;
+}
+
+Quaternion operator-(float scalar, const Quaternion& q) {
+    return { scalar - q.w, -q.x, -q.y, -q.z };
 }
 
 std::ostream& operator<<(std::ostream& os, const Quaternion& q) {

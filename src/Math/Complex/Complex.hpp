@@ -113,10 +113,21 @@ struct Complex {
     Complex operator+(const Complex& b) const;
     Complex operator-(const Complex& b) const;
 
+    Complex& operator*=(const Complex& b);
+    Complex& operator/=(const Complex& b);
+    Complex& operator+=(const Complex& b);
+    Complex& operator-=(const Complex& b);
+
     Complex operator*(float scalar) const;
     Complex operator/(float scalar) const;
     Complex operator+(float scalar) const;
     Complex operator-(float scalar) const;
+
+    Complex& operator*=(float scalar);
+    Complex& operator/=(float scalar);
+    Complex& operator+=(float scalar);
+    Complex& operator-=(float scalar);
+
 
     friend Complex operator*(float scalar, const Complex& a);
     friend Complex operator/(float scalar, const Complex& a);

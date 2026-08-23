@@ -17,17 +17,34 @@ struct Quaternion {
     Quaternion Normalized() const;
     bool NearlyEquals(const Quaternion& p, float epsilon = EPSILON) const;
 
+    bool operator==(const Quaternion& p) const;
+    bool operator!=(const Quaternion& p) const;
+
     Quaternion operator-() const;
-    Quaternion operator+(const Quaternion& p) const;
-    Quaternion operator-(const Quaternion& p) const;
     Quaternion operator*(const Quaternion& p) const;
     Quaternion operator/(const Quaternion& p) const;
+    Quaternion operator+(const Quaternion& p) const;
+    Quaternion operator-(const Quaternion& p) const;
+
+    Quaternion& operator*=(const Quaternion& p);
+    Quaternion& operator/=(const Quaternion& p);
+    Quaternion& operator+=(const Quaternion& p);
+    Quaternion& operator-=(const Quaternion& p);
 
     Quaternion operator*(float scalar) const;
     Quaternion operator/(float scalar) const;
+    Quaternion operator+(float scalar) const;
+    Quaternion operator-(float scalar) const;
 
-    bool operator==(const Quaternion& p) const;
-    bool operator!=(const Quaternion& p) const;
+    Quaternion& operator*=(float scalar);
+    Quaternion& operator/=(float scalar);
+    Quaternion& operator+=(float scalar);
+    Quaternion& operator-=(float scalar);
+
+    friend Quaternion operator*(float scalar, const Quaternion& q);
+    friend Quaternion operator/(float scalar, const Quaternion& q);
+    friend Quaternion operator+(float scalar, const Quaternion& q);
+    friend Quaternion operator-(float scalar, const Quaternion& q);
 
     friend std::ostream& operator<<(std::ostream& os, const Quaternion& q);
 

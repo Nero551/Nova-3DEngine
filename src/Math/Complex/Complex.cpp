@@ -77,6 +77,22 @@ Complex Complex::operator-(const Complex& b) const {
     return { Real - b.Real, Imaginary - b.Imaginary };
 }
 
+Complex& Complex::operator*=(const Complex& b) {
+    return *this = *this * b;
+}
+
+Complex& Complex::operator+=(const Complex& b) {
+    return *this = *this + b;
+}
+
+Complex& Complex::operator-=(const Complex& b) {
+    return *this = *this - b;
+}
+
+Complex& Complex::operator/=(const Complex& b) {
+    return *this = *this / b;
+}
+
 Complex Complex::operator*(const float scalar) const {
     return { Real * scalar, Imaginary * scalar };
 }
@@ -91,6 +107,22 @@ Complex Complex::operator+(float scalar) const {
 
 Complex Complex::operator-(float scalar) const {
     return { Real - scalar, Imaginary };
+}
+
+Complex& Complex::operator*=(float scalar) {
+    return *this = *this * scalar;
+}
+
+Complex& Complex::operator+=(float scalar) {
+    return *this = *this + scalar;
+}
+
+Complex& Complex::operator-=(float scalar) {
+    return *this = *this - scalar;
+}
+
+Complex& Complex::operator/=(float scalar) {
+    return *this = *this / scalar;
 }
 
 Complex operator*(float scalar, const Complex& a) {
