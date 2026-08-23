@@ -62,12 +62,16 @@ void calculus::Start() {
     // U::Logger::Info(M::Deg(v4.Azimuth()));
     // U::Logger::Info(M::Deg(v4.HyperAngle()));
 
-    FourDimensionalProjection(10);
+    float increase = 30;
 
-    // M::Quaternion q = M::Quaternion::FromHyperSpherical({0, 0, 0, 1});
+    float theta = M::Rad(90);
 
-    // U::Logger::Info(q);
-    // U::Logger::Info(q.Magnitude());
+    M::Quaternion q = M::Quaternion::FromAxisAngle({ M::Vector3::FromSpherical({ 0, M::Rad(45) }), theta });
+    U::Logger::Info(q.ToAxisAngle().Axis);
+    U::Logger::Info(M::Deg(q.ToAxisAngle().Angle));
+    M::Vector3 v = { 1, 0, 0 };
+    v = q.Transform(v);
+    Plot(v);
 }
 
 static float elapsed = 0;

@@ -5,6 +5,18 @@
 
 
 namespace E::M {
+Quaternion Quaternion::FromAxisAngle(AxisAngle axisAngle) {
+    Quaternion result;
+
+    float sine = std::sin(axisAngle.Angle / 2);
+    result.w = std::cos(axisAngle.Angle / 2);
+    result.x = (axisAngle.Axis.x * sine);
+    result.y = (axisAngle.Axis.y * sine);
+    result.z = (axisAngle.Axis.z * sine);
+
+    return result;
+}
+
 Quaternion::Quaternion() : w(0), x(0), y(0), z(0) {
 }
 
@@ -32,6 +44,25 @@ Quaternion Quaternion::Inverse() const {
 
 Quaternion Quaternion::Normalized() const {
     return *this / Magnitude();
+}
+
+Vector3 Quaternion::Transform(const Vector3 vec3) {
+    Quaternion p = { 0, vec3.x, vec3.y, vec3.z };
+    Quaternion result = *this * p * Inverse();
+
+    return { result.x, result.y, result.z };
+}
+
+AxisAngle Quaternion::ToAxisAngle() const {
+    Quaternion q = Normalized();
+
+    float angle = 2 * std::acos(q.w);
+    float sine = std::sin(angle / 2);
+    Vector3 axis;
+    axis.x = q.x / sine;
+    axis.y = q.y / sine;
+    axis.z = q.z / sine;
+    return { axis, angle };
 }
 
 bool Quaternion::NearlyEquals(const Quaternion& p, const float epsilon) const {
