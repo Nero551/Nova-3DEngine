@@ -6,6 +6,17 @@
 #include "Math/Common/Interpolation.hpp"
 
 namespace E::M {
+Vector4 Vector4::FromHyperSpherical(HyperSpherical hyperSpherical) {
+    const float m = hyperSpherical.Magnitude;
+    Vector4 result;
+    result.x = m * std::cos(hyperSpherical.Elevation) * std::cos(hyperSpherical.Azimuth) * std::cos(hyperSpherical.HyperAngle);
+    result.y = m * std::sin(hyperSpherical.Elevation) * std::cos(hyperSpherical.HyperAngle);
+    result.z = m * std::cos(hyperSpherical.Elevation) * std::sin(hyperSpherical.Azimuth) * std::cos(hyperSpherical.HyperAngle);
+    result.w = m * std::sin(hyperSpherical.HyperAngle);
+
+    return result;
+}
+
 Vector4::Vector4() : x(0), y(0), z(0), w(0) {
 }
 
@@ -44,6 +55,22 @@ Vector4 Vector4::Lerp(const Vector4& vec4, const float t) const {
 
 float Vector4::Distance(const Vector4& vec4) const {
     return (*this - vec4).Length();
+}
+
+float Vector4::Elevation() const {
+    return std::asin(Normalized().y / std::cos(HyperAngle()));
+}
+
+float Vector4::Azimuth() const {
+    return std::atan2(z, x);
+}
+
+float Vector4::HyperAngle() const {
+    return std::asin(Normalized().w);
+}
+
+HyperSpherical Vector4::ToHyperSpherical() const {
+    return { Elevation(), Azimuth(), HyperAngle(), Length() };
 }
 
 bool Vector4::NearlyEquals(const Vector4& vec4, const float epsilon) const {

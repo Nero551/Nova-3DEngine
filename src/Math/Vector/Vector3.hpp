@@ -93,6 +93,7 @@ struct Vector3 {
      */
     [[nodiscard]] float Azimuth() const;
 
+    /** @brief returns the vector in spherical coords */
     [[nodiscard]] Spherical ToSpherical() const;
 
     /**

@@ -9,8 +9,8 @@ namespace E::M {
 Vector3 Vector3::FromSpherical(Spherical spherical) {
     Vector3 result;
     result.x = spherical.Magnitude * std::cos(spherical.Elevation) * std::cos(spherical.Azimuth);
-    result.y = spherical.Magnitude * std::sin(spherical.Elevation);
     result.z = spherical.Magnitude * std::cos(spherical.Elevation) * std::sin(spherical.Azimuth);
+    result.y = spherical.Magnitude * std::sin(spherical.Elevation);
 
     return result;
 }
@@ -60,7 +60,7 @@ float Vector3::Elevation() const {
 }
 
 float Vector3::Azimuth() const {
-    return atan2(z, x);
+    return std::atan2(z, x);
 }
 
 Spherical Vector3::ToSpherical() const {

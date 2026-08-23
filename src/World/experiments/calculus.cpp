@@ -60,11 +60,12 @@ void calculus::Start() {
     //     points.emplace_back(&point);
     // }
 
-    E::M::Vector3 v3 = E::M::Vector3::FromSpherical({ M::Rad(68), M::Rad(37) });
-    E::U::Logger::Info(M::Deg(v3.Azimuth()));
-    E::U::Logger::Info(M::Deg(v3.Elevation()));
+    M::Vector4 v4 = M::Vector4::FromHyperSpherical({ M::Rad(45), M::Rad(36), M::Rad(59) });
+    U::Logger::Info(M::Deg(v4.Elevation()));
+    U::Logger::Info(M::Deg(v4.Azimuth()));
+    U::Logger::Info(M::Deg(v4.HyperAngle()));
 
-    Plot(v3);
+    Plot({ v4.x, v4.y, v4.z });
 }
 
 static float elapsed = 0;

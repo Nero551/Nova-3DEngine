@@ -1,5 +1,6 @@
 #pragma once
 #include "Math/Common/Constants.hpp"
+#include "Math/Coordinates/HyperSpherical.hpp"
 
 namespace E::M {
 /**
@@ -17,6 +18,8 @@ struct Vector4 {
     float y;
     float z;
     float w;
+
+    static Vector4 FromHyperSpherical(HyperSpherical hyperSpherical);
 
     Vector4();
 
@@ -70,6 +73,11 @@ struct Vector4 {
      * @brief Returns the Euclidean distance between two vectors.
      */
     [[nodiscard]] float Distance(const Vector4& vec4) const;
+
+    [[nodiscard]] float Elevation() const;
+    [[nodiscard]] float Azimuth() const;
+    [[nodiscard]] float HyperAngle() const;
+    [[nodiscard]] HyperSpherical ToHyperSpherical() const;
 
     /**
      * @brief Compares two vectors using an epsilon tolerance.
