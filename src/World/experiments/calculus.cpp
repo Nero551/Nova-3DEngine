@@ -5,6 +5,7 @@
 #include "Core/Services/ResourceManager.hpp"
 #include "Math/Complex/Complex.hpp"
 #include "Math/Complex/Constants.hpp"
+#include "Math/Quaternion.hpp"
 #include "Math/Vector/Vector4.hpp"
 #include "Modules/Input/Input.hpp"
 #include "Modules/Renderer/Primitives/Primitives.hpp"
@@ -61,7 +62,12 @@ void calculus::Start() {
     // U::Logger::Info(M::Deg(v4.Azimuth()));
     // U::Logger::Info(M::Deg(v4.HyperAngle()));
 
-    FourDimensionalProjection(30);
+    FourDimensionalProjection(10);
+
+    // M::Quaternion q = M::Quaternion::FromHyperSpherical({0, 0, 0, 1});
+
+    // U::Logger::Info(q);
+    // U::Logger::Info(q.Magnitude());
 }
 
 static float elapsed = 0;
@@ -80,15 +86,12 @@ void calculus::Update(double dt) {
     if (input.IsKeyHeld(Key::Down)) {
         multiplier -= 0.1;
     }
-    //
+
     for (auto& point : points) {
         auto& transform = point->GetComponent<Transform3DComponent>();
-        // M::Complex a = r * (std::cos(transform.Position.z * period) + M::I * std::sin(transform.Position.z * period));
-
-        transform.Position.x *= multiplier;
-        transform.Position.y *= multiplier;
-        transform.Position.z *= multiplier;
+        transform.Position *= multiplier;
     }
+
     multiplier = 1;
 }
 
@@ -96,8 +99,10 @@ void calculus::TwoDimensionalProjection(float increase) {
     for (int theta = -180; theta < 180; theta += increase) {
         M::Vector2 v2 = M::Vector2::FromPolar(M::Polar(theta));
         float proj = v2.StereoProject();
+        auto& d2point = Plot({ v2.x, v2.y, 0 });
         auto& point = Plot({ proj, 0, 0 });
         points.emplace_back(&point);
+        points.emplace_back(&d2point);
     }
 }
 
@@ -105,9 +110,11 @@ void calculus::ThreeDimensionalProjection(float increase) {
     for (int theta = -180; theta < 180; theta += increase) {
         for (int phi = -180; phi < 180; phi += increase) {
             M::Vector3 v3 = M::Vector3::FromSpherical(M::Spherical(theta, phi));
+            auto& d3point = Plot(v3);
             M::Vector2 proj = v3.StereoProject();
             auto& point = Plot({ proj.x, proj.y, 0 });
             points.emplace_back(&point);
+            points.emplace_back(&d3point);
         }
     }
 }

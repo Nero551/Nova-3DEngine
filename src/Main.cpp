@@ -11,11 +11,11 @@
 #include "Math/Vector/Vector3.hpp"
 
 static void Testing() {
-    // E::M::Quaternion q1 = {1, 1, 1, 1};
-    // E::M::Quaternion q2 = {1, 0, 0, 1};
-    //
-    // E::U::Logger::Info(q2);
-    //
+    E::M::Quaternion q(0, 1, 0, 0); // i
+    E::M::Quaternion p = E::M::Quaternion::Identity; // j
+
+    E::U::Logger::Info(q * p);
+
     // E::M::Complex c = E::M::Complex::FromPolar({ E::M::Rad(30), 3 });
     // E::M::Complex d = E::M::Complex::FromPolar({ E::M::Rad(45), 2 });
     // E::U::Logger::Info(E::M::Deg((c * d).Argument()));
@@ -38,7 +38,7 @@ static void Testing() {
 
 int main() {
     Testing();
-    // return 0;
+    return 0;
     E::Engine engine;
     engine.Run();
     return 0;
