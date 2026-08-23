@@ -11,10 +11,14 @@
 #include "Math/Vector/Vector3.hpp"
 
 static void Testing() {
-    E::M::Quaternion q(0, 1, 0, 0); // i
+    E::M::Quaternion q(5, 1, 3, 2); // i
     E::M::Quaternion p = E::M::Quaternion::Identity; // j
 
-    E::U::Logger::Info(q * p);
+    E::U::Logger::Info(q.Magnitude());
+    E::U::Logger::Info(q.Normalized().Magnitude());
+
+    E::M::Complex c = { 2, 5 };
+    E::U::Logger::Info(c * c.Inverse());
 
     // E::M::Complex c = E::M::Complex::FromPolar({ E::M::Rad(30), 3 });
     // E::M::Complex d = E::M::Complex::FromPolar({ E::M::Rad(45), 2 });

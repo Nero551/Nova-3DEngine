@@ -1,5 +1,6 @@
 #include "Quaternion.hpp"
 
+#include "Common/Comparison.hpp"
 #include "Common/Exponentials.hpp"
 
 
@@ -13,12 +14,33 @@ Quaternion::Quaternion(const float all) : w(all), x(all), y(all), z(all) {
 Quaternion::Quaternion(const float w, const float x, const float y, const float z) : w(w), x(x), y(y), z(z) {
 }
 
+Quaternion Quaternion::Conjugate() const {
+    return Quaternion(w, -x, -y, -z);
+}
+
 float Quaternion::MagnitudeSquared() const {
     return w * w + x * x + y * y + z * z;
 }
 
 float Quaternion::Magnitude() const {
     return Sqrt(MagnitudeSquared());
+}
+
+Quaternion Quaternion::Inverse() const {
+    return Conjugate() / MagnitudeSquared();
+}
+
+Quaternion Quaternion::Normalized() const {
+    return *this / Magnitude();
+}
+
+bool Quaternion::NearlyEquals(const Quaternion& p, const float epsilon) const {
+    return M::NearlyEquals(w, p.w, epsilon) && M::NearlyEquals(x, p.x, epsilon) && M::NearlyEquals(y, p.y, epsilon) &&
+        M::NearlyEquals(z, p.z, epsilon);
+}
+
+Quaternion Quaternion::operator-() const {
+    return { -w, -x, -y, -z };
 }
 
 Quaternion Quaternion::operator+(const Quaternion& p) const {
@@ -30,6 +52,10 @@ Quaternion Quaternion::operator+(const Quaternion& p) const {
     return result;
 }
 
+Quaternion Quaternion::operator-(const Quaternion& p) const {
+    return *this + (-p);
+}
+
 Quaternion Quaternion::operator*(const Quaternion& p) const {
     Quaternion result;
     result.w = (w * p.w) - (x * p.x) - (y * p.y) - (z * p.z);
@@ -38,6 +64,26 @@ Quaternion Quaternion::operator*(const Quaternion& p) const {
     result.z = (w * p.z) + (x * p.y) - (y * p.x) + (z * p.w);
 
     return result;
+}
+
+Quaternion Quaternion::operator/(const Quaternion& p) const {
+    return *this * p.Inverse();
+}
+
+Quaternion Quaternion::operator*(float scalar) const {
+    return { w * scalar, x * scalar, y * scalar, z * scalar };
+}
+
+Quaternion Quaternion::operator/(float scalar) const {
+    return { w / scalar, x / scalar, y / scalar, z / scalar };
+}
+
+bool Quaternion::operator==(const Quaternion& p) const {
+    return w == p.w && x == p.x && y == p.y && z == p.z;
+}
+
+bool Quaternion::operator!=(const Quaternion& p) const {
+    return !(*this == p);
 }
 
 std::ostream& operator<<(std::ostream& os, const Quaternion& q) {

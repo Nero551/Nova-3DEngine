@@ -30,15 +30,7 @@ Complex Complex::Conjugate() const {
 }
 
 Complex Complex::Inverse() const {
-    Complex result;
-
-    const float denominator = MagnitudeSquared();
-    const Complex conjugate = Conjugate();
-
-    result.Real = conjugate.Real / denominator;
-    result.Imaginary = conjugate.Imaginary / denominator;
-
-    return result;
+    return Conjugate() / MagnitudeSquared();
 }
 
 Complex Complex::Normalized() const {
