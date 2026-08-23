@@ -13,16 +13,17 @@ namespace E::M {
  */
 struct Polar {
     /** @brief The angle in radians. */
-    float Angle = 0;
+    float Angle;
 
     /** @brief The distance from the origin. */
-    float Magnitude = 0;
+    float Magnitude;
 
     /**
      * @brief Constructs a polar coordinate.
      * @param angle The angle in radians.
      * @param magnitude The distance from the origin.
      */
-    Polar(float angle, float magnitude = 1);
+    Polar(float angle, float magnitude = 1) : Angle(angle), Magnitude(magnitude) {
+    }
 };
 } // namespace E::M

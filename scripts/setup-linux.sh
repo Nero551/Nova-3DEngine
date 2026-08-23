@@ -63,3 +63,5 @@ command -v cmake
 command -v doxygen
 
 echo "🥳 Nova Dependencies Installed!"
+
+"$ROOT/scripts/init-vcpkg.sh"

@@ -6,6 +6,15 @@
 #include "Math/Common/Interpolation.hpp"
 
 namespace E::M {
+Vector3 Vector3::FromSpherical(Spherical spherical) {
+    Vector3 result;
+    result.x = spherical.Magnitude * std::cos(spherical.Elevation) * std::cos(spherical.Azimuth);
+    result.y = spherical.Magnitude * std::sin(spherical.Elevation);
+    result.z = spherical.Magnitude * std::cos(spherical.Elevation) * std::sin(spherical.Azimuth);
+
+    return result;
+}
+
 Vector3::Vector3() : x(0), y(0), z(0) {
 }
 
@@ -44,6 +53,18 @@ Vector3 Vector3::Cross(const Vector3& vec3) const {
 
 float Vector3::Distance(const Vector3& vec3) const {
     return (*this - vec3).Length();
+}
+
+float Vector3::Elevation() const {
+    return std::asin(Normalized().y);
+}
+
+float Vector3::Azimuth() const {
+    return atan2(z, x);
+}
+
+Spherical Vector3::ToSpherical() const {
+    return { Elevation(), Azimuth(), Length() };
 }
 
 bool Vector3::NearlyEquals(const Vector3& vec3, const float epsilon) const {

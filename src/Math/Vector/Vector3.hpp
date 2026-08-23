@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Math/Common/Constants.hpp"
+#include "Math/Coordinates/Spherical.hpp"
 
 namespace E::M {
 /**
@@ -19,6 +20,9 @@ struct Vector3 {
     float x;
     float y;
     float z;
+
+    /** @brief constructs a vector3 from spherical coords (elevation , azimuth) */
+    [[nodiscard]] static Vector3 FromSpherical(Spherical spherical);
 
     /**
      * @brief Creates a zero vector.
@@ -75,6 +79,21 @@ struct Vector3 {
      * @brief Calculates the distance to another vector.
      */
     [[nodiscard]] float Distance(const Vector3& vec3) const;
+
+    /**
+     * @brief Returns the angle of the vector measured from the YX or YZ planes.
+     * @return The angle in radians, in the range [-PI, PI].
+     */
+    [[nodiscard]] float Elevation() const;
+
+
+    /**
+     * @brief Returns the angle of the vector measured from the XZ plane.
+     * @return The angle in radians, in the range [-PI, PI].
+     */
+    [[nodiscard]] float Azimuth() const;
+
+    [[nodiscard]] Spherical ToSpherical() const;
 
     /**
      * @brief Compares two vectors using an absolute error tolerance.

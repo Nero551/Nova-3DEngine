@@ -4,8 +4,9 @@
 #include "Math/Coordinates/Polar.hpp"
 
 // TODO- add FromPolar() and Angle(), as a path to polar cords from cartesian
+// TODO- add ToPolar()
 //  for vector3 make Elevation() and Azimuth() methods and FromSpherical()
-//  for vector4 make Elevation(), Azimuth() , idk what for the 3rd one , also do FromHyperSpherical.
+//  for vector4 make Elevation(), Azimuth() , HyperAngle() , also do FromHyperSpherical.
 namespace E::M {
 /**
  * @brief 2D floating-point vector.
