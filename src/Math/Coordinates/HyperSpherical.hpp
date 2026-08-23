@@ -1,6 +1,6 @@
 #pragma once
 
-
+namespace E::M {
 struct HyperSpherical {
     float Elevation;
     float Azimuth;
@@ -11,3 +11,4 @@ struct HyperSpherical {
         Elevation(elevation), Azimuth(azimuth), HyperAngle(hyperAngle), Magnitude(magnitude) {
     }
 };
+} // namespace E::M

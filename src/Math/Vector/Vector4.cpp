@@ -57,6 +57,11 @@ float Vector4::Distance(const Vector4& vec4) const {
     return (*this - vec4).Length();
 }
 
+Vector3 Vector4::StereoProject() const {
+    float r = Length();
+    return { r * x / (r - w), r * y / (r - w), r * z / (r - w) };
+}
+
 float Vector4::Elevation() const {
     return std::asin(Normalized().y / std::cos(HyperAngle()));
 }

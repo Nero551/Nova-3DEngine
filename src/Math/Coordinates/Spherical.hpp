@@ -1,5 +1,6 @@
 #pragma once
 
+namespace E::M {
 struct Spherical {
     float Elevation;
     float Azimuth;
@@ -9,3 +10,4 @@ struct Spherical {
         Elevation(elevation), Azimuth(azimuth), Magnitude(magnitude) {
     }
 };
+} // namespace E::M

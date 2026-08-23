@@ -1,6 +1,7 @@
 #pragma once
 #include "Math/Common/Constants.hpp"
 #include "Math/Coordinates/HyperSpherical.hpp"
+#include "Vector3.hpp"
 
 namespace E::M {
 /**
@@ -73,6 +74,8 @@ struct Vector4 {
      * @brief Returns the Euclidean distance between two vectors.
      */
     [[nodiscard]] float Distance(const Vector4& vec4) const;
+
+    [[nodiscard]] Vector3 StereoProject() const;
 
     [[nodiscard]] float Elevation() const;
     [[nodiscard]] float Azimuth() const;

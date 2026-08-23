@@ -54,6 +54,11 @@ float Vector2::Distance(const Vector2& vec2) const {
     return (*this - vec2).Length();
 }
 
+float Vector2::StereoProject() const {
+    float r = Length();
+    return r * x / (r - y);
+}
+
 Polar Vector2::ToPolar() const {
     return { Angle(), Length() };
 }

@@ -55,6 +55,12 @@ float Vector3::Distance(const Vector3& vec3) const {
     return (*this - vec3).Length();
 }
 
+Vector2 Vector3::StereoProject() const {
+    float r = Length();
+
+    return { r * x / (r - z), r * y / (r - z) };
+}
+
 float Vector3::Elevation() const {
     return std::asin(Normalized().y);
 }

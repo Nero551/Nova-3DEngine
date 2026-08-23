@@ -93,6 +93,9 @@ struct Vector2 {
      */
     [[nodiscard]] float Distance(const Vector2& vec2) const;
 
+    /** @brief uses stereographic projection to project a 2d vector onto a 1d plane (line) */
+    [[nodiscard]] float StereoProject() const;
+
     /**
      * @brief returns vector in polar coords
      */

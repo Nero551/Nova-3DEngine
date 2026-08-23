@@ -2,6 +2,7 @@
 
 #include "Math/Common/Constants.hpp"
 #include "Math/Coordinates/Spherical.hpp"
+#include "Vector2.hpp"
 
 namespace E::M {
 /**
@@ -79,6 +80,9 @@ struct Vector3 {
      * @brief Calculates the distance to another vector.
      */
     [[nodiscard]] float Distance(const Vector3& vec3) const;
+
+    /** @brief uses stereographic projection to project a 3d vector onto a 2d plane */
+    [[nodiscard]] Vector2 StereoProject() const;
 
     /**
      * @brief Returns the angle of the vector measured from the YX or YZ planes.

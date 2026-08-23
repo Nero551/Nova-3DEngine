@@ -37,15 +37,17 @@ static MeshInstance3D& CreatePoint(M::Vector4 col) {
 static float max = 100;
 static float min = -100;
 
-static std::vector<U::CheckedPtr<MeshInstance3D>> points = {};
+static std::vector<U::CheckedPtr<Entity>> points = {};
 
-static void Plot(const M::Vector3 vec3, const M::Vector4 col = { 1, 1, 1, 1 }) {
+static Entity& Plot(const M::Vector3 vec3, const M::Vector4 col = { 1, 1, 1, 1 }) {
     // if (vec3.y < max && vec3.y > min) {
     auto& point = CreatePoint(col);
     auto& transform = point.GetComponent<Transform3DComponent>();
     transform.Position.x = vec3.x;
     transform.Position.y = vec3.y;
     transform.Position.z = vec3.z;
+
+    return point;
     // }
 }
 
@@ -54,25 +56,18 @@ static constexpr float xRange = 10;
 static float x = -5;
 
 void calculus::Start() {
-    // for (float x = -8; x < 8; x += 0.05) {
-    //     M::Complex a = (std::cos(x) + M::I * std::sin(x));
-    //     Plot({ a.Real, a.Imaginary, x });
-    //     points.emplace_back(&point);
-    // }
+    // M::Vector4 v4 = M::Vector4::FromHyperSpherical({ M::Rad(45), M::Rad(36), M::Rad(59) });
+    // U::Logger::Info(M::Deg(v4.Elevation()));
+    // U::Logger::Info(M::Deg(v4.Azimuth()));
+    // U::Logger::Info(M::Deg(v4.HyperAngle()));
 
-    M::Vector4 v4 = M::Vector4::FromHyperSpherical({ M::Rad(45), M::Rad(36), M::Rad(59) });
-    U::Logger::Info(M::Deg(v4.Elevation()));
-    U::Logger::Info(M::Deg(v4.Azimuth()));
-    U::Logger::Info(M::Deg(v4.HyperAngle()));
-
-    Plot({ v4.x, v4.y, v4.z });
+    ThreeDimensionalProjection(10);
 }
 
 static float elapsed = 0;
 static float passed = 0;
 
-static float r = 1;
-static float period = 1;
+static float multiplier = 1;
 
 void calculus::Update(double dt) {
     auto& resourceManager = Service::Get<ResourceManager>();
@@ -80,24 +75,54 @@ void calculus::Update(double dt) {
 
 
     if (input.IsKeyHeld(Key::Up)) {
-        r += 0.1;
+        multiplier += 0.1;
     }
     if (input.IsKeyHeld(Key::Down)) {
-        r -= 0.1;
-    }
-    if (input.IsKeyHeld(Key::Right)) {
-        period += 0.1;
-    }
-    if (input.IsKeyHeld(Key::Left)) {
-        period -= 0.1;
+        multiplier -= 0.1;
     }
     //
-    // for (auto& point : points) {
-    //     auto& transform = point->GetComponent<Transform3DComponent>();
-    //     M::Complex a = r * (std::cos(transform.Position.z * period) + M::I * std::sin(transform.Position.z * period));
-    //     transform.Position.x = a.Real;
-    //     transform.Position.y = a.Imaginary;
-    // }
+    for (auto& point : points) {
+        auto& transform = point->GetComponent<Transform3DComponent>();
+        // M::Complex a = r * (std::cos(transform.Position.z * period) + M::I * std::sin(transform.Position.z * period));
+
+        transform.Position.x *= multiplier;
+        transform.Position.y *= multiplier;
+        transform.Position.z *= multiplier;
+    }
+    multiplier = 1;
+}
+
+void calculus::TwoDimensionalProjection(float increase) {
+    for (int theta = -180; theta < 180; theta += increase) {
+        M::Vector2 v2 = M::Vector2::FromPolar(M::Polar(theta));
+        float proj = v2.StereoProject();
+        auto& point = Plot({ proj, 0, 0 });
+        points.emplace_back(&point);
+    }
+}
+
+void calculus::ThreeDimensionalProjection(float increase) {
+    for (int theta = -180; theta < 180; theta += increase) {
+        for (int phi = -180; phi < 180; phi += increase) {
+            M::Vector3 v3 = M::Vector3::FromSpherical(M::Spherical(theta, phi));
+            M::Vector2 proj = v3.StereoProject();
+            auto& point = Plot({ proj.x, proj.y, 0 });
+            points.emplace_back(&point);
+        }
+    }
+}
+
+void calculus::FourDimensionalProjection(float increase) {
+    for (int theta = -180; theta < 180; theta += increase) {
+        for (int phi = -180; phi < 180; phi += increase) {
+            for (int h = -180; h < 180; h += increase) {
+                M::Vector4 v4 = M::Vector4::FromHyperSpherical(M::HyperSpherical(theta, phi, h));
+                M::Vector3 proj = v4.StereoProject();
+                auto& point = Plot(proj);
+                points.emplace_back(&point);
+            };
+        }
+    }
 }
 } // namespace E
 
