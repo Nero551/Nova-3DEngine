@@ -61,7 +61,7 @@ void calculus::Start() {
     // U::Logger::Info(M::Deg(v4.Azimuth()));
     // U::Logger::Info(M::Deg(v4.HyperAngle()));
 
-    ThreeDimensionalProjection(10);
+    FourDimensionalProjection(30);
 }
 
 static float elapsed = 0;
