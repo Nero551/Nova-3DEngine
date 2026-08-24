@@ -5,7 +5,7 @@
 #include "Core/Services/ResourceManager.hpp"
 #include "Math/Complex/Complex.hpp"
 #include "Math/Complex/Constants.hpp"
-#include "Math/Quaternion.hpp"
+#include "Math/Quaternion/Quaternion.hpp"
 #include "Math/Vector/Vector4.hpp"
 #include "Modules/Input/Input.hpp"
 #include "Modules/Renderer/Primitives/Primitives.hpp"
@@ -64,13 +64,17 @@ void calculus::Start() {
 
     float increase = 30;
 
-    float theta = M::Rad(90);
+    float theta = M::Rad(45);
 
-    M::Quaternion q = M::Quaternion::FromAxisAngle({ M::Vector3::FromSpherical({ 0, M::Rad(45) }), theta });
-    U::Logger::Info(q.ToAxisAngle().Axis);
-    U::Logger::Info(M::Deg(q.ToAxisAngle().Angle));
+    M::Quaternion q = M::Quaternion::FromQPolar({ { 0, 1, 0 }, theta });
+    M::Quaternion q2 = M::Quaternion::FromQPolar({ { 0, 0, 1 }, theta });
+    // M::Quaternion q2 = M::Quaternion::FromQPolar({M::Vector3::FromSpherical({0, M::Rad(32)}), theta});
+
+    // U::Logger::Info((q * q2).ToQPolar().Axis);
+    // U::Logger::Info(M::Deg((q * q2).ToQPolar().Angle));
+    // U::Logger::Info((q * q2).ToQPolar().Magnitude);
     M::Vector3 v = { 1, 0, 0 };
-    v = q.Transform(v);
+    v = (q * q2).Transform(v);
     Plot(v);
 }
 

@@ -1,14 +1,15 @@
 #pragma once
-#include "Common/Constants.hpp"
-#include "Coordinates/AxisAngle.hpp"
-#include "Coordinates/HyperSpherical.hpp"
-#include "Vector/Vector3.hpp"
+#include "../Common/Constants.hpp"
+#include "../Coordinates/HyperSpherical.hpp"
+#include "../Coordinates/QPolar.hpp"
+#include "../Matrix/Matrix4.hpp"
+#include "../Vector/Vector3.hpp"
 
 namespace E::M {
 struct Quaternion {
     float w, x, y, z;
 
-    static Quaternion FromAxisAngle(AxisAngle axisAngle);
+    static Quaternion FromQPolar(QPolar qPolar);
     Quaternion();
     Quaternion(float all);
     Quaternion(float w, float x, float y, float z);
@@ -18,11 +19,11 @@ struct Quaternion {
     float Magnitude() const;
     Quaternion Inverse() const;
     Quaternion Normalized() const;
-    Vector3 Transform(const Vector3 vec3);
+    Vector3 Transform(const Vector3& vec3);
     float Angle() const;
     Vector3 Axis() const;
-    AxisAngle ToAxisAngle() const;
-
+    QPolar ToQPolar() const;
+    Matrix4 ToMatrix4() const;
     bool NearlyEquals(const Quaternion& p, float epsilon = EPSILON) const;
 
     bool operator==(const Quaternion& p) const;

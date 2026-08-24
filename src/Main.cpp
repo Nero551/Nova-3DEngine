@@ -6,7 +6,7 @@
 #include "Math/Common/Trigonometry.hpp"
 #include "Math/Complex/Complex.hpp"
 #include "Math/Functions/Function.hpp"
-#include "Math/Quaternion.hpp"
+#include "Math/Quaternion/Quaternion.hpp"
 #include "Math/Vector/Vector2.hpp"
 #include "Math/Vector/Vector3.hpp"
 

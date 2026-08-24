@@ -1,18 +1,19 @@
 #include "Quaternion.hpp"
 
-#include "Common/Comparison.hpp"
-#include "Common/Exponentials.hpp"
+#include "../Common/Comparison.hpp"
+#include "../Common/Exponentials.hpp"
 
 
 namespace E::M {
-Quaternion Quaternion::FromAxisAngle(AxisAngle axisAngle) {
+// TODO-  pretty sure i can add magnitude to these operations, quaternions are a number system , not just rotations
+Quaternion Quaternion::FromQPolar(QPolar qPolar) {
     Quaternion result;
-
-    float sine = std::sin(axisAngle.Angle / 2);
-    result.w = std::cos(axisAngle.Angle / 2);
-    result.x = (axisAngle.Axis.x * sine);
-    result.y = (axisAngle.Axis.y * sine);
-    result.z = (axisAngle.Axis.z * sine);
+    float m = qPolar.Magnitude;
+    float sine = std::sin(qPolar.Angle);
+    result.w = m * std::cos(qPolar.Angle);
+    result.x = m * (qPolar.Axis.x * sine);
+    result.y = m * (qPolar.Axis.y * sine);
+    result.z = m * (qPolar.Axis.z * sine);
 
     return result;
 }
@@ -46,23 +47,24 @@ Quaternion Quaternion::Normalized() const {
     return *this / Magnitude();
 }
 
-Vector3 Quaternion::Transform(const Vector3 vec3) {
+Vector3 Quaternion::Transform(const Vector3& vec3) {
     Quaternion p = { 0, vec3.x, vec3.y, vec3.z };
-    Quaternion result = *this * p * Inverse();
+    Quaternion q = FromQPolar({ Axis(), Angle() / 2, Magnitude() });
+    Quaternion result = q * p * q.Inverse();
 
     return { result.x, result.y, result.z };
 }
 
 float Quaternion::Angle() const {
     Quaternion q = Normalized();
-    float angle = 2 * std::acos(q.w);
+    float angle = std::acos(q.w);
     return angle;
 }
 
 Vector3 Quaternion::Axis() const {
     Quaternion q = Normalized();
     float angle = Angle();
-    float sine = std::sin(angle / 2);
+    float sine = std::sin(angle);
     Vector3 axis;
     axis.x = q.x / sine;
     axis.y = q.y / sine;
@@ -70,8 +72,13 @@ Vector3 Quaternion::Axis() const {
     return axis;
 }
 
-AxisAngle Quaternion::ToAxisAngle() const {
-    return { Axis(), Angle() };
+QPolar Quaternion::ToQPolar() const {
+    return { Axis(), Angle(), Magnitude() };
+}
+
+Matrix4 Quaternion::ToMatrix4() const {
+    Matrix4 result = Matrix4::Identity;
+    return result.RotateAroundAxis(Axis(), Angle());
 }
 
 bool Quaternion::NearlyEquals(const Quaternion& p, const float epsilon) const {
