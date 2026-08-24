@@ -2,11 +2,12 @@
 
 #include "Core/OuterCore/ECS/Component.hpp"
 #include "Math/Matrix/Matrix4.hpp"
+#include "Math/Quaternion/Quaternion.hpp"
 
 namespace E {
 struct Transform3DComponent : Component {
     M::Vector3 Position = M::Vector3::Zero;
-    M::Vector3 Rotation = M::Vector3::Zero; // Radians
+    M::Quaternion Rotation = M::Quaternion::Identity;
     M::Vector3 Scale = M::Vector3::One;
 
     bool InheritTransform = true;
@@ -14,7 +15,7 @@ struct Transform3DComponent : Component {
     [[nodiscard]] M::Matrix4 GetModelMatrix() const {
         M::Matrix4 modelMatrix = M::Matrix4::Identity;
         modelMatrix = modelMatrix.Translate({ GlobalPosition });
-        modelMatrix = modelMatrix.Rotate(GlobalRotation);
+        modelMatrix *= GlobalRotation.ToMatrix4();
         modelMatrix = modelMatrix.Scale(GlobalScale);
 
         return modelMatrix;
@@ -33,19 +34,14 @@ struct Transform3DComponent : Component {
     }
 
     [[nodiscard]] M::Vector3 GetForward() const {
-        M::Vector3 direction;
-        direction.x = std::sin(Rotation.y) * std::cos(Rotation.x);
-        direction.y = std::sin(Rotation.x);
-        direction.z = std::cos(Rotation.y) * std::cos(Rotation.x);
-
-        return direction.Normalized();
+        return GlobalRotation.Transform({ 0, 0, -1 });
     }
 
 private:
     // TODO- this is temporary until i have a proper change detection system
     // (reflection)
     M::Vector3 GlobalPosition = M::Vector3::Zero;
-    M::Vector3 GlobalRotation = M::Vector3::Zero; // Radians
+    M::Quaternion GlobalRotation = M::Quaternion::Identity;
     M::Vector3 GlobalScale = M::Vector3::One;
     friend struct Transform3DSystem;
 };

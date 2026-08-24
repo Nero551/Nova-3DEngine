@@ -4,8 +4,6 @@
 
 namespace E {
 struct Transform3DSystem : System {
-    void Start() override;
-
     void Update(double dt) override;
 };
 } // namespace E

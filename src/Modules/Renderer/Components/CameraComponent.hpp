@@ -13,6 +13,8 @@ struct CameraComponent : Component {
     float Far = 100.0f;
     float AspectRatio = 1.0f;
     float Speed = 5.0f;
+    float Yaw = 0;
+    float Pitch = 0;
     ProjectionMode ProjectionMode = ProjectionMode::Perspective;
 
     [[nodiscard]] M::Matrix4 GetProjectionMatrix() const {

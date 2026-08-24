@@ -103,7 +103,7 @@ struct Quaternion {
      * @param vec3 Vector to transform.
      * @return Transformed vector.
      */
-    Vector3 Transform(const Vector3& vec3);
+    Vector3 Transform(const Vector3& vec3) const;
 
     /** @brief Returns the quaternion polar angle `θ` from `q = cos(θ) + u sin(θ)`. */
     float Angle() const;

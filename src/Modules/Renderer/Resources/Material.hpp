@@ -29,10 +29,10 @@ struct Material : Resource {
     M::Vector4 Color = { 0.5 };
 
     /** Ambient lighting color. */
-    M::Vector3 Ambient = { 1 };
+    M::Vector3 Ambient = { 0.7 };
 
     /** Diffuse lighting color. */
-    M::Vector3 Diffuse = { 0.7 };
+    M::Vector3 Diffuse = { 0.3 };
 
     /** Specular lighting color. */
     M::Vector3 Specular = { 0.7 };

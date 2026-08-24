@@ -61,11 +61,9 @@ Quaternion Quaternion::FromMatrix3(const Matrix3& mat3) {
 }
 
 Quaternion Quaternion::FromEulerXYZ(const Vector3& euler) {
-    const Quaternion qx = FromQPolar({ { 1, 0, 0 }, euler.x });
-    const Quaternion qy = FromQPolar({ { 0, 1, 0 }, euler.y });
-    const Quaternion qz = FromQPolar({ { 0, 0, 1 }, euler.z });
-
-    return qz * qy * qx;
+    Matrix3 rotation = Matrix3::Identity;
+    rotation = rotation.Rotate(euler);
+    return FromMatrix3(rotation);
 }
 
 Quaternion::Quaternion() : w(0), x(0), y(0), z(0) {
@@ -97,7 +95,7 @@ Quaternion Quaternion::Normalized() const {
     return *this / Magnitude();
 }
 
-Vector3 Quaternion::Transform(const Vector3& vec3) {
+Vector3 Quaternion::Transform(const Vector3& vec3) const {
     Quaternion p = { 0, vec3.x, vec3.y, vec3.z };
     Quaternion q = FromQPolar({ Axis(), Angle() / 2, Magnitude() });
     Quaternion result = q * p * q.Inverse();
@@ -128,6 +126,11 @@ QPolar Quaternion::ToQPolar() const {
 
 Matrix4 Quaternion::ToMatrix4() const {
     Matrix4 result = Matrix4::Identity;
+
+    if (iszero(Angle())) {
+        return Matrix4::Identity;
+    }
+
     return result.RotateAroundAxis(Axis(), Angle());
 }
 

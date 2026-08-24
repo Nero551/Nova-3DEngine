@@ -39,11 +39,12 @@ void Renderer::OnRender() {
 
         if (entity->HasComponent<MaterialComponent>()) {
             auto& materialComponent = entity->GetComponent<MaterialComponent>();
-            materialComponent.Material->Use();
 
             if (materialComponent.Material->Shader->HotReload == true) {
                 materialComponent.Material->Shader->Reload();
             }
+
+            materialComponent.Material->Use();
 
             materialComponent.Material->Shader->SetUniform(FloatUniform("TIME", static_cast<float>(Engine::Get().GetTime())));
 

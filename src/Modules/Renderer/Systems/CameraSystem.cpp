@@ -23,11 +23,13 @@ void CameraSystem::Update(const double dt) {
             const float xOffset = M::Rad(input.GetMouseDelta().x * cameraComponent.Sensitivity);
             const float yOffset = M::Rad(-input.GetMouseDelta().y * cameraComponent.Sensitivity);
 
-            const float maxPitch = M::Rad(89.0f);
+            const float maxPitch = M::Rad(89);
 
-            transform.Rotation.y += xOffset;
-            transform.Rotation.x += yOffset;
-            transform.Rotation.x = std::clamp(transform.Rotation.x, -maxPitch, maxPitch);
+            cameraComponent.Yaw += xOffset;
+            cameraComponent.Pitch += yOffset;
+            cameraComponent.Pitch = std::clamp(cameraComponent.Pitch, -maxPitch, maxPitch);
+
+            transform.Rotation = M::Quaternion::FromEulerXYZ({ cameraComponent.Pitch, cameraComponent.Yaw, 0 });
         }
 
         const float speed = cameraComponent.Speed * static_cast<float>(dt);

@@ -138,7 +138,5 @@ vec3 Lighting() {
 
 void main()
 {
-
-    FragColor = vec4(Lighting(), 1) * MATERIAL.Colo;
-
+    FragColor = vec4(Lighting(), 1) * MATERIAL.Color
 }

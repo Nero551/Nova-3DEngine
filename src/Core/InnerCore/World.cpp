@@ -75,6 +75,9 @@ void World::Start() {
     CoordinateAxesScene coordinateAxes;
     Root->AttachChild(coordinateAxes.GetRoot());
 
+    FirstScene firstScene;
+    coordinateAxes.GetRoot().AttachChild(firstScene.GetRoot());
+
     for (auto& system : Systems | std::views::values) {
         system->Start();
     }

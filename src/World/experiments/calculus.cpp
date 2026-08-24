@@ -54,21 +54,36 @@ static constexpr float step = 0.025;
 static constexpr float xRange = 10;
 static float x = -5;
 
+unsigned int cubeId = 0;
+
 void calculus::Start() {
-    // M::Vector4 v4 = M::Vector4::FromHyperSpherical({ M::Rad(45), M::Rad(36), M::Rad(59) });
-    // U::Logger::Info(M::Deg(v4.Elevation()));
-    // U::Logger::Info(M::Deg(v4.Azimuth()));
-    // U::Logger::Info(M::Deg(v4.HyperAngle()));
+    auto& resourceManager = Service::Get<ResourceManager>();
+    auto& mesh = Primitives::CreateCube("mesh");
 
-    float increase = 30;
+    auto& objectShader = resourceManager.Load<Shader>("objectShader");
 
-    float theta = M::Rad(32);
+    objectShader.AssignSource(
+        resourceManager.Load<ShaderSource>("objectFrag", "Assets/Shaders/shader.frag", ShaderStage::Fragment));
+    objectShader.AssignSource(
+        resourceManager.Load<ShaderSource>("objectVert", "Assets/Shaders/shader.vert", ShaderStage::Vertex));
 
-    M::Quaternion q = M::Quaternion::FromEulerXYZ({ M::Rad(90), 0, 0 });
-    U::Logger::Info(M::Deg(q.ToEulerXYZ().x));
-    M::Vector3 v = { 0, 0, -1 };
-    v = q.Transform(v);
-    Plot(v);
+    objectShader.HotReload = true;
+
+    auto& objectMaterial = resourceManager.Load<Material>("material");
+    objectMaterial.Shader = &objectShader;
+
+    auto& cube = World::Get().CreateEntity<MeshInstance3D>();
+    cube.GetComponent<MeshComponent>().Mesh = &mesh;
+    cube.GetComponent<MaterialComponent>().Material = &objectMaterial;
+    cube.GetComponent<Transform3DComponent>().Position = { 0, 0, 0 };
+
+    auto& transform = cube.GetComponent<Transform3DComponent>();
+
+    U::Logger::Info(transform.Position);
+    U::Logger::Info(transform.Rotation);
+    U::Logger::Info(transform.Scale);
+    cubeId = cube.Id;
+    World::Get().Root->AttachChild(cube);
 }
 
 static float elapsed = 0;
@@ -77,23 +92,28 @@ static float passed = 0;
 static float multiplier = 1;
 
 void calculus::Update(double dt) {
-    auto& resourceManager = Service::Get<ResourceManager>();
+    // auto& resourceManager = Service::Get<ResourceManager>();
+    auto& transform = World::Get().FindEntity(cubeId).GetComponent<Transform3DComponent>();
     auto& input = Engine::Get().GetModule<Input>();
-
-
-    if (input.IsKeyHeld(Key::Up)) {
-        multiplier += 0.1;
+    //
+    //
+    if (input.IsKeyHeld(Key::Z)) {
+        transform.Rotation *= M::Quaternion::FromEulerXYZ({ 0.1, 0, 0 });
     }
-    if (input.IsKeyHeld(Key::Down)) {
-        multiplier -= 0.1;
-    }
-
-    for (auto& point : points) {
-        auto& transform = point->GetComponent<Transform3DComponent>();
-        transform.Position *= multiplier;
+    if (input.IsKeyHeld(Key::X)) {
+        transform.Rotation *= M::Quaternion::FromEulerXYZ({ 0, 0.1, 0 });
     }
 
-    multiplier = 1;
+    if (input.IsKeyHeld(Key::C)) {
+        transform.Rotation *= M::Quaternion::FromEulerXYZ({ 0, 0, 0.1 });
+    }
+    //
+    // for (auto& point : points) {
+    //     auto& transform = point->GetComponent<Transform3DComponent>();
+    //     transform.Position *= multiplier;
+    // }
+    //
+    // multiplier = 1;
 }
 
 void calculus::TwoDimensionalProjection(float increase) {
