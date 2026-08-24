@@ -94,6 +94,9 @@ struct Quaternion {
     /** @brief Returns a normalized copy of the quaternion with magnitude one. */
     Quaternion Normalized() const;
 
+    /** @brief Dot product of 2 quaternions */
+    float Dot(const Quaternion& p) const;
+
     /**
      * @brief Transforms a vector using the quaternion as a rotation.
      *

@@ -95,6 +95,10 @@ Quaternion Quaternion::Normalized() const {
     return *this / Magnitude();
 }
 
+float Quaternion::Dot(const Quaternion& p) const {
+    return w * p.w + x * p.x + y * p.y + z * p.z;
+}
+
 Vector3 Quaternion::Transform(const Vector3& vec3) const {
     Quaternion p = { 0, vec3.x, vec3.y, vec3.z };
     Quaternion q = FromQPolar({ Axis(), Angle() / 2, Magnitude() });
