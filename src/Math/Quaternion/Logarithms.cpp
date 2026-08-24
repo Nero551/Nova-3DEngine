@@ -14,7 +14,7 @@ Quaternion Ln(const Quaternion& q) {
     float imaginaryMagnitude = Sqrt(q.x * q.x + q.y * q.y + q.z * q.z);
 
     // and q.w is m * cos(rsin(x))
-    // their arctan returns the original angle, rsin. which is the original magnitude * sin(original angle)
+    // their arctan returns rsin. which is the original magnitude * sin(original angle)
     float rsin = std::atan2(imaginaryMagnitude, q.w);
 
     // axis is unchanged by exponentiation so "u" remains the same

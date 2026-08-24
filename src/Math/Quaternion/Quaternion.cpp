@@ -133,8 +133,11 @@ Matrix4 Quaternion::ToMatrix4() const {
 
 Vector3 Quaternion::ToEulerXYZ() const {
     const Matrix4 matrix = ToMatrix4();
-
-    return { std::atan2(matrix.m[2][1], matrix.m[2][2]), std::asin(-matrix.m[2][0]), std::atan2(matrix.m[1][0], matrix.m[0][0]) };
+    Vector3 result;
+    result.x = std::atan2(matrix.m[2][1], matrix.m[2][2]);
+    result.y = std::asin(-matrix.m[2][0]);
+    result.z = std::atan2(matrix.m[1][0], matrix.m[0][0]);
+    return result;
 }
 
 bool Quaternion::NearlyEquals(const Quaternion& p, const float epsilon) const {

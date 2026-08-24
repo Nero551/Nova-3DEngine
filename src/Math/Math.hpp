@@ -3,8 +3,13 @@
 // A Float-based math library for the Nova game engine. everything uses floats
 // here
 
-#include "Exponentials.hpp"
-#include "Logarithms.hpp"
+#include "Common/Logarithms.hpp"
+#include "Complex/Logarithms.hpp"
+#include "Quaternion/Logarithms.hpp"
+
+#include "Common/Exponentials.hpp"
+#include "Complex/Exponentials.hpp"
+#include "Quaternion/Exponentials.hpp"
 
 #include "Common/Comparison.hpp"
 #include "Common/Constants.hpp"
