@@ -111,7 +111,6 @@ Matrix4 Matrix4::RotateAroundAxis(const Vector3& axis, const float radian) const
     const Matrix4 basisMatrix = basis.GetMatrix();
 
     Matrix4 finalMatrix = basisMatrix * rotationMatrix * basisMatrix.Inverse();
-
     return *this * finalMatrix;
 }
 

@@ -5,7 +5,7 @@
 
 
 namespace E::M {
-Quaternion Quaternion::FromQPolar(QPolar qPolar) {
+Quaternion Quaternion::FromQPolar(const QPolar& qPolar) {
     Quaternion result;
     float m = qPolar.Magnitude;
     float sine = std::sin(qPolar.Angle);
@@ -15,6 +15,57 @@ Quaternion Quaternion::FromQPolar(QPolar qPolar) {
     result.z = m * (qPolar.Axis.z * sine);
 
     return result;
+}
+
+Quaternion Quaternion::FromMatrix3(const Matrix3& mat3) {
+    float trace = mat3.m[0][0] + mat3.m[1][1] + mat3.m[2][2];
+
+    Quaternion rotation;
+
+    if (trace > 0) {
+        float s = Sqrt(trace + 1.0f) * 2.0f;
+
+        rotation.w = 0.25f * s;
+        rotation.x = (mat3.m[2][1] - mat3.m[1][2]) / s;
+        rotation.y = (mat3.m[0][2] - mat3.m[2][0]) / s;
+        rotation.z = (mat3.m[1][0] - mat3.m[0][1]) / s;
+    }
+    else if (mat3.m[0][0] > mat3.m[1][1] && mat3.m[0][0] > mat3.m[2][2]) {
+        float s = Sqrt(1.0f + mat3.m[0][0] - mat3.m[1][1] - mat3.m[2][2]) * 2.0f;
+
+        rotation.w = (mat3.m[2][1] - mat3.m[1][2]) / s;
+        rotation.x = 0.25f * s;
+        rotation.y = (mat3.m[0][1] + mat3.m[1][0]) / s;
+        rotation.z = (mat3.m[0][2] + mat3.m[2][0]) / s;
+    }
+    else if (mat3.m[1][1] > mat3.m[2][2]) {
+        float s = Sqrt(1.0f + mat3.m[1][1] - mat3.m[0][0] - mat3.m[2][2]) * 2.0f;
+
+        rotation.w = (mat3.m[0][2] - mat3.m[2][0]) / s;
+        rotation.x = (mat3.m[0][1] + mat3.m[1][0]) / s;
+        rotation.y = 0.25f * s;
+        rotation.z = (mat3.m[1][2] + mat3.m[2][1]) / s;
+    }
+    else {
+        float s = Sqrt(1.0f + mat3.m[2][2] - mat3.m[0][0] - mat3.m[1][1]) * 2.0f;
+
+        rotation.w = (mat3.m[1][0] - mat3.m[0][1]) / s;
+        rotation.x = (mat3.m[0][2] + mat3.m[2][0]) / s;
+        rotation.y = (mat3.m[1][2] + mat3.m[2][1]) / s;
+        rotation.z = 0.25f * s;
+    }
+
+    // Convert the rotation quaternion from half-angle form
+    // to the full-angle quaternion representation.
+    return rotation * rotation;
+}
+
+Quaternion Quaternion::FromEulerXYZ(const Vector3& euler) {
+    const Quaternion qx = FromQPolar({ { 1, 0, 0 }, euler.x });
+    const Quaternion qy = FromQPolar({ { 0, 1, 0 }, euler.y });
+    const Quaternion qz = FromQPolar({ { 0, 0, 1 }, euler.z });
+
+    return qz * qy * qx;
 }
 
 Quaternion::Quaternion() : w(0), x(0), y(0), z(0) {
@@ -55,8 +106,10 @@ Vector3 Quaternion::Transform(const Vector3& vec3) {
 }
 
 float Quaternion::Angle() const {
-    float angle = std::acos(Normalized().w);
-    return angle;
+    Quaternion q = Normalized();
+
+    float imaginaryMagnitude = Sqrt(q.x * q.x + q.y * q.y + q.z * q.z);
+    return std::atan2(imaginaryMagnitude, q.w);
 }
 
 Vector3 Quaternion::Axis() const {
@@ -76,6 +129,12 @@ QPolar Quaternion::ToQPolar() const {
 Matrix4 Quaternion::ToMatrix4() const {
     Matrix4 result = Matrix4::Identity;
     return result.RotateAroundAxis(Axis(), Angle());
+}
+
+Vector3 Quaternion::ToEulerXYZ() const {
+    const Matrix4 matrix = ToMatrix4();
+
+    return { std::atan2(matrix.m[2][1], matrix.m[2][2]), std::asin(-matrix.m[2][0]), std::atan2(matrix.m[1][0], matrix.m[0][0]) };
 }
 
 bool Quaternion::NearlyEquals(const Quaternion& p, const float epsilon) const {

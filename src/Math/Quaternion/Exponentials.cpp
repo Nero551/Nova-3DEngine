@@ -39,6 +39,10 @@ Quaternion Pow(const Quaternion& q, float power) {
 }
 
 Quaternion Pow(const Quaternion& q, const Quaternion& p) {
-    return Exp(q * Ln(p));
+    return Exp(p * Ln(q));
+}
+
+Quaternion Sqrt(const Quaternion& q) {
+    return Pow(q, 1.0f / 2.0f);
 }
 } // namespace E::M
