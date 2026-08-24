@@ -2,6 +2,7 @@
 #include "Math/Common/Exponentials.hpp"
 
 #include "Math/Common/Logarithms.hpp"
+#include "Math/Quaternion//Logarithms.hpp"
 
 namespace E::M {
 Quaternion M::Exp(const Quaternion& q) {
@@ -35,5 +36,9 @@ Quaternion Pow(const Quaternion& q, float power) {
     result.z = q.z * rsin;
 
     return result;
+}
+
+Quaternion Pow(const Quaternion& q, const Quaternion& p) {
+    return Exp(q * Ln(p));
 }
 } // namespace E::M
