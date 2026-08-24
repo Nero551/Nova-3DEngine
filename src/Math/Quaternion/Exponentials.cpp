@@ -2,7 +2,7 @@
 #include "Math/Common/Exponentials.hpp"
 
 #include "Math/Common/Logarithms.hpp"
-#include "Math/Quaternion//Logarithms.hpp"
+#include "Math/Quaternion/Logarithms.hpp"
 
 namespace E::M {
 Quaternion M::Exp(const Quaternion& q) {

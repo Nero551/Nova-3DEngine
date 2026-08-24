@@ -92,4 +92,8 @@
 
 - vcpkg package management
 - basic calc 1 integration
+
+### Week 9 — August 21–28
+
 - complex arithmetic
+- quaternion arithmetic & rotation conversions
