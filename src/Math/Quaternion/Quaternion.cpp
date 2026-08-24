@@ -5,7 +5,6 @@
 
 
 namespace E::M {
-// TODO-  pretty sure i can add magnitude to these operations, quaternions are a number system , not just rotations
 Quaternion Quaternion::FromQPolar(QPolar qPolar) {
     Quaternion result;
     float m = qPolar.Magnitude;
@@ -56,15 +55,13 @@ Vector3 Quaternion::Transform(const Vector3& vec3) {
 }
 
 float Quaternion::Angle() const {
-    Quaternion q = Normalized();
-    float angle = std::acos(q.w);
+    float angle = std::acos(Normalized().w);
     return angle;
 }
 
 Vector3 Quaternion::Axis() const {
     Quaternion q = Normalized();
-    float angle = Angle();
-    float sine = std::sin(angle);
+    float sine = std::sin(Angle());
     Vector3 axis;
     axis.x = q.x / sine;
     axis.y = q.y / sine;
