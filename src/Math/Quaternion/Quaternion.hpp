@@ -1,6 +1,5 @@
 #pragma once
 #include "../Common/Constants.hpp"
-#include "../Coordinates/HyperSpherical.hpp"
 #include "../Coordinates/QPolar.hpp"
 #include "../Matrix/Matrix4.hpp"
 #include "../Vector/Vector3.hpp"
