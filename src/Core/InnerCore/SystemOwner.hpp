@@ -2,7 +2,7 @@
 #include "Core/OuterCore/ECS/System.hpp"
 #include "Utilities/Logger.hpp"
 
-namespace E {
+namespace N {
 template <typename T>
 concept SystemType = std::derived_from<T, System>;
 
@@ -33,4 +33,4 @@ protected:
         return ref;
     }
 };
-} // namespace E
+} // namespace N

@@ -1,7 +1,7 @@
 #pragma once
 
-namespace E {
+namespace N {
 struct Event {
     virtual ~Event() = default;
 };
-} // namespace E
+} // namespace N

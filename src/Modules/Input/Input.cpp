@@ -4,7 +4,7 @@
 
 #include "Core/InnerCore/Engine.hpp"
 
-namespace E {
+namespace N {
 bool Input::IsKeyHeld(const Key key) {
     return CurrentKeys[ToIndex(key)];
 }
@@ -95,4 +95,4 @@ void Input::OnEndFrame(double dt) {
     PreviousKeys = CurrentKeys;
     PreviousMouseButtons = CurrentMouseButtons;
 }
-} // namespace E
+} // namespace N

@@ -4,7 +4,7 @@
 #include "Math/Geometry/Basis.hpp"
 #include "Utilities/Logger.hpp"
 
-namespace E::M {
+namespace N::M {
 Matrix4::Matrix4(const float mAll) {
     for (auto& row : m) {
         for (float& col : row) {
@@ -363,4 +363,4 @@ std::ostream& operator<<(std::ostream& os, const Matrix4& mat4) {
     os << "[ " << mat4.m[3][0] << "  " << mat4.m[3][1] << "  " << mat4.m[3][2] << "  " << mat4.m[3][3] << " ]";
     return os;
 }
-} // namespace E::M
+} // namespace N::M

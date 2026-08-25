@@ -7,10 +7,9 @@
 #include "Math/Vector/Vector4.hpp"
 #include "Modules/Input/Input.hpp"
 #include "Modules/Renderer/Primitives/Primitives.hpp"
-#include "World/Novas/Light.hpp"
 #include "World/Novas/MeshInstance3D.hpp"
 
-namespace E {
+namespace N {
 static MeshInstance3D& CreatePoint(M::Vector4 col) {
     auto& resourceManager = Service::Get<ResourceManager>();
     auto& mesh = Primitives::CreateCube("point");
@@ -67,7 +66,7 @@ void calculus::Start() {
     objectShader.AssignSource(
         resourceManager.Load<ShaderSource>("objectVert", "Assets/Shaders/shader.vert", ShaderStage::Vertex));
 
-    objectShader.HotReload = true;
+    // objectShader.HotReload = true;
 
     auto& objectMaterial = resourceManager.Load<Material>("material");
     objectMaterial.Shader = &objectShader;
@@ -79,11 +78,17 @@ void calculus::Start() {
 
     auto& transform = cube.GetComponent<Transform3DComponent>();
 
-    U::Logger::Info(transform.Position);
-    U::Logger::Info(transform.Rotation);
-    U::Logger::Info(transform.Scale);
+    // U::Logger::Info(transform.Position);
+    // U::Logger::Info(transform.Rotation);
+    // U::Logger::Info(transform.Scale);
     cubeId = cube.Id;
     World::Get().Root->AttachChild(cube);
+
+    auto& cube2 = World::Get().CreateEntity<MeshInstance3D>();
+    cube2.GetComponent<MeshComponent>().Mesh = &mesh;
+    cube2.GetComponent<MaterialComponent>().Material = &objectMaterial;
+    cube2.GetComponent<Transform3DComponent>().Position = { 2, 0, 0 };
+    cube.AttachChild(cube2);
 }
 
 static float elapsed = 0;
@@ -152,7 +157,7 @@ void calculus::FourDimensionalProjection(float increase) {
         }
     }
 }
-} // namespace E
+} // namespace N
 
 //
 // M::Vector3 Tween(M::Vector3 start, M::Vector3 end, float duration, double dt)

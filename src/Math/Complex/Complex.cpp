@@ -3,7 +3,7 @@
 #include "../Common/Comparison.hpp"
 #include "../Common/Exponentials.hpp"
 
-namespace E::M {
+namespace N::M {
 Complex::Complex() : Real(0), Imaginary(0) {
 }
 Complex::Complex(float real, float imaginary) : Real(real), Imaginary(imaginary) {
@@ -152,4 +152,4 @@ std::ostream& operator<<(std::ostream& os, const Complex& complex) {
 
     return os;
 }
-} // namespace E::M
+} // namespace N::M

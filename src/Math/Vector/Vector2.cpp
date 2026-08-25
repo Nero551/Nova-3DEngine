@@ -5,7 +5,7 @@
 #include "Math/Common/Comparison.hpp"
 #include "Math/Common/Interpolation.hpp"
 
-namespace E::M {
+namespace N::M {
 Vector2 Vector2::FromPolar(Polar polar) {
     return { polar.Magnitude * std::cos(polar.Angle), polar.Magnitude * std::sin(polar.Angle) };
 }
@@ -162,4 +162,4 @@ std::ostream& operator<<(std::ostream& os, const Vector2& vec2) {
 
 //?Statics
 Vector2 const Vector2::Zero = Vector2(0, 0);
-} // namespace E::M
+} // namespace N::M

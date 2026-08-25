@@ -1,6 +1,6 @@
 #include "Physics.hpp"
 
-namespace E {
+namespace N {
 void Physics::OnStart() {
 }
 
@@ -9,4 +9,4 @@ void Physics::OnFixedUpdate(double fdt) {
 
 void Physics::AddSystems() {
 }
-} // namespace E
+} // namespace N

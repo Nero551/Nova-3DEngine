@@ -2,7 +2,7 @@
 #include "../Uniform.hpp"
 #include "OpenGL.hpp"
 
-namespace E {
+namespace N {
 struct IntUniform : Uniform {
     int Value;
 
@@ -13,4 +13,4 @@ struct IntUniform : Uniform {
         glUniform1i(location, Value);
     }
 };
-} // namespace E
+} // namespace N

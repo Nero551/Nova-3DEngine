@@ -1,6 +1,6 @@
 #include "Module.hpp"
 
-namespace E {
+namespace N {
 void Module::Start() {
     AddSystems();
     OnStart();
@@ -50,4 +50,4 @@ void Module::EndFrame(const double dt) {
         system->EndFrame(dt);
     }
 }
-} // namespace E
+} // namespace N

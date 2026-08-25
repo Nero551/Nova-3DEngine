@@ -5,7 +5,7 @@
 #include "Math/Common/Comparison.hpp"
 #include "Math/Common/Interpolation.hpp"
 
-namespace E::M {
+namespace N::M {
 Vector4 Vector4::FromHyperSpherical(HyperSpherical hyperSpherical) {
     const float m = hyperSpherical.Magnitude;
     Vector4 result;
@@ -178,4 +178,4 @@ std::ostream& operator<<(std::ostream& os, const Vector4& vec4) {
 
 //?Statics
 Vector4 const Vector4::Zero = Vector4(0, 0, 0, 0);
-} // namespace E::M
+} // namespace N::M

@@ -2,7 +2,7 @@
 #include "Core/Services/ResourceManager.hpp"
 #include "Primitives.hpp"
 
-namespace E {
+namespace N {
 Texture& Primitives::CreateWhiteTexture() {
     std::vector<unsigned char> white = { 255, 255, 255, 255 };
     U::Image image = { 1, 1, U::Image::ColorChannels::RGBA, white };
@@ -17,4 +17,4 @@ Texture& Primitives::CreateBlackTexture() {
     auto& blackTexture = Service::Get<ResourceManager>().Load<Texture>("BlackTexture", image);
     return blackTexture;
 }
-} // namespace E
+} // namespace N

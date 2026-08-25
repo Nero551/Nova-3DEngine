@@ -5,7 +5,7 @@
 #include "Math/Common/Comparison.hpp"
 #include "Math/Common/Interpolation.hpp"
 
-namespace E::M {
+namespace N::M {
 Vector3 Vector3::FromSpherical(Spherical spherical) {
     Vector3 result;
     result.x = spherical.Magnitude * std::cos(spherical.Elevation) * std::cos(spherical.Azimuth);
@@ -204,4 +204,4 @@ Vector3 const Vector3::One = Vector3(1, 1, 1);
 Vector3 const Vector3::Up = Vector3(0, 1, 0);
 Vector3 const Vector3::Right = Vector3(1, 0, 0);
 Vector3 const Vector3::Forward = Vector3(0, 0, 1);
-} // namespace E::M
+} // namespace N::M

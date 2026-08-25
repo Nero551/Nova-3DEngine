@@ -2,7 +2,7 @@
 #include "../Uniform.hpp"
 #include "Core/InnerCore/Engine.hpp"
 
-namespace E {
+namespace N {
 struct FloatUniform : Uniform {
     float Value;
 
@@ -13,4 +13,4 @@ struct FloatUniform : Uniform {
         glUniform1f(location, Value);
     }
 };
-} // namespace E
+} // namespace N

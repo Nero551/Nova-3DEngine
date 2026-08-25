@@ -2,7 +2,7 @@
 
 #include "Exponentials.hpp"
 
-namespace E::M {
+namespace N::M {
 float Lerp(const float a, const float b, const float t) {
     return a + (b - a) * t;
 }
@@ -36,4 +36,4 @@ float EaseInOutCubic(const float t) {
 
     return 0.5f + 0.5f * EaseOutCubic((t - 0.5f) * 2.0f);
 }
-} // namespace E::M
+} // namespace N::M

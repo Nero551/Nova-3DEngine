@@ -8,7 +8,7 @@
 #include "Core/Services/ResourceManager.hpp"
 #include "World/Novas/MeshInstance3D.hpp"
 
-namespace E {
+namespace N {
 static Assimp::Importer importer;
 
 static void ProcessVertices(std::vector<Vertex>& vertices, const aiMesh* mesh) {
@@ -105,4 +105,4 @@ AssimpScene::AssimpScene(const std::string& filepath) {
     std::string directory = filepath.substr(0, filepath.find_last_of('/'));
     ProcessNode(scene->mRootNode, scene, directory, GetRoot());
 }
-} // namespace E
+} // namespace N

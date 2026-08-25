@@ -4,7 +4,7 @@
 #include "../Matrix/Matrix4.hpp"
 #include "../Vector/Vector3.hpp"
 
-namespace E::M {
+namespace N::M {
 /**
  * @brief Represents a quaternion number.
  *
@@ -25,6 +25,9 @@ namespace E::M {
  * for the relationship between quaternion and spatial rotation angles.
  */
 struct Quaternion {
+    // TODO: Investigate the principal branch of Quaternion Ln/Exp.
+    // Ln(Exp(q)) == q only when the imaginary-vector magnitude is within
+    // the principal range (< PI). Outside it, the logarithm wraps by 2*PI.
     float w, x, y, z;
 
     /**
@@ -236,4 +239,4 @@ struct Quaternion {
     /** @brief Multiplicative identity quaternion: `1 + 0i + 0j + 0k`. */
     static const Quaternion Identity;
 };
-} // namespace E::M
+} // namespace N::M

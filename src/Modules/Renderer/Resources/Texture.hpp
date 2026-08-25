@@ -3,7 +3,7 @@
 #include "Core/OuterCore/Resource.hpp"
 #include "Utilities/Image/Image.hpp"
 
-namespace E {
+namespace N {
 /**
  * @brief Represents an OpenGL 2D texture resource.
  *
@@ -39,4 +39,4 @@ private:
 
     unsigned int Id = 0;
 };
-} // namespace E
+} // namespace N

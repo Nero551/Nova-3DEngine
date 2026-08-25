@@ -1,6 +1,6 @@
 #pragma once
 
-namespace E {
+namespace N {
 struct Uniform {
     std::string Name;
 
@@ -10,4 +10,4 @@ struct Uniform {
 
     virtual void Upload(int location) = 0;
 };
-} // namespace E
+} // namespace N

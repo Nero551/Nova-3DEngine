@@ -4,7 +4,7 @@
 #include "Core/OuterCore/ECS/Entity.hpp"
 #include "World/Components/Transform3DComponent.hpp"
 
-namespace E {
+namespace N {
 void Transform3DSystem::Update(double dt) {
     for (auto& entity : World::Get().Root->GetDescendants()) {
         if (!entity->HasComponent<Transform3DComponent>()) {
@@ -29,4 +29,4 @@ void Transform3DSystem::Update(double dt) {
         transform.GlobalScale = transform.Scale;
     }
 }
-} // namespace E
+} // namespace N

@@ -2,7 +2,7 @@
 #include "../Uniform.hpp"
 #include "Math/Vector/Vector4.hpp"
 
-namespace E {
+namespace N {
 struct Vector4Uniform : Uniform {
     M::Vector4 Value;
 
@@ -13,4 +13,4 @@ struct Vector4Uniform : Uniform {
         glUniform4fv(location, 1, &Value.x);
     }
 };
-} // namespace E
+} // namespace N

@@ -2,14 +2,14 @@
 
 #include "Core/InnerCore/World.hpp"
 
-E::Entity& E::Scene::GetRoot() {
+N::Entity& N::Scene::GetRoot() {
     return World::Get().FindEntity(Root);
 }
 
-void E::Scene::SetRoot(const Entity& entity) {
+void N::Scene::SetRoot(const Entity& entity) {
     Root = entity.Id;
 }
 
-void E::Scene::SetRoot(const unsigned int entityId) {
+void N::Scene::SetRoot(const unsigned int entityId) {
     Root = entityId;
 }

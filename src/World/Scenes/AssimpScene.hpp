@@ -2,8 +2,8 @@
 
 #include "Core/OuterCore/Scene.hpp"
 
-namespace E {
+namespace N {
 struct AssimpScene : Scene {
     AssimpScene(const std::string& filepath);
 };
-} // namespace E
+} // namespace N

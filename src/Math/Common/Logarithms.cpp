@@ -2,7 +2,7 @@
 
 #include <complex>
 
-namespace E::M {
+namespace N::M {
 float Ln(const float x) {
     return std::log(x);
 }
@@ -10,4 +10,4 @@ float Ln(const float x) {
 float Log(const float base, const float x) {
     return Ln(x) / Ln(base);
 }
-} // namespace E::M
+} // namespace N::M

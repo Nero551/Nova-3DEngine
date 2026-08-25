@@ -2,7 +2,7 @@
 #include <glslang/Public/ResourceLimits.h>
 #include "Resources/ShaderSource.hpp"
 
-namespace E {
+namespace N {
 EShLanguage ShaderSourceValidator::ToEShLanguage(const ShaderStage& stage) {
     switch (stage) {
     case ShaderStage::Vertex:
@@ -42,4 +42,4 @@ ShaderValidationResult ShaderSourceValidator::Validate(const ShaderSource& sourc
 
     return result;
 }
-} // namespace E
+} // namespace N

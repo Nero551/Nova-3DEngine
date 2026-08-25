@@ -1,7 +1,7 @@
 #pragma once
 #include "OpenGL.hpp"
 
-namespace E {
+namespace N {
 enum class Topology {
     Points = GL_POINTS,
     Lines = GL_LINES,
@@ -9,4 +9,4 @@ enum class Topology {
     TriangleStrip = GL_TRIANGLE_STRIP,
     LineStrip = GL_LINE_STRIP,
 };
-} // namespace E
+} // namespace N

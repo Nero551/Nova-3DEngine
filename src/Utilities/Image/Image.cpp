@@ -5,7 +5,7 @@
 
 #include "Utilities/Logger.hpp"
 
-namespace E::U {
+namespace N::U {
 Image::Image(const std::string& filePath, const bool flip) {
     stbi_set_flip_vertically_on_load(flip);
 
@@ -32,4 +32,4 @@ Image::Image(const int width, const int height, const ColorChannels channels, co
     Channels = channels;
     Pixels = pixels;
 }
-} // namespace E::U
+} // namespace N::U

@@ -1,7 +1,7 @@
 #pragma once
 #include "Quaternion.hpp"
 
-namespace E::M {
+namespace N::M {
 /** @brief Computes the exponential of a quaternion. */
 Quaternion Exp(const Quaternion& q);
 
@@ -16,4 +16,4 @@ Quaternion Pow(const Quaternion& q, const Quaternion& p);
 
 /** @brief Computes the square root of a quaternion. */
 Quaternion Sqrt(const Quaternion& q);
-} // namespace E::M
+} // namespace N::M

@@ -4,7 +4,7 @@
 #include "Utilities/Image/Image.hpp"
 #include "Utilities/Logger.hpp"
 
-namespace E {
+namespace N {
 Texture::Texture(const std::string& name, const U::Image& image) : Resource(name) {
     glGenTextures(1, &Id);
     glActiveTexture(GL_TEXTURE0);
@@ -66,4 +66,4 @@ void Texture::SetParameters() const {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
-} // namespace E
+} // namespace N

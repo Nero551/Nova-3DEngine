@@ -1,6 +1,6 @@
 #pragma once
 
-namespace E {
+namespace N {
 struct System {
     virtual ~System() {
     }
@@ -26,4 +26,4 @@ struct System {
     virtual void EndFrame(double dt) {
     }
 };
-} // namespace E
+} // namespace N

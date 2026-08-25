@@ -2,7 +2,7 @@
 
 #include "Core/OuterCore/ECS/System.hpp"
 
-namespace E {
+namespace N {
 struct calculus : System {
     void Start() override;
 
@@ -13,4 +13,4 @@ private:
     void ThreeDimensionalProjection(float increase);
     void FourDimensionalProjection(float increase);
 };
-} // namespace E
+} // namespace N

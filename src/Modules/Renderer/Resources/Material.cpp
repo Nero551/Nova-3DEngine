@@ -7,7 +7,7 @@
 #include "../Uniforms/Vector4Uniform.hpp"
 #include "Utilities/Logger.hpp"
 
-namespace E {
+namespace N {
 Material::Material(const std::string& name) : Resource(name) {
     auto& whiteTexture = Primitives::CreateWhiteTexture();
 
@@ -53,4 +53,4 @@ void Material::SetProperties() const {
     Shader->SetUniform(IntUniform("MATERIAL.EmissionMap", 14));
     EmissionMap->Bind(14);
 }
-} // namespace E
+} // namespace N

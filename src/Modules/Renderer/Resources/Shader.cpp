@@ -5,7 +5,7 @@
 #include "../Uniforms/FloatUniform.hpp"
 #include "Utilities/Logger.hpp"
 
-namespace E {
+namespace N {
 Shader::Shader(const std::string& name) : Resource(name) {
 }
 
@@ -30,7 +30,7 @@ bool Shader::IsProgramCreated() const {
 void Shader::AssignSource(ShaderSource& source) {
     for (auto& existing : Sources) {
         if (existing->GetStage() == source.GetStage()) {
-            // E::U::Logger::Error("Shader: " + Name + " Duplicate Shader Stage.");
+            // N::U::Logger::Error("Shader: " + Name + " Duplicate Shader Stage.");
             return;
         }
     }
@@ -104,4 +104,4 @@ void Shader::UploadUniforms() {
         uniform->Upload(location);
     }
 }
-} // namespace E
+} // namespace N

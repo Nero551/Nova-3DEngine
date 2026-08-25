@@ -5,10 +5,10 @@
 #include "Math/Matrix/Matrix4.hpp"
 #include "Modules/Renderer/Enums/ProjectionMode.hpp"
 
-namespace E {
+namespace N {
 struct CameraComponent : Component {
     float FOV = 45.0f;
-    float Sensitivity = 0.05f;
+    float Sensitivity = 0.07f;
     float Near = 0.1f;
     float Far = 100.0f;
     float AspectRatio = 1.0f;
@@ -25,4 +25,4 @@ struct CameraComponent : Component {
         return M::Matrix4::Perspective(M::Rad(FOV), AspectRatio, Near, Far);
     }
 };
-} // namespace E
+} // namespace N

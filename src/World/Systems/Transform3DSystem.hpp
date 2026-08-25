@@ -2,8 +2,8 @@
 
 #include "Core/OuterCore/ECS/System.hpp"
 
-namespace E {
+namespace N {
 struct Transform3DSystem : System {
     void Update(double dt) override;
 };
-} // namespace E
+} // namespace N

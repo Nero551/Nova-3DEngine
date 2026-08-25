@@ -1,6 +1,6 @@
 #pragma once
 #include "Constants.hpp"
 
-namespace E::M {
+namespace N::M {
 bool NearlyEquals(float a, float b, float epsilon = EPSILON);
 }

@@ -14,7 +14,7 @@
 #include "World/Novas/MeshInstance3D.hpp"
 #include "World/Novas/Nova3D.hpp"
 
-namespace E {
+namespace N {
 CoordinateAxesScene::CoordinateAxesScene() {
     auto& resourceManager = Service::Get<ResourceManager>();
 
@@ -73,11 +73,9 @@ CoordinateAxesScene::CoordinateAxesScene() {
     zAxis.GetComponent<Transform3DComponent>().Scale = { 1, 1, 200 };
     zAxis.GetComponent<MaterialComponent>().Material->Color = M::Color::Blue;
 
-    U::Logger::Info(zAxis.GetComponent<Transform3DComponent>().Rotation.ToMatrix4());
-
     GetRoot().AttachChild(zAxis);
 
     Grid grid;
     GetRoot().AttachChild(grid.GetRoot());
 }
-} // namespace E
+} // namespace N

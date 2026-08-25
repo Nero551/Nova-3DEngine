@@ -4,7 +4,7 @@
 #include "Math/Quaternion/Quaternion.hpp"
 #include "Math/Vector/Vector3.hpp"
 
-namespace E {
+namespace N {
 struct Grid : Scene {
     Grid();
 
@@ -14,4 +14,4 @@ private:
     void CreateXZ();
     void CreateYZ();
 };
-} // namespace E
+} // namespace N

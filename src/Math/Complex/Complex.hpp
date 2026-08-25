@@ -3,7 +3,7 @@
 #include "../Common/Constants.hpp"
 #include "../Coordinates/Polar.hpp"
 
-namespace E::M {
+namespace N::M {
 /**
  * @brief Represents a complex number in Cartesian form.
  *
@@ -136,4 +136,4 @@ struct Complex {
 
     friend std::ostream& operator<<(std::ostream& os, const Complex& complex);
 };
-} // namespace E::M
+} // namespace N::M

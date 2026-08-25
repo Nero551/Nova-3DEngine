@@ -1,7 +1,7 @@
 #pragma once
 #include "Utilities/Logger.hpp"
 
-namespace E::U {
+namespace N::U {
 /// Non-owning pointer that checks for null dereferences.
 /// Does NOT track object lifetime or prevent dangling pointers.
 template <typename T> struct CheckedPtr {
@@ -57,4 +57,4 @@ private:
     T* ptr = nullptr;
     std::string nullMessage = "[NULL PTR] ";
 };
-} // namespace E::U
+} // namespace N::U

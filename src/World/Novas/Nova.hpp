@@ -1,10 +1,10 @@
 #pragma once
 #include "Core/OuterCore/ECS/Entity.hpp"
 
-namespace E {
+namespace N {
 struct Nova : Entity {
     void Initialize() override {
         Entity::Initialize();
     }
 };
-} // namespace E
+} // namespace N

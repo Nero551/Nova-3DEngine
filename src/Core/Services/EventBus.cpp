@@ -1,6 +1,6 @@
 #include "EventBus.hpp"
 
-namespace E {
+namespace N {
 void EventBus::EmptyFireQueue() {
     for (auto& event : FireQueue) {
         auto listeners = Listeners.find(typeid(*event));
@@ -18,4 +18,4 @@ void EventBus::EmptyFireQueue() {
 void EventBus::EndFrame() {
     EmptyFireQueue();
 }
-} // namespace E
+} // namespace N

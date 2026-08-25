@@ -4,7 +4,7 @@
 
 #include "Core/InnerCore/Module.hpp"
 
-namespace E {
+namespace N {
 struct Profiling : Module {
     double FrameMs;
     int FrameCount;
@@ -19,4 +19,4 @@ private:
 
     void AddSystems() override;
 };
-} // namespace E
+} // namespace N

@@ -1,6 +1,6 @@
 #include "Random.hpp"
 
-namespace E::M {
+namespace N::M {
 static std::mt19937 rng(std::random_device{}());
 
 float Random(const float min, const float max) {
@@ -21,4 +21,4 @@ float RandomGaussian(const float mean, const float standardDeviation) {
 unsigned long RandomRaw() {
     return rng();
 }
-} // namespace E::M
+} // namespace N::M

@@ -6,7 +6,7 @@
 #include "World.hpp"
 
 /** @brief Root namespace for Nova engine functionality. */
-namespace E {
+namespace N {
 template <typename T>
 concept ModuleType = std::derived_from<T, Module>;
 
@@ -106,4 +106,4 @@ private:
     /** @brief Runs render step. */
     void Render();
 };
-} // namespace E
+} // namespace N

@@ -6,8 +6,8 @@
 #include "Logger.hpp"
 
 /**
- * @namespace E::U
+ * @namespace N::U
  * @brief Contains utility functions, helpers, and supporting structures for
  * Nova.
  */
-namespace E::U {}
+namespace N::U {}

@@ -11,7 +11,7 @@
 #include "World/Novas/MeshInstance3D.hpp"
 #include "World/Novas/Nova.hpp"
 
-namespace E {
+namespace N {
 Grid::Grid() {
     SetRoot(World::Get().CreateEntity<Nova>());
 
@@ -87,4 +87,4 @@ void Grid::CreateYZ() {
         }
     }
 }
-} // namespace E
+} // namespace N

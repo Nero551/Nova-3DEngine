@@ -9,7 +9,7 @@
 #include "Utilities/Logger.hpp"
 #include "World/Events/EntityCreated.hpp"
 
-namespace E {
+namespace N {
 template <typename T>
 concept EntityType = std::derived_from<T, Entity>;
 
@@ -105,4 +105,4 @@ protected:
 
     void Render();
 };
-} // namespace E
+} // namespace N

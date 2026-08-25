@@ -1,6 +1,6 @@
 #pragma once
 
-namespace E::U {
+namespace N::U {
 struct Logger {
     template <typename T> static void Print(const T& message) {
         std::cout << message << "\n";
@@ -45,4 +45,4 @@ private:
     static constexpr auto Yellow = "\033[33m";
     static constexpr auto Blue = "\033[34m";
 };
-} // namespace E::U
+} // namespace N::U

@@ -2,7 +2,7 @@
 #include "../Matrix/Matrix4.hpp"
 #include "../Vector/Vector3.hpp"
 
-namespace E::M {
+namespace N::M {
 struct Basis {
     Vector3 Right = Vector3::Right;
     Vector3 Up = Vector3::Up;
@@ -11,4 +11,4 @@ struct Basis {
     [[nodiscard]] Matrix4 GetInverseMatrix() const;
     [[nodiscard]] Matrix4 GetMatrix() const;
 };
-} // namespace E::M
+} // namespace N::M

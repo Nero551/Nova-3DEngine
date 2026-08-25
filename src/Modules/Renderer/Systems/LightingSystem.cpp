@@ -9,7 +9,7 @@
 #include "World/Events/EntityCreated.hpp"
 #include "World/Events/EntityDestroyed.hpp"
 
-namespace E {
+namespace N {
 static std::vector<unsigned int> Lights;
 
 static void OnEntityCreated(const EntityCreated& event) {
@@ -32,7 +32,6 @@ void LightingSystem::Start() {
 }
 
 void LightingSystem::Render() {
-
     for (auto& entity : World::Get().Root->GetDescendants()) {
         if (!entity->HasComponent<Transform3DComponent, MaterialComponent>() || entity->HasComponent<LightComponent>()) {
             continue;
@@ -87,4 +86,4 @@ void LightingSystem::Render() {
         }
     }
 }
-} // namespace E
+} // namespace N

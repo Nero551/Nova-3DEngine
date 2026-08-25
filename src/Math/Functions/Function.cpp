@@ -4,7 +4,7 @@
 #include "Math/Common/Exponentials.hpp"
 #include "Utilities/Logger.hpp"
 
-namespace E::M {
+namespace N::M {
 float Function::Evaluate(const float x) const {
     return Func(x);
 }
@@ -176,4 +176,4 @@ Function operator*(const float scalar, const Function& f) {
 Function operator/(float scalar, const Function& f) {
     return [f, scalar](const float x) { return scalar / f(x); };
 }
-} // namespace E::M
+} // namespace N::M

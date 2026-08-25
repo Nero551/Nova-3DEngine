@@ -3,7 +3,7 @@
 #include "OpenGL.hpp"
 #include "Utilities/Logger.hpp"
 
-namespace E {
+namespace N {
 /** @brief Handles initialization and termination of GLFW.
  * Created by Engine, constructed first, deconstructed last. that way it
  * prevents GLFW errors
@@ -26,4 +26,4 @@ struct GraphicsContext {
         glfwTerminate();
     }
 };
-} // namespace E
+} // namespace N

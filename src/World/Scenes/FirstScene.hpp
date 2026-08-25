@@ -1,8 +1,8 @@
 #pragma once
 #include "Core/OuterCore/Scene.hpp"
 
-namespace E {
+namespace N {
 struct FirstScene : Scene {
     FirstScene();
 };
-} // namespace E
+} // namespace N

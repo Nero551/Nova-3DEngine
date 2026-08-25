@@ -7,7 +7,7 @@
 #include "Texture.hpp"
 #include "Utilities/CheckedPtr.hpp"
 
-namespace E {
+namespace N {
 /**
  * @brief Represents the rendering properties and textures of a surface.
  *
@@ -87,4 +87,4 @@ protected:
      */
     void SetProperties() const;
 };
-} // namespace E
+} // namespace N

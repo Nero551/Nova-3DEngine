@@ -3,7 +3,7 @@
 #include "Math/Common/Constants.hpp"
 #include "Math/Coordinates/Polar.hpp"
 
-namespace E::M {
+namespace N::M {
 /**
  * @brief 2D floating-point vector.
  *
@@ -167,4 +167,4 @@ struct Vector2 {
      */
     static const Vector2 Zero;
 };
-} // namespace E::M
+} // namespace N::M

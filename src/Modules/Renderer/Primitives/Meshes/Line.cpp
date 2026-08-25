@@ -3,7 +3,7 @@
 #include "Core/Services/ResourceManager.hpp"
 #include "Math/Color/Color.hpp"
 
-namespace E {
+namespace N {
 Mesh& Primitives::CreateLine(const std::string& name) {
     std::vector vertices = { Vertex({ 0, 0, -0.5f, 1 }, { 1 }, { 0 }, { 0, 0, 1 }),
         Vertex({ 0, 0, 0.5f, 1 }, { 1 }, { 0 }, { 0, 0, 1 }) };
@@ -14,4 +14,4 @@ Mesh& Primitives::CreateLine(const std::string& name) {
     mesh.Topology = Topology::Lines;
     return mesh;
 }
-} // namespace E
+} // namespace N

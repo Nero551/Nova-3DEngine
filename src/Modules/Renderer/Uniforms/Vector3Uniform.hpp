@@ -2,7 +2,7 @@
 #include "../Uniform.hpp"
 #include "Core/InnerCore/Engine.hpp"
 
-namespace E {
+namespace N {
 struct Vector3Uniform : Uniform {
     M::Vector3 Value;
 
@@ -13,4 +13,4 @@ struct Vector3Uniform : Uniform {
         glUniform3fv(location, 1, &Value.x);
     }
 };
-} // namespace E
+} // namespace N

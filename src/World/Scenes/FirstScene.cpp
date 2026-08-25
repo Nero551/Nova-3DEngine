@@ -7,8 +7,8 @@
 #include "World/Novas/Light.hpp"
 #include "World/Novas/MeshInstance3D.hpp"
 
-namespace E {
+namespace N {
 FirstScene::FirstScene() {
     SetRoot(World::Get().CreateEntity<Nova3D>());
 }
-} // namespace E
+} // namespace N

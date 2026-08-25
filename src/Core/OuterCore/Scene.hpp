@@ -3,7 +3,7 @@
 #include "ECS/Entity.hpp"
 #include "Utilities/CheckedPtr.hpp"
 
-namespace E {
+namespace N {
 /**
  * @brief Temporary container for a group of entities.
  */
@@ -25,4 +25,4 @@ struct Scene {
 private:
     unsigned int Root;
 };
-} // namespace E
+} // namespace N

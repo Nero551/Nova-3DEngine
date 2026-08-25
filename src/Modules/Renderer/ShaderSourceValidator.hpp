@@ -6,7 +6,7 @@
 #include "Enums/ShaderStage.hpp"
 #include "Resources/ShaderSource.hpp"
 
-namespace E {
+namespace N {
 /**
  * @brief Result produced by shader source validation.
  */
@@ -57,4 +57,4 @@ struct ShaderSourceValidator {
      */
     static ShaderValidationResult Validate(const ShaderSource& source);
 };
-} // namespace E
+} // namespace N

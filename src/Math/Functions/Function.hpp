@@ -3,7 +3,7 @@
 #include "DifferentiationMethod.hpp"
 #include "IntegrationMethod.hpp"
 
-namespace E::M {
+namespace N::M {
 /**
  * @brief Concept for callable objects that accept a float and return a float.
  */
@@ -202,4 +202,4 @@ struct Function {
 private:
     std::function<float(float)> Func;
 };
-} // namespace E::M
+} // namespace N::M

@@ -3,7 +3,7 @@
 #include "Math/Common/Comparison.hpp"
 #include "Utilities/Logger.hpp"
 
-namespace E::M {
+namespace N::M {
 Matrix2::Matrix2(const float mAll) {
     for (int row = 0; row < 2; row++) {
         for (int col = 0; col < 2; col++) {
@@ -191,4 +191,4 @@ std::ostream& operator<<(std::ostream& os, const Matrix2& mat2) {
     os << "[ " << mat2.m[1][0] << "  " << mat2.m[1][1] << " ]";
     return os;
 }
-} // namespace E::M
+} // namespace N::M

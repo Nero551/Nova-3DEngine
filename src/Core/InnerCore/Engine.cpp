@@ -9,7 +9,7 @@
 #include "Modules/Physics/Physics.hpp"
 #include "Modules/Profiling/Profiling.hpp"
 
-namespace E {
+namespace N {
 Engine::Engine() : Window(800, 600, "Nova") {
     if (Instance) {
         U::Logger::Fatal("Only one Engine may exist.");
@@ -160,4 +160,4 @@ void Engine::Render() {
         service->Render();
     }
 }
-} // namespace E
+} // namespace N

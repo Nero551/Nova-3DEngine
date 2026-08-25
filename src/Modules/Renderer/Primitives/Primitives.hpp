@@ -2,7 +2,7 @@
 #include "../Resources/Mesh.hpp"
 #include "../Resources/Texture.hpp"
 
-namespace E {
+namespace N {
 namespace Primitives {
     Mesh& CreateCube(const std::string& name);
 
@@ -16,4 +16,4 @@ namespace Primitives {
 
     Texture& CreateBlackTexture();
 } // namespace Primitives
-} // namespace E
+} // namespace N

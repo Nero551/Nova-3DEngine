@@ -2,7 +2,7 @@
 #include "Utilities/CheckedPtr.hpp"
 #include "Utilities/Logger.hpp"
 
-namespace E {
+namespace N {
 struct Service;
 template <typename T>
 concept ServiceType = std::derived_from<T, Service>;
@@ -88,4 +88,4 @@ private:
 
     inline static std::unordered_map<std::type_index, std::unique_ptr<Service>> Services;
 };
-} // namespace E
+} // namespace N

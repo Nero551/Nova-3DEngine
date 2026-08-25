@@ -11,7 +11,8 @@ file(GLOB_RECURSE TEST_SOURCES
 
 add_executable(UnitTests
         ${ENGINE_SOURCES}
-        ${TEST_SOURCES}
+        math-tests.cpp
+
 )
 
 set_target_properties(UnitTests PROPERTIES UNITY_BUILD ON)

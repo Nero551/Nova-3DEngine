@@ -1,8 +1,7 @@
 #pragma once
 #include "Math/Vector/Vector3.hpp"
 
-namespace E::M {
-
+namespace N::M {
 /**
  * @brief Represents a quaternion in polar form.
  * A quaternion can be represented as `q = m(cos(θ) + u sin(θ))`,
@@ -22,5 +21,4 @@ struct QPolar {
     QPolar(Vector3 axis, float angle, float magnitude = 1) : Axis(axis.Normalized()), Angle(angle), Magnitude(magnitude) {
     }
 };
-
-} // namespace E::M
+} // namespace N::M

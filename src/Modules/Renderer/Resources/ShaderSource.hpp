@@ -6,7 +6,7 @@
 #include "Core/OuterCore/Resource.hpp"
 #include "Modules/Renderer/Enums/ShaderStage.hpp"
 
-namespace E {
+namespace N {
 /**
  * @brief Represents a shader source file and its OpenGL shader object.
  * Handles loading, preprocessing, and reloading of a shader source.
@@ -50,4 +50,4 @@ private:
     void Preprocess();
     void PreprocessIncludes(const std::string& path, std::string& code, std::unordered_set<std::string>& includesProcessing);
 };
-} // namespace E
+} // namespace N

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace E::M {
+namespace N::M {
 /**
  * @brief Represents a two-dimensional point in polar coordinates.
  * A polar coordinate is represented by an angle and a magnitude:
@@ -26,4 +26,4 @@ struct Polar {
     Polar(float angle, float magnitude = 1) : Angle(angle), Magnitude(magnitude) {
     }
 };
-} // namespace E::M
+} // namespace N::M

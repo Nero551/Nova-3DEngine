@@ -6,7 +6,7 @@
 #include "Modules/Renderer/Components/CameraComponent.hpp"
 #include "World/Components/Transform3DComponent.hpp"
 
-namespace E {
+namespace N {
 void CameraSystem::Update(const double dt) {
     {
         auto& input = Engine::Get().GetModule<Input>();
@@ -72,4 +72,4 @@ M::Matrix4 CameraSystem::GetViewMatrix() {
 
     return view;
 }
-} // namespace E
+} // namespace N

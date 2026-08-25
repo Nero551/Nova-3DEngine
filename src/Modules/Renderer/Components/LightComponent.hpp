@@ -5,7 +5,7 @@
 #include "Math/Common/Trigonometry.hpp"
 #include "Math/Vector/Vector3.hpp"
 
-namespace E {
+namespace N {
 struct LightComponent : Component {
     LightType Type = LightType::Directional;
     M::Vector3 Color = { 1 };
@@ -20,4 +20,4 @@ struct LightComponent : Component {
     float InnerCutOff = M::Rad(7.5);
     float OuterCutOff = M::Rad(17.5);
 };
-} // namespace E
+} // namespace N

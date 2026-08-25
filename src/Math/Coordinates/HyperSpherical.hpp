@@ -1,6 +1,6 @@
 #pragma once
 
-namespace E::M {
+namespace N::M {
 /**
  * @brief Represents a vector using hyperspherical coordinates.
  *
@@ -32,4 +32,4 @@ struct HyperSpherical {
         Elevation(elevation), Azimuth(azimuth), HyperAngle(hyperAngle), Magnitude(magnitude) {
     }
 };
-} // namespace E::M
+} // namespace N::M

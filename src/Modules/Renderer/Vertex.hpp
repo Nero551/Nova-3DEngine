@@ -3,7 +3,7 @@
 #include "Math/Vector/Vector3.hpp"
 #include "Math/Vector/Vector4.hpp"
 
-namespace E {
+namespace N {
 struct Vertex {
     M::Vector4 Position;
     M::Vector4 Color;
@@ -14,4 +14,4 @@ struct Vertex {
         Position(pos), Color(col), UV(uv), Normal(normal) {
     }
 };
-} // namespace E
+} // namespace N

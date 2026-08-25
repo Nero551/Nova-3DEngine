@@ -1,6 +1,6 @@
 #pragma once
 
-namespace E::M {
+namespace N::M {
 /**
  * @brief Represents a vector using spherical coordinates.
  *
@@ -27,4 +27,4 @@ struct Spherical {
         Elevation(elevation), Azimuth(azimuth), Magnitude(magnitude) {
     }
 };
-} // namespace E::M
+} // namespace N::M

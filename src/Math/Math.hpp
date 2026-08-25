@@ -42,7 +42,7 @@
 #include "Vector/Vector4.hpp"
 
 /**
- * @namespace E::M
+ * @namespace N::M
  * @brief Mathematical types and utilities used throughout Nova.
  */
-namespace E::M {}
+namespace N::M {}

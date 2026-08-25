@@ -2,7 +2,7 @@
 
 #include "Core/InnerCore/Engine.hpp"
 
-namespace E {
+namespace N {
 void Profiling::OnStart() {
 }
 
@@ -35,11 +35,11 @@ void Profiling::OnUpdate(const double dt) {
         Engine::Get().Window.SetTitle("FPS: " + std::to_string(FrameCount) + " | " + "AVG: " + std::to_string(averageFrameMs) +
             " ms" + " | " + std::to_string(FrameMs) + " ms");
 
-        // E::U::Logger::Info(
+        // N::U::Logger::Info(
         //     "FPS: " + std::to_string(FrameCount) + " | " + "AVG: " +
         //     std::to_string(averageFrameMs) + " ms" + " | " +
         //     std::to_string(FrameMs) + " ms");
         FrameCount = 0;
     }
 }
-} // namespace E
+} // namespace N

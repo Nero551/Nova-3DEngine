@@ -3,7 +3,7 @@
 #include "Math/Coordinates/HyperSpherical.hpp"
 #include "Vector3.hpp"
 
-namespace E::M {
+namespace N::M {
 /**
  * @brief 4D floating-point vector.
  *
@@ -139,4 +139,4 @@ struct Vector4 {
 
     static const Vector4 Zero;
 };
-} // namespace E::M
+} // namespace N::M

@@ -1,9 +1,9 @@
 #pragma once
 #include "Core/OuterCore/ECS/System.hpp"
 
-namespace E {
+namespace N {
 struct LightingSystem : System {
     void Start() override;
     void Render() override;
 };
-} // namespace E
+} // namespace N

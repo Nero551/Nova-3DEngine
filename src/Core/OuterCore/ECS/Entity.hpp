@@ -5,7 +5,7 @@
 #include "Utilities/CheckedPtr.hpp"
 #include "Utilities/Logger.hpp"
 
-namespace E {
+namespace N {
 /**
 
 * @brief Represents an entity in the world.
@@ -266,4 +266,4 @@ private:
      */
     void RecursiveChildren(std::vector<U::CheckedPtr<Entity>>& entities, const Entity& entity);
 };
-} // namespace E
+} // namespace N

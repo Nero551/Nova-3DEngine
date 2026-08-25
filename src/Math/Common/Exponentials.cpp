@@ -3,7 +3,7 @@
 #include "Logarithms.hpp"
 #include "Utilities/Logger.hpp"
 
-namespace E::M {
+namespace N::M {
 float Pow(const float x, const float power) {
     return std::pow(x, power);
 }
@@ -28,4 +28,4 @@ float Factorial(int x) {
 
     return result;
 }
-} // namespace E::M
+} // namespace N::M

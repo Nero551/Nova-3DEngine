@@ -5,7 +5,7 @@
 
 #include "Utilities/Logger.hpp"
 
-namespace E::U {
+namespace N::U {
 std::string FileSystem::ReadFile(const std::string& path) {
     std::ifstream file(path);
     std::stringstream buffer;
@@ -28,4 +28,4 @@ void FileSystem::WriteFile(const std::string& path, const std::string& content) 
 
     file << content;
 }
-} // namespace E::U
+} // namespace N::U

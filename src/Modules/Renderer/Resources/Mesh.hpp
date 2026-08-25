@@ -5,7 +5,7 @@
 #include "Core/OuterCore/Resource.hpp"
 #include "Modules/Renderer/Enums/RenderMode.hpp"
 
-namespace E {
+namespace N {
 /**
  * @brief Represents a renderable mesh resource.
  *
@@ -80,4 +80,4 @@ private:
     /** Configures the vertex attribute pointers. */
     void SetupVertAttrPointers();
 };
-} // namespace E
+} // namespace N

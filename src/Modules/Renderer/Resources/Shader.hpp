@@ -5,7 +5,7 @@
 #include "ShaderSource.hpp"
 #include "Utilities/CheckedPtr.hpp"
 
-namespace E {
+namespace N {
 template <typename T>
 
 /** @brief Concept for structs inheriting Uniform, used for OpenGL shader uniforms */
@@ -92,4 +92,4 @@ private:
 
     void UploadUniforms();
 };
-} // namespace E
+} // namespace N

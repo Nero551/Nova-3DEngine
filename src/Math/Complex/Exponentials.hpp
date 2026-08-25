@@ -1,7 +1,7 @@
 #pragma once
 #include "Complex.hpp"
 
-namespace E::M {
+namespace N::M {
 /** @brief Raises a real number to a complex power. */
 Complex Pow(float x, const Complex& z);
 
@@ -16,4 +16,4 @@ Complex Sqrt(const Complex& z);
 
 /** @brief Computes the exponential of a complex number. */
 Complex Exp(const Complex& z);
-} // namespace E::M
+} // namespace N::M

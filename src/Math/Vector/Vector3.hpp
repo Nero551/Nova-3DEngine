@@ -4,7 +4,7 @@
 #include "Math/Coordinates/Spherical.hpp"
 #include "Vector2.hpp"
 
-namespace E::M {
+namespace N::M {
 /**
  * @brief 3D floating-point vector.
  *
@@ -220,4 +220,4 @@ struct Vector3 {
      */
     static const Vector3 Forward;
 };
-} // namespace E::M
+} // namespace N::M

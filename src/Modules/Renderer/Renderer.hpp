@@ -2,7 +2,7 @@
 
 #include "Core/InnerCore/Module.hpp"
 
-namespace E {
+namespace N {
 struct Renderer : Module {
 protected:
     void OnStart() override;
@@ -12,4 +12,4 @@ protected:
 private:
     void AddSystems() override;
 };
-} // namespace E
+} // namespace N

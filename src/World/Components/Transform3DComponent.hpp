@@ -4,7 +4,7 @@
 #include "Math/Matrix/Matrix4.hpp"
 #include "Math/Quaternion/Quaternion.hpp"
 
-namespace E {
+namespace N {
 struct Transform3DComponent : Component {
     M::Vector3 Position = M::Vector3::Zero;
     M::Quaternion Rotation = M::Quaternion::Identity;
@@ -45,4 +45,4 @@ private:
     M::Vector3 GlobalScale = M::Vector3::One;
     friend struct Transform3DSystem;
 };
-} // namespace E
+} // namespace N

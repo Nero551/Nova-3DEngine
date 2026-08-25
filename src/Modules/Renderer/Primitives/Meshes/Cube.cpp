@@ -2,7 +2,7 @@
 #include "Core/InnerCore/Engine.hpp"
 #include "Core/Services/ResourceManager.hpp"
 
-namespace E {
+namespace N {
 Mesh& Primitives::CreateCube(const std::string& name) {
     std::vector vertices = { // Front (+Z)
         Vertex({ -0.5f, -0.5f, 0.5f, 1 }, { 1, 0, 0, 1 }, { 0, 0 }, { 0, 0, 1 }),
@@ -82,4 +82,4 @@ Mesh& Primitives::CreateCube(const std::string& name) {
 
     return mesh;
 }
-} // namespace E
+} // namespace N

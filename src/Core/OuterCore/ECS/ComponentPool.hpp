@@ -2,7 +2,7 @@
 #include "Component.hpp"
 #include "IComponentPool.hpp"
 
-namespace E {
+namespace N {
 template <typename T>
 concept ComponentType = std::derived_from<T, Component>;
 
@@ -29,4 +29,4 @@ private:
     std::vector<unsigned int> EntityIds{};
     std::unordered_map<unsigned int, size_t> Indices{};
 };
-} // namespace E
+} // namespace N

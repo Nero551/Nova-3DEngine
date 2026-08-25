@@ -14,7 +14,7 @@
 #include "Uniforms/Matrix4Uniform.hpp"
 #include "Uniforms/Vector3Uniform.hpp"
 
-namespace E {
+namespace N {
 void Renderer::OnStart() {
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
@@ -71,4 +71,4 @@ void Renderer::AddSystems() {
     AddSystem<CameraSystem>();
     AddSystem<LightingSystem>();
 }
-} // namespace E
+} // namespace N

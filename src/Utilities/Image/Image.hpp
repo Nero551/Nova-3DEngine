@@ -1,6 +1,6 @@
 #pragma once
 
-namespace E::U {
+namespace N::U {
 /**
  * @brief Represents a raster image .
  *
@@ -37,4 +37,4 @@ struct Image {
     /** Color channel configuration of the image. */
     ColorChannels Channels = ColorChannels::R;
 };
-} // namespace E::U
+} // namespace N::U

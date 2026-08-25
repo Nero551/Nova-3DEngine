@@ -9,7 +9,7 @@
 #include "Utilities/FileSystem/FileSystem.hpp"
 #include "Utilities/Logger.hpp"
 
-namespace E {
+namespace N {
 ShaderSource::ShaderSource(const std::string& name, const std::string& path, const ShaderStage stage, std::string version) :
     Resource(name), Path(path), Version(std::move(version)), Stage(stage) {
     SourceCode = U::FileSystem::ReadFile(path);
@@ -124,4 +124,4 @@ void ShaderSource::PreprocessIncludes(
         pos = code.find(include, pos + 1);
     }
 }
-} // namespace E
+} // namespace N

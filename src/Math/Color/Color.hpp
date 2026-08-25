@@ -1,7 +1,7 @@
 #pragma once
 #include "../Vector/Vector4.hpp"
 
-namespace E::M {
+namespace N::M {
 struct Color {
     inline static const Vector4 White = { 1.0f, 1.0f, 1.0f, 1.0f };
     inline static const Vector4 Black = { 0.0f, 0.0f, 0.0f, 1.0f };
@@ -26,4 +26,4 @@ struct Color {
 
     inline static const Vector4 Transparent = { 0.0f, 0.0f, 0.0f, 0.0f };
 };
-} // namespace E::M
+} // namespace N::M

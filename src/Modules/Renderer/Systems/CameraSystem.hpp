@@ -2,9 +2,9 @@
 #include "Core/OuterCore/ECS/System.hpp"
 #include "Math/Matrix/Matrix4.hpp"
 
-namespace E {
+namespace N {
 struct CameraSystem : System {
     void Update(double dt) override;
     M::Matrix4 GetViewMatrix();
 };
-} // namespace E
+} // namespace N

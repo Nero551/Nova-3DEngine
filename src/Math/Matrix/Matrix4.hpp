@@ -3,7 +3,7 @@
 #include "Math/Vector/Vector4.hpp"
 #include "Matrix3.hpp"
 
-namespace E::M {
+namespace N::M {
 /**
  * @brief 4x4 floating-point matrix.
  *
@@ -224,4 +224,4 @@ struct Matrix4 {
 Matrix4 operator*(float scalar, const Matrix4& mat4);
 
 std::ostream& operator<<(std::ostream& os, const Matrix4& mat4);
-} // namespace E::M
+} // namespace N::M

@@ -1,6 +1,6 @@
 #pragma once
 #include "Complex.hpp"
 
-namespace E::M {
+namespace N::M {
 inline const Complex I{ 0, 1 };
 }

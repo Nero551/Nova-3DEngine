@@ -2,7 +2,7 @@
 
 #include "SystemOwner.hpp"
 
-namespace E {
+namespace N {
 /**
  * @brief Base class for all engine modules.
  * Modules provide engine-specific functionality and participate in the
@@ -106,4 +106,4 @@ private:
 
     void EndFrame(double dt);
 };
-} // namespace E
+} // namespace N

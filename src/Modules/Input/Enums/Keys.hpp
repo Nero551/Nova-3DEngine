@@ -1,7 +1,7 @@
 #pragma once
 #include "OpenGL.hpp"
 
-namespace E {
+namespace N {
 enum class Key {
     // Letters
     A = GLFW_KEY_A,
@@ -148,4 +148,4 @@ enum class Key {
     F24 = GLFW_KEY_F24,
     F25 = GLFW_KEY_F25,
 };
-} // namespace E
+} // namespace N

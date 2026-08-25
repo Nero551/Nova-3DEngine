@@ -2,11 +2,11 @@
 #include "Modules/Renderer/Components/LightComponent.hpp"
 #include "Nova3D.hpp"
 
-namespace E {
+namespace N {
 struct Light : Nova3D {
     void Initialize() override {
         Nova3D::Initialize();
         AddComponents<LightComponent>();
     }
 };
-} // namespace E
+} // namespace N

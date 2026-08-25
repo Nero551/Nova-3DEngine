@@ -4,7 +4,7 @@
 #include "Core/OuterCore/Service.hpp"
 #include "Utilities/Logger.hpp"
 
-namespace E {
+namespace N {
 template <typename T>
 
 /** @brief Concept for all structs inheriting Resource , represents all objects loadable by ResourceManager */
@@ -25,7 +25,7 @@ struct ResourceManager : Service {
      */
     template <ResourceType T, typename... Args> T& Load(const std::string& name, Args&&... args) {
         if (Resources.contains(name)) {
-            // E::U::Logger::Warning("Resource: " + name + " Already Loaded.");
+            // N::U::Logger::Warning("Resource: " + name + " Already Loaded.");
             return static_cast<T&>(*Resources.at(name));
         }
 
@@ -51,4 +51,4 @@ struct ResourceManager : Service {
 private:
     std::unordered_map<std::string, std::unique_ptr<Resource>> Resources;
 };
-} // namespace E
+} // namespace N

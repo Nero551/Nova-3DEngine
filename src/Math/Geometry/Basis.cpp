@@ -1,6 +1,6 @@
 #include "Basis.hpp"
 
-namespace E::M {
+namespace N::M {
 Matrix4 Basis::GetMatrix() const {
     Matrix4 basisMatrix = Matrix4::Identity;
 
@@ -22,4 +22,4 @@ Matrix4 Basis::GetMatrix() const {
 Matrix4 Basis::GetInverseMatrix() const {
     return GetMatrix().Transpose();
 }
-} // namespace E::M
+} // namespace N::M

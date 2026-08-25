@@ -4,7 +4,7 @@
 #include "../Common/Exponentials.hpp"
 
 
-namespace E::M {
+namespace N::M {
 Quaternion Quaternion::FromQPolar(const QPolar& qPolar) {
     Quaternion result;
     float m = qPolar.Magnitude;
@@ -109,9 +109,7 @@ Vector3 Quaternion::Transform(const Vector3& vec3) const {
 
 float Quaternion::Angle() const {
     Quaternion q = Normalized();
-
-    float imaginaryMagnitude = Sqrt(q.x * q.x + q.y * q.y + q.z * q.z);
-    return std::atan2(imaginaryMagnitude, q.w);
+    return std::acos(q.w);
 }
 
 Vector3 Quaternion::Axis() const {
@@ -283,4 +281,4 @@ std::ostream& operator<<(std::ostream& os, const Quaternion& q) {
 }
 
 Quaternion const Quaternion::Identity = Quaternion(1, 0, 0, 0);
-} // namespace E::M
+} // namespace N::M

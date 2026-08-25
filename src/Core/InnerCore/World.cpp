@@ -10,7 +10,7 @@
 #include "World/Systems/Transform3DSystem.hpp"
 #include "World/experiments/calculus.hpp"
 
-namespace E {
+namespace N {
 World& World::Get() {
     return Engine::Get().World;
 }
@@ -131,4 +131,4 @@ void World::Render() {
         system->Render();
     }
 }
-} // namespace E
+} // namespace N

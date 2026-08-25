@@ -3,7 +3,7 @@
 
 #include "Utilities/Image/Image.hpp"
 
-namespace E {
+namespace N {
 /**
  * @brief Wrapper around a GLFW window.
  * Owns the underlying GLFW window and provides basic window
@@ -68,4 +68,4 @@ private:
 
     void SetHints();
 };
-} // namespace E
+} // namespace N

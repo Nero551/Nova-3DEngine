@@ -1,7 +1,7 @@
 #include "../Primitives.hpp"
 #include "Core/Services/ResourceManager.hpp"
 
-namespace E {
+namespace N {
 Mesh& Primitives::CreateQuad(const std::string& name) {
     std::vector<Vertex> vertices = {
         { { -0.5f, -0.5f, 0.0f, 1.0f }, { 1, 1, 1, 1 }, { 0, 0 }, { 0, 0, 1 } },
@@ -16,4 +16,4 @@ Mesh& Primitives::CreateQuad(const std::string& name) {
 
     return mesh;
 }
-} // namespace E
+} // namespace N

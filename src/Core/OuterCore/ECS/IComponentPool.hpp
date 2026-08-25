@@ -1,7 +1,7 @@
 #pragma once
 
-namespace E {
+namespace N {
 struct IComponentPool {
     virtual ~IComponentPool() = default;
 };
-} // namespace E
+} // namespace N

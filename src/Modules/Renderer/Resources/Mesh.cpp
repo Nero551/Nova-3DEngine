@@ -2,7 +2,7 @@
 
 #include <OpenGL.hpp>
 
-namespace E {
+namespace N {
 Mesh::Mesh(const std::string& name, const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices) :
     Resource(name), Vertices(vertices), Indices(indices) {
 }
@@ -90,4 +90,4 @@ void Mesh::SetupVertAttrPointers() {
     glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, Normal)));
     glEnableVertexAttribArray(3);
 }
-} // namespace E
+} // namespace N

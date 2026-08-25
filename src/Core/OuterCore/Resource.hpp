@@ -1,6 +1,6 @@
 #pragma once
 
-namespace E {
+namespace N {
 /**
  * @brief Base class for resources managed by ResourceManager.
  *
@@ -23,4 +23,4 @@ struct Resource {
 
     Resource& operator=(Resource&&) = default;
 };
-} // namespace E
+} // namespace N

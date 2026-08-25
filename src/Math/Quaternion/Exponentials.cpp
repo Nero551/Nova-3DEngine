@@ -4,13 +4,15 @@
 #include "Math/Common/Logarithms.hpp"
 #include "Math/Quaternion/Logarithms.hpp"
 
-namespace E::M {
+namespace N::M {
 Quaternion M::Exp(const Quaternion& q) {
     float r = q.Magnitude();
     float theta = q.Angle();
     Vector3 axis = q.Axis();
+
     float magnitude = Exp(r * std::cos(theta));
     float rsin = r * std::sin(theta);
+
     Quaternion result;
     result.w = magnitude * std::cos(rsin);
     result.x = magnitude * axis.x * std::sin(rsin);
@@ -25,15 +27,16 @@ Quaternion Pow(const float x, const Quaternion& q) {
 }
 
 Quaternion Pow(const Quaternion& q, float power) {
-    float rc = Pow(q.Magnitude(), power);
+    float magnitude = Pow(q.Magnitude(), power);
     float theta = q.Angle();
-    float rsin = rc * std::sin(theta * power);
+    Vector3 axis = q.Axis();
+    float sin = std::sin(theta * power);
 
     Quaternion result;
-    result.w = rc * std::cos(theta * power);
-    result.x = q.x * rsin;
-    result.y = q.y * rsin;
-    result.z = q.z * rsin;
+    result.w = magnitude * std::cos(theta * power);
+    result.x = magnitude * axis.x * sin;
+    result.y = magnitude * axis.y * sin;
+    result.z = magnitude * axis.z * sin;
 
     return result;
 }
@@ -45,4 +48,4 @@ Quaternion Pow(const Quaternion& q, const Quaternion& p) {
 Quaternion Sqrt(const Quaternion& q) {
     return Pow(q, 1.0f / 2.0f);
 }
-} // namespace E::M
+} // namespace N::M

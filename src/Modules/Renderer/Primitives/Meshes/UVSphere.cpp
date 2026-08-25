@@ -2,7 +2,7 @@
 #include "Core/Services/ResourceManager.hpp"
 #include "Math/Color/Color.hpp"
 
-namespace E {
+namespace N {
 Mesh& Primitives::CreateUVSphere(const std::string& name, const float radius, const int sectors, const int stacks) {
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
@@ -49,4 +49,4 @@ Mesh& Primitives::CreateUVSphere(const std::string& name, const float radius, co
     auto& mesh = Service::Get<ResourceManager>().Load<Mesh>(name, vertices, indices);
     return mesh;
 }
-} // namespace E
+} // namespace N

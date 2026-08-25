@@ -3,7 +3,7 @@
 #include "Math/Common/Exponentials.hpp"
 #include "Math/Common/Logarithms.hpp"
 
-namespace E::M {
+namespace N::M {
 Complex Pow(float x, const Complex& z) {
     return Exp(Ln(x) * z);
 }
@@ -31,4 +31,4 @@ Complex Exp(const Complex& z) {
     float m = Exp(z.Real);
     return { m * std::cos(z.Imaginary), m * std::sin(z.Imaginary) };
 }
-} // namespace E::M
+} // namespace N::M

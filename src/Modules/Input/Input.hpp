@@ -5,7 +5,7 @@
 #include "Enums/Mouse.hpp"
 #include "Math/Vector/Vector2.hpp"
 
-namespace E {
+namespace N {
 struct Input : Module {
     bool IsKeyHeld(Key key);
 
@@ -59,4 +59,4 @@ protected:
 
     void OnEndFrame(double dt) override;
 };
-} // namespace E
+} // namespace N

@@ -3,7 +3,7 @@
 #include "../Scene.hpp"
 #include "Core/InnerCore/Engine.hpp"
 
-namespace E {
+namespace N {
 std::vector<U::CheckedPtr<Component>> Entity::GetAllComponents() {
     std::vector<U::CheckedPtr<Component>> components;
     for (auto& component : Components | std::views::values) {
@@ -177,4 +177,4 @@ void Entity::RecursiveChildren(std::vector<U::CheckedPtr<Entity>>& entities, con
         RecursiveChildren(entities, child);
     }
 }
-} // namespace E
+} // namespace N

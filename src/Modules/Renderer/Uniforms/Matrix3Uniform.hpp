@@ -3,7 +3,7 @@
 #include "Math/Matrix/Matrix4.hpp"
 #include "OpenGL.hpp"
 
-namespace E {
+namespace N {
 struct Matrix3Uniform : Uniform {
     M::Matrix3 Value;
 
@@ -14,4 +14,4 @@ struct Matrix3Uniform : Uniform {
         glUniformMatrix3fv(location, 1, GL_TRUE, *Value.m);
     }
 };
-} // namespace E
+} // namespace N
