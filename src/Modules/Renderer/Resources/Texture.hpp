@@ -8,7 +8,7 @@ namespace N {
  * @brief Represents an OpenGL 2D texture resource.
  *
  * A Texture owns its underlying OpenGL texture object and releases it
- * when destroyed. GPU resources are created immediately during construction.
+ * when destroyed. GPU resources are created lazily when the texture is first bound.
  */
 struct Texture : Resource {
     U::Image Image;
@@ -27,22 +27,51 @@ struct Texture : Resource {
     /// Releases the underlying OpenGL texture object.
     ~Texture() override;
 
+    /**
+     * @brief Gets the OpenGL texture object ID.
+     * @return OpenGL texture ID, or 0 if the texture has not been loaded.
+     */
     [[nodiscard]] unsigned int GetId() const;
 
+    /**
+     * @brief Releases the current OpenGL texture object.
+     * The texture can be loaded again afterward with Load().
+     */
     void Reload();
+
+    /**
+     * @brief Checks whether the texture has been loaded to the GPU.
+     *
+     * @return true if an OpenGL texture object exists, otherwise false.
+     */
     bool IsLoaded() const;
+
+    /**
+     * @brief Loads the image data into an OpenGL texture object.
+     *
+     * Creates the OpenGL texture, configures its parameters, uploads the
+     * image data, and generates mipmaps.
+     */
     void Load();
 
     /**
      * @brief Binds the texture to a texture unit.
+     *
+     * If the texture has not been loaded, it is loaded automatically.
+     *
      * @param unit Texture unit to bind to.
      */
     void Bind(unsigned int unit);
 
 private:
-    /// Configures texture wrapping and filtering parameters.
+    /**
+     * @brief Configures the texture's wrapping and filtering parameters.
+     *
+     * Must be called while the texture is bound to GL_TEXTURE_2D.
+     */
     void SetParameters() const;
 
+    /// OpenGL texture object ID. Zero indicates that no texture object exists.
     unsigned int Id = 0;
 };
 } // namespace N
