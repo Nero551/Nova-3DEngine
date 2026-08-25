@@ -11,6 +11,8 @@ namespace N {
  * when destroyed. GPU resources are created immediately during construction.
  */
 struct Texture : Resource {
+    U::Image Image;
+
     /**
      * @brief Creates a texture using an Image.
      *
@@ -27,11 +29,15 @@ struct Texture : Resource {
 
     [[nodiscard]] unsigned int GetId() const;
 
+    void Reload();
+    bool IsLoaded() const;
+    void Load();
+
     /**
      * @brief Binds the texture to a texture unit.
      * @param unit Texture unit to bind to.
      */
-    void Bind(unsigned int unit) const;
+    void Bind(unsigned int unit);
 
 private:
     /// Configures texture wrapping and filtering parameters.

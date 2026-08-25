@@ -73,9 +73,17 @@ void calculus::Start() {
 
     auto& cube = World::Get().CreateEntity<MeshInstance3D>();
     cube.GetComponent<MeshComponent>().Mesh = &mesh;
-    // mesh.RenderMode = RenderMode::SolidWireframe;
+    mesh.RenderMode = RenderMode::SolidWireframe;
     cube.GetComponent<MaterialComponent>().Material = &objectMaterial;
     cube.GetComponent<Transform3DComponent>().Position = { 0, 0, 0 };
+
+    U::Image image = { "Assets/icon.png", true };
+    U::Image image2 = { "Assets/Images/ruby.png", true };
+
+    auto& snowflake = resourceManager.Load<Texture>("snowflake", image);
+    objectMaterial.AssignTexture(snowflake, 1);
+    snowflake.Reload();
+    snowflake.Image = image2;
 
     auto& transform = cube.GetComponent<Transform3DComponent>();
 

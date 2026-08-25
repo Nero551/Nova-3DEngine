@@ -47,12 +47,16 @@ void Mesh::Draw() {
     }
 
     else if (RenderMode == RenderMode::SolidWireframe) {
-        // TODO- the lines and solid overlap in depth , fix this by reading depth testing chapter in the book then trying again.
+        // TODO- apparently there is a better way to do this using geometry shaders (search SolidWireframe opengl on yt).
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glDrawElements(static_cast<int>(Topology), Indices.size(), GL_UNSIGNED_INT, nullptr);
 
+        glDepthFunc(GL_ALWAYS);
+
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glDrawElements(static_cast<int>(Topology), Indices.size(), GL_UNSIGNED_INT, nullptr);
+
+        glDepthFunc(GL_LESS);
     }
 }
 

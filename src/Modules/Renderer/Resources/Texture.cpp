@@ -5,7 +5,27 @@
 #include "Utilities/Logger.hpp"
 
 namespace N {
-Texture::Texture(const std::string& name, const U::Image& image) : Resource(name) {
+Texture::Texture(const std::string& name, const U::Image& image) : Resource(name), Image(image) {
+}
+
+Texture::~Texture() {
+    glDeleteTextures(1, &Id);
+}
+
+unsigned int Texture::GetId() const {
+    return Id;
+}
+
+void Texture::Reload() {
+    glDeleteTextures(1, &Id);
+    Id = 0;
+}
+
+bool Texture::IsLoaded() const {
+    return GetId() != 0;
+}
+
+void Texture::Load() {
     glGenTextures(1, &Id);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, Id);
@@ -14,7 +34,7 @@ Texture::Texture(const std::string& name, const U::Image& image) : Resource(name
 
     GLenum format = GL_RED;
 
-    switch (image.Channels) {
+    switch (Image.Channels) {
     case U::Image::ColorChannels::R:
         format = GL_RED;
         break;
@@ -34,12 +54,12 @@ Texture::Texture(const std::string& name, const U::Image& image) : Resource(name
     glTexImage2D(GL_TEXTURE_2D,
         0,
         static_cast<GLint>(format),
-        image.Width,
-        image.Height,
+        Image.Width,
+        Image.Height,
         0,
         format,
         GL_UNSIGNED_BYTE,
-        image.Pixels.data());
+        Image.Pixels.data());
 
     glGenerateMipmap(GL_TEXTURE_2D);
 
@@ -47,15 +67,11 @@ Texture::Texture(const std::string& name, const U::Image& image) : Resource(name
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-Texture::~Texture() {
-    glDeleteTextures(1, &Id);
-}
+void Texture::Bind(const unsigned int unit) {
+    if (!IsLoaded()) {
+        Load();
+    }
 
-unsigned int Texture::GetId() const {
-    return Id;
-}
-
-void Texture::Bind(const unsigned int unit) const {
     glActiveTexture(GL_TEXTURE0 + unit);
     glBindTexture(GL_TEXTURE_2D, Id);
 }

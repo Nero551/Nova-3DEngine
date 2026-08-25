@@ -26,6 +26,7 @@ void Material::AssignTexture(Texture& texture, const unsigned int slot) {
 
 void Material::Use() {
     SetProperties();
+    Stencil.Apply();
     Shader->Use();
 
     for (int slot = 0; slot < MaxCustomTextures; slot++) {

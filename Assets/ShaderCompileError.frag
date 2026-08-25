@@ -138,5 +138,8 @@ vec3 Lighting() {
 
 void main()
 {
-    FragColor = vec4(Lighting(), 1) * MATERIAL.Color
+    float depth = gl_FragCoord.z;
+    float ndc = 2 * depth - 1.0;
+    float
+    FragColor = vec4(ndc, ndc, ndc, 1);
 }

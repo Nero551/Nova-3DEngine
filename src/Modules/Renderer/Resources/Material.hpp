@@ -3,6 +3,7 @@
 #include "Core/OuterCore/Resource.hpp"
 #include "Math/Vector/Vector3.hpp"
 #include "Math/Vector/Vector4.hpp"
+#include "Modules/Renderer/Stencil.hpp"
 #include "Shader.hpp"
 #include "Texture.hpp"
 #include "Utilities/CheckedPtr.hpp"
@@ -39,6 +40,8 @@ struct Material : Resource {
 
     /** Emissive color of the material. */
     M::Vector3 Emission = { 0 };
+
+    Stencil Stencil = false;
 
     /** Specular shininess exponent. */
     float Shininess = 32;

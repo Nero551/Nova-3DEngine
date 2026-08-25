@@ -17,12 +17,13 @@
 namespace N {
 void Renderer::OnStart() {
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_STENCIL_TEST);
     glDepthFunc(GL_LESS);
 }
 
 void Renderer::OnBeginFrame(double dt) {
     glClearColor(0.05, 0.025, 0.05, 1);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
 void Renderer::OnRender() {
