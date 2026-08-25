@@ -53,7 +53,7 @@ static constexpr float step = 0.025;
 static constexpr float xRange = 10;
 static float x = -5;
 
-unsigned int cubeId = 0;
+static unsigned int cubeId = 0;
 
 void calculus::Start() {
     auto& resourceManager = Service::Get<ResourceManager>();
@@ -73,6 +73,7 @@ void calculus::Start() {
 
     auto& cube = World::Get().CreateEntity<MeshInstance3D>();
     cube.GetComponent<MeshComponent>().Mesh = &mesh;
+    // mesh.RenderMode = RenderMode::SolidWireframe;
     cube.GetComponent<MaterialComponent>().Material = &objectMaterial;
     cube.GetComponent<Transform3DComponent>().Position = { 0, 0, 0 };
 
@@ -84,11 +85,11 @@ void calculus::Start() {
     cubeId = cube.Id;
     World::Get().Root->AttachChild(cube);
 
-    auto& cube2 = World::Get().CreateEntity<MeshInstance3D>();
-    cube2.GetComponent<MeshComponent>().Mesh = &mesh;
-    cube2.GetComponent<MaterialComponent>().Material = &objectMaterial;
-    cube2.GetComponent<Transform3DComponent>().Position = { 2, 0, 0 };
-    cube.AttachChild(cube2);
+    // auto& cube2 = World::Get().CreateEntity<MeshInstance3D>();
+    // cube2.GetComponent<MeshComponent>().Mesh = &mesh;
+    // cube2.GetComponent<MaterialComponent>().Material = &objectMaterial;
+    // cube2.GetComponent<Transform3DComponent>().Position = {2, 0, 0};
+    // cube.AttachChild(cube2);
 }
 
 static float elapsed = 0;

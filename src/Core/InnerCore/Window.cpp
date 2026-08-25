@@ -13,6 +13,7 @@ void Window::SetHints() {
     glfwWindowHintString(GLFW_X11_CLASS_NAME, "nova_engine");
     glfwWindowHintString(GLFW_WAYLAND_APP_ID, "nova_engine");
     glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
+    glfwWindowHint(GLFW_DEPTH_BITS, 24);
 }
 
 Window::Window(const int width, const int height, const std::string& title) {

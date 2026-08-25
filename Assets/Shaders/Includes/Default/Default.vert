@@ -5,7 +5,6 @@ layout (location = 3) in vec3 aNormal;
 
 out vec4 vPosition;
 out vec4 vWorldPosition;
-
 out vec4 vColor;
 out vec2 vUV;
 out vec3 vNormal;
