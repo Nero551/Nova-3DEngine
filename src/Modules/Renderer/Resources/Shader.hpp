@@ -47,15 +47,15 @@ struct Shader : Resource {
     bool IsProgramCreated() const;
 
     /**
-     * @brief Queues a uniform for upload.
+     * @brief Queues a uniform value for upload.
      *
      * @tparam T Uniform type derived from @ref Uniform.
-     * @param uniform Uniform to queue.
+     * @param uniform Uniform value to queue.
      *
-     * @note Queued uniforms are uploaded every time the shader is used.
+     * @note The uniform is uploaded the next time the shader is used.
      */
     template <UniformType T> void SetUniform(const T& uniform) {
-        PendingUniforms[GetUniformLocation(uniform.Name)] = std::make_unique<T>(uniform);
+        PendingUniforms[uniform.Name] = std::make_unique<T>(uniform);
     }
 
     void AssignSource(ShaderSource& source);
@@ -73,11 +73,11 @@ private:
     std::unordered_map<std::string, int> UniformLocations;
 
     /**
-     * @brief Uniforms waiting to be uploaded to the GPU.
-     * Uniforms are stored by their OpenGL uniform location until
-     * @ref UploadUniforms() is called.
+     * @brief Uniform values waiting to be uploaded to the GPU.
+     * Uniforms are stored by name and resolved to OpenGL locations
+     * when they are uploaded.
      */
-    std::unordered_map<int, std::unique_ptr<Uniform>> PendingUniforms;
+    std::unordered_map<std::string, std::unique_ptr<Uniform>> PendingUniforms;
 
     std::vector<U::CheckedPtr<ShaderSource>> Sources;
 

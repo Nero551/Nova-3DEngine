@@ -100,8 +100,8 @@ int Shader::GetUniformLocation(const std::string& name) {
 }
 
 void Shader::UploadUniforms() {
-    for (auto& [location, uniform] : PendingUniforms) {
-        uniform->Upload(location);
+    for (auto& [uniformName, uniform] : PendingUniforms) {
+        uniform->Upload(GetUniformLocation(uniformName));
     }
 }
 } // namespace N

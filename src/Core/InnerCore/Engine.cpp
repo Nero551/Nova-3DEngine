@@ -22,6 +22,7 @@ Engine& Engine::Get() {
 }
 
 void Engine::Run() {
+    LastFrame = glfwGetTime();
     double accumulator = 0;
     Running = true;
 
@@ -98,25 +99,24 @@ void Engine::Stop() {
 }
 
 void Engine::BeginFrame() {
-    Time = glfwGetTime();
+    const double currentTime = glfwGetTime();
+    DeltaTime = currentTime - LastFrame;
+    LastFrame = currentTime;
+    Time = currentTime;
+
     Window.PollEvents();
 
     World.BeginFrame(DeltaTime);
-    for (auto& module : Modules | std::views::values) {
-        module->BeginFrame(DeltaTime);
-    }
 
-    for (auto& service : Service::GetAll()) {
+    for (auto& module : Modules | std::views::values)
+        module->BeginFrame(DeltaTime);
+
+    for (auto& service : Service::GetAll())
         service->BeginFrame(DeltaTime);
-    }
 }
 
 void Engine::EndFrame() {
     Window.SwapBuffers();
-
-    const double currentFrame = Time;
-    DeltaTime = currentFrame - LastFrame;
-    LastFrame = currentFrame;
 
     World.EndFrame(DeltaTime);
     for (auto& module : Modules | std::views::values) {

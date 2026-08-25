@@ -8,10 +8,10 @@ struct System {
     virtual void Start() {
     }
 
-    virtual void Update(double dt) {
+    virtual void FixedUpdate(double dt) {
     }
 
-    virtual void FixedUpdate(double fdt) {
+    virtual void Update(double fdt) {
     }
 
     virtual void Stop() {

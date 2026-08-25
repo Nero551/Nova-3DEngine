@@ -6,7 +6,7 @@ namespace N {
 struct calculus : System {
     void Start() override;
 
-    void Update(double dt) override;
+    void FixedUpdate(double dt) override;
 
 private:
     void TwoDimensionalProjection(float increase);

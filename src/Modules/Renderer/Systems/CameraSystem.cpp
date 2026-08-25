@@ -7,7 +7,7 @@
 #include "World/Components/Transform3DComponent.hpp"
 
 namespace N {
-void CameraSystem::Update(const double dt) {
+void CameraSystem::FixedUpdate(const double fdt) {
     {
         auto& input = Engine::Get().GetModule<Input>();
         auto& camera = World::Get().ActiveCamera;
@@ -32,7 +32,7 @@ void CameraSystem::Update(const double dt) {
             transform.Rotation = M::Quaternion::FromEulerXYZ({ cameraComponent.Pitch, cameraComponent.Yaw, 0 });
         }
 
-        const float speed = cameraComponent.Speed * static_cast<float>(dt);
+        const float speed = cameraComponent.Speed * static_cast<float>(fdt);
 
         if (input.IsKeyHeld(Key::W)) {
             transform.Position += speed * transform.GetForward();

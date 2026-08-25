@@ -5,7 +5,7 @@
 #include "World/Components/Transform3DComponent.hpp"
 
 namespace N {
-void Transform3DSystem::Update(double dt) {
+void Transform3DSystem::FixedUpdate(double fdt) {
     for (auto& entity : World::Get().Root->GetDescendants()) {
         if (!entity->HasComponent<Transform3DComponent>()) {
             continue;

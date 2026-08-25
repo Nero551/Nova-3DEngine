@@ -44,5 +44,6 @@ private:
     M::Quaternion GlobalRotation = M::Quaternion::Identity;
     M::Vector3 GlobalScale = M::Vector3::One;
     friend struct Transform3DSystem;
+    friend struct Renderer;
 };
 } // namespace N
