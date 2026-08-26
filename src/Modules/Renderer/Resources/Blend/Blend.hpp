@@ -9,7 +9,7 @@ namespace N {
  * @brief Controls color blending for rendered fragments.
  *
  * Blending combines the fragment's output color with the color already
- * stored in the framebuffer using configurable source and destination
+ * stored in the color buffer using configurable source and destination
  * factors and blend equations.
  */
 struct Blend {

@@ -35,6 +35,14 @@ void Mesh::Generate() {
 void Mesh::Draw() {
     Generate();
 
+    if (CullMode == CullMode::None) {
+        glDisable(GL_CULL_FACE);
+    }
+    else {
+        glEnable(GL_CULL_FACE);
+        glCullFace(static_cast<GLenum>(CullMode));
+    }
+
     glBindVertexArray(Id);
     if (RenderMode == RenderMode::Solid) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

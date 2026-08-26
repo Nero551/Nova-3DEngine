@@ -19,6 +19,8 @@ void Renderer::OnStart() {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_STENCIL_TEST);
     glEnable(GL_BLEND);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_FRONT);
 }
 
 void Renderer::OnBeginFrame(double dt) {

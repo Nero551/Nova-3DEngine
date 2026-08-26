@@ -15,13 +15,15 @@ namespace N {
  * @brief Represents the rendering properties and textures of a surface.
  *
  * A Material defines the shader, color properties, lighting properties,
- * and textures used when rendering an object. It also supports a fixed
- * number of custom texture slots.
+ * stencil, blending, depth and textures used when rendering an object.
+ * It also supports a fixed number of custom texture slots.
  *
  * A default white texture is assigned to the standard material maps when
  * the material is created.
  */
 struct Material : Resource {
+    // TODO- combine this custom textures thing with the maps , somehow.
+
     /** Maximum number of custom textures that can be assigned to a material. */
     static constexpr int MaxCustomTextures = 8;
 
@@ -43,8 +45,13 @@ struct Material : Resource {
     /** Emissive color of the material. */
     M::Vector3 Emission = { 0 };
 
+    /** Stencil testing and stencil buffer operations used by the material. */
     Stencil Stencil = true;
+
+    /** Depth testing and depth buffer writes used by the material. */
     Depth Depth = true;
+
+    /** Color blending between the material's fragments and the color buffer. */
     Blend Blend = false;
 
     /** Specular shininess exponent. */
@@ -89,8 +96,8 @@ protected:
     std::array<U::CheckedPtr<Texture>, MaxCustomTextures> CustomTextures = {};
 
     /**
-     * @brief Uploads the material's properties and standard textures.
-     * Called by Use() after the material's shader has been activated.
+     * @brief sets the material's properties and standard textures.
+     * Called by Use() before the material's shader has been activated.
      */
     void SetProperties() const;
 };

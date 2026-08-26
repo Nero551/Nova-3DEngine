@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/OuterCore/Resource.hpp"
+#include "CullMode.hpp"
 #include "RenderMode.hpp"
 #include "Topology.hpp"
 #include "Vertex.hpp"
@@ -19,6 +20,8 @@ struct Mesh : Resource {
 
     /** Primitive topology used to interpret the mesh indices. */
     Topology Topology = Topology::Triangles;
+
+    CullMode CullMode = CullMode::Front;
 
     /** CPU-side vertex data used to generate the GPU resources. */
     std::vector<Vertex> Vertices;

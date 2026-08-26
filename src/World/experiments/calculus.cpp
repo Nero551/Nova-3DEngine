@@ -86,6 +86,7 @@ void calculus::Start() {
     snowflake.Reload();
     snowflake.Image = image2;
 
+    mesh.RenderMode = RenderMode::Wireframe;
     auto& transform = cube.GetComponent<Transform3DComponent>();
     cubeId = cube.Id;
     World::Get().Root->AttachChild(cube);
