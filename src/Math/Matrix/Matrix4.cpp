@@ -339,8 +339,8 @@ Matrix4 Matrix4::LookAt(const Vector3& pos, const Vector3& target, const Vector3
     trans = trans.Translate(-pos);
 
     Vector3 forward = (target - pos).Normalized();
-    Vector3 right = up.Cross(forward).Normalized();
-    Vector3 upCorrect = forward.Cross(right);
+    Vector3 right = forward.Cross(up).Normalized();
+    Vector3 upCorrect = right.Cross(forward);
 
     Basis basis(right, upCorrect, -forward);
     return basis.GetInverseMatrix() * trans;

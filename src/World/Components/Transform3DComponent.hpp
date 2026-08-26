@@ -26,11 +26,11 @@ struct Transform3DComponent : Component {
     }
 
     [[nodiscard]] M::Vector3 GetRight() const {
-        return M::Vector3::Up.Cross(GetForward()).Normalized();
+        return GlobalRotation.Transform({ 1, 0, 0 });
     }
 
     [[nodiscard]] M::Vector3 GetUp() const {
-        return GetForward().Cross(GetRight()).Normalized();
+        return GlobalRotation.Transform({ 0, 1, 0 });
     }
 
     [[nodiscard]] M::Vector3 GetForward() const {

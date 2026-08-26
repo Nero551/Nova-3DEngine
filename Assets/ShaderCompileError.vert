@@ -6,7 +6,6 @@ layout (location = 3) in vec3 aNormal;
 
 out vec4 vPosition;
 out vec4 vWorldPosition;
-
 out vec4 vColor;
 out vec2 vUV;
 out vec3 vNormal;
@@ -23,7 +22,7 @@ void DefaultVertex()
 {
     vNormal = normalize(NORMAL_MATRIX * aNormal);
     vColor = aColor;
-    vPosition = PROJECTION_MATRIX * VIEW_MATRIX * MODEL_MATRIX * aPosition;
+    vPosition = MODEL_MATRIX * VIEW_MATRIX * PROJECTION_MATRIX aPosition;
     vWorldPosition = MODEL_MATRIX * aPosition;
     vUV = aUV;
 }

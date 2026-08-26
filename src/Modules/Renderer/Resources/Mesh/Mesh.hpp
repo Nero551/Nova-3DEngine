@@ -2,6 +2,7 @@
 
 #include "Core/OuterCore/Resource.hpp"
 #include "CullMode.hpp"
+#include "FrontFace.hpp"
 #include "RenderMode.hpp"
 #include "Topology.hpp"
 #include "Vertex.hpp"
@@ -23,10 +24,15 @@ struct Mesh : Resource {
 
     /**
      * @brief Face culling mode used when drawing the mesh.
-     * Determines whether front-facing, back-facing, or both types of faces
-     * are discarded during rasterization.
+     * Determines which faces are discarded during rasterization.
      */
-    CullMode CullMode = CullMode::Front;
+    CullMode CullMode = CullMode::Back;
+
+    /**
+     * @brief Winding order considered front-facing.
+     * Determines how OpenGL identifies front-facing and back-facing faces.
+     */
+    FrontFace FrontFace = FrontFace::CounterClockwise;
 
     /** CPU-side vertex data used to generate the GPU resources. */
     std::vector<Vertex> Vertices;
@@ -52,18 +58,23 @@ struct Mesh : Resource {
      */
     [[nodiscard]] unsigned int GetId() const;
 
+    /** @return Whether the mesh's OpenGL resources have been generated. */
+    bool IsGenerated() const;
+
     /**
      * @brief Generates the OpenGL resources required to render the mesh.
-     * Creates the vertex array, vertex buffer, element buffer, and vertex attribute
-     * configuration from the mesh's stored vertices and indices data.
+     *
+     * Creates the VAO, VBO, EBO, and vertex attribute configuration from
+     * the mesh's stored vertex and index data.
      */
-    bool IsGenerated() const;
     void Generate();
 
     /**
-     * @brief Enables the configured face culling mode and Draws the mesh using its configured render mode and topology.
+     * @brief Draws the mesh using its configured rendering state.
      *
-     * Generates the OpenGL resources first if they have not yet been created.
+     * Applies the culling mode, front-face winding, render mode, and
+     * topology before issuing the draw call. Generates the OpenGL
+     * resources first if they have not yet been created.
      */
     void Draw();
 
@@ -76,6 +87,17 @@ private:
 
     /** OpenGL element buffer object ID. */
     unsigned int EBO = 0;
+
+    /** @brief Just runs glDrawElements for the mesh */
+    void DrawElements() const;
+
+    /**
+     * @brief Applies the mesh's face culling configuration.
+     *
+     * Configures the front-face winding and enables or disables face
+     * culling according to the mesh's CullMode and FrontFace settings.
+     */
+    void ApplyCulling() const;
 
     /** Creates and binds the vertex array object. */
     void CreateVAO();

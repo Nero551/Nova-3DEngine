@@ -20,7 +20,7 @@ void CameraSystem::FixedUpdate(const double fdt) {
             cameraComponent.Speed += input.GetScrollDelta().y / 3;
             cameraComponent.Speed = std::clamp(cameraComponent.Speed, 1.0f, 50.0f);
 
-            const float xOffset = M::Rad(input.GetMouseDelta().x * cameraComponent.Sensitivity);
+            const float xOffset = M::Rad(-input.GetMouseDelta().x * cameraComponent.Sensitivity);
             const float yOffset = M::Rad(-input.GetMouseDelta().y * cameraComponent.Sensitivity);
 
             const float maxPitch = M::Rad(89.9);

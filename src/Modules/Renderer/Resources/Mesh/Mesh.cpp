@@ -35,6 +35,36 @@ void Mesh::Generate() {
 void Mesh::Draw() {
     Generate();
 
+    ApplyCulling();
+    glBindVertexArray(Id);
+    if (RenderMode == RenderMode::Solid) {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        DrawElements();
+    }
+
+    else if (RenderMode == RenderMode::Wireframe) {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        DrawElements();
+    }
+
+    else if (RenderMode == RenderMode::SolidWireframe) {
+        // TODO- apparently there is a better way to do this using geometry shaders (search SolidWireframe opengl on yt).
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        DrawElements();
+
+        glDepthFunc(GL_ALWAYS);
+
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        DrawElements();
+
+        glDepthFunc(GL_LESS);
+    }
+    glBindVertexArray(0);
+}
+
+void Mesh::ApplyCulling() const {
+    glFrontFace(static_cast<GLenum>(FrontFace));
+
     if (CullMode == CullMode::None) {
         glDisable(GL_CULL_FACE);
     }
@@ -42,30 +72,10 @@ void Mesh::Draw() {
         glEnable(GL_CULL_FACE);
         glCullFace(static_cast<GLenum>(CullMode));
     }
+}
 
-    glBindVertexArray(Id);
-    if (RenderMode == RenderMode::Solid) {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        glDrawElements(static_cast<int>(Topology), Indices.size(), GL_UNSIGNED_INT, nullptr);
-    }
-
-    else if (RenderMode == RenderMode::Wireframe) {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        glDrawElements(static_cast<int>(Topology), Indices.size(), GL_UNSIGNED_INT, nullptr);
-    }
-
-    else if (RenderMode == RenderMode::SolidWireframe) {
-        // TODO- apparently there is a better way to do this using geometry shaders (search SolidWireframe opengl on yt).
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        glDrawElements(static_cast<int>(Topology), Indices.size(), GL_UNSIGNED_INT, nullptr);
-
-        glDepthFunc(GL_ALWAYS);
-
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        glDrawElements(static_cast<int>(Topology), Indices.size(), GL_UNSIGNED_INT, nullptr);
-
-        glDepthFunc(GL_LESS);
-    }
+void Mesh::DrawElements() const {
+    glDrawElements(static_cast<GLenum>(Topology), static_cast<GLsizei>(Indices.size()), GL_UNSIGNED_INT, nullptr);
 }
 
 void Mesh::CreateVAO() {
