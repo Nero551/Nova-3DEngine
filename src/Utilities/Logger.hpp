@@ -7,25 +7,25 @@ struct Logger {
     }
 
     template <typename... Args> static void Info(const Args&... args) {
-        std::cout << Green << "[INFO] " << Reset;
+        std::cout << Green << "ℹ️ [INFO] " << Reset;
         (..., (std::cout << args));
         std::cout << '\n';
     }
 
     template <typename... Args> static void Warning(const Args&... args) {
-        std::cout << Yellow << "[WARNING] " << Reset;
+        std::cout << Yellow << "⚠️ [WARNING] " << Reset;
         (..., (std::cout << args));
-        std::cout << "\n";
+        std::cout << '\n';
     }
 
     template <typename... Args> static void Error(const Args&... args) {
-        std::cout << Red << "[ERROR] " << Reset;
+        std::cout << Red << "❌ [ERROR] " << Reset;
         (..., (std::cout << args));
         std::cout << '\n';
     }
 
     template <typename... Args> [[noreturn]] static void Fatal(const Args&... args) {
-        std::cout << Red << "[FATAL] " << Reset;
+        std::cout << Red << "💀 [FATAL] " << Reset;
         (..., (std::cout << args));
         std::cout << '\n';
         throw std::runtime_error("");

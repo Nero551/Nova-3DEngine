@@ -13,6 +13,10 @@ namespace N {
  * when destroyed. GPU resources are created lazily when the texture is first bound.
  */
 struct Texture : Resource {
+    // TODO- should texture have an enum for its type? ex: Cubemap , 2D , etc. dont know yet
+    // TODO- appears there are other formats other than the color channels, specifically for framebuffer use. gotta figure that
+    // out
+
     /** @brief Image data used to create and upload the texture. */
     U::Image Image;
 

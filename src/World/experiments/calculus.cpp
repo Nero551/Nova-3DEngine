@@ -124,9 +124,6 @@ void calculus::Start() {
 
     U::Image grassImage = { "Assets/Images/semiTransparentWindow.png", true };
     auto& windowTexture = resourceManager.Load<Texture>("windowTexture", grassImage);
-    windowTexture.WrapS = TextureWrap::ClampToEdge;
-    windowTexture.WrapT = TextureWrap::ClampToEdge;
-
     windowMaterial.AssignTexture(windowTexture, 1);
 
     auto& window = World::Get().CreateEntity<MeshInstance3D>();
@@ -134,9 +131,11 @@ void calculus::Start() {
     window.GetComponent<MeshComponent>().Mesh = &quad;
     World::Get().Root->AttachChild(window);
 
+    windowTexture.WrapS = TextureWrap::ClampToEdge;
+    windowTexture.WrapT = TextureWrap::ClampToEdge;
     windowMaterial.Blend.Enabled = true;
-
     windowMaterial.Depth.Function = DepthFunction::Less;
+    quad.CullMode = CullMode::None;
 }
 
 static float elapsed = 0;
