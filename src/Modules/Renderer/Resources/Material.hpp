@@ -42,7 +42,7 @@ struct Material : Resource {
     /** Emissive color of the material. */
     M::Vector3 Emission = { 0 };
 
-    Stencil Stencil = false;
+    Stencil Stencil = true;
     Depth Depth = true;
 
     /** Specular shininess exponent. */

@@ -86,18 +86,32 @@ void calculus::Start() {
     snowflake.Image = image2;
 
     auto& transform = cube.GetComponent<Transform3DComponent>();
-
-    // U::Logger::Info(transform.Position);
-    // U::Logger::Info(transform.Rotation);
-    // U::Logger::Info(transform.Scale);
     cubeId = cube.Id;
     World::Get().Root->AttachChild(cube);
 
-    // auto& cube2 = World::Get().CreateEntity<MeshInstance3D>();
-    // cube2.GetComponent<MeshComponent>().Mesh = &mesh;
-    // cube2.GetComponent<MaterialComponent>().Material = &objectMaterial;
-    // cube2.GetComponent<Transform3DComponent>().Position = {2, 0, 0};
-    // cube.AttachChild(cube2);
+    auto& outlineShader = resourceManager.Load<Shader>("outlineShader");
+    outlineShader.AssignSource(
+        resourceManager.Load<ShaderSource>("outlineFrag", "Assets/Shaders/outline.frag", ShaderStage::Fragment));
+    outlineShader.AssignSource(
+        resourceManager.Load<ShaderSource>("objectVert", "Assets/Shaders/shader.vert", ShaderStage::Vertex));
+
+    auto& outlineMaterial = resourceManager.Load<Material>("outlineMaterial");
+    outlineMaterial.Shader = &outlineShader;
+    outlineMaterial.Color = { 1, 0, 0, 1 };
+
+    objectMaterial.Stencil.SDPass = StencilAction::Replace;
+
+    outlineMaterial.Stencil.SDPass = StencilAction::Replace;
+    outlineMaterial.Stencil.Function = StencilFunction::NotEqual;
+    outlineMaterial.Depth.Enabled = false;
+
+
+    auto& cube2 = World::Get().CreateEntity<MeshInstance3D>();
+    cube2.GetComponent<MeshComponent>().Mesh = &mesh;
+    cube2.GetComponent<MaterialComponent>().Material = &outlineMaterial;
+    cube2.GetComponent<Transform3DComponent>().Position = { 0, 0, 0 };
+    cube2.GetComponent<Transform3DComponent>().Scale = { 1.05, 1.05, 1.05 };
+    cube.AttachChild(cube2);
 }
 
 static float elapsed = 0;
