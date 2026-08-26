@@ -8,7 +8,7 @@ namespace N {
  */
 struct Stencil {
     /** @brief Whether stencil testing is enabled. */
-    bool Enabled = false;
+    bool Enabled;
 
     /** @brief Reference value used by the stencil comparison function. */
     int Ref = 1;

@@ -6,6 +6,7 @@
 #include "Depth/Depth.hpp"
 #include "Math/Vector/Vector3.hpp"
 #include "Math/Vector/Vector4.hpp"
+#include "Modules/Renderer/Resources/Blend/Blend.hpp"
 #include "Stencil/Stencil.hpp"
 #include "Utilities/CheckedPtr.hpp"
 
@@ -44,6 +45,7 @@ struct Material : Resource {
 
     Stencil Stencil = true;
     Depth Depth = true;
+    Blend Blend = true;
 
     /** Specular shininess exponent. */
     float Shininess = 32;

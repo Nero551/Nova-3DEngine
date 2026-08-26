@@ -29,6 +29,7 @@ void Material::Use() {
 
     Depth.Apply();
     Stencil.Apply();
+    Blend.Apply();
 
     Shader->Use();
 

@@ -7,7 +7,7 @@ namespace N {
  */
 struct Depth {
     /** @brief Whether depth testing is enabled. */
-    bool Enabled = true;
+    bool Enabled;
 
     /** @brief Whether successful depth-tested fragments write to the depth buffer. */
     bool Write = true;

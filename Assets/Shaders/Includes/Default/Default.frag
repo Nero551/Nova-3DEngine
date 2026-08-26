@@ -24,3 +24,8 @@ struct Material {
 };
 
 uniform Material MATERIAL;
+
+void CheckAlpha(){
+    if (FragColor.a < 0.1)
+    discard;
+}
