@@ -18,7 +18,6 @@ namespace N {
 void Renderer::OnStart() {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_STENCIL_TEST);
-    glDepthFunc(GL_LESS);
 }
 
 void Renderer::OnBeginFrame(double dt) {

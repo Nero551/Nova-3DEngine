@@ -19,6 +19,7 @@ void Window::SetHints() {
 
 Window::Window(const int width, const int height, const std::string& title) {
     SetHints();
+
     GLFWwindow* glfwWindow = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
     if (!glfwWindow) {
         U::Logger::Fatal("Failed To Create Window");

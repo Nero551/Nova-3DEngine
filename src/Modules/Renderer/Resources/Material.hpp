@@ -3,6 +3,7 @@
 #include "Core/OuterCore/Resource.hpp"
 #include "Math/Vector/Vector3.hpp"
 #include "Math/Vector/Vector4.hpp"
+#include "Modules/Renderer/Depth.hpp"
 #include "Modules/Renderer/Stencil.hpp"
 #include "Shader.hpp"
 #include "Texture.hpp"
@@ -42,6 +43,7 @@ struct Material : Resource {
     M::Vector3 Emission = { 0 };
 
     Stencil Stencil = false;
+    Depth Depth = true;
 
     /** Specular shininess exponent. */
     float Shininess = 32;
