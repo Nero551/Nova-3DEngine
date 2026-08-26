@@ -3,9 +3,14 @@
 #include "StencilFunction.hpp"
 
 namespace N {
+/**
+ * @brief Controls stencil testing and stencil buffer operations.
+ */
 struct Stencil {
+    /** @brief Whether stencil testing is enabled. */
     bool Enabled = false;
 
+    /** @brief Reference value used by the stencil comparison function. */
     int Ref = 1;
 
     /** @brief Bit mask applied to stencil values when comparing against Ref. */
@@ -29,19 +34,7 @@ struct Stencil {
     Stencil(const bool enabled) : Enabled(enabled) {
     }
 
-    void Apply() {
-        if (!Enabled) {
-            glDisable(GL_STENCIL_TEST);
-            return;
-        }
-
-        if (!glIsEnabled(GL_STENCIL_TEST)) {
-            glEnable(GL_STENCIL_TEST);
-        }
-
-        glStencilOp(static_cast<GLenum>(SFail), static_cast<GLenum>(DFail), static_cast<GLenum>(SDPass));
-        glStencilMask(WriteMask);
-        glStencilFunc(static_cast<GLenum>(Function), Ref, FunctionMask);
-    }
+    /** @brief Applies the configured stencil state to the OpenGL context. */
+    void Apply();
 };
 } // namespace N

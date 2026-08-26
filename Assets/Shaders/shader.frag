@@ -1,9 +1,11 @@
 #include "Includes/Lighting/Lighting.frag"
 
 
-uniform sampler2D snowflake;
+uniform sampler2D grassTexture;
 
 void main()
 {
-    FragColor = vec4(Lighting(), 1) * MATERIAL.Color + texture(snowflake, vUV);
+    FragColor = texture(grassTexture, vUV);
+    if (FragColor.a < 0.1)
+    discard;
 }

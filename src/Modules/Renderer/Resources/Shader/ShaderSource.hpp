@@ -4,7 +4,7 @@
 #include <unordered_set>
 
 #include "Core/OuterCore/Resource.hpp"
-#include "Modules/Renderer/Material/Shader/ShaderStage.hpp"
+#include "ShaderStage.hpp"
 
 namespace N {
 /**

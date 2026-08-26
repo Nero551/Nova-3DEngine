@@ -3,9 +3,9 @@
 #include "../../../World/Components/Transform3DComponent.hpp"
 #include "../Components/LightComponent.hpp"
 #include "../Components/MaterialComponent.hpp"
-#include "../Material/Shader/Uniforms/FloatUniform.hpp"
-#include "../Material/Shader/Uniforms/IntUniform.hpp"
-#include "../Material/Shader/Uniforms/Vector3Uniform.hpp"
+#include "../Resources/Shader/Uniforms/FloatUniform.hpp"
+#include "../Resources/Shader/Uniforms/IntUniform.hpp"
+#include "../Resources/Shader/Uniforms/Vector3Uniform.hpp"
 #include "World/Events/EntityCreated.hpp"
 #include "World/Events/EntityDestroyed.hpp"
 

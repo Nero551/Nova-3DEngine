@@ -1,6 +1,6 @@
 #pragma once
-#include "../Material/Texture.hpp"
-#include "../Mesh/Mesh.hpp"
+#include "../Resources/Mesh/Mesh.hpp"
+#include "../Resources/Texture/Texture.hpp"
 
 namespace N {
 namespace Primitives {

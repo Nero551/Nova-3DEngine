@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Core/OuterCore/Resource.hpp"
+#include "Modules/Renderer/Resources/Shader/TextureFIlter.hpp"
+#include "TextureWrap.hpp"
 #include "Utilities/Image/Image.hpp"
 
 namespace N {
@@ -11,7 +13,20 @@ namespace N {
  * when destroyed. GPU resources are created lazily when the texture is first bound.
  */
 struct Texture : Resource {
+    /** @brief Image data used to create and upload the texture. */
     U::Image Image;
+
+    /** @brief Wrapping mode applied to texture coordinates along the S axis. */
+    TextureWrap WrapS = TextureWrap::MirroredRepeat;
+
+    /** @brief Wrapping mode applied to texture coordinates along the T axis. */
+    TextureWrap WrapT = TextureWrap::MirroredRepeat;
+
+    /** @brief Filtering mode used when the texture is minified. */
+    TextureFilter MinFilter = TextureFilter::NearestMipmapLinear;
+
+    /** @brief Filtering mode used when the texture is magnified. */
+    TextureFilter MagFilter = TextureFilter::Linear;
 
     /**
      * @brief Creates a texture using an Image.

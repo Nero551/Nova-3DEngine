@@ -3,7 +3,7 @@
 #include "../../Modules/Renderer/Primitives/Primitives.hpp"
 #include "AssimpScene.hpp"
 #include "Core/Services/ResourceManager.hpp"
-#include "Modules/Renderer/Material/Shader/Uniforms/Vector3Uniform.hpp"
+#include "Modules/Renderer/Resources/Shader/Uniforms/Vector3Uniform.hpp"
 #include "World/Novas/Light.hpp"
 #include "World/Novas/MeshInstance3D.hpp"
 

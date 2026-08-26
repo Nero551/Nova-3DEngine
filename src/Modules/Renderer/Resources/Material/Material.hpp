@@ -1,12 +1,12 @@
 #pragma once
 
+#include "../Shader/Shader.hpp"
+#include "../Texture/Texture.hpp"
 #include "Core/OuterCore/Resource.hpp"
+#include "Depth/Depth.hpp"
 #include "Math/Vector/Vector3.hpp"
 #include "Math/Vector/Vector4.hpp"
-#include "Modules/Renderer/Material/Depth/Depth.hpp"
-#include "Modules/Renderer/Material/Stencil/Stencil.hpp"
-#include "Shader/Shader.hpp"
-#include "Texture.hpp"
+#include "Stencil/Stencil.hpp"
 #include "Utilities/CheckedPtr.hpp"
 
 namespace N {
