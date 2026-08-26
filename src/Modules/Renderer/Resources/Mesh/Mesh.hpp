@@ -21,6 +21,11 @@ struct Mesh : Resource {
     /** Primitive topology used to interpret the mesh indices. */
     Topology Topology = Topology::Triangles;
 
+    /**
+     * @brief Face culling mode used when drawing the mesh.
+     * Determines whether front-facing, back-facing, or both types of faces
+     * are discarded during rasterization.
+     */
     CullMode CullMode = CullMode::Front;
 
     /** CPU-side vertex data used to generate the GPU resources. */
@@ -56,7 +61,8 @@ struct Mesh : Resource {
     void Generate();
 
     /**
-     * @brief Draws the mesh using its configured render mode and topology.
+     * @brief Enables the configured face culling mode and Draws the mesh using its configured render mode and topology.
+     *
      * Generates the OpenGL resources first if they have not yet been created.
      */
     void Draw();
