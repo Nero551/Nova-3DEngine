@@ -57,38 +57,38 @@ static unsigned int cubeId = 0;
 
 void calculus::Start() {
     auto& resourceManager = Service::Get<ResourceManager>();
-    // auto& mesh = Primitives::CreateCube("mesh");
-    //
-    // auto& objectShader = resourceManager.Load<Shader>("objectShader");
-    //
-    // objectShader.AssignSource(
-    //     resourceManager.Load<ShaderSource>("objectFrag", "Assets/Shaders/shader.frag", ShaderStage::Fragment));
-    // objectShader.AssignSource(
-    //     resourceManager.Load<ShaderSource>("objectVert", "Assets/Shaders/shader.vert", ShaderStage::Vertex));
-    //
-    // // objectShader.HotReload = true;
-    //
-    // auto& objectMaterial = resourceManager.Load<Material>("material");
-    // objectMaterial.Shader = &objectShader;
-    //
-    // auto& cube = World::Get().CreateEntity<MeshInstance3D>();
-    // cube.GetComponent<MeshComponent>().Mesh = &mesh;
-    // // mesh.RenderMode = RenderMode::SolidWireframe;
-    // cube.GetComponent<MaterialComponent>().Material = &objectMaterial;
-    // cube.GetComponent<Transform3DComponent>().Position = {0, 0, 0};
-    //
-    //
-    // U::Image image = {"Assets/icon.png", true};
-    // U::Image image2 = {"Assets/Images/ruby.png", true};
-    //
-    // auto& snowflake = resourceManager.Load<Texture>("snowflake", image);
-    // objectMaterial.AssignTexture(snowflake, 1);
-    // snowflake.Reload();
-    // snowflake.Image = image2;
-    //
-    // auto& transform = cube.GetComponent<Transform3DComponent>();
-    // cubeId = cube.Id;
-    // World::Get().Root->AttachChild(cube);
+    auto& mesh = Primitives::CreateCube("mesh");
+
+    auto& objectShader = resourceManager.Load<Shader>("objectShader");
+
+    objectShader.AssignSource(
+        resourceManager.Load<ShaderSource>("objectFrag", "Assets/Shaders/shader.frag", ShaderStage::Fragment));
+    objectShader.AssignSource(
+        resourceManager.Load<ShaderSource>("objectVert", "Assets/Shaders/shader.vert", ShaderStage::Vertex));
+
+    // objectShader.HotReload = true;
+
+    auto& objectMaterial = resourceManager.Load<Material>("material");
+    objectMaterial.Shader = &objectShader;
+
+    auto& cube = World::Get().CreateEntity<MeshInstance3D>();
+    cube.GetComponent<MeshComponent>().Mesh = &mesh;
+    // mesh.RenderMode = RenderMode::SolidWireframe;
+    cube.GetComponent<MaterialComponent>().Material = &objectMaterial;
+    cube.GetComponent<Transform3DComponent>().Position = { 0, 0, 3 };
+
+
+    U::Image image = { "Assets/icon.png", true };
+    U::Image image2 = { "Assets/Images/ruby.png", true };
+
+    auto& snowflake = resourceManager.Load<Texture>("snowflake", image);
+    objectMaterial.AssignTexture(snowflake, 1);
+    snowflake.Reload();
+    snowflake.Image = image2;
+
+    auto& transform = cube.GetComponent<Transform3DComponent>();
+    cubeId = cube.Id;
+    World::Get().Root->AttachChild(cube);
     //
     // auto& outlineShader = resourceManager.Load<Shader>("outlineShader");
     // outlineShader.AssignSource(
@@ -111,28 +111,31 @@ void calculus::Start() {
     // cube2.GetComponent<Transform3DComponent>().Scale = {1.05, 1.05, 1.05};
     // cube.AttachChild(cube2);
 
-    auto& grass = World::Get().CreateEntity<MeshInstance3D>();
 
     auto& quad = Primitives::CreateQuad("quad");
-    auto& grassMaterial = resourceManager.Load<Material>("grassMaterial");
-    auto& grassShader = resourceManager.Load<Shader>("grassShader");
-    auto& grassVert = resourceManager.Load<ShaderSource>("grassVert", "Assets/Shaders/shader.vert", ShaderStage::Vertex);
-    auto& grassFrag = resourceManager.Load<ShaderSource>("grassFrag", "Assets/Shaders/shader.frag", ShaderStage::Fragment);
-    grassShader.AssignSource(grassFrag);
-    grassShader.AssignSource(grassVert);
-    grassMaterial.Shader = &grassShader;
+    auto& windowMaterial = resourceManager.Load<Material>("windowMaterial");
+    auto& windowShader = resourceManager.Load<Shader>("windowShader");
+    auto& windowVert = resourceManager.Load<ShaderSource>("windowVert", "Assets/Shaders/shader.vert", ShaderStage::Vertex);
+    auto& windowFrag = resourceManager.Load<ShaderSource>("windowFrag", "Assets/Shaders/window.frag", ShaderStage::Fragment);
+    windowShader.AssignSource(windowFrag);
+    windowShader.AssignSource(windowVert);
+    windowMaterial.Shader = &windowShader;
 
-    U::Image grassImage = { "Assets/Images/grass.png", true };
-    auto& grassTexture = resourceManager.Load<Texture>("grassTexture", grassImage);
-    grassTexture.WrapS = TextureWrap::ClampToEdge;
-    grassTexture.WrapT = TextureWrap::ClampToEdge;
+    U::Image grassImage = { "Assets/Images/semiTransparentWindow.png", true };
+    auto& windowTexture = resourceManager.Load<Texture>("windowTexture", grassImage);
+    windowTexture.WrapS = TextureWrap::ClampToEdge;
+    windowTexture.WrapT = TextureWrap::ClampToEdge;
 
-    grassMaterial.AssignTexture(grassTexture, 1);
+    windowMaterial.AssignTexture(windowTexture, 1);
 
-    grass.GetComponent<MaterialComponent>().Material = &grassMaterial;
-    grass.GetComponent<MeshComponent>().Mesh = &quad;
+    auto& window = World::Get().CreateEntity<MeshInstance3D>();
+    window.GetComponent<MaterialComponent>().Material = &windowMaterial;
+    window.GetComponent<MeshComponent>().Mesh = &quad;
+    World::Get().Root->AttachChild(window);
 
-    World::Get().Root->AttachChild(grass);
+    windowMaterial.Blend.Enabled = true;
+
+    windowMaterial.Depth.Function = DepthFunction::Less;
 }
 
 static float elapsed = 0;

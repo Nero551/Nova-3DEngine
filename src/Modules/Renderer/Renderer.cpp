@@ -22,10 +22,14 @@ void Renderer::OnStart() {
 }
 
 void Renderer::OnBeginFrame(double dt) {
-    glClearColor(0.05, 0.025, 0.05, 1);
+    glClearColor(0.08, 0.05, 0.1, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
+
+// TODO- if there is multiple semi-transparent objects behind each other , depth testing breaks blending.
+//  fix this by classifying render passes by transparency, pairs well with future render batches / instancing.
+//  for ordering semi-transparent object by distance , use a map , it auto sorts.
 void Renderer::OnRender() {
     auto& camera = World::Get().ActiveCamera;
 

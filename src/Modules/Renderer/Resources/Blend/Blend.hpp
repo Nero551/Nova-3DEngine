@@ -1,41 +1,46 @@
 #pragma once
+
 #include "BlendEquation.hpp"
 #include "BlendFactor.hpp"
+#include "Math/Vector/Vector4.hpp"
 
 namespace N {
+/**
+ * @brief Controls color blending for rendered fragments.
+ *
+ * Blending combines the fragment's output color with the color already
+ * stored in the framebuffer using configurable source and destination
+ * factors and blend equations.
+ */
 struct Blend {
+    /** @brief Whether blending is enabled. */
     bool Enabled;
 
+    /** @brief Factor applied to the source RGB color. */
     BlendFactor SourceRGB = BlendFactor::SourceAlpha;
+
+    /** @brief Factor applied to the destination RGB color. */
+    BlendFactor DestinationRGB = BlendFactor::OneMinusSourceAlpha;
+
+    /** @brief Factor applied to the source alpha value. */
     BlendFactor SourceAlpha = BlendFactor::One;
 
-    BlendFactor DestinationRGB = BlendFactor::OneMinusSourceAlpha;
+    /** @brief Factor applied to the destination alpha value. */
     BlendFactor DestinationAlpha = BlendFactor::OneMinusSourceAlpha;
 
+    /** @brief Equation used to combine the source and destination RGB colors. */
     BlendEquation EquationRGB = BlendEquation::Add;
+
+    /** @brief Equation used to combine the source and destination alpha values. */
     BlendEquation EquationAlpha = BlendEquation::Add;
 
-    M::Vector4 ConstantColor;
+    /** @brief Constant color used by blend factors that reference a constant color. */
+    M::Vector4 ConstantColor = { 0, 0, 0, 0 };
 
     Blend(bool enabled) : Enabled(enabled) {
     }
 
-    void Apply() {
-        if (!Enabled) {
-            glDisable(GL_BLEND);
-            return;
-        }
-        if (!glIsEnabled(GL_BLEND)) {
-            glEnable(GL_BLEND);
-        }
-
-        glBlendEquationSeparate(static_cast<GLenum>(EquationRGB), static_cast<GLenum>(EquationAlpha));
-        glBlendColor(ConstantColor.x, ConstantColor.y, ConstantColor.z, ConstantColor.w);
-
-        glBlendFuncSeparate(static_cast<GLenum>(SourceRGB),
-            static_cast<GLenum>(DestinationRGB),
-            static_cast<GLenum>(SourceAlpha),
-            static_cast<GLenum>(DestinationAlpha));
-    }
+    /** @brief Applies the configured blending state to the OpenGL context. */
+    void Apply();
 };
 } // namespace N

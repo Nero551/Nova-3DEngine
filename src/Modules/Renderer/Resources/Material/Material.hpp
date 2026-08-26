@@ -45,7 +45,7 @@ struct Material : Resource {
 
     Stencil Stencil = true;
     Depth Depth = true;
-    Blend Blend = true;
+    Blend Blend = false;
 
     /** Specular shininess exponent. */
     float Shininess = 32;

@@ -26,6 +26,11 @@ struct Material {
 
 uniform Material MATERIAL;
 
+void CheckAlpha(){
+    if (FragColor.a < 0.1)
+    discard;
+}
+
 
 struct Light {
     int Type;
@@ -136,10 +141,10 @@ vec3 Lighting() {
 
 
 
+uniform sampler2D grassTexture;
+
 void main()
 {
-    float depth = gl_FragCoord.z;
-    float ndc = 2 * depth - 1.0;
-    float
-    FragColor = vec4(ndc, ndc, ndc, 1);
+    FragColor = vec4(Lighting, 1) * MATERIAL.Color;
+    CheckAlpha();
 }
