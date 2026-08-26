@@ -39,7 +39,7 @@ struct Transform3DComponent : Component {
 
 private:
     // TODO- this is temporary until i have a proper change detection system
-    // (reflection)
+    //  (reflection)
     M::Vector3 GlobalPosition = M::Vector3::Zero;
     M::Quaternion GlobalRotation = M::Quaternion::Identity;
     M::Vector3 GlobalScale = M::Vector3::One;

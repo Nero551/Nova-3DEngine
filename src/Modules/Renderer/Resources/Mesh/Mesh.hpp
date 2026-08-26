@@ -78,6 +78,14 @@ struct Mesh : Resource {
      */
     void Draw();
 
+    /**
+     * @brief Regenerates the mesh's OpenGL resources.
+     *
+     * Deletes the existing GPU resources and marks the mesh as not
+     * generated so they can be recreated by Generate().
+     */
+    void Regenerate();
+
 private:
     /** OpenGL vertex array object ID. */
     unsigned int Id = 0;
@@ -88,7 +96,7 @@ private:
     /** OpenGL element buffer object ID. */
     unsigned int EBO = 0;
 
-    /** @brief Just runs glDrawElements for the mesh */
+    /** Issues the OpenGL draw call for the mesh's index data. */
     void DrawElements() const;
 
     /**

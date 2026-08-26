@@ -62,6 +62,13 @@ void Mesh::Draw() {
     glBindVertexArray(0);
 }
 
+void Mesh::Regenerate() {
+    glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &EBO);
+    glDeleteVertexArrays(1, &Id);
+    Id = 0;
+}
+
 void Mesh::ApplyCulling() const {
     glFrontFace(static_cast<GLenum>(FrontFace));
 
