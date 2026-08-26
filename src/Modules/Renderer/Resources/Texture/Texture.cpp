@@ -5,11 +5,41 @@
 #include "Utilities/Logger.hpp"
 
 namespace N {
-Texture::Texture(const std::string& name, const U::Image& image) : Resource(name), Image(image) {
+Texture::Texture(const std::string& name) : Resource(name) {
 }
 
 Texture::~Texture() {
     glDeleteTextures(1, &Id);
+}
+
+void Texture::UseImage(const U::Image& image) {
+    Width = image.Width;
+    Height = image.Height;
+    Data = image.Pixels;
+    DataType = TextureDataType::UnsignedByte;
+    Target = TextureTarget::Texture2D;
+    AutoMipmaps = true;
+
+    switch (image.Channels) {
+    case U::Image::ColorChannels::R:
+        Format = TextureFormat::Red;
+        InternalFormat = TextureInternalFormat::R8;
+        break;
+    case U::Image::ColorChannels::RG:
+        Format = TextureFormat::RG;
+        InternalFormat = TextureInternalFormat::RG8;
+        break;
+    case U::Image::ColorChannels::RGB:
+        Format = TextureFormat::RGB;
+        InternalFormat = TextureInternalFormat::RGB8;
+        break;
+    case U::Image::ColorChannels::RGBA:
+        Format = TextureFormat::RGBA;
+        InternalFormat = TextureInternalFormat::RGBA8;
+        break;
+    default:
+        U::Logger::Error("Unsupported Texture Channel Count");
+    }
 }
 
 unsigned int Texture::GetId() const {
@@ -28,43 +58,25 @@ bool Texture::IsLoaded() const {
 void Texture::Load() {
     glGenTextures(1, &Id);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, Id);
-
+    glBindTexture(static_cast<GLenum>(Target), Id);
     SetParameters();
 
-    GLenum format = GL_RED;
+    glTexImage2D(static_cast<GLenum>(Target),
+        0,
+        static_cast<GLint>(InternalFormat),
+        Width,
+        Height,
+        0,
+        static_cast<GLenum>(Format),
+        static_cast<GLenum>(DataType),
+        Data.data());
 
-    switch (Image.Channels) {
-    case U::Image::ColorChannels::R:
-        format = GL_RED;
-        break;
-    case U::Image::ColorChannels::RG:
-        format = GL_RG;
-        break;
-    case U::Image::ColorChannels::RGB:
-        format = GL_RGB;
-        break;
-    case U::Image::ColorChannels::RGBA:
-        format = GL_RGBA;
-        break;
-    default:
-        U::Logger::Error("Unsupported Texture Channel Count");
+    if (AutoMipmaps) {
+        glGenerateMipmap(GL_TEXTURE_2D);
     }
 
-    glTexImage2D(GL_TEXTURE_2D,
-        0,
-        static_cast<GLint>(format),
-        Image.Width,
-        Image.Height,
-        0,
-        format,
-        GL_UNSIGNED_BYTE,
-        Image.Pixels.data());
-
-    glGenerateMipmap(GL_TEXTURE_2D);
-
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, 0);
+    glBindTexture(static_cast<GLenum>(Target), 0);
 }
 
 void Texture::Bind(const unsigned int unit) {
@@ -73,13 +85,13 @@ void Texture::Bind(const unsigned int unit) {
     }
 
     glActiveTexture(GL_TEXTURE0 + unit);
-    glBindTexture(GL_TEXTURE_2D, Id);
+    glBindTexture(static_cast<GLenum>(Target), Id);
 }
 
 void Texture::SetParameters() const {
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, static_cast<GLint>(WrapS));
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, static_cast<GLint>(WrapT));
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(MinFilter));
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(MagFilter));
+    glTexParameteri(static_cast<GLenum>(Target), GL_TEXTURE_WRAP_S, static_cast<GLint>(WrapS));
+    glTexParameteri(static_cast<GLenum>(Target), GL_TEXTURE_WRAP_T, static_cast<GLint>(WrapT));
+    glTexParameteri(static_cast<GLenum>(Target), GL_TEXTURE_MIN_FILTER, static_cast<GLint>(MinFilter));
+    glTexParameteri(static_cast<GLenum>(Target), GL_TEXTURE_MAG_FILTER, static_cast<GLint>(MagFilter));
 }
 } // namespace N

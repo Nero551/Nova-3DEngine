@@ -80,11 +80,17 @@ void calculus::Start() {
 
     U::Image image = { "Assets/icon.png", true };
     U::Image image2 = { "Assets/Images/ruby.png", true };
-
+    // TODO- should texture have an enum for its type? ex: Cubemap , 2D , etc. dont know yet
+    //
+    // TODO- appears there are other formats other than the color channels, specifically for framebuffer use. gotta figure that
+    //  out. could use renderbuffers for those specifically but that limits my API options
+    //  easy fix is to just add a custom constructor specifically for those kinds of textures. probably the best option as well
+    //  could also make the texture not own an image , but have the image transfer and take out all the data into the texture.
+    //  that already happens implicitly , since the Image attribute isn't a pointer nor reference.
     auto& snowflake = resourceManager.Load<Texture>("snowflake", image);
     objectMaterial.AssignTexture(snowflake, 1);
     snowflake.Reload();
-    snowflake.Image = image2;
+    snowflake.UseImage(image2);
 
     // mesh.RenderMode = RenderMode::Wireframe;
     auto& transform = cube.GetComponent<Transform3DComponent>();
