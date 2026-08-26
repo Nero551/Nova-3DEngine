@@ -3,8 +3,8 @@
 #include <glslang/Public/ShaderLang.h>
 #include <string>
 
-#include "Enums/ShaderStage.hpp"
-#include "Resources/ShaderSource.hpp"
+#include "ShaderSource.hpp"
+#include "ShaderStage.hpp"
 
 namespace N {
 /**

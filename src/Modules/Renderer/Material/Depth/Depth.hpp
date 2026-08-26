@@ -1,5 +1,5 @@
 #pragma once
-#include "Enums/DepthFunction.hpp"
+#include "DepthFunction.hpp"
 
 namespace N {
 struct Depth {

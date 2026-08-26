@@ -2,7 +2,7 @@
 
 #include <OpenGL.hpp>
 
-#include "../Uniforms/FloatUniform.hpp"
+#include "Uniforms/FloatUniform.hpp"
 #include "Utilities/Logger.hpp"
 
 namespace N {

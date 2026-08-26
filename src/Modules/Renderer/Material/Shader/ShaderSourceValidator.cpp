@@ -1,6 +1,6 @@
 #include "ShaderSourceValidator.hpp"
 #include <glslang/Public/ResourceLimits.h>
-#include "Resources/ShaderSource.hpp"
+#include "ShaderSource.hpp"
 
 namespace N {
 EShLanguage ShaderSourceValidator::ToEShLanguage(const ShaderStage& stage) {

@@ -1,7 +1,7 @@
 #pragma once
-#include "../Uniform.hpp"
 #include "Math/Matrix/Matrix4.hpp"
 #include "OpenGL.hpp"
+#include "Uniform.hpp"
 
 namespace N {
 struct Matrix4Uniform : Uniform {

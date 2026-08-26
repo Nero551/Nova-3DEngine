@@ -1,6 +1,6 @@
 #pragma once
 #include "Core/OuterCore/ECS/Component.hpp"
-#include "Modules/Renderer/Resources/Mesh.hpp"
+#include "Modules/Renderer/Mesh/Mesh.hpp"
 #include "Utilities/CheckedPtr.hpp"
 
 namespace N {

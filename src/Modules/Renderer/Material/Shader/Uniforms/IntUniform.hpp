@@ -1,6 +1,6 @@
 #pragma once
-#include "../Uniform.hpp"
 #include "OpenGL.hpp"
+#include "Uniform.hpp"
 
 namespace N {
 struct IntUniform : Uniform {

@@ -1,4 +1,4 @@
-#include "../Resources/Texture.hpp"
+#include "../Material/Texture.hpp"
 #include "Core/Services/ResourceManager.hpp"
 #include "Primitives.hpp"
 

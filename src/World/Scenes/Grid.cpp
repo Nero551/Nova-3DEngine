@@ -5,9 +5,9 @@
 #include "Core/Services/ResourceManager.hpp"
 #include "Math/Color/Color.hpp"
 #include "Math/Common/Trigonometry.hpp"
+#include "Modules/Renderer/Material/Shader/Shader.hpp"
+#include "Modules/Renderer/Material/Shader/ShaderSource.hpp"
 #include "Modules/Renderer/Primitives/Primitives.hpp"
-#include "Modules/Renderer/Resources/Shader.hpp"
-#include "Modules/Renderer/Resources/ShaderSource.hpp"
 #include "World/Novas/MeshInstance3D.hpp"
 #include "World/Novas/Nova.hpp"
 

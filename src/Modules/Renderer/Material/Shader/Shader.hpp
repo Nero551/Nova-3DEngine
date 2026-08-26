@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../Uniform.hpp"
 #include "Core/OuterCore/Resource.hpp"
 #include "ShaderSource.hpp"
+#include "Uniforms/Uniform.hpp"
 #include "Utilities/CheckedPtr.hpp"
 
 namespace N {

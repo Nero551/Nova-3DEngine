@@ -3,9 +3,9 @@
 #include "Core/OuterCore/Resource.hpp"
 #include "Math/Vector/Vector3.hpp"
 #include "Math/Vector/Vector4.hpp"
-#include "Modules/Renderer/Depth.hpp"
-#include "Modules/Renderer/Stencil.hpp"
-#include "Shader.hpp"
+#include "Modules/Renderer/Material/Depth/Depth.hpp"
+#include "Modules/Renderer/Material/Stencil/Stencil.hpp"
+#include "Shader/Shader.hpp"
 #include "Texture.hpp"
 #include "Utilities/CheckedPtr.hpp"
 

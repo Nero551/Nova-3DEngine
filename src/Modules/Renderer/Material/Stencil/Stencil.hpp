@@ -1,6 +1,6 @@
 #pragma once
-#include "Enums/StencilAction.hpp"
-#include "Enums/StencilFunction.hpp"
+#include "StencilAction.hpp"
+#include "StencilFunction.hpp"
 
 namespace N {
 struct Stencil {

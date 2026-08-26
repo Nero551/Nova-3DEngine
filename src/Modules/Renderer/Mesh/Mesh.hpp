@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../Enums/Topology.hpp"
-#include "../Vertex.hpp"
+#include "../Mesh/Topology.hpp"
+#include "../Mesh/Vertex.hpp"
 #include "Core/OuterCore/Resource.hpp"
-#include "Modules/Renderer/Enums/RenderMode.hpp"
+#include "Modules/Renderer/Mesh/RenderMode.hpp"
 
 namespace N {
 /**

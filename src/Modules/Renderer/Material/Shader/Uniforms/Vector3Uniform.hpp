@@ -1,6 +1,6 @@
 #pragma once
-#include "../Uniform.hpp"
 #include "Core/InnerCore/Engine.hpp"
+#include "Uniform.hpp"
 
 namespace N {
 struct Vector3Uniform : Uniform {

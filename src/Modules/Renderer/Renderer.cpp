@@ -6,13 +6,13 @@
 #include "Components/MeshComponent.hpp"
 #include "Core/InnerCore/Engine.hpp"
 #include "Core/OuterCore/ECS/Entity.hpp"
+#include "Material/Shader/Uniforms/FloatUniform.hpp"
+#include "Material/Shader/Uniforms/Matrix3Uniform.hpp"
+#include "Material/Shader/Uniforms/Matrix4Uniform.hpp"
+#include "Material/Shader/Uniforms/Vector3Uniform.hpp"
 #include "Primitives/Primitives.hpp"
 #include "Systems/CameraSystem.hpp"
 #include "Systems/LightingSystem.hpp"
-#include "Uniforms/FloatUniform.hpp"
-#include "Uniforms/Matrix3Uniform.hpp"
-#include "Uniforms/Matrix4Uniform.hpp"
-#include "Uniforms/Vector3Uniform.hpp"
 
 namespace N {
 void Renderer::OnStart() {

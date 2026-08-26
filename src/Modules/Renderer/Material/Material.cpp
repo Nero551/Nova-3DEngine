@@ -1,10 +1,10 @@
 #include "Material.hpp"
 
 #include "../Primitives/Primitives.hpp"
-#include "../Uniforms/FloatUniform.hpp"
-#include "../Uniforms/IntUniform.hpp"
-#include "../Uniforms/Vector3Uniform.hpp"
-#include "../Uniforms/Vector4Uniform.hpp"
+#include "Shader/Uniforms/FloatUniform.hpp"
+#include "Shader/Uniforms/IntUniform.hpp"
+#include "Shader/Uniforms/Vector3Uniform.hpp"
+#include "Shader/Uniforms/Vector4Uniform.hpp"
 #include "Utilities/Logger.hpp"
 
 namespace N {

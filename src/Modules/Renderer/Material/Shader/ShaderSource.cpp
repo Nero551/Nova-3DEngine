@@ -5,7 +5,7 @@
 #include <utility>
 
 #include "Core/OuterCore/Resource.hpp"
-#include "Modules/Renderer/ShaderSourceValidator.hpp"
+#include "Modules/Renderer/Material/Shader/ShaderSourceValidator.hpp"
 #include "Utilities/FileSystem/FileSystem.hpp"
 #include "Utilities/Logger.hpp"
 
