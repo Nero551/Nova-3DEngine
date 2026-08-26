@@ -3,6 +3,8 @@
 #include "Core/InnerCore/Engine.hpp"
 #include "Core/InnerCore/World.hpp"
 #include "Core/Services/ResourceManager.hpp"
+#include "Math/Color/Color.hpp"
+#include "Math/Functions/Function.hpp"
 #include "Math/Quaternion/Quaternion.hpp"
 #include "Math/Vector/Vector4.hpp"
 #include "Modules/Input/Input.hpp"
@@ -81,7 +83,8 @@ void calculus::Start() {
     U::Image image = { "Assets/icon.png", true };
     U::Image image2 = { "Assets/Images/ruby.png", true };
 
-    auto& snowflake = resourceManager.Load<Texture>("snowflake", image);
+    auto& snowflake = resourceManager.Load<Texture>("snowflake");
+    snowflake.UseImage(image);
     objectMaterial.AssignTexture(snowflake, 1);
     snowflake.Reload();
     snowflake.UseImage(image2);
@@ -122,8 +125,9 @@ void calculus::Start() {
     windowShader.AssignSource(windowVert);
     windowMaterial.Shader = &windowShader;
 
-    U::Image grassImage = { "Assets/Images/semiTransparentWindow.png", true };
-    auto& windowTexture = resourceManager.Load<Texture>("windowTexture", grassImage);
+    U::Image windowImage = { "Assets/Images/semiTransparentWindow.png", true };
+    auto& windowTexture = resourceManager.Load<Texture>("windowTexture");
+    windowTexture.UseImage(windowImage);
     windowMaterial.AssignTexture(windowTexture, 1);
 
     auto& window = World::Get().CreateEntity<MeshInstance3D>();
@@ -144,28 +148,42 @@ static float passed = 0;
 static float multiplier = 1;
 
 void calculus::FixedUpdate(double dt) {
-    // auto& resourceManager = Service::Get<ResourceManager>();
+    auto& resourceManager = Service::Get<ResourceManager>();
     // auto& transform = World::Get().FindEntity(cubeId).GetComponent<Transform3DComponent>();
     // auto& input = Engine::Get().GetModule<Input>();
+
+    x += step;
+    if (x >= xRange) {
+        return;
+    }
     //
     //
     // if (input.IsKeyHeld(Key::Z)) {
-    // transform.Rotation *= M::Quaternion::FromEulerXYZ({0.1, 0, 0});
-    // }
-    // if (input.IsKeyHeld(Key::X)) {
-    // transform.Rotation *= M::Quaternion::FromEulerXYZ({0, 0.1, 0});
-    // }
-
-    // if (input.IsKeyHeld(Key::C)) {
-    // transform.Rotation *= M::Quaternion::FromEulerXYZ({0, 0, 0.1});
+    //     transform.Rotation *= M::Quaternion::FromEulerXYZ({0.1, 0, 0});
     // }
     //
+    // if (input.IsKeyHeld(Key::X)) {
+    //     transform.Rotation *= M::Quaternion::FromEulerXYZ({0, 0.1, 0});
+    // }
+    //
+    // if (input.IsKeyHeld(Key::C)) {
+    //     transform.Rotation *= M::Quaternion::FromEulerXYZ({0, 0, 0.1});
+    // }
+
     // for (auto& point : points) {
     //     auto& transform = point->GetComponent<Transform3DComponent>();
     //     transform.Position *= multiplier;
     // }
+
+    multiplier = 1;
+
+    // M::Function sin = [](const float x) {
+    //     return std::sin(x);
+    // };
     //
-    // multiplier = 1;
+    // U::Logger::Info(sin.Taylor(3, 0)(x));
+    // Plot({x, sin.Maclaurin(4)(x), 0});
+    // Plot({x, sin(x), 0}, M::Color::Red);
 }
 
 void calculus::TwoDimensionalProjection(float increase) {

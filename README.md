@@ -98,5 +98,5 @@
 - complex arithmetic
 - quaternion arithmetic & rotation conversions
 - depth, stencil & blending added as per material configurations
-- face culling
+- per mesh face culling configurations
 - redesigned texture system

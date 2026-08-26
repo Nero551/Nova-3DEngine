@@ -6,7 +6,8 @@ namespace N {
 Texture& Primitives::CreateWhiteTexture() {
     std::vector<unsigned char> white = { 255, 255, 255, 255 };
     U::Image image = { 1, 1, U::Image::ColorChannels::RGBA, white };
-    auto& whiteTexture = Service::Get<ResourceManager>().Load<Texture>("WhiteTexture", image);
+    auto& whiteTexture = Service::Get<ResourceManager>().Load<Texture>("WhiteTexture");
+    whiteTexture.UseImage(image);
 
     return whiteTexture;
 }
@@ -14,7 +15,8 @@ Texture& Primitives::CreateWhiteTexture() {
 Texture& Primitives::CreateBlackTexture() {
     std::vector<unsigned char> black = { 0, 0, 0, 255 };
     U::Image image = { 1, 1, U::Image::ColorChannels::RGBA, black };
-    auto& blackTexture = Service::Get<ResourceManager>().Load<Texture>("BlackTexture", image);
+    auto& blackTexture = Service::Get<ResourceManager>().Load<Texture>("BlackTexture");
+    blackTexture.UseImage(image);
     return blackTexture;
 }
 } // namespace N
