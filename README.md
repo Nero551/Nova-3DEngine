@@ -97,3 +97,6 @@
 
 - complex arithmetic
 - quaternion arithmetic & rotation conversions
+- depth, stencil & blending added as per material configurations
+- face culling
+- redesigned texture system

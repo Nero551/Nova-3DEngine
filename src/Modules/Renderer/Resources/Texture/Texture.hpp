@@ -18,6 +18,14 @@ namespace N {
  * when Load() or Bind() is called.
  */
 struct Texture : Resource {
+    // TODO- should texture have an enum for its type? ex: Cubemap , 2D , etc. dont know yet
+    //
+    // TODO- appears there are other formats other than the color channels, specifically for framebuffer use. gotta figure that
+    //  out. could use renderbuffers for those specifically but that limits my API options
+    //  easy fix is to just add a custom constructor specifically for those kinds of textures.
+    //  could also make the texture not own an image , but have the image transfer and take out all the data into the texture.
+    //  that already happens implicitly , since the Image attribute isn't a pointer nor reference.
+
     /** Data type used to interpret the texture's source pixel data. */
     TextureDataType DataType = TextureDataType::UnsignedByte;
 
