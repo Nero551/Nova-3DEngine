@@ -19,6 +19,7 @@ struct ShaderSource : Resource {
 
     /** @brief SourceCode with modifications (preprocessing) */
     std::string GeneratedCode;
+
     std::string Version = "version 450 core";
 
     // TODO- it would be really cool if i could have methods for adding code
@@ -31,22 +32,24 @@ struct ShaderSource : Resource {
     unsigned int GetId() const;
     ShaderStage GetStage() const;
 
-    /** @brief Preprocesses the source, generates an OpenGL Id & compiles the
-     * source */
+    /** @brief Preprocesses the source, generates an OpenGL Id & compiles the source */
     void Compile();
 
     /** @brief checks if the source was compiled.
      * @return true if compiled , false if not.
      */
     bool IsCompiled() const;
+
     /** @brief Reloads and preprocesses the shader source. */
     void Reload();
 
 private:
     unsigned int Id = 0;
     ShaderStage Stage;
+
     /** @brief Paths of shader files included by this source. */
     std::unordered_set<std::string> Includes;
+
     void Preprocess();
     void PreprocessIncludes(const std::string& path, std::string& code, std::unordered_set<std::string>& includesProcessing);
 };

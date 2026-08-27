@@ -23,6 +23,13 @@ void Framebuffer::Regenerate() {
 void Framebuffer::Bind() {
     Generate();
     glBindFramebuffer(static_cast<GLenum>(Target), Id);
+    if (!glCheckFramebufferStatus(static_cast<GLenum>(Target)) == GL_FRAMEBUFFER_COMPLETE) {
+        U::Logger::Error("Framebuffer is not complete");
+    }
+}
+
+void Framebuffer::Unbind() {
+    glBindFramebuffer(static_cast<GLenum>(Target), 0);
 }
 
 bool Framebuffer::IsGenerated() const {
@@ -32,10 +39,10 @@ bool Framebuffer::IsGenerated() const {
 bool Framebuffer::IsComplete() {
     Bind();
     if (glCheckFramebufferStatus(static_cast<GLenum>(Target)) == GL_FRAMEBUFFER_COMPLETE) {
-        U::Logger::Info("FrameBuffer Usable, 🔥");
+        Unbind();
         return true;
     }
-    U::Logger::Info("Framebuffer trash");
+    Unbind();
     return false;
 }
 
@@ -49,6 +56,8 @@ void Framebuffer::AttachTexture(FramebufferAttachment textureAttachment, Texture
         static_cast<GLenum>(texture.Target),
         texture.GetId(),
         0);
+
+    Unbind();
 }
 
 void Framebuffer::AttachRenderBuffer(FramebufferAttachment attachment, Renderbuffer& renderbuffer) {
@@ -57,6 +66,8 @@ void Framebuffer::AttachRenderBuffer(FramebufferAttachment attachment, Renderbuf
     RenderBuffers.emplace(attachment, &renderbuffer);
     glFramebufferRenderbuffer(
         static_cast<GLenum>(Target), static_cast<GLenum>(attachment), GL_RENDERBUFFER, renderbuffer.GetId());
+
+    Unbind();
 }
 
 void Framebuffer::Resize(int width, int height) {
@@ -78,6 +89,7 @@ void Framebuffer::Resize(int width, int height) {
 
         AttachRenderBuffer(attachment, *buffer);
     }
+    Unbind();
 }
 
 unsigned int Framebuffer::GetId() const {

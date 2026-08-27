@@ -75,6 +75,9 @@ struct Framebuffer : Resource {
      */
     void Bind();
 
+    /** @brief Unbinds this framebuffer from the configured target. sets the bound to default framebuffer */
+    void Unbind();
+
     /**
      * @brief Checks whether the OpenGL framebuffer object has been generated.
      *
