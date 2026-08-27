@@ -139,7 +139,7 @@ void calculus::Start() {
     windowTexture.WrapT = TextureWrap::ClampToEdge;
     windowMaterial.Blend.Enabled = true;
     windowMaterial.Depth.Function = DepthFunction::Less;
-    // quad.CullMode = CullMode::None;
+    quad.CullMode = CullMode::None;
 }
 
 static float elapsed = 0;

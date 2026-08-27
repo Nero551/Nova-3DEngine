@@ -13,11 +13,17 @@ struct Renderer : Module {
 
 protected:
     void AddSystems() override;
+
     void SetupFramebuffers();
+
     void OnStart() override;
     void OnBeginFrame(double dt) override;
+
     void RenderWorld();
     void PresentFramebuffer();
+
     void OnRender() override;
+
+    void OnStop() override;
 };
 } // namespace N

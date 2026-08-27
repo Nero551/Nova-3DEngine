@@ -1,6 +1,10 @@
 #include "Includes/Default/Default.vert"
 
 void main() {
-    DefaultVertex();
-    gl_Position = aPosition;
+    vNormal = normalize(aNormal);
+    vColor = aColor;
+    vPosition = aPosition;
+    vWorldPosition = aPosition;
+    vUV = aUV;
+    gl_Position = vPosition;
 }

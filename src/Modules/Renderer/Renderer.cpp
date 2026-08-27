@@ -55,6 +55,7 @@ void Renderer::SetupFramebuffers() {
     ScreenMesh->Vertices = vertices;
     ScreenMesh->Indices = indices;
     ScreenMesh->CullMode = CullMode::None;
+    // ScreenMesh->RenderMode = RenderMode::Wireframe;
 
     auto& window = Engine::Get().Window;
 
@@ -147,7 +148,7 @@ void Renderer::RenderWorld() {
 
 void Renderer::PresentFramebuffer() {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glClearColor(1, 1, 1, 1);
+    glClearColor(0.08, 0.05, 0.1, 1);
     glClear(GL_COLOR_BUFFER_BIT);
 
     int i = 0;
@@ -168,5 +169,24 @@ void Renderer::PresentFramebuffer() {
 void Renderer::OnRender() {
     RenderWorld();
     PresentFramebuffer();
+}
+
+void Renderer::OnStop() {
+    const auto& texture = Framebuffer->TextureAttachments.at(FramebufferAttachment::Color0);
+
+    std::vector<unsigned char> pixels(static_cast<size_t>(texture->Width) * static_cast<size_t>(texture->Height) * 3);
+
+    glBindTexture(GL_TEXTURE_2D, texture->GetId());
+
+    glGetTexImage(GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels.data());
+
+    U::Image image = {
+        texture->Width,
+        texture->Height,
+        U::Image::ColorChannels::RGB,
+        pixels,
+
+    };
+    image.SaveToDiskPNG("Assets/LastFrame.png", true);
 }
 } // namespace N

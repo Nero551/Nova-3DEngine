@@ -1,7 +1,9 @@
 #define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "Image.hpp"
 
 #include <stb_image.h>
+#include <stb_image_write.h>
 
 #include "Utilities/Logger.hpp"
 
@@ -31,5 +33,22 @@ Image::Image(const int width, const int height, const ColorChannels channels, co
     Height = height;
     Channels = channels;
     Pixels = pixels;
+}
+
+void Image::SaveToDiskPNG(const std::string& filepath, bool flip) {
+    stbi_flip_vertically_on_write(flip);
+    stbi_write_png(
+        filepath.c_str(), Width, Height, static_cast<size_t>(Channels), Pixels.data(), Width * static_cast<size_t>(Channels));
+}
+
+void Image::FlipVertically() {
+    const size_t rowSize = static_cast<size_t>(Width) * static_cast<size_t>(Channels);
+
+    for (int y = 0; y < Height / 2; ++y) {
+        auto top = Pixels.begin() + static_cast<size_t>(y) * rowSize;
+        auto bottom = Pixels.begin() + static_cast<size_t>(Height - 1 - y) * rowSize;
+
+        std::swap_ranges(top, top + rowSize, bottom);
+    }
 }
 } // namespace N::U
