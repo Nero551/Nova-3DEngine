@@ -4,5 +4,5 @@
 namespace N {
 struct cubemaps : System {
     void Start() override;
-}
+};
 } // namespace N

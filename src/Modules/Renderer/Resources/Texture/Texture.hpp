@@ -7,25 +7,22 @@
 #include "TextureInternalFormat.hpp"
 #include "TextureTarget.hpp"
 #include "TextureWrap.hpp"
-#include "Utilities/Image/Image.hpp"
 
 namespace N {
 /**
- * @brief Represents an OpenGL texture resource.
+ * @brief Base class for OpenGL texture resources.
  *
- * Stores the texture's image data and configuration, and manages the
- * underlying OpenGL texture object. GPU resources are created lazily
- * when Load() or Bind() is called.
+ * Provides the common configuration and GPU resource management shared by
+ * different texture types, such as 2D textures, 3D textures, and cubemaps.
+ *
+ * Stores texture dimensions, pixel formats, filtering, wrapping, and the
+ * OpenGL texture object. Specialized texture types are responsible for
+ * implementing their specific GPU storage and data upload behavior through
+ * Generate().
  */
 struct Texture : Resource {
-    // TODO- appears cubemaps need 6 images instead of 1.
-    //  plan: make Texture super generic and have inheritance (Texture2D, Cubemap,etc).
-
-    /** Data type used to interpret the texture's source pixel data. */
+    /** Data type used to interpret source pixel data. */
     TextureDataType DataType = TextureDataType::UnsignedByte;
-
-    /** OpenGL texture target defining the texture's dimensionality and layout. */
-    TextureTarget Target = TextureTarget::Texture2D;
 
     /** Format of the source pixel data supplied to OpenGL. */
     TextureFormat Format = TextureFormat::RGBA;
@@ -33,7 +30,7 @@ struct Texture : Resource {
     /** Internal format used to store the texture data on the GPU. */
     TextureInternalFormat InternalFormat = TextureInternalFormat::RGBA8;
 
-    /** Whether mipmaps should be generated automatically when the texture is loaded. */
+    /** Whether mipmaps should be generated after texture storage is created. */
     bool AutoMipmaps = true;
 
     /** Width of the texture in pixels. */
@@ -41,9 +38,6 @@ struct Texture : Resource {
 
     /** Height of the texture in pixels. */
     int Height = 0;
-
-    /** CPU-side pixel data used when loading the texture to the GPU. */
-    std::vector<unsigned char> Data;
 
     /** Wrapping mode applied to texture coordinates along the S axis. */
     TextureWrap WrapS = TextureWrap::MirroredRepeat;
@@ -59,72 +53,82 @@ struct Texture : Resource {
 
     /**
      * @brief Creates a texture resource.
+     *
+     * The texture target is specified by the derived texture type and cannot
+     * be changed after construction.
+     *
      * @param name Resource name.
+     * @param target OpenGL texture target represented by this texture.
      */
-    Texture(const std::string& name);
+    Texture(const std::string& name, TextureTarget target);
 
     /** @brief Releases the underlying OpenGL texture object. */
     ~Texture() override;
 
     /**
-     * @brief Replaces the texture's data and configuration with the supplied image's data.
+     * @brief Gets the texture's OpenGL target.
      *
-     * Updates the texture dimensions, pixel data, source format, and internal
-     * format using the supplied image. Existing GPU resources are not reloaded.
-     *
-     * @param image Image to use for the texture.
-     * @remark The image should be vertically flipped when loaded to account
-     * for the difference between image and OpenGL texture coordinates.
+     * @return Texture target used when binding and configuring the texture.
      */
-    void UseImage(const U::Image& image);
+    [[nodiscard]] TextureTarget GetTarget() const;
 
     /**
      * @brief Gets the OpenGL texture object ID.
      *
-     * @return OpenGL texture ID, or 0 if the texture has not been loaded.
+     * @return OpenGL texture ID, or 0 if no texture object has been generated.
      */
     [[nodiscard]] unsigned int GetId() const;
 
     /**
      * @brief Releases the current OpenGL texture object.
      *
-     * The texture can be loaded again afterward with Load() or Bind().
+     * The texture can be generated again afterward by calling Generate().
      */
-    void Reload();
+    void Regenerate();
 
     /**
-     * @brief Checks whether the texture has been loaded to the GPU.
+     * @brief Checks whether the texture has been generated on the GPU.
      *
      * @return true if an OpenGL texture object exists, otherwise false.
      */
-    bool IsLoaded() const;
+    [[nodiscard]] bool IsGenerated() const;
 
     /**
-     * @brief Loads the texture data into an OpenGL texture object.
+     * @brief Generates the OpenGL texture object and its storage.
      *
-     * Creates the OpenGL texture, configures its parameters, uploads the
-     * stored texture data, and optionally generates mipmaps.
+     * The base implementation does not generate any texture storage.
+     * Specialized texture types override this function to create and upload
+     * their specific texture data.
      */
-    void Load();
+    virtual void Generate();
 
     /**
      * @brief Binds the texture to a texture unit.
      *
-     * If the texture has not been loaded, it is loaded automatically.
+     * If the texture has not yet been generated, Generate() is called
+     * automatically.
      *
-     * @param unit Texture unit to bind the texture to.
+     * @param unit Texture unit to which the texture is bound.
      */
     void Bind(unsigned int unit);
+    void Unbind(unsigned int unit);
 
-private:
+protected:
     /**
-     * @brief Configures the texture's wrapping and filtering parameters.
-     * Must be called while the texture is bound to its configured target.
+     * @brief Configures common texture parameters.
+     *
+     * Applies the texture's wrapping and filtering configuration to the
+     * currently bound texture.
+     *
+     * Must be called while this texture is bound to its configured target.
      */
     void SetParameters() const;
-    void LoadCubemap();
 
-    /** OpenGL texture object ID. Zero indicates that no texture object exists. */
+    /** OpenGL texture object ID. Zero indicates that no object is generated. */
     unsigned int Id = 0;
+
+private:
+    /** OpenGL texture target associated with this texture type. */
+    TextureTarget Target;
 };
 } // namespace N

@@ -6,8 +6,8 @@
 
 namespace N {
 void cubemaps::Start() {
-    auto& resources = Service::Get<ResourceManager>();
-    auto& cubemap = resources.Load<Texture>("Cubemap");
-    cubemap.Target = TextureTarget::CubeMap;
+    // auto& resources = Service::Get<ResourceManager>();
+    // auto& cubemap = resources.Load<Texture>("Cubemap");
+    // cubemap.Target = TextureTarget::CubeMap;
 }
 } // namespace N

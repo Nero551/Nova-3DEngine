@@ -14,6 +14,7 @@
 #include "Resources/Shader/Uniforms/Matrix3Uniform.hpp"
 #include "Resources/Shader/Uniforms/Matrix4Uniform.hpp"
 #include "Resources/Shader/Uniforms/Vector3Uniform.hpp"
+#include "Resources/Texture/Texture2D.hpp"
 #include "Systems/CameraSystem.hpp"
 #include "Systems/LightingSystem.hpp"
 
@@ -59,8 +60,7 @@ void Renderer::SetupFramebuffers() {
 
     auto& window = Engine::Get().Window;
 
-    auto& colorTexture = resources.Load<Texture>("colorbuffer");
-    colorTexture.Target = TextureTarget::Texture2D;
+    auto& colorTexture = resources.Load<Texture2D>("colorbuffer");
     colorTexture.InternalFormat = TextureInternalFormat::RGB8;
     colorTexture.Format = TextureFormat::RGB;
     colorTexture.DataType = TextureDataType::UnsignedByte;

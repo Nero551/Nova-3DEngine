@@ -25,6 +25,9 @@ struct Image {
         RGBA = 4
     };
 
+    Image() {
+    }
+
     /**
      * @brief Loads an image from disk.
      *

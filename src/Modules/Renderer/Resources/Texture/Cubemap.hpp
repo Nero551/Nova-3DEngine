@@ -9,5 +9,9 @@ struct Cubemap : Texture {
     U::Image Bottom;
     U::Image Right;
     U::Image Left;
+    Cubemap(const std::string& name) : Texture(name, TextureTarget::CubeMap) {
+    }
+
+    void Generate() override;
 };
 } // namespace N

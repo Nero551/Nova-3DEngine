@@ -9,6 +9,7 @@
 #include "Math/Vector/Vector4.hpp"
 #include "Modules/Input/Input.hpp"
 #include "Modules/Renderer/Primitives/Primitives.hpp"
+#include "Modules/Renderer/Resources/Texture/Texture2D.hpp"
 #include "World/Novas/MeshInstance3D.hpp"
 
 namespace N {
@@ -83,10 +84,10 @@ void calculus::Start() {
     U::Image image = { "Assets/icon.png", true };
     U::Image image2 = { "Assets/Images/ruby.png", true };
 
-    auto& snowflake = resourceManager.Load<Texture>("snowflake");
+    auto& snowflake = resourceManager.Load<Texture2D>("snowflake");
     snowflake.UseImage(image);
     objectMaterial.AssignTexture(snowflake, 1);
-    snowflake.Reload();
+    snowflake.Regenerate();
     snowflake.UseImage(image2);
 
     // mesh.RenderMode = RenderMode::Wireframe;
@@ -126,7 +127,7 @@ void calculus::Start() {
     windowMaterial.Shader = &windowShader;
 
     U::Image windowImage = { "Assets/Images/semiTransparentWindow.png", true };
-    auto& windowTexture = resourceManager.Load<Texture>("windowTexture");
+    auto& windowTexture = resourceManager.Load<Texture2D>("windowTexture");
     windowTexture.UseImage(windowImage);
     windowMaterial.AssignTexture(windowTexture, 1);
 

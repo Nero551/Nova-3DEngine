@@ -48,12 +48,12 @@ bool Framebuffer::IsComplete() {
 
 void Framebuffer::AttachTexture(FramebufferAttachment textureAttachment, Texture& texture) {
     Bind();
-    texture.Load();
+    texture.Generate();
 
     TextureAttachments.emplace(textureAttachment, &texture);
     glFramebufferTexture2D(static_cast<GLenum>(Target),
         static_cast<GLenum>(textureAttachment),
-        static_cast<GLenum>(texture.Target),
+        static_cast<GLenum>(texture.GetTarget()),
         texture.GetId(),
         0);
 
@@ -74,10 +74,10 @@ void Framebuffer::Resize(int width, int height) {
     Bind();
 
     for (auto& [attachment, texture] : TextureAttachments) {
-        texture->Reload();
+        texture->Regenerate();
         texture->Height = height;
         texture->Width = width;
-        texture->Load();
+        texture->Generate();
         AttachTexture(attachment, *texture);
     }
 
