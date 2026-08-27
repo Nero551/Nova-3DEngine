@@ -1,10 +1,9 @@
 #include "Includes/Lighting/Lighting.frag"
 
 
-uniform sampler2D snowflake;
+uniform samplerCube cubemap;
 
 void main()
 {
-    FragColor = vec4(Lighting(), 1) * MATERIAL.Color + texture(snowflake, vUV);
-    CheckAlpha();
+    FragColor = texture(cubemap, vUVW);
 }

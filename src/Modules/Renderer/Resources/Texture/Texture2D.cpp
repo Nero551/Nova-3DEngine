@@ -22,6 +22,7 @@ void Texture2D::Generate() {
         static_cast<GLenum>(DataType),
         Data.data());
 
+
     if (AutoMipmaps) {
         glGenerateMipmap(GL_TEXTURE_2D);
     }

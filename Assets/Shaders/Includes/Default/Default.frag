@@ -5,6 +5,7 @@ in vec4 vPosition;
 in vec4 vColor;
 in vec3 vNormal;
 in vec4 vWorldPosition;
+in vec3 vUVW;
 
 uniform vec3 VIEW_POSITION;
 uniform float TIME;

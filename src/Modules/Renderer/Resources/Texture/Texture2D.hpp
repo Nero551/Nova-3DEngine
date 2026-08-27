@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-
 #include "Texture.hpp"
 #include "Utilities/Image/Image.hpp"
 #include "Utilities/Logger.hpp"
@@ -15,7 +13,7 @@ namespace N {
  */
 struct Texture2D : Texture {
     /** CPU-side pixel data uploaded to the GPU when the texture is generated. */
-    std::vector<unsigned char> Data;
+    std::vector<unsigned char> Data{};
 
     /**
      * @brief Creates a 2D texture resource.

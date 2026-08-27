@@ -40,10 +40,10 @@ struct Texture : Resource {
     int Height = 0;
 
     /** Wrapping mode applied to texture coordinates along the S axis. */
-    TextureWrap WrapS = TextureWrap::MirroredRepeat;
+    TextureWrap WrapS = TextureWrap::ClampToEdge;
 
     /** Wrapping mode applied to texture coordinates along the T axis. */
-    TextureWrap WrapT = TextureWrap::MirroredRepeat;
+    TextureWrap WrapT = TextureWrap::ClampToEdge;
 
     /** Filtering mode used when the texture is minified. */
     TextureFilter MinFilter = TextureFilter::NearestMipmapLinear;
@@ -122,7 +122,7 @@ protected:
      *
      * Must be called while this texture is bound to its configured target.
      */
-    void SetParameters() const;
+    virtual void SetParameters() const;
 
     /** OpenGL texture object ID. Zero indicates that no object is generated. */
     unsigned int Id = 0;

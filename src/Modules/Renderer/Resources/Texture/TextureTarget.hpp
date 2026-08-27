@@ -16,7 +16,7 @@ enum class TextureTarget {
     Texture3D = GL_TEXTURE_3D,
 
     /** Cube map texture containing six faces. */
-    CubeMap = GL_TEXTURE_CUBE_MAP,
+    Cubemap = GL_TEXTURE_CUBE_MAP,
 
     /** Array of two-dimensional textures. */
     Texture2DArray = GL_TEXTURE_2D_ARRAY,

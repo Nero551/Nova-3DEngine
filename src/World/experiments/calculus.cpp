@@ -9,6 +9,7 @@
 #include "Math/Vector/Vector4.hpp"
 #include "Modules/Input/Input.hpp"
 #include "Modules/Renderer/Primitives/Primitives.hpp"
+#include "Modules/Renderer/Resources/Texture/Cubemap.hpp"
 #include "Modules/Renderer/Resources/Texture/Texture2D.hpp"
 #include "World/Novas/MeshInstance3D.hpp"
 
@@ -78,23 +79,39 @@ void calculus::Start() {
     cube.GetComponent<MeshComponent>().Mesh = &mesh;
     // mesh.RenderMode = RenderMode::SolidWireframe;
     cube.GetComponent<MaterialComponent>().Material = &objectMaterial;
-    cube.GetComponent<Transform3DComponent>().Position = { 0, 0, 3 };
+    cube.GetComponent<Transform3DComponent>().Position = { 0, 0, 0 };
+    cube.GetComponent<Transform3DComponent>().Scale = { 50 };
 
 
     U::Image image = { "Assets/icon.png", true };
     U::Image image2 = { "Assets/Images/ruby.png", true };
 
-    auto& snowflake = resourceManager.Load<Texture2D>("snowflake");
-    snowflake.UseImage(image);
-    objectMaterial.AssignTexture(snowflake, 1);
-    snowflake.Regenerate();
-    snowflake.UseImage(image2);
+    // auto& snowflake = resourceManager.Load<Texture2D>("snowflake");
+    // snowflake.UseImage(image);
+    // objectMaterial.AssignTexture(snowflake, 1);
+
+    auto& cubemap = resourceManager.Load<Cubemap>("cubemap");
+    cubemap.InternalFormat = TextureInternalFormat::RGB8;
+    cubemap.Format = TextureFormat::RGB;
+    cubemap.Front = { "Assets/Images/Cubemap/skybox/front.jpg" };
+    cubemap.Back = { "Assets/Images/Cubemap/skybox/back.jpg" };
+    cubemap.Top = { "Assets/Images/Cubemap/skybox/top.jpg" };
+    cubemap.Bottom = { "Assets/Images/Cubemap/skybox/bottom.jpg" };
+    cubemap.Right = { "Assets/Images/Cubemap/skybox/left.jpg" };
+    cubemap.Left = { "Assets/Images/Cubemap/skybox/right.jpg" };
+    objectMaterial.AssignTexture(cubemap, 1);
+
+    U::Logger::Info(static_cast<int>(cubemap.Front.Channels));
+    mesh.CullMode = CullMode::None;
+    objectMaterial.Depth.Write = false;
+    objectMaterial.Stencil = false;
+    objectMaterial.Blend = false;
 
     // mesh.RenderMode = RenderMode::Wireframe;
     auto& transform = cube.GetComponent<Transform3DComponent>();
     cubeId = cube.Id;
     World::Get().Root->AttachChild(cube);
-
+    //
     auto& outlineShader = resourceManager.Load<Shader>("outlineShader");
     outlineShader.AssignSource(
         resourceManager.Load<ShaderSource>("outlineFrag", "Assets/Shaders/outline.frag", ShaderStage::Fragment));
@@ -105,16 +122,16 @@ void calculus::Start() {
     outlineMaterial.Shader = &outlineShader;
     outlineMaterial.Color = { 1, 1, 1, 1 };
 
-    objectMaterial.Stencil.SDPass = StencilAction::Replace;
-    outlineMaterial.Stencil.Function = StencilFunction::NotEqual;
-
+    // objectMaterial.Stencil.SDPass = StencilAction::Replace;
+    // outlineMaterial.Stencil.Function = StencilFunction::NotEqual;
+    //
 
     auto& cube2 = World::Get().CreateEntity<MeshInstance3D>();
     cube2.GetComponent<MeshComponent>().Mesh = &mesh;
     cube2.GetComponent<MaterialComponent>().Material = &outlineMaterial;
-    cube2.GetComponent<Transform3DComponent>().Position = { 0, 0, 0 };
+    cube2.GetComponent<Transform3DComponent>().Position = { -3, 0, 0 };
     cube2.GetComponent<Transform3DComponent>().Scale = { 1.025, 1.025, 1.025 };
-    cube.AttachChild(cube2);
+    World::Get().Root->AttachChild(cube2);
 
 
     auto& quad = Primitives::CreateQuad("quad");

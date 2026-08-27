@@ -8,6 +8,7 @@ out vec4 vWorldPosition;
 out vec4 vColor;
 out vec2 vUV;
 out vec3 vNormal;
+out vec3 vUVW;
 
 uniform mat4 MODEL_MATRIX;
 uniform mat4 VIEW_MATRIX;
@@ -24,4 +25,5 @@ void DefaultVertex()
     vPosition = PROJECTION_MATRIX * VIEW_MATRIX * MODEL_MATRIX * aPosition;
     vWorldPosition = MODEL_MATRIX * aPosition;
     vUV = aUV;
+    vUVW = normalize(aPosition.xyz);
 }
