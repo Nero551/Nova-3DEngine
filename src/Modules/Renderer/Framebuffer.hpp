@@ -17,16 +17,16 @@ enum class TextureAttachment {
     DepthStencil = GL_DEPTH_STENCIL_ATTACHMENT
 };
 
-struct Framebuffer {
+struct Framebuffer : Resource {
     FrameBufferTarget Target = FrameBufferTarget::ReadDraw;
     std::unordered_map<TextureAttachment, U::CheckedPtr<Texture>> TextureAttachments;
     std::unordered_map<TextureAttachment, U::CheckedPtr<Renderbuffer>> RenderBuffers;
 
-    Framebuffer() {
+    Framebuffer(const std::string& name) : Resource(name) {
         glGenFramebuffers(1, &Id);
     }
 
-    ~Framebuffer() {
+    ~Framebuffer() override {
         glDeleteFramebuffers(1, &Id);
     }
 

@@ -58,13 +58,13 @@ void Engine::Configure() {
     // Window.SetSize(1980, 1200);
     glfwSwapInterval(1);
 
+    Service::Add<ResourceManager>();
+    Service::Add<EventBus>();
+
     AddModule<Renderer>();
     AddModule<Input>();
     AddModule<Profiling>();
     AddModule<Physics>();
-
-    Service::Add<ResourceManager>();
-    Service::Add<EventBus>();
 }
 
 void Engine::Start() {

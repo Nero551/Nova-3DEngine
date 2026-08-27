@@ -3,8 +3,7 @@
 #include <OpenGL.hpp>
 
 namespace N {
-Mesh::Mesh(const std::string& name, const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices) :
-    Resource(name), Vertices(vertices), Indices(indices) {
+Mesh::Mesh(const std::string& name) : Resource(name) {
 }
 
 Mesh::~Mesh() {

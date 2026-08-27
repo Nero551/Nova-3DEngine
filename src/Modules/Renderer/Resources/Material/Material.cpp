@@ -45,17 +45,17 @@ void Material::SetProperties() const {
 void Material::Use() {
     SetProperties();
 
-    Depth.Apply();
-    Stencil.Apply();
-    Blend.Apply();
-
-    Shader->Use();
-
     for (int slot = 0; slot < MaxCustomTextures; slot++) {
         if (CustomTextures[slot]) {
             Shader->SetUniform(IntUniform(CustomTextures[slot]->Name, slot));
             CustomTextures[slot]->Bind(slot);
         }
     }
+
+    Depth.Apply();
+    Stencil.Apply();
+    Blend.Apply();
+
+    Shader->Use();
 }
 } // namespace N

@@ -44,10 +44,8 @@ struct Mesh : Resource {
      * @brief Creates a mesh from vertex and index data.
      *
      * @param name Resource name.
-     * @param vertices Vertex data used to construct the mesh.
-     * @param indices Index data used to construct the mesh.
      */
-    Mesh(const std::string& name, const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices);
+    Mesh(const std::string& name);
 
     /** Releases the OpenGL resources owned by the mesh. */
     ~Mesh() override;

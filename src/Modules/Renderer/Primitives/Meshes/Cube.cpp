@@ -78,7 +78,9 @@ Mesh& Primitives::CreateCube(const std::string& name) {
         23,
         20 };
 
-    auto& mesh = Service::Get<ResourceManager>().Load<Mesh>(name, vertices, indices);
+    auto& mesh = Service::Get<ResourceManager>().Load<Mesh>(name);
+    mesh.Vertices = vertices;
+    mesh.Indices = indices;
 
     return mesh;
 }

@@ -10,6 +10,7 @@
 #include "Framebuffer.hpp"
 #include "Primitives/Primitives.hpp"
 #include "Resources/Shader/Uniforms/FloatUniform.hpp"
+#include "Resources/Shader/Uniforms/IntUniform.hpp"
 #include "Resources/Shader/Uniforms/Matrix3Uniform.hpp"
 #include "Resources/Shader/Uniforms/Matrix4Uniform.hpp"
 #include "Resources/Shader/Uniforms/Vector3Uniform.hpp"
@@ -25,10 +26,41 @@ void Renderer::OnStart() {
     glCullFace(GL_FRONT);
     glFrontFace(GL_CCW);
 
+    std::vector vertices = { Vertex({ -1.0f, -1.0f, 0.0f, 1.0f }, {}, { 0.0f, 0.0f }, {}),
+        Vertex({ 1.0f, -1.0f, 0.0f, 1.0f }, {}, { 1.0f, 0.0f }, {}),
+        Vertex({ 1.0f, 1.0f, 0.0f, 1.0f }, {}, { 1.0f, 1.0f }, {}),
+        Vertex({ -1.0f, 1.0f, 0.0f, 1.0f }, {}, { 0.0f, 1.0f }, {}) };
+
+    std::vector<unsigned int> indices = { 0, 1, 2, 2, 3, 0 };
+
+
     auto& resources = Service::Get<ResourceManager>();
+    Framebuffer = &resources.Load<struct Framebuffer>("[Renderer] Framebuffer");
+    Framebuffer->Target = FrameBufferTarget::ReadDraw;
+
+    ScreenMesh = &resources.Load<Mesh>("[Renderer] Screen Mesh");
+    ScreenMaterial = &resources.Load<Material>("[Renderer] Screen Material");
+    auto& screenShader = resources.Load<Shader>("[Renderer] Screen Shader");
+    auto& screenVert =
+        resources.Load<ShaderSource>("[Renderer] Screen Vertex", "Assets/Shaders/screen.vert", ShaderStage::Vertex);
+    auto& screenFrag =
+        resources.Load<ShaderSource>("[Renderer] Screen Fragment", "Assets/Shaders/screen.frag", ShaderStage::Fragment);
+
+    screenShader.AssignSource(screenVert);
+    screenShader.AssignSource(screenFrag);
+
+    ScreenMaterial->Shader = &screenShader;
+    ScreenMaterial->Depth.Enabled = false;
+    ScreenMaterial->Stencil.Enabled = false;
+    ScreenMaterial->Blend.Enabled = false;
+
+    ScreenMesh->Vertices = vertices;
+    ScreenMesh->Indices = indices;
+    ScreenMesh->CullMode = CullMode::None;
+
     auto& window = Engine::Get().Window;
 
-    auto& colorTexture = resources.Load<Texture>("color-buffer");
+    auto& colorTexture = resources.Load<Texture>("colorbuffer");
     colorTexture.Target = TextureTarget::Texture2D;
     colorTexture.InternalFormat = TextureInternalFormat::RGB8;
     colorTexture.Format = TextureFormat::RGB;
@@ -40,30 +72,30 @@ void Renderer::OnStart() {
     colorTexture.MinFilter = TextureFilter::Linear;
     colorTexture.Load();
 
-    Renderbuffer depthstencilBuffer;
+    auto& depthstencilBuffer = resources.Load<Renderbuffer>("[Renderer] DepthStencil Render Buffer");
     depthstencilBuffer.Height = window.GetHeight();
     depthstencilBuffer.Width = window.GetWidth();
     depthstencilBuffer.InternalFormat = TextureInternalFormat::Depth24Stencil8;
+    depthstencilBuffer.Generate();
 
-    Framebuffer.Bind();
-    Framebuffer.AttachTexture(TextureAttachment::Color, colorTexture);
-    Framebuffer.AttachRenderBuffer(TextureAttachment::DepthStencil, depthstencilBuffer);
-    Framebuffer.IsComplete();
+    Framebuffer->Bind();
+    Framebuffer->AttachTexture(TextureAttachment::Color, colorTexture);
+    Framebuffer->AttachRenderBuffer(TextureAttachment::DepthStencil, depthstencilBuffer);
+    Framebuffer->IsComplete();
 
     glfwSetFramebufferSizeCallback(Engine::Get().Window.GetGlfwWindow(), [](GLFWwindow*, const int w, const int h) {
         glViewport(0, 0, w, h);
         auto& renderer = Engine::Get().GetModule<Renderer>();
-        renderer.Framebuffer.Resize(w, h);
+        renderer.Framebuffer->Resize(w, h);
     });
 }
 
 void Renderer::OnBeginFrame(double dt) {
-    Framebuffer.Bind();
+    Framebuffer->Bind();
 
     glClearColor(0.08, 0.05, 0.1, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
-
 
 // TODO- if there is multiple semi-transparent objects behind each other , depth testing breaks blending.
 //  fix this by classifying render passes by transparency, pairs well with future render batches / instancing.
@@ -109,10 +141,18 @@ void Renderer::OnRender() {
         }
     }
 
-    glBindFramebuffer(GL_READ_FRAMEBUFFER, Framebuffer.GetId());
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glClearColor(1, 1, 1, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
 
-    glBlitFramebuffer(0, 0, 800, 600, 0, 0, 800, 600, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    int i = 0;
+    for (auto& texture : Framebuffer->TextureAttachments | std::views::values) {
+        ScreenMaterial->AssignTexture(*texture, i);
+        i++;
+    }
+
+    ScreenMaterial->Use();
+    ScreenMesh->Draw();
 }
 
 void Renderer::AddSystems() {
