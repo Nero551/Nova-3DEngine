@@ -33,7 +33,6 @@ Window::Window(const int width, const int height, const std::string& title) {
     U::Logger::Info(glGetString(GL_VERSION));
 
     glViewport(0, 0, width, height);
-    glfwSetFramebufferSizeCallback(glfwWindow, [](GLFWwindow*, const int w, const int h) { glViewport(0, 0, w, h); });
     GlfwWindow = glfwWindow;
 }
 

@@ -7,6 +7,7 @@
 #include "Core/InnerCore/Engine.hpp"
 #include "Core/OuterCore/ECS/Entity.hpp"
 #include "Core/Services/ResourceManager.hpp"
+#include "Framebuffer.hpp"
 #include "Primitives/Primitives.hpp"
 #include "Resources/Shader/Uniforms/FloatUniform.hpp"
 #include "Resources/Shader/Uniforms/Matrix3Uniform.hpp"
@@ -16,35 +17,6 @@
 #include "Systems/LightingSystem.hpp"
 
 namespace N {
-enum class FrameBufferTarget { ReadDraw = GL_FRAMEBUFFER, Read = GL_READ_FRAMEBUFFER, Draw = GL_DRAW_FRAMEBUFFER };
-
-enum class TextureAttachment {
-    Color = GL_COLOR_ATTACHMENT0,
-    Depth = GL_DEPTH_ATTACHMENT,
-    Stencil = GL_STENCIL_ATTACHMENT,
-    DepthStencil = GL_DEPTH_STENCIL
-};
-
-struct FrameBuffer {
-    unsigned int Id;
-    FrameBufferTarget Target = FrameBufferTarget::ReadDraw;
-
-    FrameBuffer() {
-        glGenFramebuffers(1, &Id);
-    }
-
-    void Bind() {
-        glBindFramebuffer(static_cast<GLenum>(Target), Id);
-        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE) {
-            U::Logger::Info("FrameBuffer Usable, 🔥");
-        }
-    }
-
-    void AttachTexture(TextureAttachment textureAttachment, const Texture& texture) {
-        glFramebufferTexture2D(GL_FRAMEBUFFER, static_cast<GLenum>(textureAttachment), GL_TEXTURE_2D, texture.GetId(), 0);
-    }
-};
-
 void Renderer::OnStart() {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_STENCIL_TEST);
@@ -53,22 +25,41 @@ void Renderer::OnStart() {
     glCullFace(GL_FRONT);
     glFrontFace(GL_CCW);
 
-    // unsigned int fbo;
-    // glGenFramebuffers(1, &fbo);
-    //
-    // U::Image image = {Engine::Get().Window.GetWidth(), Engine::Get().Window.GetWidth(), U::Image::ColorChannels::RGB, {}};
-    // auto& texture = Service::Get<ResourceManager>().Load<Texture>("framebuffer", image);
-    // texture.MinFilter = TextureFilter::Linear;
-    // texture.MagFilter = TextureFilter::Linear;
-    // glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.GetId(), 0);
-    //
-    // glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-    // if (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE) {
-    //     U::Logger::Info("FrameBuffer Usable, 🔥");
-    // }
+    auto& resources = Service::Get<ResourceManager>();
+    auto& window = Engine::Get().Window;
+
+    auto& colorTexture = resources.Load<Texture>("color-buffer");
+    colorTexture.Target = TextureTarget::Texture2D;
+    colorTexture.InternalFormat = TextureInternalFormat::RGB8;
+    colorTexture.Format = TextureFormat::RGB;
+    colorTexture.DataType = TextureDataType::UnsignedByte;
+    colorTexture.Width = window.GetWidth();
+    colorTexture.Height = window.GetHeight();
+    colorTexture.AutoMipmaps = false;
+    colorTexture.MagFilter = TextureFilter::Linear;
+    colorTexture.MinFilter = TextureFilter::Linear;
+    colorTexture.Load();
+
+    Renderbuffer depthstencilBuffer;
+    depthstencilBuffer.Height = window.GetHeight();
+    depthstencilBuffer.Width = window.GetWidth();
+    depthstencilBuffer.InternalFormat = TextureInternalFormat::Depth24Stencil8;
+
+    Framebuffer.Bind();
+    Framebuffer.AttachTexture(TextureAttachment::Color, colorTexture);
+    Framebuffer.AttachRenderBuffer(TextureAttachment::DepthStencil, depthstencilBuffer);
+    Framebuffer.IsComplete();
+
+    glfwSetFramebufferSizeCallback(Engine::Get().Window.GetGlfwWindow(), [](GLFWwindow*, const int w, const int h) {
+        glViewport(0, 0, w, h);
+        auto& renderer = Engine::Get().GetModule<Renderer>();
+        renderer.Framebuffer.Resize(w, h);
+    });
 }
 
 void Renderer::OnBeginFrame(double dt) {
+    Framebuffer.Bind();
+
     glClearColor(0.08, 0.05, 0.1, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
@@ -117,6 +108,11 @@ void Renderer::OnRender() {
             meshComponent.Mesh->Draw();
         }
     }
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, Framebuffer.GetId());
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+
+    glBlitFramebuffer(0, 0, 800, 600, 0, 0, 800, 600, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 }
 
 void Renderer::AddSystems() {

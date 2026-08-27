@@ -56,6 +56,10 @@ bool Texture::IsLoaded() const {
 }
 
 void Texture::Load() {
+    if (IsLoaded()) {
+        return;
+    }
+
     glGenTextures(1, &Id);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(static_cast<GLenum>(Target), Id);
