@@ -9,6 +9,7 @@
 #include "World/Scenes/FirstScene.hpp"
 #include "World/Systems/Transform3DSystem.hpp"
 #include "World/experiments/calculus.hpp"
+#include "World/experiments/cubemaps.hpp"
 
 namespace N {
 World& World::Get() {
@@ -60,6 +61,7 @@ U::CheckedPtr<Entity> World::TryFindEntity(const unsigned int id) {
 void World::AddSystems() {
     AddSystem<Transform3DSystem>();
     AddSystem<calculus>();
+    AddSystem<cubemaps>();
 }
 
 void World::Start() {

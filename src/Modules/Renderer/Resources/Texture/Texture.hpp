@@ -18,13 +18,8 @@ namespace N {
  * when Load() or Bind() is called.
  */
 struct Texture : Resource {
-    // TODO- should texture have an enum for its type? ex: Cubemap , 2D , etc. dont know yet
-    //
-    // TODO- appears there are other formats other than the color channels, specifically for framebuffer use. gotta figure that
-    //  out. could use renderbuffers for those specifically but that limits my API options
-    //  easy fix is to just add a custom constructor specifically for those kinds of textures.
-    //  could also make the texture not own an image , but have the image transfer and take out all the data into the texture.
-    //  that already happens implicitly , since the Image attribute isn't a pointer nor reference.
+    // TODO- appears cubemaps need 6 images instead of 1.
+    //  plan: make Texture super generic and have inheritance (Texture2D, Cubemap,etc).
 
     /** Data type used to interpret the texture's source pixel data. */
     TextureDataType DataType = TextureDataType::UnsignedByte;
@@ -63,27 +58,23 @@ struct Texture : Resource {
     TextureFilter MagFilter = TextureFilter::Linear;
 
     /**
-     * @brief Creates a texture from an image.
-     *
-     * Initializes the texture's dimensions, pixel data, format, and default
-     * OpenGL configuration from the supplied image.
-     *
+     * @brief Creates a texture resource.
      * @param name Resource name.
-     * @remark The image should be vertically flipped when loaded to account
-     * for the difference between image and OpenGL texture coordinates.
      */
     Texture(const std::string& name);
 
-    /** Releases the underlying OpenGL texture object. */
+    /** @brief Releases the underlying OpenGL texture object. */
     ~Texture() override;
 
     /**
-     * @brief Replaces the texture's data and configuration.
+     * @brief Replaces the texture's data and configuration with the supplied image's data.
      *
      * Updates the texture dimensions, pixel data, source format, and internal
      * format using the supplied image. Existing GPU resources are not reloaded.
      *
      * @param image Image to use for the texture.
+     * @remark The image should be vertically flipped when loaded to account
+     * for the difference between image and OpenGL texture coordinates.
      */
     void UseImage(const U::Image& image);
 
@@ -131,6 +122,7 @@ private:
      * Must be called while the texture is bound to its configured target.
      */
     void SetParameters() const;
+    void LoadCubemap();
 
     /** OpenGL texture object ID. Zero indicates that no texture object exists. */
     unsigned int Id = 0;

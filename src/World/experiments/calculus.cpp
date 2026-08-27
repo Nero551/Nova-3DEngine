@@ -102,7 +102,7 @@ void calculus::Start() {
 
     auto& outlineMaterial = resourceManager.Load<Material>("outlineMaterial");
     outlineMaterial.Shader = &outlineShader;
-    outlineMaterial.Color = { 1, 0, 0, 1 };
+    outlineMaterial.Color = { 1, 1, 1, 1 };
 
     objectMaterial.Stencil.SDPass = StencilAction::Replace;
     outlineMaterial.Stencil.Function = StencilFunction::NotEqual;
@@ -112,7 +112,7 @@ void calculus::Start() {
     cube2.GetComponent<MeshComponent>().Mesh = &mesh;
     cube2.GetComponent<MaterialComponent>().Material = &outlineMaterial;
     cube2.GetComponent<Transform3DComponent>().Position = { 0, 0, 0 };
-    cube2.GetComponent<Transform3DComponent>().Scale = { 1.05, 1.05, 1.05 };
+    cube2.GetComponent<Transform3DComponent>().Scale = { 1.025, 1.025, 1.025 };
     cube.AttachChild(cube2);
 
 

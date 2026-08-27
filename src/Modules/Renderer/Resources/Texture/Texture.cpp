@@ -76,7 +76,7 @@ void Texture::Load() {
         Data.data());
 
     if (AutoMipmaps) {
-        glGenerateMipmap(GL_TEXTURE_2D);
+        glGenerateMipmap(static_cast<GLenum>(Target));
     }
 
     glActiveTexture(GL_TEXTURE0);
@@ -97,5 +97,8 @@ void Texture::SetParameters() const {
     glTexParameteri(static_cast<GLenum>(Target), GL_TEXTURE_WRAP_T, static_cast<GLint>(WrapT));
     glTexParameteri(static_cast<GLenum>(Target), GL_TEXTURE_MIN_FILTER, static_cast<GLint>(MinFilter));
     glTexParameteri(static_cast<GLenum>(Target), GL_TEXTURE_MAG_FILTER, static_cast<GLint>(MagFilter));
+}
+
+void Texture::LoadCubemap() {
 }
 } // namespace N

@@ -1,36 +1,3 @@
-#version 450 core
-out vec4 FragColor;
-
-in vec2 vUV;
-in vec4 vPosition;
-in vec4 vColor;
-in vec3 vNormal;
-in vec4 vWorldPosition;
-
-uniform vec3 VIEW_POSITION;
-uniform float TIME;
-
-struct Material {
-    vec4 Color;
-    vec3 Ambient;
-    vec3 Diffuse;
-    vec3 Specular;
-    vec3 Emission;
-
-    float Shininess;
-
-    sampler2D DiffuseMap;
-    sampler2D SpecularMap;
-    sampler2D EmissionMap;
-};
-
-uniform Material MATERIAL;
-
-void CheckAlpha(){
-    if (FragColor.a < 0.1)
-    discard;
-}
-
 vec4 Kernel(sampler2D tex, vec2 uv, float kernel[9], float offset) {
     vec2 offsets[9] = vec2[](
             vec2(-offset, offset),
@@ -87,36 +54,4 @@ vec4 EdgeDetectionKernel(sampler2D tex, vec2 uv, float offset) {
     );
 
     return Kernel(tex, uv, kernel, offset);
-}
-
-vec4 Inversion(sampler2D tex, vec2 uv) {
-    return 1.0 - texture(tex, uv);
-}
-
-vec4 Grayscale(sampler2D tex, vec2 uv) {
-    vec4 color = texture(tex, uv);
-
-    float red = 0.2126 * color.r;
-    float green = 0.7152 * color.g;
-    float blue = 0.0722 * color.b;
-
-    float average = red + green + blue;
-
-    return vec4(average, average, average, 1.0);
-}
-
-vec4 Pixelated(sampler2D tex, vec2 uv, vec2 pixelSize, vec2 resolution) {
-    vec2 normalizedPixelSize = pixelSize / resolution;
-    vec2 pixelUV = normalizedPixelSize * floor(uv / normalizedPixelSize);
-
-    return texture(tex, pixelUV);
-}
-
-
-uniform sampler2D colorbuffer;
-
-
-
-void main() {
-    FragColor = Inversion(colorbuffer, vUV;
 }
