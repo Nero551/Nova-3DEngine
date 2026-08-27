@@ -12,9 +12,12 @@ struct Renderer : Module {
     U::CheckedPtr<Mesh> ScreenMesh{ "Renderer has no Screen Mesh to render on" };
 
 protected:
+    void AddSystems() override;
+    void BootupFramebuffers();
     void OnStart() override;
     void OnBeginFrame(double dt) override;
+    void RenderWorld();
+    void PresentFramebuffer();
     void OnRender() override;
-    void AddSystems() override;
 };
 } // namespace N

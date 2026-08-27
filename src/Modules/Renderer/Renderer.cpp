@@ -18,14 +18,12 @@
 #include "Systems/LightingSystem.hpp"
 
 namespace N {
-void Renderer::OnStart() {
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_STENCIL_TEST);
-    glEnable(GL_BLEND);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_FRONT);
-    glFrontFace(GL_CCW);
+void Renderer::AddSystems() {
+    AddSystem<CameraSystem>();
+    AddSystem<LightingSystem>();
+}
 
+void Renderer::BootupFramebuffers() {
     std::vector vertices = { Vertex({ -1.0f, -1.0f, 0.0f, 1.0f }, {}, { 0.0f, 0.0f }, {}),
         Vertex({ 1.0f, -1.0f, 0.0f, 1.0f }, {}, { 1.0f, 0.0f }, {}),
         Vertex({ 1.0f, 1.0f, 0.0f, 1.0f }, {}, { 1.0f, 1.0f }, {}),
@@ -82,7 +80,17 @@ void Renderer::OnStart() {
     Framebuffer->AttachTexture(FramebufferAttachment::Color0, colorTexture);
     Framebuffer->AttachRenderBuffer(FramebufferAttachment::DepthStencil, depthstencilBuffer);
     Framebuffer->IsComplete();
+}
 
+void Renderer::OnStart() {
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_STENCIL_TEST);
+    glEnable(GL_BLEND);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_FRONT);
+    glFrontFace(GL_CCW);
+
+    BootupFramebuffers();
     glfwSetFramebufferSizeCallback(Engine::Get().Window.GetGlfwWindow(), [](GLFWwindow*, const int w, const int h) {
         glViewport(0, 0, w, h);
         auto& renderer = Engine::Get().GetModule<Renderer>();
@@ -97,10 +105,7 @@ void Renderer::OnBeginFrame(double dt) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
-// TODO- if there is multiple semi-transparent objects behind each other , depth testing breaks blending.
-//  fix this by classifying render passes by transparency, pairs well with future render batches / instancing.
-//  for ordering semi-transparent object by distance , use a map , it auto sorts.
-void Renderer::OnRender() {
+void Renderer::RenderWorld() {
     auto& camera = World::Get().ActiveCamera;
 
     M::Matrix4 projection = camera->GetComponent<CameraComponent>().GetProjectionMatrix();
@@ -140,7 +145,9 @@ void Renderer::OnRender() {
             meshComponent.Mesh->Draw();
         }
     }
+}
 
+void Renderer::PresentFramebuffer() {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glClearColor(1, 1, 1, 1);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -157,8 +164,11 @@ void Renderer::OnRender() {
     ScreenMesh->Draw();
 }
 
-void Renderer::AddSystems() {
-    AddSystem<CameraSystem>();
-    AddSystem<LightingSystem>();
+// TODO- if there is multiple semi-transparent objects behind each other , depth testing breaks blending.
+//  fix this by classifying render passes by transparency, pairs well with future render batches / instancing.
+//  for ordering semi-transparent object by distance , use a map , it auto sorts.
+void Renderer::OnRender() {
+    RenderWorld();
+    PresentFramebuffer();
 }
 } // namespace N
