@@ -1,4 +1,5 @@
 #pragma once
+
 #include <vector>
 
 #include "Texture.hpp"
@@ -6,80 +7,48 @@
 #include "Utilities/Logger.hpp"
 
 namespace N {
+/**
+ * @brief Represents a two-dimensional OpenGL texture resource.
+ *
+ * Extends the generic Texture resource with CPU-side pixel data and
+ * image loading support for 2D textures.
+ */
 struct Texture2D : Texture {
-    /** CPU-side pixel data used when loading the texture to the GPU. */
+    /** CPU-side pixel data uploaded to the GPU when the texture is generated. */
     std::vector<unsigned char> Data;
 
-
+    /**
+     * @brief Creates a 2D texture resource.
+     *
+     * The texture target is automatically set to Texture2D.
+     *
+     * @param name Resource name.
+     */
     Texture2D(const std::string& name) : Texture(name, TextureTarget::Texture2D) {
     }
 
-    void Generate() override {
-        if (IsGenerated()) {
-            return;
-        }
-
-        glGenTextures(1, &Id);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, Id);
-        SetParameters();
-
-        glTexImage2D(GL_TEXTURE_2D,
-            0,
-            static_cast<GLint>(InternalFormat),
-            Width,
-            Height,
-            0,
-            static_cast<GLenum>(Format),
-            static_cast<GLenum>(DataType),
-            Data.data());
-
-        if (AutoMipmaps) {
-            glGenerateMipmap(GL_TEXTURE_2D);
-        }
-
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, 0);
-    }
-
+    /**
+     * @brief Generates the OpenGL 2D texture object.
+     *
+     * Creates the texture object, binds it to texture unit 0, applies the
+     * configured texture parameters, and uploads the stored pixel data.
+     * Mipmaps are generated automatically when AutoMipmaps is enabled.
+     *
+     * If the texture has already been generated, no action is taken.
+     */
+    void Generate() override;
 
     /**
-     * @brief Replaces the texture's data and configuration with the supplied image's data.
+     * @brief Replaces the texture's data and configuration with an image.
      *
-     * Updates the texture dimensions, pixel data, source format, and internal
-     * format using the supplied image. Existing GPU resources are not reloaded.
+     * Updates the texture dimensions, pixel data, data type, mipmap setting,
+     * source format, and internal format based on the image's channel count.
+     * The existing GPU texture is not regenerated automatically.
      *
-     * @param image Image to use for the texture.
+     * @param image Image to use as the texture's source data.
      * @remark The image should be vertically flipped when loaded to account
      * for the difference between image and OpenGL texture coordinates.
      */
-    void UseImage(const U::Image& image) {
-        Width = image.Width;
-        Height = image.Height;
-        Data = image.Pixels;
-        DataType = TextureDataType::UnsignedByte;
-        AutoMipmaps = true;
-
-        switch (image.Channels) {
-        case U::Image::ColorChannels::R:
-            Format = TextureFormat::Red;
-            InternalFormat = TextureInternalFormat::R8;
-            break;
-        case U::Image::ColorChannels::RG:
-            Format = TextureFormat::RG;
-            InternalFormat = TextureInternalFormat::RG8;
-            break;
-        case U::Image::ColorChannels::RGB:
-            Format = TextureFormat::RGB;
-            InternalFormat = TextureInternalFormat::RGB8;
-            break;
-        case U::Image::ColorChannels::RGBA:
-            Format = TextureFormat::RGBA;
-            InternalFormat = TextureInternalFormat::RGBA8;
-            break;
-        default:
-            U::Logger::Error("Unsupported Texture Channel Count");
-        }
-    }
+    void UseImage(const U::Image& image);
 };
 } // namespace N
