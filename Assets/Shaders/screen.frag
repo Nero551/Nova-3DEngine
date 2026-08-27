@@ -4,5 +4,5 @@ uniform sampler2D colorbuffer;
 
 void main()
 {
-    FragColor = texture(colorbuffer, vUV);
+    FragColor = texture(colorbuffer, vUV) * sin(TIME);
 }

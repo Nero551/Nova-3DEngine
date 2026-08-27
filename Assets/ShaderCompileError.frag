@@ -33,8 +33,9 @@ void CheckAlpha(){
 
 
 uniform sampler2D colorbuffer;
+uniform float TIME;
 
 void main()
 {
-    FragColor = vec4(1, 0, 01);
+    FragColor = texture(colorbuffer, vUV) * TIME;
 }

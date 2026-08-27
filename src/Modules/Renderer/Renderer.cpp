@@ -7,8 +7,8 @@
 #include "Core/InnerCore/Engine.hpp"
 #include "Core/OuterCore/ECS/Entity.hpp"
 #include "Core/Services/ResourceManager.hpp"
-#include "Framebuffer.hpp"
 #include "Primitives/Primitives.hpp"
+#include "Resources/Framebuffer/Framebuffer.hpp"
 #include "Resources/Shader/Uniforms/FloatUniform.hpp"
 #include "Resources/Shader/Uniforms/IntUniform.hpp"
 #include "Resources/Shader/Uniforms/Matrix3Uniform.hpp"
@@ -79,8 +79,8 @@ void Renderer::OnStart() {
     depthstencilBuffer.Generate();
 
     Framebuffer->Bind();
-    Framebuffer->AttachTexture(TextureAttachment::Color, colorTexture);
-    Framebuffer->AttachRenderBuffer(TextureAttachment::DepthStencil, depthstencilBuffer);
+    Framebuffer->AttachTexture(FramebufferAttachment::Color0, colorTexture);
+    Framebuffer->AttachRenderBuffer(FramebufferAttachment::DepthStencil, depthstencilBuffer);
     Framebuffer->IsComplete();
 
     glfwSetFramebufferSizeCallback(Engine::Get().Window.GetGlfwWindow(), [](GLFWwindow*, const int w, const int h) {
@@ -150,6 +150,8 @@ void Renderer::OnRender() {
         ScreenMaterial->AssignTexture(*texture, i);
         i++;
     }
+
+    ScreenMaterial->Shader->SetUniform(FloatUniform("TIME", static_cast<float>(Engine::Get().GetTime())));
 
     ScreenMaterial->Use();
     ScreenMesh->Draw();
