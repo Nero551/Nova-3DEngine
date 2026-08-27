@@ -22,10 +22,10 @@ struct ShaderSource : Resource {
     std::string Version = "version 450 core";
 
     // TODO- it would be really cool if i could have methods for adding code
-    // dynamically , like GenerateInt("MaxLights", 20)
+    //  dynamically , like GenerateInt("MaxLights", 20)
     //  and it adds it to the shader code, (hint: dont forget std::variants)
 
-    ShaderSource(const std::string& name, const std::string& path, ShaderStage stage, std::string version = "version 330 core");
+    ShaderSource(const std::string& name, const std::string& path, ShaderStage stage, std::string version = "version 450 core");
 
     ~ShaderSource() override;
     unsigned int GetId() const;

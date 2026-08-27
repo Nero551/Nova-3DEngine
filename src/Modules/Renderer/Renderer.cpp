@@ -23,7 +23,7 @@ void Renderer::AddSystems() {
     AddSystem<LightingSystem>();
 }
 
-void Renderer::BootupFramebuffers() {
+void Renderer::SetupFramebuffers() {
     std::vector vertices = { Vertex({ -1.0f, -1.0f, 0.0f, 1.0f }, {}, { 0.0f, 0.0f }, {}),
         Vertex({ 1.0f, -1.0f, 0.0f, 1.0f }, {}, { 1.0f, 0.0f }, {}),
         Vertex({ 1.0f, 1.0f, 0.0f, 1.0f }, {}, { 1.0f, 1.0f }, {}),
@@ -68,13 +68,11 @@ void Renderer::BootupFramebuffers() {
     colorTexture.AutoMipmaps = false;
     colorTexture.MagFilter = TextureFilter::Linear;
     colorTexture.MinFilter = TextureFilter::Linear;
-    colorTexture.Load();
 
     auto& depthstencilBuffer = resources.Load<Renderbuffer>("[Renderer] DepthStencil Render Buffer");
     depthstencilBuffer.Height = window.GetHeight();
     depthstencilBuffer.Width = window.GetWidth();
     depthstencilBuffer.InternalFormat = TextureInternalFormat::Depth24Stencil8;
-    depthstencilBuffer.Generate();
 
     Framebuffer->Bind();
     Framebuffer->AttachTexture(FramebufferAttachment::Color0, colorTexture);
@@ -90,7 +88,7 @@ void Renderer::OnStart() {
     glCullFace(GL_FRONT);
     glFrontFace(GL_CCW);
 
-    BootupFramebuffers();
+    SetupFramebuffers();
     glfwSetFramebufferSizeCallback(Engine::Get().Window.GetGlfwWindow(), [](GLFWwindow*, const int w, const int h) {
         glViewport(0, 0, w, h);
         auto& renderer = Engine::Get().GetModule<Renderer>();

@@ -16,5 +16,5 @@ void CalculateSpotLight(Light light, vec3 lightDir, out float cutOff, out float 
     vec3 spotDir = normalize(-light.Direction);
     float cosTheta = dot(lightDir, spotDir);
     float epsilon = light.InnerCutOff - light.OuterCutOff;
-    cutOff = clamp((cosTheta - light.OuterCutOff) / epsilon, 0.0, 1) * light.Intensity;
+    cutOff = clamp((cosTheta - light.OuterCutOff) / epsilon, 0.0, 1.0f) * light.Intensity;
 }

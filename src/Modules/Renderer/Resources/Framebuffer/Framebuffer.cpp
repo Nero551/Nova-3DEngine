@@ -41,6 +41,8 @@ bool Framebuffer::IsComplete() {
 
 void Framebuffer::AttachTexture(FramebufferAttachment textureAttachment, Texture& texture) {
     Bind();
+    texture.Load();
+
     TextureAttachments.emplace(textureAttachment, &texture);
     glFramebufferTexture2D(static_cast<GLenum>(Target),
         static_cast<GLenum>(textureAttachment),
@@ -51,6 +53,7 @@ void Framebuffer::AttachTexture(FramebufferAttachment textureAttachment, Texture
 
 void Framebuffer::AttachRenderBuffer(FramebufferAttachment attachment, Renderbuffer& renderbuffer) {
     Bind();
+    renderbuffer.Generate();
     RenderBuffers.emplace(attachment, &renderbuffer);
     glFramebufferRenderbuffer(
         static_cast<GLenum>(Target), static_cast<GLenum>(attachment), GL_RENDERBUFFER, renderbuffer.GetId());

@@ -13,7 +13,7 @@ struct Renderer : Module {
 
 protected:
     void AddSystems() override;
-    void BootupFramebuffers();
+    void SetupFramebuffers();
     void OnStart() override;
     void OnBeginFrame(double dt) override;
     void RenderWorld();
