@@ -102,3 +102,4 @@
 - redesigned texture system
 - Framebuffers & Renderbuffers
 - Cubemaps
+- Uniform buffers

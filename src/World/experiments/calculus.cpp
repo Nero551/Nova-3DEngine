@@ -69,6 +69,10 @@ void calculus::Start() {
     objectShader.AssignSource(
         resourceManager.Load<ShaderSource>("objectVert", "Assets/Shaders/shader.vert", ShaderStage::Vertex));
 
+    // objectShader.AssignSource(
+    //     resourceManager.Load<ShaderSource>("objectGeom", "Assets/Shaders/shader.geom", ShaderStage::Geometry));
+
+
     auto& objectMaterial = resourceManager.Load<Material>("material");
     objectMaterial.Shader = &objectShader;
 

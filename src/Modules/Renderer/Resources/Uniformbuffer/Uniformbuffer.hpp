@@ -7,6 +7,9 @@ namespace N {
  * @brief Represents an OpenGL Uniform Buffer Object.
  */
 struct Uniformbuffer : Resource {
+    // TODO- currently doesn't store uniforms nor has automatic offset calculation, do later.
+    //  uniforms have to be set repeatedly. they aren't saved on the cpu and repeatedly sent to the gpu automatically.
+
     /** @brief Size of the buffer in bytes. */
     unsigned int Size = 0;
 

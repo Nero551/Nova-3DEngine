@@ -43,6 +43,9 @@ void ShaderSource::Compile() {
         if (Stage == ShaderStage::Vertex) {
             U::FileSystem::WriteFile("Assets/ShaderCompileError.vert", GeneratedCode);
         }
+        if (Stage == ShaderStage::Geometry) {
+            U::FileSystem::WriteFile("Assets/ShaderCompileError.geom", GeneratedCode);
+        }
     }
 
     const char* string = GeneratedCode.c_str();
