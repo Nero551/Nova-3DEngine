@@ -1,3 +1,5 @@
+#include "../GlobalUniforms.glsl"
+
 out vec4 FragColor;
 
 in vec2 vUV;
@@ -7,8 +9,7 @@ in vec3 vNormal;
 in vec4 vWorldPosition;
 in vec3 vUVW;
 
-uniform vec3 VIEW_POSITION;
-uniform float TIME;
+
 
 struct Material {
     vec4 Color;

@@ -1,9 +1,8 @@
 #include "Includes/Lighting/Lighting.frag"
 
 
-uniform samplerCube cubemap;
 
 void main()
 {
-    FragColor = texture(cubemap, vUVW);
+    FragColor = vec4(Lighting(), 1) * MATERIAL.Color;
 }

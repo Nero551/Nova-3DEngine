@@ -1,3 +1,5 @@
+#include "../GlobalUniforms.glsl"
+
 layout (location = 0) in vec4 aPosition;
 layout (location = 1) in vec4 aColor;
 layout (location = 2) in vec2 aUV;
@@ -11,12 +13,7 @@ out vec3 vNormal;
 out vec3 vUVW;
 
 uniform mat4 MODEL_MATRIX;
-uniform mat4 VIEW_MATRIX;
-uniform mat4 PROJECTION_MATRIX;
 uniform mat3 NORMAL_MATRIX;
-
-uniform vec3 VIEW_POSITION;
-uniform float TIME;
 
 void DefaultVertex()
 {

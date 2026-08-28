@@ -1,4 +1,12 @@
 #version 450 core
+layout (std140, binding = 0) uniform Global {
+    mat4 VIEW_MATRIX;
+    mat4 PROJECTION_MATRIX;
+    float TIME;
+    vec3 VIEW_POSITION;
+};
+
+
 out vec4 FragColor;
 
 in vec2 vUV;
@@ -8,8 +16,7 @@ in vec3 vNormal;
 in vec4 vWorldPosition;
 in vec3 vUVW;
 
-uniform vec3 VIEW_POSITION;
-uniform float TIME;
+
 
 struct Material {
     vec4 Color;
@@ -142,9 +149,8 @@ vec3 Lighting() {
 
 
 
-uniform samplerCube cubemap;
 
 void main()
 {
-    FragColor = MATERIAL.COLOR;
+    FragColor = V;
 }

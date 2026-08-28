@@ -4,12 +4,14 @@
 #include "Resources/Framebuffer/Framebuffer.hpp"
 #include "Resources/Material/Material.hpp"
 #include "Resources/Mesh/Mesh.hpp"
+#include "Resources/Uniformbuffer/Uniformbuffer.hpp"
 
 namespace N {
 struct Renderer : Module {
     U::CheckedPtr<Framebuffer> Framebuffer{ "Renderer has no Framebuffer to render on" };
     U::CheckedPtr<Material> ScreenMaterial{ "Renderer has no Screen Material to render on" };
     U::CheckedPtr<Mesh> ScreenMesh{ "Renderer has no Screen Mesh to render on" };
+    U::CheckedPtr<Uniformbuffer> GUniformbuffer{ "Renderer has no Uniform buffer to use" };
 
 protected:
     void AddSystems() override;

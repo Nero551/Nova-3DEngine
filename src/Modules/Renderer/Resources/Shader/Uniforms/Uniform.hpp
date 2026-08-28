@@ -8,6 +8,6 @@ struct Uniform {
     virtual ~Uniform() {
     }
 
-    virtual void Upload(int location) = 0;
+    virtual void Upload(int location) {};
 };
 } // namespace N

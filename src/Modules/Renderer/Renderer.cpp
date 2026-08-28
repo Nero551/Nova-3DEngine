@@ -88,6 +88,11 @@ void Renderer::OnStart() {
     glEnable(GL_CULL_FACE);
     glCullFace(GL_FRONT);
     glFrontFace(GL_CCW);
+    glEnable(GL_PROGRAM_POINT_SIZE);
+
+    auto& resources = Service::Get<ResourceManager>();
+    GUniformbuffer = &resources.Load<Uniformbuffer>("[Renderer] Global Uniform buffer");
+    GUniformbuffer->Size = 160;
 
     SetupFramebuffers();
     glfwSetFramebufferSizeCallback(Engine::Get().Window.GetGlfwWindow(), [](GLFWwindow*, const int w, const int h) {
@@ -104,11 +109,20 @@ void Renderer::OnBeginFrame(double dt) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
+
+// TODO- uniform buffer objects
 void Renderer::RenderWorld() {
     auto& camera = World::Get().ActiveCamera;
 
     M::Matrix4 projection = camera->GetComponent<CameraComponent>().GetProjectionMatrix();
     M::Matrix4 view = GetSystem<CameraSystem>().GetViewMatrix();
+
+    GUniformbuffer->Set(view.Transpose(), 0);
+    GUniformbuffer->Set(projection.Transpose(), 64);
+    GUniformbuffer->Set(Engine::Get().GetTime(), 128);
+    GUniformbuffer->Set(camera->GetComponent<Transform3DComponent>().GlobalPosition, 144);
+    GUniformbuffer->Bind();
+
 
     for (auto& entity : World::Get().Root->GetDescendants()) {
         if (!entity->HasComponent<Transform3DComponent>()) {
@@ -123,16 +137,7 @@ void Renderer::RenderWorld() {
                 materialComponent.Material->Shader->Reload();
             }
 
-            materialComponent.Material->Shader->SetUniform(FloatUniform("TIME", static_cast<float>(Engine::Get().GetTime())));
-
-            materialComponent.Material->Shader->SetUniform(
-                Vector3Uniform("VIEW_POSITION", camera->GetComponent<Transform3DComponent>().GlobalPosition));
-
             materialComponent.Material->Shader->SetUniform(Matrix4Uniform("MODEL_MATRIX", transformComponent.GetModelMatrix()));
-
-            materialComponent.Material->Shader->SetUniform(Matrix4Uniform("VIEW_MATRIX", view));
-
-            materialComponent.Material->Shader->SetUniform(Matrix4Uniform("PROJECTION_MATRIX", projection));
 
             materialComponent.Material->Shader->SetUniform(Matrix3Uniform("NORMAL_MATRIX", transformComponent.GetNormalMatrix()));
 
