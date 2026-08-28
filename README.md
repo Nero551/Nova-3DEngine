@@ -101,3 +101,4 @@
 - per mesh face culling configurations
 - redesigned texture system
 - Framebuffers & Renderbuffers
+- Cubemaps

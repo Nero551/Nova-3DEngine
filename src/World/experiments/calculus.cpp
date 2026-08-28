@@ -80,7 +80,7 @@ void calculus::Start() {
     // mesh.RenderMode = RenderMode::SolidWireframe;
     cube.GetComponent<MaterialComponent>().Material = &objectMaterial;
     cube.GetComponent<Transform3DComponent>().Position = { 0, 0, 0 };
-    cube.GetComponent<Transform3DComponent>().Scale = { 50 };
+    cube.GetComponent<Transform3DComponent>().Scale = { 100 };
 
 
     U::Image image = { "Assets/icon.png", true };
@@ -89,6 +89,8 @@ void calculus::Start() {
     // auto& snowflake = resourceManager.Load<Texture2D>("snowflake");
     // snowflake.UseImage(image);
     // objectMaterial.AssignTexture(snowflake, 1);
+
+    // TODO- play rainworld , game i downloaded
 
     auto& cubemap = resourceManager.Load<Cubemap>("cubemap");
     cubemap.InternalFormat = TextureInternalFormat::RGB8;

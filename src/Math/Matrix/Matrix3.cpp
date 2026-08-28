@@ -181,6 +181,24 @@ bool Matrix3::NearlyEquals(const Matrix3& mat3, const float epsilon) const {
     return true;
 }
 
+Matrix4 Matrix3::ToMatrix4() const {
+    Matrix4 result{};
+
+    result.m[0][0] = m[0][0];
+    result.m[0][1] = m[0][1];
+    result.m[0][2] = m[0][2];
+
+    result.m[1][0] = m[1][0];
+    result.m[1][1] = m[1][1];
+    result.m[1][2] = m[1][2];
+
+    result.m[2][0] = m[2][0];
+    result.m[2][1] = m[2][1];
+    result.m[2][2] = m[2][2];
+
+    return result;
+}
+
 //* Matrices
 Matrix3 Matrix3::operator+(const Matrix3& mat3) const {
     Matrix3 result = Zero;

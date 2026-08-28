@@ -4,7 +4,7 @@
 
 namespace N {
 void Cubemap::Generate() {
-    // Texture::Generate();
+    Texture::Generate();
     if (IsGenerated()) {
         return;
     }
@@ -39,6 +39,7 @@ void Cubemap::Generate() {
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, intern, Width, Height, 0, format, dataType, Right.Pixels.data());
 
     glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, intern, Width, Height, 0, format, dataType, Left.Pixels.data());
+
     if (AutoMipmaps) {
         glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
     }

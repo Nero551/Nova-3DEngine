@@ -39,18 +39,6 @@ void Texture::Bind(const unsigned int unit) {
 
     glActiveTexture(GL_TEXTURE0 + unit);
     glBindTexture(static_cast<GLenum>(Target), Id);
-
-
-    if (Name == "cubemap") {
-        GLint width = 0;
-        GLint height = 0;
-
-        glGetTexLevelParameteriv(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_TEXTURE_WIDTH, &width);
-
-        glGetTexLevelParameteriv(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_TEXTURE_HEIGHT, &height);
-
-        U::Logger::Info(std::format("Cubemap GPU: {}x{}", width, height));
-    }
 }
 
 void Texture::Unbind(unsigned int unit) {

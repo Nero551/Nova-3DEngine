@@ -15,12 +15,9 @@ static void ProcessVertices(std::vector<Vertex>& vertices, const aiMesh* mesh) {
     for (unsigned int v = 0; v < mesh->mNumVertices; v++) {
         M::Vector4 pos = { mesh->mVertices[v].x, mesh->mVertices[v].y, mesh->mVertices[v].z, 1 };
         M::Vector3 normal = { mesh->mNormals[v].x, mesh->mNormals[v].y, mesh->mNormals[v].z };
-        M::Vector2 uv;
+        M::Vector2 uv = { 0, 0 };
         if (mesh->mTextureCoords[0]) {
             uv = { mesh->mTextureCoords[0][v].x, mesh->mTextureCoords[0][v].y };
-        }
-        else {
-            uv = { 0.0f, 0.0f };
         }
         vertices.emplace_back(pos, M::Vector4(1), uv, normal);
     }

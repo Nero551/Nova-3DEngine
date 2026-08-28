@@ -69,6 +69,7 @@ M::Matrix4 CameraSystem::GetViewMatrix() {
     M::Vector3 up = transformComponent.GetUp();
 
     M::Matrix4 view = M::Matrix4::LookAt(pos, pos + forward, up);
+    ;
 
     return view;
 }

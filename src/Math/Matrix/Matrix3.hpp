@@ -4,6 +4,8 @@
 #include "Matrix2.hpp"
 
 namespace N::M {
+struct Matrix4;
+
 /**
  * @brief 3x3 floating-point matrix.
  *
@@ -137,6 +139,9 @@ struct Matrix3 {
      * @param epsilon Maximum allowed difference between corresponding elements.
      */
     [[nodiscard]] bool NearlyEquals(const Matrix3& mat3, float epsilon = EPSILON) const;
+
+    /** @brief returns a matrix 4 version of this matrix 3. with all the extra values = 0 */
+    [[nodiscard]] Matrix4 ToMatrix4() const;
 
     Matrix3 operator+(const Matrix3& mat3) const;
     Matrix3 operator-(const Matrix3& mat3) const;
