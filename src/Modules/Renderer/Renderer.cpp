@@ -110,7 +110,6 @@ void Renderer::OnBeginFrame(double dt) {
 }
 
 
-// TODO- uniform buffer objects
 void Renderer::RenderWorld() {
     auto& camera = World::Get().ActiveCamera;
 
