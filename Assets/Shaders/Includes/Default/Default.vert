@@ -5,22 +5,25 @@ layout (location = 1) in vec4 aColor;
 layout (location = 2) in vec2 aUV;
 layout (location = 3) in vec3 aNormal;
 
-out vec4 vPosition;
-out vec4 vWorldPosition;
-out vec4 vColor;
-out vec2 vUV;
-out vec3 vNormal;
-out vec3 vUVW;
+out VS_OUT {
+    vec4 Position;
+    vec4 WorldPosition;
+    vec4 Color;
+    vec3 Normal;
+    vec2 UV;
+    vec3 UVW;
+
+} vs_out;
 
 uniform mat4 MODEL_MATRIX;
 uniform mat3 NORMAL_MATRIX;
 
 void DefaultVertex()
 {
-    vNormal = normalize(NORMAL_MATRIX * aNormal);
-    vColor = aColor;
-    vPosition = PROJECTION_MATRIX * VIEW_MATRIX * MODEL_MATRIX * aPosition;
-    vWorldPosition = MODEL_MATRIX * aPosition;
-    vUV = aUV;
-    vUVW = normalize(aPosition.xyz);
+    vs_out.Normal = normalize(NORMAL_MATRIX * aNormal);
+    vs_out.Color = aColor;
+    vs_out.Position = PROJECTION_MATRIX * VIEW_MATRIX * MODEL_MATRIX * aPosition;
+    vs_out.WorldPosition = MODEL_MATRIX * aPosition;
+    vs_out.UV = aUV;
+    vs_out.UVW = normalize(aPosition.xyz);
 }

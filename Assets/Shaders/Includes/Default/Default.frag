@@ -2,14 +2,14 @@
 
 out vec4 FragColor;
 
-in vec2 vUV;
-in vec4 vPosition;
-in vec4 vColor;
-in vec3 vNormal;
-in vec4 vWorldPosition;
-in vec3 vUVW;
-
-
+in VS_OUT {
+    vec4 Position;
+    vec4 WorldPosition;
+    vec4 Color;
+    vec3 Normal;
+    vec2 UV;
+    vec3 UVW;
+} fs_in;
 
 struct Material {
     vec4 Color;

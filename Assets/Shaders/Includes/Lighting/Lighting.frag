@@ -6,7 +6,7 @@ uniform int MAX_LIGHTS;
 uniform Light LIGHTS[NR_LIGHTS];
 
 vec3 CalculateLight(Light light) {
-    vec3 lightDir = normalize(light.Position - vWorldPosition.xyz);
+    vec3 lightDir = normalize(light.Position - fs_in.WorldPosition.xyz);
     float cutOff = 1;
     float attenuation = 1;
 

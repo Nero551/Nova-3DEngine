@@ -1,41 +1,36 @@
 layout (triangles) in;
 layout (triangle_strip, max_vertices = 3) out;
 
-out vec4 vPosition;
-out vec4 vWorldPosition;
-out vec4 vColor;
-out vec2 vUV;
-out vec3 vNormal;
-out vec3 vUVW;
-//
-in vec2 vUV[];
-in vec4 vPosition[];
-in vec4 vColor[];
-in vec3 vNormal[];
-in vec4 vWorldPosition[];
-in vec3 vUVW[];
-//
+in VS_OUT {
+    vec4 Position;
+    vec4 WorldPosition;
+    vec4 Color;
+    vec3 Normal;
+    vec2 UV;
+    vec3 UVW;
+} gs_in[];
 
-//out VS_OUT {
+out VS_OUT {
+    vec4 Position;
+    vec4 WorldPosition;
+    vec4 Color;
+    vec3 Normal;
+    vec2 UV;
+    vec3 UVW;
+} gs_out;
 
-//} vs_out;
-
-//in VS_OUT {
-
-//} gs_in[];
 
 void main()
 {
     for (int i = 0; i < gl_in.length(); i++)
     {
         gl_Position = gl_in[i].gl_Position;
-        //
-        //        vPosition = vPosition[i];
-        //        vWorldPosition = vWorldPosition[i];
-        //        vColor = vColor[i];
-        //        vUV = vUV[i];
-        //        vNormal = vNormal[i];
-        //        vUVW = vUVW[i];
+        gs_out.Position = gs_in[i].Position;
+        gs_out.WorldPosition = gs_in[i].WorldPosition;
+        gs_out.Color = gs_in[i].Color;
+        gs_out.UV = gs_in[i].UV;
+        gs_out.Normal = gs_in[i].Normal;
+        gs_out.UVW = gs_in[i].UVW;
 
         EmitVertex();
     }

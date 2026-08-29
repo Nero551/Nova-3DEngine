@@ -4,6 +4,6 @@ uniform sampler2D windowTexture;
 
 void main()
 {
-    FragColor = texture(windowTexture, vUV);
+    FragColor = texture(windowTexture, fs_in.UV);
     CheckAlpha();
 }

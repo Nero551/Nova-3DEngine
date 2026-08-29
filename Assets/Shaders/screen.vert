@@ -1,10 +1,10 @@
 #include "Includes/Default/Default.vert"
 
 void main() {
-    vNormal = normalize(aNormal);
-    vColor = aColor;
-    vPosition = aPosition;
-    vWorldPosition = aPosition;
-    vUV = aUV;
-    gl_Position = vPosition;
+    vs_out.Normal = normalize(aNormal);
+    vs_out.Color = aColor;
+    vs_out.Position = aPosition;
+    vs_out.WorldPosition = aPosition;
+    vs_out.UV = aUV;
+    gl_Position = vs_out.Position;
 }
