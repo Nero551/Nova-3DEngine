@@ -103,3 +103,5 @@
 - Framebuffers & Renderbuffers
 - Cubemaps
 - Uniform buffers
+
+![Post-Processed Cube](Docs/Screenshots/Post-ProccesedCube.png)
