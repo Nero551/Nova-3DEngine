@@ -126,7 +126,6 @@ void Renderer::RenderWorld() {
     for (auto& batch : Batches) {
         batch.ModelMatrices.clear();
         batch.NormalMatrices.clear();
-        batch.Buffer.SetData(std::vector<M::Matrix4>{});
     }
 
     for (auto& entity : World::Get().Root->GetDescendants()) {
@@ -147,9 +146,8 @@ void Renderer::RenderWorld() {
                 Batches.emplace_back();
 
                 auto& batch = Batches.back();
-
-                batch.Mesh = meshComponent.Mesh;
                 batch.Material = materialComponent.Material;
+                batch.Mesh = meshComponent.Mesh;
                 batch.ModelMatrices.emplace_back(transformComponent.GetModelMatrix().Transpose());
                 batch.NormalMatrices.emplace_back(transformComponent.GetNormalMatrix().Transpose());
             }
@@ -157,6 +155,7 @@ void Renderer::RenderWorld() {
                 it->ModelMatrices.emplace_back(transformComponent.GetModelMatrix().Transpose());
                 it->NormalMatrices.emplace_back(transformComponent.GetNormalMatrix().Transpose());
             }
+            U::Logger::Info(transformComponent.GetModelMatrix());
         }
     }
 
@@ -168,8 +167,6 @@ void Renderer::RenderWorld() {
 
         batch.Mesh->Generate();
         batch.Mesh->VAO.Bind();
-        // batch.Buffer.Delete();
-        // batch.Buffer.Generate();
         batch.Buffer.Bind();
 
         batch.Mesh->VAO.SetMatrix4AttribPointer(4);

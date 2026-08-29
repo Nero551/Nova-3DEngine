@@ -1,6 +1,6 @@
 #pragma once
 #include "Core/OuterCore/Resource.hpp"
-#include "Modules/Renderer/ArrayBuffer.hpp"
+#include "Modules/Renderer/Resources/Mesh/Buffers/ArrayBuffer.hpp"
 #include "OpenGL.hpp"
 
 namespace N {

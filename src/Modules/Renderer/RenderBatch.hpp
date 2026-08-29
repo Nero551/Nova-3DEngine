@@ -11,6 +11,7 @@ struct RenderBatch {
     ArrayBuffer Buffer;
 
     RenderBatch() {
+        Buffer.Usage = BufferUsage::DynamicDraw;
         Buffer.Generate();
     }
 };

@@ -21,14 +21,11 @@ void Mesh::Generate() {
     if (IsGenerated()) {
         return;
     }
-    VAO.Generate();
     VAO.Bind();
 
-    VBO.Generate();
     VBO.SetData(Vertices);
     VBO.Bind();
 
-    EBO.Generate();
     EBO.SetData(Indices);
     EBO.Bind();
 
