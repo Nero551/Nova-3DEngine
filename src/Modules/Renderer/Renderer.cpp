@@ -124,8 +124,7 @@ void Renderer::RenderWorld() {
     GUniformbuffer->Bind();
 
     for (auto& batch : Batches) {
-        batch.ModelMatrices.clear();
-        batch.NormalMatrices.clear();
+        batch.Instances.clear();
     }
 
     for (auto& entity : World::Get().Root->GetDescendants()) {
@@ -148,29 +147,30 @@ void Renderer::RenderWorld() {
                 auto& batch = Batches.back();
                 batch.Material = materialComponent.Material;
                 batch.Mesh = meshComponent.Mesh;
-                batch.ModelMatrices.emplace_back(transformComponent.GetModelMatrix().Transpose());
-                batch.NormalMatrices.emplace_back(transformComponent.GetNormalMatrix().Transpose());
+                batch.Instances.emplace_back(
+                    transformComponent.GetModelMatrix().Transpose(), transformComponent.GetNormalMatrix().Transpose());
             }
             else {
-                it->ModelMatrices.emplace_back(transformComponent.GetModelMatrix().Transpose());
-                it->NormalMatrices.emplace_back(transformComponent.GetNormalMatrix().Transpose());
+                it->Instances.emplace_back(
+                    transformComponent.GetModelMatrix().Transpose(), transformComponent.GetNormalMatrix().Transpose());
             }
-            U::Logger::Info(transformComponent.GetModelMatrix());
         }
     }
 
     for (auto& batch : Batches) {
         batch.Material->Use();
 
-        int instanceCount = batch.ModelMatrices.size();
-        batch.Buffer.SetData(batch.ModelMatrices);
+        int instanceCount = batch.Instances.size();
+        batch.Buffer.SetData(batch.Instances);
 
         batch.Mesh->Generate();
         batch.Mesh->VAO.Bind();
         batch.Buffer.Bind();
 
-        batch.Mesh->VAO.SetMatrix4AttribPointer(4);
+        batch.Mesh->VAO.SetMatrix4AttribPointer(4, sizeof(InstanceData), 0);
+        batch.Mesh->VAO.SetMatrix3AttribPointer(8, sizeof(InstanceData), sizeof(M::Matrix4));
         batch.Mesh->VAO.SetMatrix4AttribDivisor(4, 1);
+        batch.Mesh->VAO.SetMatrix3AttribDivisor(8, 1);
 
         batch.Mesh->DrawInstanced(instanceCount);
     }

@@ -40,17 +40,17 @@ void VertexArray::SetAttribPointer(int index, int size, DataType type, size_t st
     glVertexAttribPointer(index, size, static_cast<GLenum>(type), normalized, stride, reinterpret_cast<void*>(offset));
 }
 
-void VertexArray::SetMatrix3AttribPointer(int startIndex) {
-    SetAttribPointer(startIndex, 3, DataType::Float, sizeof(M::Matrix3), 0);
-    SetAttribPointer(startIndex + 1, 3, DataType::Float, sizeof(M::Matrix3), sizeof(M::Vector3));
-    SetAttribPointer(startIndex + 2, 3, DataType::Float, sizeof(M::Matrix3), 2 * sizeof(M::Vector3));
+void VertexArray::SetMatrix3AttribPointer(int startIndex, int stride, int offset) {
+    SetAttribPointer(startIndex, 3, DataType::Float, stride, 0 + offset);
+    SetAttribPointer(startIndex + 1, 3, DataType::Float, stride, sizeof(M::Vector3) + offset);
+    SetAttribPointer(startIndex + 2, 3, DataType::Float, stride, 2 * sizeof(M::Vector3) + offset);
 }
 
-void VertexArray::SetMatrix4AttribPointer(int startIndex) {
-    SetAttribPointer(startIndex, 4, DataType::Float, sizeof(M::Matrix4), 0);
-    SetAttribPointer(startIndex + 1, 4, DataType::Float, sizeof(M::Matrix4), sizeof(M::Vector4));
-    SetAttribPointer(startIndex + 2, 4, DataType::Float, sizeof(M::Matrix4), 2 * sizeof(M::Vector4));
-    SetAttribPointer(startIndex + 3, 4, DataType::Float, sizeof(M::Matrix4), 3 * sizeof(M::Vector4));
+void VertexArray::SetMatrix4AttribPointer(int startIndex, int stride, int offset) {
+    SetAttribPointer(startIndex, 4, DataType::Float, stride, 0 + offset);
+    SetAttribPointer(startIndex + 1, 4, DataType::Float, stride, sizeof(M::Vector4) + offset);
+    SetAttribPointer(startIndex + 2, 4, DataType::Float, stride, 2 * sizeof(M::Vector4) + offset);
+    SetAttribPointer(startIndex + 3, 4, DataType::Float, stride, 3 * sizeof(M::Vector4) + offset);
 }
 
 void VertexArray::SetAttribDivisor(int index, int divisor) {

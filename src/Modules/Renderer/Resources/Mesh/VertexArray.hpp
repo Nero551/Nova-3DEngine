@@ -43,14 +43,18 @@ struct VertexArray {
     /**
      * @brief Maps a Matrix3 to three consecutive vertex attributes, one per column.
      * @param startIndex Attribute location of the first column.
+     * @param stride
+     * @param offset
      */
-    void SetMatrix3AttribPointer(int startIndex);
+    void SetMatrix3AttribPointer(int startIndex, int stride, int offset);
 
     /**
      * @brief Maps a Matrix4 to four consecutive vertex attributes, one per column.
      * @param startIndex Attribute location of the first column.
+     * @param stride
+     * @param offset
      */
-    void SetMatrix4AttribPointer(int startIndex);
+    void SetMatrix4AttribPointer(int startIndex, int stride, int offset);
 
     /**
      * @brief Controls how often an attribute advances when using instanced rendering.

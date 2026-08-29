@@ -3,11 +3,18 @@
 #include "Resources/Mesh/Mesh.hpp"
 
 namespace N {
+struct InstanceData {
+    M::Matrix4 ModelMatrix;
+    M::Matrix3 NormalMatrix;
+
+    InstanceData(const M::Matrix4& model, const M::Matrix3& normal) : ModelMatrix(model), NormalMatrix(normal) {
+    }
+};
+
 struct RenderBatch {
     U::CheckedPtr<Material> Material;
     U::CheckedPtr<Mesh> Mesh;
-    std::vector<M::Matrix4> ModelMatrices;
-    std::vector<M::Matrix3> NormalMatrices;
+    std::vector<InstanceData> Instances;
     ArrayBuffer Buffer;
 
     RenderBatch() {
