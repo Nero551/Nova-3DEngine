@@ -38,12 +38,12 @@ template <typename T> struct CheckedPtr {
     }
 
     /** @brief Compares the stored pointer with a raw pointer. */
-    bool operator==(T* otherPtr) {
+    bool operator==(T* otherPtr) const {
         return ptr == otherPtr;
     }
 
     /** @brief Compares the stored pointer with another checked pointer. */
-    bool operator==(const CheckedPtr<T>& otherCheckedPtr) {
+    bool operator==(const CheckedPtr<T>& otherCheckedPtr) const {
         return ptr == otherCheckedPtr.ptr;
     }
 

@@ -56,7 +56,7 @@ double Engine::GetTime() const {
 void Engine::Configure() {
     Window.SetIcon({ "Assets/icon.png" });
     // Window.SetSize(1980, 1200);
-    glfwSwapInterval(1);
+    glfwSwapInterval(0);
 
     Service::Add<ResourceManager>();
     Service::Add<EventBus>();

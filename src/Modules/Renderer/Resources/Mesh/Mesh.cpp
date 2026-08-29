@@ -37,7 +37,6 @@ void Mesh::Generate() {
     VAO.SetAttribPointer(2, 2, DataType::Float, sizeof(Vertex), offsetof(Vertex, UV));
     VAO.SetAttribPointer(3, 3, DataType::Float, sizeof(Vertex), offsetof(Vertex, Normal));
 
-
     VAO.Unbind();
     VBO.Unbind();
     EBO.Unbind();
@@ -88,8 +87,8 @@ void Mesh::DrawInstanced(int instanceCount) {
         static_cast<GLsizei>(instanceCount));
 
     VAO.Unbind();
-    VBO.Bind();
-    EBO.Bind();
+    VBO.Unbind();
+    EBO.Unbind();
 }
 
 void Mesh::Regenerate() {

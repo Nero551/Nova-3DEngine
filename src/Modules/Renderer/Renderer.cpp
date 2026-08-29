@@ -126,8 +126,8 @@ void Renderer::RenderWorld() {
     for (auto& batch : Batches) {
         batch.ModelMatrices.clear();
         batch.NormalMatrices.clear();
+        batch.Buffer.SetData(std::vector<M::Matrix4>{});
     }
-
 
     for (auto& entity : World::Get().Root->GetDescendants()) {
         if (entity->HasComponent<MaterialComponent, MeshComponent, Transform3DComponent>()) {
@@ -139,22 +139,23 @@ void Renderer::RenderWorld() {
                 materialComponent.Material->Shader->Reload();
             }
 
-            auto it = std::ranges::find_if(Batches, [meshComponent, materialComponent](const RenderBatch& batch) mutable {
+            auto it = std::ranges::find_if(Batches, [meshComponent, materialComponent](const RenderBatch& batch) {
                 return batch.Mesh == meshComponent.Mesh && batch.Material == materialComponent.Material;
             });
 
             if (it == Batches.end()) {
-                RenderBatch batch;
+                Batches.emplace_back();
+
+                auto& batch = Batches.back();
+
                 batch.Mesh = meshComponent.Mesh;
                 batch.Material = materialComponent.Material;
-                batch.ModelMatrices.push_back(transformComponent.GetModelMatrix().Transpose());
-                batch.NormalMatrices.push_back(transformComponent.GetNormalMatrix().Transpose());
-
-                Batches.push_back(batch);
+                batch.ModelMatrices.emplace_back(transformComponent.GetModelMatrix().Transpose());
+                batch.NormalMatrices.emplace_back(transformComponent.GetNormalMatrix().Transpose());
             }
             else {
-                it->ModelMatrices.push_back(transformComponent.GetModelMatrix().Transpose());
-                it->NormalMatrices.push_back(transformComponent.GetNormalMatrix().Transpose());
+                it->ModelMatrices.emplace_back(transformComponent.GetModelMatrix().Transpose());
+                it->NormalMatrices.emplace_back(transformComponent.GetNormalMatrix().Transpose());
             }
         }
     }
@@ -165,7 +166,10 @@ void Renderer::RenderWorld() {
         int instanceCount = batch.ModelMatrices.size();
         batch.Buffer.SetData(batch.ModelMatrices);
 
+        batch.Mesh->Generate();
         batch.Mesh->VAO.Bind();
+        // batch.Buffer.Delete();
+        // batch.Buffer.Generate();
         batch.Buffer.Bind();
 
         batch.Mesh->VAO.SetMatrix4AttribPointer(4);
