@@ -35,7 +35,7 @@ void Texture2D::UseImage(const U::Image& image) {
     Width = image.Width;
     Height = image.Height;
     Data = image.Pixels;
-    DataType = TextureDataType::UnsignedByte;
+    DataType = DataType::UnsignedByte;
     AutoMipmaps = true;
 
     switch (image.Channels) {

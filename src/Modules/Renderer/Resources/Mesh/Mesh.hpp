@@ -3,6 +3,7 @@
 #include "Core/OuterCore/Resource.hpp"
 #include "CullMode.hpp"
 #include "FrontFace.hpp"
+#include "Modules/Renderer/VertexBuffer.hpp"
 #include "RenderMode.hpp"
 #include "Topology.hpp"
 #include "Vertex.hpp"
@@ -16,6 +17,7 @@ namespace N {
  * is called.
  */
 struct Mesh : Resource {
+    VertexArray VAO;
     /** Rendering mode used when drawing the mesh. */
     RenderMode RenderMode = RenderMode::Solid;
 
@@ -76,6 +78,8 @@ struct Mesh : Resource {
      */
     void Draw();
 
+    void DrawInstanced(int instanceCount);
+
     /**
      * @brief Regenerates the mesh's OpenGL resources.
      *
@@ -85,15 +89,6 @@ struct Mesh : Resource {
     void Regenerate();
 
 private:
-    /** OpenGL vertex array object ID. */
-    unsigned int Id = 0;
-
-    /** OpenGL vertex buffer object ID. */
-    unsigned int VBO = 0;
-
-    /** OpenGL element buffer object ID. */
-    unsigned int EBO = 0;
-
     /** Issues the OpenGL draw call for the mesh's index data. */
     void DrawElements() const;
 
@@ -104,15 +99,6 @@ private:
      * culling according to the mesh's CullMode and FrontFace settings.
      */
     void ApplyCulling() const;
-
-    /** Creates and binds the vertex array object. */
-    void CreateVAO();
-
-    /** Creates and uploads the vertex buffer object. */
-    void CreateVBO();
-
-    /** Creates and uploads the element buffer object. */
-    void CreateEBO();
 
     /** Configures the vertex attribute pointers. */
     void SetupVertAttrPointers();

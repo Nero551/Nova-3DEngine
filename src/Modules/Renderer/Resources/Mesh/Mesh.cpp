@@ -7,35 +7,36 @@ Mesh::Mesh(const std::string& name) : Resource(name) {
 }
 
 Mesh::~Mesh() {
-    glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
-    glDeleteVertexArrays(1, &Id);
 }
 
 unsigned int Mesh::GetId() const {
-    return Id;
+    return VAO.GetId();
 }
 
 bool Mesh::IsGenerated() const {
-    return GetId() != 0;
+    return VAO.GetId() != 0;
 }
 
 void Mesh::Generate() {
     if (IsGenerated()) {
         return;
     }
-    CreateVAO();
-    CreateVBO();
-    CreateEBO();
-    SetupVertAttrPointers();
-    glBindVertexArray(0);
+    VAO.Generate(Vertices, Indices);
+    VAO.Bind();
+
+    VAO.SetAttribPointer(0, 4, DataType::Float, sizeof(Vertex), offsetof(Vertex, Position));
+    VAO.SetAttribPointer(1, 4, DataType::Float, sizeof(Vertex), offsetof(Vertex, Color));
+    VAO.SetAttribPointer(2, 2, DataType::Float, sizeof(Vertex), offsetof(Vertex, UV));
+    VAO.SetAttribPointer(3, 3, DataType::Float, sizeof(Vertex), offsetof(Vertex, Normal));
+
+    VAO.Unbind();
 }
 
 void Mesh::Draw() {
     Generate();
 
     ApplyCulling();
-    glBindVertexArray(Id);
+    VAO.Bind();
     if (RenderMode == RenderMode::Solid) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         DrawElements();
@@ -58,14 +59,26 @@ void Mesh::Draw() {
 
         glDepthFunc(GL_LESS);
     }
-    glBindVertexArray(0);
+    VAO.Unbind();
+}
+
+void Mesh::DrawInstanced(int instanceCount) {
+    Generate();
+
+    ApplyCulling();
+    VAO.Bind();
+
+    glDrawElementsInstanced(static_cast<GLenum>(Topology),
+        static_cast<GLsizei>(Indices.size()),
+        GL_UNSIGNED_INT,
+        nullptr,
+        static_cast<GLsizei>(instanceCount));
+
+    VAO.Unbind();
 }
 
 void Mesh::Regenerate() {
-    glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
-    glDeleteVertexArrays(1, &Id);
-    Id = 0;
+    VAO.Delete();
 }
 
 void Mesh::ApplyCulling() const {
@@ -82,40 +95,5 @@ void Mesh::ApplyCulling() const {
 
 void Mesh::DrawElements() const {
     glDrawElements(static_cast<GLenum>(Topology), static_cast<GLsizei>(Indices.size()), GL_UNSIGNED_INT, nullptr);
-}
-
-void Mesh::CreateVAO() {
-    glGenVertexArrays(1, &Id);
-    glBindVertexArray(Id);
-}
-
-void Mesh::CreateVBO() {
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, Vertices.size() * sizeof(Vertex), Vertices.data(), GL_STATIC_DRAW);
-}
-
-void Mesh::CreateEBO() {
-    glGenBuffers(1, &EBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, Indices.size() * sizeof(unsigned int), Indices.data(), GL_STATIC_DRAW);
-}
-
-void Mesh::SetupVertAttrPointers() {
-    // Position
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, Position)));
-    glEnableVertexAttribArray(0);
-
-    // Color
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, Color)));
-    glEnableVertexAttribArray(1);
-
-    // UV
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, UV)));
-    glEnableVertexAttribArray(2);
-
-    // Normal
-    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, Normal)));
-    glEnableVertexAttribArray(3);
 }
 } // namespace N

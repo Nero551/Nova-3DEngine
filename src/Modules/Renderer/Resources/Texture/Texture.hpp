@@ -1,8 +1,8 @@
 #pragma once
 
+#include "../../DataType.hpp"
 #include "Core/OuterCore/Resource.hpp"
 #include "Modules/Renderer/Resources/Shader/TextureFIlter.hpp"
-#include "TextureDataType.hpp"
 #include "TextureFormat.hpp"
 #include "TextureInternalFormat.hpp"
 #include "TextureTarget.hpp"
@@ -22,7 +22,7 @@ namespace N {
  */
 struct Texture : Resource {
     /** Data type used to interpret source pixel data. */
-    TextureDataType DataType = TextureDataType::UnsignedByte;
+    DataType DataType = DataType::UnsignedByte;
 
     /** Format of the source pixel data supplied to OpenGL. */
     TextureFormat Format = TextureFormat::RGBA;

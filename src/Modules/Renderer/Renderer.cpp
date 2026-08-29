@@ -63,7 +63,7 @@ void Renderer::SetupFramebuffers() {
     auto& colorTexture = resources.Load<Texture2D>("colorbuffer");
     colorTexture.InternalFormat = TextureInternalFormat::RGB8;
     colorTexture.Format = TextureFormat::RGB;
-    colorTexture.DataType = TextureDataType::UnsignedByte;
+    colorTexture.DataType = DataType::UnsignedByte;
     colorTexture.Width = window.GetWidth();
     colorTexture.Height = window.GetHeight();
     colorTexture.AutoMipmaps = false;
@@ -116,6 +116,12 @@ void Renderer::RenderWorld() {
     M::Matrix4 projection = camera->GetComponent<CameraComponent>().GetProjectionMatrix();
     M::Matrix4 view = GetSystem<CameraSystem>().GetViewMatrix();
 
+    std::vector<M::Matrix4> ModelMatrices;
+    std::vector<M::Matrix3> NormalMatrices;
+    std::vector<U::CheckedPtr<Material>> Materials;
+    std::vector<U::CheckedPtr<Mesh>> Meshes;
+    ArrayBuffer instanceVBO;
+
     GUniformbuffer->Set(view.Transpose(), 0);
     GUniformbuffer->Set(projection.Transpose(), 64);
     GUniformbuffer->Set(Engine::Get().GetTime(), 128);
@@ -129,25 +135,35 @@ void Renderer::RenderWorld() {
         }
         auto& transformComponent = entity->GetComponent<Transform3DComponent>();
 
-        if (entity->HasComponent<MaterialComponent>()) {
+        if (entity->HasComponent<MaterialComponent, MeshComponent>()) {
             auto& materialComponent = entity->GetComponent<MaterialComponent>();
+            auto& meshComponent = entity->GetComponent<MeshComponent>();
 
             if (materialComponent.Material->Shader->HotReload == true) {
                 materialComponent.Material->Shader->Reload();
             }
 
-            materialComponent.Material->Shader->SetUniform(Matrix4Uniform("MODEL_MATRIX", transformComponent.GetModelMatrix()));
+            // ModelMatrices.push_back(transformComponent.GetModelMatrix());
+            // NormalMatrices.push_back(transformComponent.GetNormalMatrix());
+            // Meshes.push_back(meshComponent.Mesh);
+            // Materials.push_back(materialComponent.Material);
 
+            materialComponent.Material->Shader->SetUniform(Matrix4Uniform("MODEL_MATRIX", transformComponent.GetModelMatrix()));
             materialComponent.Material->Shader->SetUniform(Matrix3Uniform("NORMAL_MATRIX", transformComponent.GetNormalMatrix()));
 
             materialComponent.Material->Use();
-        }
-
-        if (entity->HasComponent<MeshComponent>()) {
-            auto& meshComponent = entity->GetComponent<MeshComponent>();
             meshComponent.Mesh->Draw();
         }
     }
+    //
+    // int instanceCount = ModelMatrices.size();
+    // instanceVBO.Generate(ModelMatrices);
+    // instanceVBO.Bind();
+    //
+    // for (int i = 0; i < Meshes.size(); i++) {
+    //     Materials.at(i)->Use();
+    //     Meshes.at(i)->DrawInstanced(instanceCount);
+    // }
 }
 
 void Renderer::PresentFramebuffer() {

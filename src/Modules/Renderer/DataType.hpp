@@ -8,7 +8,7 @@ namespace N {
  * Determines how the individual components of source pixel data
  * are represented in memory when transferred to OpenGL.
  */
-enum class TextureDataType {
+enum class DataType {
     /** Unsigned 8-bit integer. */
     UnsignedByte = GL_UNSIGNED_BYTE,
 

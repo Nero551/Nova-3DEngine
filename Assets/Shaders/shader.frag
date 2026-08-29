@@ -1,8 +1,7 @@
 #include "Includes/Lighting/Lighting.frag"
 
-in vec3 vertex_color;
 
 void main()
 {
-    FragColor = vec4(vertex_color, 1);
+    FragColor = vec4(Lighting(), 1.0) * MATERIAL.Color;
 }

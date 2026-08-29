@@ -19,13 +19,11 @@ static MeshInstance3D& CreatePoint(M::Vector4 col) {
     auto& mesh = Primitives::CreateCube("point");
     auto& material = resourceManager.Load<Material>(std::format("m{}{}{}", col.z, col.x, col.y));
     material.Color = col;
-    auto& shader = resourceManager.Load<Shader>("shader");
+    auto& shader = resourceManager.Load<Shader>("pointShader");
 
     shader.AssignSource(resourceManager.Load<ShaderSource>("pointVert", "Assets/Shaders/shader.vert", ShaderStage::Vertex));
     shader.AssignSource(resourceManager.Load<ShaderSource>("pointFrag", "Assets/Shaders/shader.frag", ShaderStage::Fragment));
     material.Shader = &shader;
-
-    mesh.RenderMode = RenderMode::SolidWireframe;
 
     auto& point = World::Get().CreateEntity<MeshInstance3D>();
     point.GetComponent<MeshComponent>().Mesh = &mesh;
@@ -70,79 +68,18 @@ void calculus::Start() {
         resourceManager.Load<ShaderSource>("objectVert", "Assets/Shaders/shader.vert", ShaderStage::Vertex));
 
 
-    auto& objectMaterial = resourceManager.Load<Material>("material");
+    auto& objectMaterial = resourceManager.Load<Material>("cubeMaterial");
     objectMaterial.Shader = &objectShader;
 
     auto& cube = World::Get().CreateEntity<MeshInstance3D>();
-    // objectMaterial.Shininess = 300;
-    // objectMaterial.Specular = {0.9, 0.2, 0.2};
-    // mesh.Topology = Topology::Points;
-    // mesh.RenderMode = RenderMode::Wireframe;
-    // mesh.CullMode = CullMode::None;
     cube.GetComponent<MeshComponent>().Mesh = &mesh;
     cube.GetComponent<MaterialComponent>().Material = &objectMaterial;
-    cube.GetComponent<Transform3DComponent>().Position = { 0, 0, 3 };
     cube.GetComponent<Transform3DComponent>().Scale = { 1 };
-
-
-    // U::Image image = {"Assets/icon.png", true};
-
-    // auto& snowflake = resourceManager.Load<Texture2D>("snowflake");
-    // snowflake.UseImage(image);
-    // objectMaterial.AssignTexture(snowflake, 1);
-
-    // mesh.RenderMode = RenderMode::Wireframe;
     auto& transform = cube.GetComponent<Transform3DComponent>();
     cubeId = cube.Id;
     World::Get().Root->AttachChild(cube);
 
-    //
-    // auto& outlineShader = resourceManager.Load<Shader>("outlineShader");
-    // outlineShader.AssignSource(
-    //     resourceManager.Load<ShaderSource>("outlineFrag", "Assets/Shaders/outline.frag", ShaderStage::Fragment));
-    // outlineShader.AssignSource(
-    //     resourceManager.Load<ShaderSource>("objectVert", "Assets/Shaders/shader.vert", ShaderStage::Vertex));
-    //
-    // auto& outlineMaterial = resourceManager.Load<Material>("outlineMaterial");
-    // outlineMaterial.Shader = &outlineShader;
-    // outlineMaterial.Color = {1, 1, 1, 1};
-    //
-    // objectMaterial.Stencil.SDPass = StencilAction::Replace;
-    // outlineMaterial.Stencil.Function = StencilFunction::NotEqual;
-    //
-    //
-    // auto& cube2 = World::Get().CreateEntity<MeshInstance3D>();
-    // cube2.GetComponent<MeshComponent>().Mesh = &mesh;
-    // cube2.GetComponent<MaterialComponent>().Material = &outlineMaterial;
-    // cube2.GetComponent<Transform3DComponent>().Position = {0, 0, 3};
-    // cube2.GetComponent<Transform3DComponent>().Scale = {1.0125};
-    // World::Get().Root->AttachChild(cube2);
-    //
-
-    auto& quad = Primitives::CreateQuad("quad");
-    auto& windowMaterial = resourceManager.Load<Material>("windowMaterial");
-    auto& windowShader = resourceManager.Load<Shader>("windowShader");
-    auto& windowVert = resourceManager.Load<ShaderSource>("windowVert", "Assets/Shaders/shader.vert", ShaderStage::Vertex);
-    auto& windowFrag = resourceManager.Load<ShaderSource>("windowFrag", "Assets/Shaders/window.frag", ShaderStage::Fragment);
-    windowShader.AssignSource(windowFrag);
-    windowShader.AssignSource(windowVert);
-    windowMaterial.Shader = &windowShader;
-
-    U::Image windowImage = { "Assets/Images/semiTransparentWindow.png", true };
-    auto& windowTexture = resourceManager.Load<Texture2D>("windowTexture");
-    windowTexture.UseImage(windowImage);
-    windowMaterial.AssignTexture(windowTexture, 1);
-
-    auto& window = World::Get().CreateEntity<MeshInstance3D>();
-    window.GetComponent<MaterialComponent>().Material = &windowMaterial;
-    window.GetComponent<MeshComponent>().Mesh = &quad;
-    World::Get().Root->AttachChild(window);
-
-    windowTexture.WrapS = TextureWrap::ClampToEdge;
-    windowTexture.WrapT = TextureWrap::ClampToEdge;
-    windowMaterial.Blend.Enabled = true;
-    windowMaterial.Depth.Function = DepthFunction::Less;
-    quad.CullMode = CullMode::None;
+    ThreeDimensionalProjection(20);
 }
 
 static float elapsed = 0;
@@ -152,31 +89,38 @@ static float multiplier = 1;
 
 void calculus::FixedUpdate(double dt) {
     auto& resourceManager = Service::Get<ResourceManager>();
-    // auto& transform = World::Get().FindEntity(cubeId).GetComponent<Transform3DComponent>();
-    // auto& input = Engine::Get().GetModule<Input>();
+    auto& transform = World::Get().FindEntity(cubeId).GetComponent<Transform3DComponent>();
+    auto& input = Engine::Get().GetModule<Input>();
 
     x += step;
     if (x >= xRange) {
         return;
     }
-    //
-    //
-    // if (input.IsKeyHeld(Key::Z)) {
-    //     transform.Rotation *= M::Quaternion::FromEulerXYZ({0.1, 0, 0});
-    // }
-    //
-    // if (input.IsKeyHeld(Key::X)) {
-    //     transform.Rotation *= M::Quaternion::FromEulerXYZ({0, 0.1, 0});
-    // }
-    //
-    // if (input.IsKeyHeld(Key::C)) {
-    //     transform.Rotation *= M::Quaternion::FromEulerXYZ({0, 0, 0.1});
-    // }
 
-    // for (auto& point : points) {
-    //     auto& transform = point->GetComponent<Transform3DComponent>();
-    //     transform.Position *= multiplier;
-    // }
+
+    if (input.IsKeyHeld(Key::Z)) {
+        transform.Rotation *= M::Quaternion::FromEulerXYZ({ 0.1, 0, 0 });
+    }
+
+    if (input.IsKeyHeld(Key::X)) {
+        transform.Rotation *= M::Quaternion::FromEulerXYZ({ 0, 0.1, 0 });
+    }
+
+    if (input.IsKeyHeld(Key::C)) {
+        transform.Rotation *= M::Quaternion::FromEulerXYZ({ 0, 0, 0.1 });
+    }
+
+    if (input.IsKeyHeld(Key::Left)) {
+        multiplier -= 0.1;
+    }
+    if (input.IsKeyHeld(Key::Right)) {
+        multiplier += 0.1;
+    }
+
+    for (auto& point : points) {
+        auto& transform = point->GetComponent<Transform3DComponent>();
+        transform.Position *= multiplier;
+    }
 
     multiplier = 1;
 
@@ -193,10 +137,10 @@ void calculus::TwoDimensionalProjection(float increase) {
     for (int theta = -180; theta < 180; theta += increase) {
         M::Vector2 v2 = M::Vector2::FromPolar(M::Polar(theta));
         float proj = v2.StereoProject();
-        auto& d2point = Plot({ v2.x, v2.y, 0 });
+        // auto& d2point = Plot({v2.x, v2.y, 0});
         auto& point = Plot({ proj, 0, 0 });
         points.emplace_back(&point);
-        points.emplace_back(&d2point);
+        // points.emplace_back(&d2point);
     }
 }
 
@@ -204,11 +148,11 @@ void calculus::ThreeDimensionalProjection(float increase) {
     for (int theta = -180; theta < 180; theta += increase) {
         for (int phi = -180; phi < 180; phi += increase) {
             M::Vector3 v3 = M::Vector3::FromSpherical(M::Spherical(theta, phi));
-            auto& d3point = Plot(v3);
+            // auto& d3point = Plot(v3);
             M::Vector2 proj = v3.StereoProject();
             auto& point = Plot({ proj.x, proj.y, 0 });
             points.emplace_back(&point);
-            points.emplace_back(&d3point);
+            // points.emplace_back(&d3point);
         }
     }
 }
