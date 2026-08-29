@@ -6,5 +6,5 @@ uniform sampler2D colorbuffer;
 
 
 void main() {
-    FragColor = BlurKernel(colorbuffer, vUV, 2.0f / 300.0f) + EdgeDetectionKernel(colorbuffer, vUV, 2.0f / 300.0f);
+    FragColor = texture(colorbuffer, vUV);
 }

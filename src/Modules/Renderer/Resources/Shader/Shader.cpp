@@ -58,6 +58,12 @@ void Shader::CreateProgram() {
         return;
     }
 
+    // TODO- add preprocessing to shader program, ex: a ShowNormals option that when true, automatically adds a geometry shader
+    // for that.
+    //  gotta figure out how to "Merge" multiple sources too, like if there is 2 vertex shaders attached both with void main().
+    //  Preprocess();
+
+
     if (Sources.empty()) {
         U::Logger::Warning("Shader Program:" + Name + " Has No Sources");
         return;

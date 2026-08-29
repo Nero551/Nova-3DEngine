@@ -1,4 +1,5 @@
 #version 450 core
+#version 450 core
 layout (std140, binding = 0) uniform Global {
     mat4 VIEW_MATRIX;
     mat4 PROJECTION_MATRIX;
@@ -10,12 +11,16 @@ layout (std140, binding = 0) uniform Global {
 out vec4 FragColor;
 
 in vec2 vUV;
-in vec4 vPosition;
+//in vec4 vs_out.vPosition;
 in vec4 vColor;
-in vec3 vNormal;
+//in vec3 vs_out.vNormal;
 in vec4 vWorldPosition;
 in vec3 vUVW;
 
+in VS_OUT {
+    vec4 vPosition;
+    vec3 vNormal;
+} vs_out;
 
 
 struct Material {
@@ -66,7 +71,7 @@ vec3 CalculateAmbient(Light light){
 
 vec3 CalculateDiffuse(Light light, vec3 lightDir, float attenuation, float cutOff){
     vec3 diffuseMap = vec3(texture(MATERIAL.DiffuseMap, vUV));
-    float diff = max(dot(vNormal, lightDir), 0.0);
+    float diff = max(dot(vs_out.vNormal, lightDir), 0.0);
     vec3 diffuse = diff * light.Color * diffuseMap * light.Diffuse * MATERIAL.Diffuse * attenuation * cutOff * light.Intensity;
     return diffuse;
 }
@@ -74,7 +79,7 @@ vec3 CalculateDiffuse(Light light, vec3 lightDir, float attenuation, float cutOf
 vec3 CalculateSpecular(Light light, vec3 lightDir, float attenuation, float cutOff){
     vec3 specularMap = vec3(texture(MATERIAL.SpecularMap, vUV));
     vec3 viewDir = normalize(VIEW_POSITION - vec3(vWorldPosition.xyz));
-    vec3 reflectDir = reflect(-lightDir, vNormal);
+    vec3 reflectDir = reflect(-lightDir, vs_out.vNormal);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), MATERIAL.Shininess);
     vec3 specular = spec * light.Color * specularMap * MATERIAL.Specular * light.Specular * attenuation * cutOff * light.Intensity;
 
@@ -152,5 +157,5 @@ vec3 Lighting() {
 
 void main()
 {
-    FragColor = V;
+    FragColor = vec4(Lighting(), 1) * MATERIAL.Color;
 }

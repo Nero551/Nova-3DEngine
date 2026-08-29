@@ -1,4 +1,12 @@
 #version 450 core
+layout (std140, binding = 0) uniform Global {
+    mat4 VIEW_MATRIX;
+    mat4 PROJECTION_MATRIX;
+    float TIME;
+    vec3 VIEW_POSITION;
+};
+
+
 layout (location = 0) in vec4 aPosition;
 layout (location = 1) in vec4 aColor;
 layout (location = 2) in vec2 aUV;
@@ -11,17 +19,16 @@ out vec2 vUV;
 out vec3 vNormal;
 out vec3 vUVW;
 
+out VS_OUT {
+
+} vs_out;
+
+in VS_OUT {
+
+} gs_in[];
+
 uniform mat4 MODEL_MATRIX;
-uniform mat4 VIEW_MATRIX;
-uniform mat4 PROJECTION_MATRIX;
 uniform mat3 NORMAL_MATRIX;
-
-layout (std140, binding = 0) uniform Global {
-
-};
-
-uniform vec3 VIEW_POSITION;
-uniform float TIME;
 
 void DefaultVertex()
 {
