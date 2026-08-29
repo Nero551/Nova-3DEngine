@@ -1,6 +1,14 @@
 #version 450 core
 layout (triangles) in;
-layout (triangle_strip, max_vertices = 3) out;
+layout (line_strip, max_vertices = 2) out;
+
+layout (std140, binding = 0) uniform Global {
+    mat4 VIEW_MATRIX;
+    mat4 PROJECTION_MATRIX;
+    float TIME;
+    vec3 VIEW_POSITION;
+};
+
 
 in VS_OUT {
     vec4 Position;
@@ -9,7 +17,7 @@ in VS_OUT {
     vec3 Normal;
     vec2 UV;
     vec3 UVW;
-} gs_in[];
+} GSIn[];
 
 out VS_OUT {
     vec4 Position;
@@ -18,24 +26,47 @@ out VS_OUT {
     vec3 Normal;
     vec2 UV;
     vec3 UVW;
-} gs_out;
+} GSOut;
 
+uniform mat4 MODEL_MATRIX;
+uniform mat3 NORMAL_MATRIX;
+
+
+
+void GenerateLine(int index)
+{
+    gl_Position = PROJECTION_MATRIX * gl_in[index].gl_Position;
+    EmitVertex();
+    gl_Position = PROJECTION_MATRIX * (gl_in[index].gl_Position +
+    vec4(GSIn[index].Normal, 0.0) * 0.4);
+    EmitVertex();
+    EndPrimitive();
+}
 
 void main()
 {
-    for (int i = 0; i < gl_in.length(); i++)
-    {
-        gl_Position = gl_in[i].gl_Position;
-        //
-        vs_out.Position = gs_in[i].Position;
-        vs_out.WorldPosition = gs_in[i].WorldPosition;
-        vs_out.Color = gs_in[i].Color;
-        vs_out.UV = gs_in[i].UV;
-        vs_out.Normal = gs_in[i].Normal;
-        vs_out.UVW = gs_in[i].UVW;
+    GenerateLine(0);
+    GenerateLine(1);
+    GenerateLine(2);
+}
 
-        EmitVertex();
-    }
+out vec3 vertex_color;
+
+void main()
+{
+    float length = 1.0f;
+    vec3 normal = GSIn[0].Normal;
+    mat4 mvp = PROJECTION_MATRIX * VIEW_MATRIX * MODEL_MATRIX;
+
+    vertex_color = abs(normal);
+
+    vec4 v0 = gl_in[0].gl_Position;
+    gl_Position = mvp * v0;
+    EmitVertex();
+
+    vec4 v1 = v0 + vec4(normal * length, 0.0);
+    gl_Position = mvp * v1;
+    EmitVertex();
 
     EndPrimitive();
 }
