@@ -5,6 +5,7 @@
 #include "Math/Quaternion/Quaternion.hpp"
 
 namespace N {
+//
 struct Transform3DComponent : Component {
     M::Vector3 Position = M::Vector3::Zero;
     M::Quaternion Rotation = M::Quaternion::Identity;
@@ -38,8 +39,7 @@ struct Transform3DComponent : Component {
     }
 
 private:
-    // TODO- this is temporary until i have a proper change detection system
-    //  (reflection)
+    // TODO-this is temporary until i have a proper change detection system (reflection)
     M::Vector3 GlobalPosition = M::Vector3::Zero;
     M::Quaternion GlobalRotation = M::Quaternion::Identity;
     M::Vector3 GlobalScale = M::Vector3::One;

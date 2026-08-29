@@ -4,9 +4,10 @@
 #include "Utilities/Logger.hpp"
 
 namespace N {
-/** @brief Handles initialization and termination of GLFW.
+/** @brief Handles initialization and termination of graphics specific things
+ * that need to run before window creation and everything else.
  * Created by Engine, constructed first, deconstructed last. that way it
- * prevents GLFW errors
+ * prevents initialization errors.
  */
 struct GraphicsContext {
     GraphicsContext() {

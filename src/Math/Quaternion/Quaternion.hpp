@@ -17,7 +17,7 @@ namespace N::M {
  *
  * A quaternion can also be represented in polar form:
  * `q = m(cos(θ) + u sin(θ))`, where `m` is the magnitude, `θ` is the
- * quaternion's polar angle, and `u` is a unit vector in the imaginary part.
+ * quaternion's polar angle, and `u` is an imaginary unit vector .
  *
  * @note This class uses the full quaternion polar angle rather than the
  * conventional half-angle used by many rotation-only quaternion APIs.
@@ -26,8 +26,8 @@ namespace N::M {
  */
 struct Quaternion {
     // TODO: Investigate the principal branch of Quaternion Ln/Exp.
-    // Ln(Exp(q)) == q only when the imaginary-vector magnitude is within
-    // the principal range (< PI). Outside it, the logarithm wraps by 2*PI.
+    //  Ln(Exp(q)) == q only when the imaginary-vector magnitude is within
+    //  the principal range (< PI). Outside it, the logarithm wraps by 2*PI.
     float w, x, y, z;
 
     /**
