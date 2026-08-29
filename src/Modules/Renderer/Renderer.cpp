@@ -8,6 +8,7 @@
 #include "Core/OuterCore/ECS/Entity.hpp"
 #include "Core/Services/ResourceManager.hpp"
 #include "Primitives/Primitives.hpp"
+#include "RenderBatch.hpp"
 #include "Resources/Framebuffer/Framebuffer.hpp"
 #include "Resources/Shader/Uniforms/FloatUniform.hpp"
 #include "Resources/Shader/Uniforms/IntUniform.hpp"
@@ -109,21 +110,12 @@ void Renderer::OnBeginFrame(double dt) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
-
-struct RenderBatch {
-    U::CheckedPtr<Material> Material;
-    U::CheckedPtr<Mesh> Mesh;
-    std::vector<M::Matrix4> ModelMatrices;
-    std::vector<M::Matrix3> NormalMatrices;
-};
-
 void Renderer::RenderWorld() {
     auto& camera = World::Get().ActiveCamera;
 
     M::Matrix4 projection = camera->GetComponent<CameraComponent>().GetProjectionMatrix();
     M::Matrix4 view = GetSystem<CameraSystem>().GetViewMatrix();
 
-    std::vector<RenderBatch> Batches;
 
     GUniformbuffer->Set(view.Transpose(), 0);
     GUniformbuffer->Set(projection.Transpose(), 64);
@@ -131,12 +123,21 @@ void Renderer::RenderWorld() {
     GUniformbuffer->Set(camera->GetComponent<Transform3DComponent>().GlobalPosition, 144);
     GUniformbuffer->Bind();
 
+    for (auto& batch : Batches) {
+        batch.ModelMatrices.clear();
+        batch.NormalMatrices.clear();
+    }
+
 
     for (auto& entity : World::Get().Root->GetDescendants()) {
         if (entity->HasComponent<MaterialComponent, MeshComponent, Transform3DComponent>()) {
             auto& transformComponent = entity->GetComponent<Transform3DComponent>();
             auto& materialComponent = entity->GetComponent<MaterialComponent>();
             auto& meshComponent = entity->GetComponent<MeshComponent>();
+
+            if (materialComponent.Material->Shader->HotReload == true) {
+                materialComponent.Material->Shader->Reload();
+            }
 
             auto it = std::ranges::find_if(Batches, [meshComponent, materialComponent](const RenderBatch& batch) mutable {
                 return batch.Mesh == meshComponent.Mesh && batch.Material == materialComponent.Material;
@@ -146,8 +147,8 @@ void Renderer::RenderWorld() {
                 RenderBatch batch;
                 batch.Mesh = meshComponent.Mesh;
                 batch.Material = materialComponent.Material;
-                batch.ModelMatrices.push_back(transformComponent.GetModelMatrix());
-                batch.NormalMatrices.push_back(transformComponent.GetNormalMatrix());
+                batch.ModelMatrices.push_back(transformComponent.GetModelMatrix().Transpose());
+                batch.NormalMatrices.push_back(transformComponent.GetNormalMatrix().Transpose());
 
                 Batches.push_back(batch);
             }
@@ -155,26 +156,18 @@ void Renderer::RenderWorld() {
                 it->ModelMatrices.push_back(transformComponent.GetModelMatrix().Transpose());
                 it->NormalMatrices.push_back(transformComponent.GetNormalMatrix().Transpose());
             }
-
-            if (materialComponent.Material->Shader->HotReload == true) {
-                materialComponent.Material->Shader->Reload();
-            }
         }
     }
 
-
     for (auto& batch : Batches) {
         batch.Material->Use();
-        for (auto& matrix : batch.ModelMatrices) {
-            std::cout << matrix << '\n';
-        }
 
         int instanceCount = batch.ModelMatrices.size();
-        ArrayBuffer instanceVBO;
-        instanceVBO.Generate(batch.ModelMatrices);
+        batch.Buffer.SetData(batch.ModelMatrices);
 
         batch.Mesh->VAO.Bind();
-        instanceVBO.Bind();
+        batch.Buffer.Bind();
+
         batch.Mesh->VAO.SetMatrix4AttribPointer(4);
         batch.Mesh->VAO.SetMatrix4AttribDivisor(4, 1);
 

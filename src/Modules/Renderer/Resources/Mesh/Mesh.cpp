@@ -21,15 +21,26 @@ void Mesh::Generate() {
     if (IsGenerated()) {
         return;
     }
-    VAO.Generate(Vertices, Indices);
+    VAO.Generate();
     VAO.Bind();
+
+    VBO.Generate();
+    VBO.SetData(Vertices);
+    VBO.Bind();
+
+    EBO.Generate();
+    EBO.SetData(Indices);
+    EBO.Bind();
 
     VAO.SetAttribPointer(0, 4, DataType::Float, sizeof(Vertex), offsetof(Vertex, Position));
     VAO.SetAttribPointer(1, 4, DataType::Float, sizeof(Vertex), offsetof(Vertex, Color));
     VAO.SetAttribPointer(2, 2, DataType::Float, sizeof(Vertex), offsetof(Vertex, UV));
     VAO.SetAttribPointer(3, 3, DataType::Float, sizeof(Vertex), offsetof(Vertex, Normal));
 
+
     VAO.Unbind();
+    VBO.Unbind();
+    EBO.Unbind();
 }
 
 void Mesh::Draw() {
@@ -65,8 +76,10 @@ void Mesh::Draw() {
 void Mesh::DrawInstanced(int instanceCount) {
     Generate();
 
-    ApplyCulling();
+    // ApplyCulling();
     VAO.Bind();
+    VBO.Bind();
+    EBO.Bind();
 
     glDrawElementsInstanced(static_cast<GLenum>(Topology),
         static_cast<GLsizei>(Indices.size()),
@@ -75,9 +88,13 @@ void Mesh::DrawInstanced(int instanceCount) {
         static_cast<GLsizei>(instanceCount));
 
     VAO.Unbind();
+    VBO.Bind();
+    EBO.Bind();
 }
 
 void Mesh::Regenerate() {
+    VBO.Delete();
+    EBO.Delete();
     VAO.Delete();
 }
 

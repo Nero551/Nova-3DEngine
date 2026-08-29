@@ -18,6 +18,8 @@ namespace N {
  */
 struct Mesh : Resource {
     VertexArray VAO;
+    ArrayBuffer VBO;
+    IndexBuffer EBO;
     /** Rendering mode used when drawing the mesh. */
     RenderMode RenderMode = RenderMode::Solid;
 

@@ -35,15 +35,23 @@ struct ArrayBuffer {
     ArrayBuffer() {
     }
 
-    template <typename T> void Generate(const std::vector<T>& data) {
+    void Generate() {
         if (IsGenerated()) {
             return;
         }
         glGenBuffers(1, &Id);
+    }
+
+    template <typename T> void SetData(const std::vector<T>& data) {
+        if (!IsGenerated()) {
+            return;
+        }
+
         glBindBuffer(GL_ARRAY_BUFFER, Id);
         glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(T), data.data(), static_cast<GLenum>(Usage));
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
+
 
     bool IsGenerated() {
         return Id != 0;
@@ -80,12 +88,17 @@ struct IndexBuffer {
     IndexBuffer() {
     }
 
-    void Generate(const std::vector<unsigned int>& indices) {
+    void Generate() {
         if (IsGenerated()) {
             return;
         }
-
         glGenBuffers(1, &Id);
+    }
+
+    void SetData(const std::vector<unsigned int>& indices) {
+        if (!IsGenerated()) {
+            return;
+        }
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Id);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), static_cast<GLenum>(Usage));
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -121,17 +134,11 @@ private:
 };
 
 struct VertexArray {
-    ArrayBuffer VBO;
-    IndexBuffer EBO;
-
-    void Generate(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices) {
+    void Generate() {
         if (IsGenerated()) {
             return;
         }
         glGenVertexArrays(1, &Id);
-        glBindVertexArray(Id);
-        VBO.Generate(vertices);
-        EBO.Generate(indices);
     }
 
     bool IsGenerated() {
@@ -139,8 +146,6 @@ struct VertexArray {
     }
 
     void Delete() {
-        VBO.Delete();
-        EBO.Delete();
         glDeleteVertexArrays(1, &Id);
         Id = 0;
     }
@@ -151,19 +156,15 @@ struct VertexArray {
 
     void Bind() {
         glBindVertexArray(Id);
-        VBO.Bind();
-        EBO.Bind();
     }
 
     void Unbind() {
         glBindVertexArray(0);
-        VBO.Unbind();
-        EBO.Unbind();
     }
 
     void SetAttribPointer(int index, int size, DataType type, size_t stride, size_t offset, bool normalized = false) {
-        glVertexAttribPointer(index, size, static_cast<GLenum>(type), normalized, stride, reinterpret_cast<void*>(offset));
         glEnableVertexAttribArray(index);
+        glVertexAttribPointer(index, size, static_cast<GLenum>(type), normalized, stride, reinterpret_cast<void*>(offset));
     }
 
     void SetMatrix3AttribPointer(int startIndex) {
