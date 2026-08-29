@@ -99,8 +99,5 @@ private:
      * culling according to the mesh's CullMode and FrontFace settings.
      */
     void ApplyCulling() const;
-
-    /** Configures the vertex attribute pointers. */
-    void SetupVertAttrPointers();
 };
 } // namespace N

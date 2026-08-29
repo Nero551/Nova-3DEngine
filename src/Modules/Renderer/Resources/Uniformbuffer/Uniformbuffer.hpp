@@ -1,5 +1,6 @@
 #pragma once
 #include "Core/OuterCore/Resource.hpp"
+#include "Modules/Renderer/VertexBuffer.hpp"
 #include "OpenGL.hpp"
 
 namespace N {
@@ -9,6 +10,9 @@ namespace N {
 struct Uniformbuffer : Resource {
     // TODO- currently doesn't store uniforms nor has automatic offset calculation, do later.
     //  uniforms have to be set repeatedly. they aren't saved on the cpu and repeatedly sent to the gpu automatically.
+
+    /** @brief How the buffer's data will be used */
+    BufferUsage Usage = BufferUsage::StaticDraw;
 
     /** @brief Size of the buffer in bytes. */
     unsigned int Size = 0;

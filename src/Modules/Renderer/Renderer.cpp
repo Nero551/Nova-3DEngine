@@ -110,17 +110,20 @@ void Renderer::OnBeginFrame(double dt) {
 }
 
 
+struct RenderBatch {
+    U::CheckedPtr<Material> Material;
+    U::CheckedPtr<Mesh> Mesh;
+    std::vector<M::Matrix4> ModelMatrices;
+    std::vector<M::Matrix3> NormalMatrices;
+};
+
 void Renderer::RenderWorld() {
     auto& camera = World::Get().ActiveCamera;
 
     M::Matrix4 projection = camera->GetComponent<CameraComponent>().GetProjectionMatrix();
     M::Matrix4 view = GetSystem<CameraSystem>().GetViewMatrix();
 
-    std::vector<M::Matrix4> ModelMatrices;
-    std::vector<M::Matrix3> NormalMatrices;
-    std::vector<U::CheckedPtr<Material>> Materials;
-    std::vector<U::CheckedPtr<Mesh>> Meshes;
-    ArrayBuffer instanceVBO;
+    std::vector<RenderBatch> Batches;
 
     GUniformbuffer->Set(view.Transpose(), 0);
     GUniformbuffer->Set(projection.Transpose(), 64);
@@ -130,40 +133,53 @@ void Renderer::RenderWorld() {
 
 
     for (auto& entity : World::Get().Root->GetDescendants()) {
-        if (!entity->HasComponent<Transform3DComponent>()) {
-            continue;
-        }
-        auto& transformComponent = entity->GetComponent<Transform3DComponent>();
-
-        if (entity->HasComponent<MaterialComponent, MeshComponent>()) {
+        if (entity->HasComponent<MaterialComponent, MeshComponent, Transform3DComponent>()) {
+            auto& transformComponent = entity->GetComponent<Transform3DComponent>();
             auto& materialComponent = entity->GetComponent<MaterialComponent>();
             auto& meshComponent = entity->GetComponent<MeshComponent>();
+
+            auto it = std::ranges::find_if(Batches, [meshComponent, materialComponent](const RenderBatch& batch) mutable {
+                return batch.Mesh == meshComponent.Mesh && batch.Material == materialComponent.Material;
+            });
+
+            if (it == Batches.end()) {
+                RenderBatch batch;
+                batch.Mesh = meshComponent.Mesh;
+                batch.Material = materialComponent.Material;
+                batch.ModelMatrices.push_back(transformComponent.GetModelMatrix());
+                batch.NormalMatrices.push_back(transformComponent.GetNormalMatrix());
+
+                Batches.push_back(batch);
+            }
+            else {
+                it->ModelMatrices.push_back(transformComponent.GetModelMatrix().Transpose());
+                it->NormalMatrices.push_back(transformComponent.GetNormalMatrix().Transpose());
+            }
 
             if (materialComponent.Material->Shader->HotReload == true) {
                 materialComponent.Material->Shader->Reload();
             }
-
-            // ModelMatrices.push_back(transformComponent.GetModelMatrix());
-            // NormalMatrices.push_back(transformComponent.GetNormalMatrix());
-            // Meshes.push_back(meshComponent.Mesh);
-            // Materials.push_back(materialComponent.Material);
-
-            materialComponent.Material->Shader->SetUniform(Matrix4Uniform("MODEL_MATRIX", transformComponent.GetModelMatrix()));
-            materialComponent.Material->Shader->SetUniform(Matrix3Uniform("NORMAL_MATRIX", transformComponent.GetNormalMatrix()));
-
-            materialComponent.Material->Use();
-            meshComponent.Mesh->Draw();
         }
     }
-    //
-    // int instanceCount = ModelMatrices.size();
-    // instanceVBO.Generate(ModelMatrices);
-    // instanceVBO.Bind();
-    //
-    // for (int i = 0; i < Meshes.size(); i++) {
-    //     Materials.at(i)->Use();
-    //     Meshes.at(i)->DrawInstanced(instanceCount);
-    // }
+
+
+    for (auto& batch : Batches) {
+        batch.Material->Use();
+        for (auto& matrix : batch.ModelMatrices) {
+            std::cout << matrix << '\n';
+        }
+
+        int instanceCount = batch.ModelMatrices.size();
+        ArrayBuffer instanceVBO;
+        instanceVBO.Generate(batch.ModelMatrices);
+
+        batch.Mesh->VAO.Bind();
+        instanceVBO.Bind();
+        batch.Mesh->VAO.SetMatrix4AttribPointer(4);
+        batch.Mesh->VAO.SetMatrix4AttribDivisor(4, 1);
+
+        batch.Mesh->DrawInstanced(instanceCount);
+    }
 }
 
 void Renderer::PresentFramebuffer() {

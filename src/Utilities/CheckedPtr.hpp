@@ -42,6 +42,11 @@ template <typename T> struct CheckedPtr {
         return ptr == otherPtr;
     }
 
+    /** @brief Compares the stored pointer with another checked pointer. */
+    bool operator==(const CheckedPtr<T>& otherCheckedPtr) {
+        return ptr == otherCheckedPtr.ptr;
+    }
+
     /** @brief Dereferences the pointer, checking for null. */
     T& operator*() const {
         return Logger::Require(ptr, nullMessage);
