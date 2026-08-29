@@ -9,7 +9,7 @@ in VS_OUT {
     vec3 Normal;
     vec2 UV;
     vec3 UVW;
-} fs_in;
+} FSIn;
 
 struct Material {
     vec4 Color;

@@ -8,7 +8,7 @@ in VS_OUT {
     vec3 Normal;
     vec2 UV;
     vec3 UVW;
-} gs_in[];
+} GSIn[];
 
 out VS_OUT {
     vec4 Position;
@@ -17,7 +17,7 @@ out VS_OUT {
     vec3 Normal;
     vec2 UV;
     vec3 UVW;
-} gs_out;
+} GSOut;
 
 
 void main()
@@ -25,12 +25,12 @@ void main()
     for (int i = 0; i < gl_in.length(); i++)
     {
         gl_Position = gl_in[i].gl_Position;
-        gs_out.Position = gs_in[i].Position;
-        gs_out.WorldPosition = gs_in[i].WorldPosition;
-        gs_out.Color = gs_in[i].Color;
-        gs_out.UV = gs_in[i].UV;
-        gs_out.Normal = gs_in[i].Normal;
-        gs_out.UVW = gs_in[i].UVW;
+        GSOut.Position = GSIn[i].Position;
+        GSOut.WorldPosition = GSIn[i].WorldPosition;
+        GSOut.Color = GSIn[i].Color;
+        GSOut.UV = GSIn[i].UV;
+        GSOut.Normal = GSIn[i].Normal;
+        GSOut.UVW = GSIn[i].UVW;
 
         EmitVertex();
     }

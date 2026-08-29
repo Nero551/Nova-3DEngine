@@ -6,5 +6,5 @@ uniform sampler2D colorbuffer;
 
 
 void main() {
-    FragColor = texture(colorbuffer, fs_in.UV);
+    FragColor = texture(colorbuffer, FSIn.UV);
 }

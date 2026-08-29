@@ -5,12 +5,12 @@ void CalculateDirectionalLight(Light light, out vec3 lightDir) {
 }
 
 void CalculatePointLight(Light light, out float attenuation) {
-    float dist = length(light.Position - fs_in.WorldPosition.xyz);
+    float dist = length(light.Position - FSIn.WorldPosition.xyz);
     attenuation = (1.0 / (light.Quadratic * (dist * dist) + light.Linear * dist + light.Constant)) * light.Intensity;
 }
 
 void CalculateSpotLight(Light light, vec3 lightDir, out float cutOff, out float attenuation) {
-    float dist = length(light.Position - fs_in.WorldPosition.xyz);
+    float dist = length(light.Position - FSIn.WorldPosition.xyz);
     attenuation = (1.0 / (light.Constant + light.Linear * dist + light.Quadratic * (dist * dist))) * light.Intensity;
 
     vec3 spotDir = normalize(-light.Direction);

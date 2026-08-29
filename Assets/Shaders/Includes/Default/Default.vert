@@ -13,17 +13,17 @@ out VS_OUT {
     vec2 UV;
     vec3 UVW;
 
-} vs_out;
+} VSOut;
 
 uniform mat4 MODEL_MATRIX;
 uniform mat3 NORMAL_MATRIX;
 
 void DefaultVertex()
 {
-    vs_out.Normal = normalize(NORMAL_MATRIX * aNormal);
-    vs_out.Color = aColor;
-    vs_out.Position = PROJECTION_MATRIX * VIEW_MATRIX * MODEL_MATRIX * aPosition;
-    vs_out.WorldPosition = MODEL_MATRIX * aPosition;
-    vs_out.UV = aUV;
-    vs_out.UVW = normalize(aPosition.xyz);
+    VSOut.Normal = normalize(NORMAL_MATRIX * aNormal);
+    VSOut.Color = aColor;
+    VSOut.Position = PROJECTION_MATRIX * VIEW_MATRIX * MODEL_MATRIX * aPosition;
+    VSOut.WorldPosition = MODEL_MATRIX * aPosition;
+    VSOut.UV = aUV;
+    VSOut.UVW = normalize(aPosition.xyz);
 }

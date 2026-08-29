@@ -2,5 +2,5 @@
 
 void main() {
     DefaultVertex();
-    gl_Position = vs_out.Position;
+    gl_Position = VSOut.Position;
 }
