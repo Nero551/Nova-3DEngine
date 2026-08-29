@@ -1,5 +1,5 @@
 #pragma once
-#include "../../../vcpkg/buildtrees/glslang/src/16.4.0-0420a59a83.clean/glslang/MachineIndependent/LiveTraverser.h"
+#include <glslang/Public/ShaderLang.h>
 #include "OpenGL.hpp"
 #include "Utilities/Logger.hpp"
 

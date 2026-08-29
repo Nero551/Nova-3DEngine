@@ -94,8 +94,6 @@ void calculus::Start() {
     // snowflake.UseImage(image);
     // objectMaterial.AssignTexture(snowflake, 1);
 
-    // TODO- play rainworld , game i downloaded
-
     // mesh.RenderMode = RenderMode::Wireframe;
     auto& transform = cube.GetComponent<Transform3DComponent>();
     cubeId = cube.Id;

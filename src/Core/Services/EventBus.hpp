@@ -7,6 +7,10 @@ namespace N {
 template <typename T>
 concept EventType = std::derived_from<T, Event>;
 
+// TODO- redesign this whole event system.
+//  preferably, Events would be able to handle themselves, meaning ability to sub, unsub, fire all on their own.
+//  EventBus will just be a organized queue that can be used and can't, depending on the situation.
+
 struct EventBus : Service {
     template <EventType T, typename... Args> void InstantFire(Args&&... args) {
         auto listeners = Listeners.find(typeid(T));
