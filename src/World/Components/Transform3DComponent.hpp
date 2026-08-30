@@ -18,6 +18,7 @@ private:
     M::Vector3 DirtyScale = M::Vector3::One;
     M::Quaternion DirtyRotation = M::Quaternion::Identity;
     M::Matrix4 DirtyModelMatrix = M::Matrix4::Identity;
+    M::Matrix3 DirtyNormalMatrix = M::Matrix3::Identity;
 
 public:
     [[nodiscard]] M::Matrix4 GetModelMatrix() {
@@ -39,7 +40,12 @@ public:
     }
 
     [[nodiscard]] M::Matrix3 GetNormalMatrix() {
-        return GetModelMatrix().ToMatrix3().Inverse().Transpose();
+        if (DirtyPos != GlobalPosition || DirtyScale != GlobalScale || DirtyRotation != GlobalRotation) {
+            DirtyNormalMatrix = GetModelMatrix().ToMatrix3().Inverse().Transpose();
+
+            return DirtyNormalMatrix;
+        }
+        return DirtyNormalMatrix;
     }
 
     [[nodiscard]] M::Vector3 GetRight() const {
