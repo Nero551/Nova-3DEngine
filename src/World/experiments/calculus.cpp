@@ -88,28 +88,28 @@ static float passed = 0;
 static float multiplier = 1;
 
 void calculus::Update(double dt) {
-    auto& resourceManager = Service::Get<ResourceManager>();
-    auto& transform = World::Get().FindEntity(cubeId).GetComponent<Transform3DComponent>();
+    // auto& resourceManager = Service::Get<ResourceManager>();
+    // auto& transform = World::Get().FindEntity(cubeId).GetComponent<Transform3DComponent>();
     auto& input = Engine::Get().GetModule<Input>();
 
     // x += step;
     // if (x >= xRange) {
     //     return;
     // }
-
-
-    if (input.IsKeyHeld(Key::Z)) {
-        transform.Rotation *= M::Quaternion::FromEulerXYZ({ 0.1, 0, 0 });
-    }
-
-    if (input.IsKeyHeld(Key::X)) {
-        transform.Rotation *= M::Quaternion::FromEulerXYZ({ 0, 0.1, 0 });
-    }
-
-    if (input.IsKeyHeld(Key::C)) {
-        transform.Rotation *= M::Quaternion::FromEulerXYZ({ 0, 0, 0.1 });
-    }
-
+    //
+    //
+    // if (input.IsKeyHeld(Key::Z)) {
+    //     transform.Rotation *= M::Quaternion::FromEulerXYZ({ 0.1, 0, 0 });
+    // }
+    //
+    // if (input.IsKeyHeld(Key::X)) {
+    //     transform.Rotation *= M::Quaternion::FromEulerXYZ({ 0, 0.1, 0 });
+    // }
+    //
+    // if (input.IsKeyHeld(Key::C)) {
+    //     transform.Rotation *= M::Quaternion::FromEulerXYZ({ 0, 0, 0.1 });
+    // }
+    //
     if (input.IsKeyHeld(Key::Left)) {
         multiplier -= 0.1;
     }
