@@ -4,7 +4,7 @@
 
 namespace N {
 struct CameraSystem : System {
-    void FixedUpdate(double fdt) override;
+    void Update(double dt) override;
     M::Matrix4 GetViewMatrix();
 };
 } // namespace N

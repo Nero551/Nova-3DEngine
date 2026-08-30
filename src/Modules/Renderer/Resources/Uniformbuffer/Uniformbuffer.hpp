@@ -30,10 +30,11 @@ struct Uniformbuffer : Resource {
      * @brief Writes a value to the buffer at the specified byte offset.
      * @param value Value to write.
      * @param offset Byte offset within the buffer.
+     * @param extraSize for stuff like vector3. where a size vector3 for UBO is 16 bytes
      */
-    template <typename T> void Set(const T& value, int offset) {
+    template <typename T> void Set(const T& value, int offset, int extraSize = 0) {
         Bind();
-        glBufferSubData(GL_UNIFORM_BUFFER, offset, sizeof(T), &value);
+        glBufferSubData(GL_UNIFORM_BUFFER, offset, sizeof(T) + extraSize, &value);
         Unbind();
     }
 

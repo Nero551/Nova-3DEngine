@@ -8,7 +8,7 @@
 namespace N {
 struct CameraComponent : Component {
     float FOV = 45.0f;
-    float Sensitivity = 0.07f;
+    float Sensitivity = 5.0f;
     float Near = 0.1f;
     float Far = 100.0f;
     float AspectRatio = 1.0f;

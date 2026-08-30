@@ -7,6 +7,7 @@
 #include "../Resources/Shader/Uniforms/IntUniform.hpp"
 #include "../Resources/Shader/Uniforms/Vector3Uniform.hpp"
 #include "Core/Services/ResourceManager.hpp"
+#include "Modules/Input/Enums/Keys.hpp"
 #include "World/Events/EntityCreated.hpp"
 #include "World/Events/EntityDestroyed.hpp"
 
@@ -33,52 +34,41 @@ void LightingSystem::Start() {
 
     auto& resources = Service::Get<ResourceManager>();
 
-    // LightingBuffer = &resources.Load<Uniformbuffer>("[Lighting System] Lighting Buffer");
+    LightingBuffer = &resources.Load<Uniformbuffer>("[Lighting System] Lighting Buffer");
+    LightingBuffer->Binding = 1;
+
+    constexpr size_t LightStride = 144;
+    constexpr size_t HeaderSize = 16;
+
+    LightingBuffer->Size = HeaderSize + World::Get().MaxLights * LightStride;
 }
 
 void LightingSystem::Render() {
-    materialComponent.Material->Shader->SetUniform(IntUniform("MAX_LIGHTS", World::Get().MaxLights));
+    LightingBuffer->Set(static_cast<int>(Lights.size()), 0);
 
-    for (int i = 0; i < static_cast<int>(Lights.size()); i++) {
+    for (int i = 0; i < Lights.size(); i++) {
+        constexpr size_t LightStride = 144;
+        const size_t LightOffset = 16 + i * LightStride;
+
         auto& light = World::Get().FindEntity(Lights[i]);
         auto& lightComponent = light.GetComponent<LightComponent>();
 
-        materialComponent.Material->Shader->SetUniform(Vector3Uniform(std::format("LIGHTS[{}].Color", i), lightComponent.Color));
+        LightingBuffer->Set(static_cast<int>(lightComponent.Type), LightOffset + 0);
+        LightingBuffer->Set(light.GetComponent<Transform3DComponent>().GetForward(), LightOffset + 16, 4);
+        LightingBuffer->Set(lightComponent.Color, LightOffset + 32, 4);
+        LightingBuffer->Set(light.GetComponent<Transform3DComponent>().Position, LightOffset + 48, 4);
+        LightingBuffer->Set(lightComponent.Ambient, LightOffset + 64, 4);
+        LightingBuffer->Set(lightComponent.Diffuse, LightOffset + 80, 4);
+        LightingBuffer->Set(lightComponent.Specular, LightOffset + 96, 4);
 
-        materialComponent.Material->Shader->SetUniform(
-            Vector3Uniform(std::format("LIGHTS[{}].Position", i), light.GetComponent<Transform3DComponent>().Position));
-
-        materialComponent.Material->Shader->SetUniform(
-            Vector3Uniform(std::format("LIGHTS[{}].Ambient", i), lightComponent.Ambient));
-
-        materialComponent.Material->Shader->SetUniform(
-            Vector3Uniform(std::format("LIGHTS[{}].Diffuse", i), lightComponent.Diffuse));
-
-        materialComponent.Material->Shader->SetUniform(
-            Vector3Uniform(std::format("LIGHTS[{}].Specular", i), lightComponent.Specular));
-
-        materialComponent.Material->Shader->SetUniform(
-            IntUniform(std::format("LIGHTS[{}].Type", i), static_cast<int>(lightComponent.Type)));
-
-        materialComponent.Material->Shader->SetUniform(
-            Vector3Uniform(std::format("LIGHTS[{}].Direction", i), light.GetComponent<Transform3DComponent>().GetForward()));
-
-        materialComponent.Material->Shader->SetUniform(
-            FloatUniform(std::format("LIGHTS[{}].Constant", i), lightComponent.Constant));
-
-        materialComponent.Material->Shader->SetUniform(FloatUniform(std::format("LIGHTS[{}].Linear", i), lightComponent.Linear));
-
-        materialComponent.Material->Shader->SetUniform(
-            FloatUniform(std::format("LIGHTS[{}].Quadratic", i), lightComponent.Quadratic));
-
-        materialComponent.Material->Shader->SetUniform(
-            FloatUniform(std::format("LIGHTS[{}].Intensity", i), lightComponent.Intensity));
-
-        materialComponent.Material->Shader->SetUniform(
-            FloatUniform(std::format("LIGHTS[{}].InnerCutOff", i), std::cos(lightComponent.InnerCutOff)));
-
-        materialComponent.Material->Shader->SetUniform(
-            FloatUniform(std::format("LIGHTS[{}].OuterCutOff", i), std::cos(lightComponent.OuterCutOff)));
+        LightingBuffer->Set(lightComponent.Intensity, LightOffset + 112);
+        LightingBuffer->Set(lightComponent.Constant, LightOffset + 116);
+        LightingBuffer->Set(lightComponent.Linear, LightOffset + 120);
+        LightingBuffer->Set(lightComponent.Quadratic, LightOffset + 124);
+        LightingBuffer->Set(lightComponent.InnerCutOff, LightOffset + 128);
+        LightingBuffer->Set(lightComponent.OuterCutOff, LightOffset + 132);
     }
+
+    LightingBuffer->Bind();
 }
 } // namespace N

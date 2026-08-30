@@ -4,6 +4,6 @@
 
 namespace N {
 struct Transform3DSystem : System {
-    void FixedUpdate(double fdt) override;
+    void Update(double fdt) override;
 };
 } // namespace N

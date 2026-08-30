@@ -106,7 +106,7 @@ void World::Update(const double dt) {
 
 void World::FixedUpdate(const double fdt) {
     for (auto& system : Systems | std::views::values) {
-        system->FixedUpdate(fdt);
+        system->Update(fdt);
     }
 }
 

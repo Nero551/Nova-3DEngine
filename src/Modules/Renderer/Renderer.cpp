@@ -201,6 +201,7 @@ void Renderer::PresentFramebuffer() {
 //  fix this by classifying render passes by transparency, pairs well with future render batches / instancing.
 //  for ordering semi-transparent object by distance , use a map , it auto sorts.
 void Renderer::OnRender() {
+    GetSystem<LightingSystem>().Render();
     RenderWorld();
     PresentFramebuffer();
 }

@@ -5,6 +5,8 @@
 
 namespace N {
 struct LightingSystem : System {
+    U::CheckedPtr<Uniformbuffer> LightingBuffer;
+
     void Start() override;
     void Render() override;
 };

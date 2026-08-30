@@ -7,7 +7,7 @@
 #include "World/Components/Transform3DComponent.hpp"
 
 namespace N {
-void CameraSystem::FixedUpdate(const double fdt) {
+void CameraSystem::Update(const double dt) {
     {
         auto& input = Engine::Get().GetModule<Input>();
         auto& camera = World::Get().ActiveCamera;
@@ -20,8 +20,8 @@ void CameraSystem::FixedUpdate(const double fdt) {
             cameraComponent.Speed += input.GetScrollDelta().y / 3;
             cameraComponent.Speed = std::clamp(cameraComponent.Speed, 1.0f, 50.0f);
 
-            const float xOffset = M::Rad(-input.GetMouseDelta().x * cameraComponent.Sensitivity);
-            const float yOffset = M::Rad(-input.GetMouseDelta().y * cameraComponent.Sensitivity);
+            const float xOffset = M::Rad(-input.GetMouseDelta().x * cameraComponent.Sensitivity * dt);
+            const float yOffset = M::Rad(-input.GetMouseDelta().y * cameraComponent.Sensitivity * dt);
 
             const float maxPitch = M::Rad(89.9);
 
@@ -32,7 +32,7 @@ void CameraSystem::FixedUpdate(const double fdt) {
             transform.Rotation = M::Quaternion::FromEulerXYZ({ cameraComponent.Pitch, cameraComponent.Yaw, 0 });
         }
 
-        const float speed = cameraComponent.Speed * static_cast<float>(fdt);
+        const float speed = cameraComponent.Speed * static_cast<float>(dt);
 
         if (input.IsKeyHeld(Key::W)) {
             transform.Position += speed * transform.GetForward();

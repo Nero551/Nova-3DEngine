@@ -19,7 +19,7 @@ void Module::Update(const double dt) {
 void Module::FixedUpdate(const double fdt) {
     OnFixedUpdate(fdt);
     for (auto& system : Systems | std::views::values) {
-        system->FixedUpdate(fdt);
+        system->Update(fdt);
     }
 }
 

@@ -87,7 +87,7 @@ static float passed = 0;
 
 static float multiplier = 1;
 
-void calculus::FixedUpdate(double dt) {
+void calculus::Update(double dt) {
     auto& resourceManager = Service::Get<ResourceManager>();
     auto& transform = World::Get().FindEntity(cubeId).GetComponent<Transform3DComponent>();
     auto& input = Engine::Get().GetModule<Input>();

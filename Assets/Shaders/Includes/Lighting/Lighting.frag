@@ -2,8 +2,12 @@
 #include "LightCasters.frag"
 
 const int NR_LIGHTS = 24;
-uniform int MAX_LIGHTS;
-uniform Light LIGHTS[NR_LIGHTS];
+
+layout (std140, binding = 1) uniform LightsBuffer{
+    int LIGHT_COUNT;
+    Light LIGHTS[NR_LIGHTS];
+
+};
 
 vec3 CalculateLight(Light light) {
     vec3 lightDir = normalize(light.Position - FSIn.WorldPosition.xyz);
@@ -30,7 +34,7 @@ vec3 CalculateLight(Light light) {
 
 vec3 Lighting() {
     vec3 result = vec3(0.0);
-    for (int i = 0; i < MAX_LIGHTS; i++) {
+    for (int i = 0; i < LIGHT_COUNT; i++) {
         result += CalculateLight(LIGHTS[i]);
     }
 

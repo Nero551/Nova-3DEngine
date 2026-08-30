@@ -21,7 +21,7 @@ concept EntityType = std::derived_from<T, Entity>;
 struct World : SystemOwner {
     U::CheckedPtr<Entity> Root{ "World Has No Root Entity" };
     U::CheckedPtr<Entity> ActiveCamera{ "World Has No Active Camera" };
-    int MaxLights = 64;
+    int MaxLights = 24;
 
     /** @brief Gets the global World instance. */
     static World& Get();
