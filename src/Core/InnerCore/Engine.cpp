@@ -9,6 +9,7 @@
 #include "Modules/Physics/Physics.hpp"
 #include "Modules/Profiling/Profiling.hpp"
 #include "tracy/Tracy.hpp"
+#include "tracy/TracyOpenGL.hpp"
 
 namespace N {
 Engine::Engine() : Window(800, 600, "Nova") {
@@ -58,6 +59,7 @@ void Engine::Configure() {
     Window.SetIcon({ "Assets/icon.png" });
     // Window.SetSize(1980, 1200);
     glfwSwapInterval(0);
+    TracyGpuContext;
 
     Service::Add<ResourceManager>();
     Service::Add<EventBus>();
@@ -70,6 +72,8 @@ void Engine::Configure() {
 
 void Engine::Start() {
     Configure();
+    ZoneScopedN("Start");
+    TracyGpuZone("Start");
 
     World.Start();
 
@@ -83,6 +87,9 @@ void Engine::Start() {
 }
 
 void Engine::Stop() {
+    ZoneScopedN("Stop");
+    TracyGpuZone("Stop");
+
     World.Stop();
     for (auto& module : Modules | std::views::values) {
         module->Stop();
@@ -100,6 +107,9 @@ void Engine::Stop() {
 }
 
 void Engine::BeginFrame() {
+    ZoneScopedN("Begin Frame");
+    TracyGpuZone("Begin Frame");
+
     const double currentTime = glfwGetTime();
     DeltaTime = currentTime - LastFrame;
     LastFrame = currentTime;
@@ -117,6 +127,9 @@ void Engine::BeginFrame() {
 }
 
 void Engine::EndFrame() {
+    ZoneScopedN("End Frame");
+    TracyGpuZone("End Frame");
+
     Window.SwapBuffers();
 
     World.EndFrame(DeltaTime);
@@ -129,9 +142,14 @@ void Engine::EndFrame() {
     }
 
     FrameMark;
+    TracyGpuCollect;
 }
 
 void Engine::Update() {
+    ZoneScopedN("Update");
+    TracyGpuZone("Update");
+
+
     World.Update(DeltaTime);
 
     for (auto& module : Modules | std::views::values) {
@@ -144,6 +162,9 @@ void Engine::Update() {
 }
 
 void Engine::FixedUpdate() {
+    ZoneScopedN("Fixed Update");
+    TracyGpuZone("Fixed Update");
+
     World.FixedUpdate(FixedDeltaTime);
     for (auto& module : Modules | std::views::values) {
         module->FixedUpdate(FixedDeltaTime);
@@ -155,6 +176,9 @@ void Engine::FixedUpdate() {
 }
 
 void Engine::Render() {
+    ZoneScopedN("Render");
+    TracyGpuZone("Render");
+
     for (auto& module : Modules | std::views::values) {
         module->Render();
     }

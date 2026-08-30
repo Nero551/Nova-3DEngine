@@ -110,8 +110,10 @@ void Renderer::OnBeginFrame(double dt) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
+// TODO- THE MASSIVE LAG WAS FROM THE LIGHTING SYSTEM, ADD ABILITY TO ORDER SYSTEM CALLS (UPDATE, etc).
+//  MAKE LIGHTING SYSTEM USE UNIFORM BUFFER INSTEAD OF LOOPING OVER ALL ENTITIES
+
 void Renderer::RenderWorld() {
-    ZoneScopedN("Render World");
     auto& camera = World::Get().ActiveCamera;
 
     const M::Matrix4 projection = camera->GetComponent<CameraComponent>().GetProjectionMatrix();
@@ -131,67 +133,50 @@ void Renderer::RenderWorld() {
     GUniformbuffer->Set(camera->GetComponent<Transform3DComponent>().GlobalPosition, 144);
     GUniformbuffer->Bind();
 
-    {
-        ZoneScopedN("Clear Batches") for (auto& batch : Batches | std::views::values) {
-            batch.Instances.clear();
-        }
+    for (auto& batch : Batches | std::views::values) {
+        batch.Instances.clear();
     }
-    {
-        ZoneScopedN("Collect Entities");
-        for (auto& entity : World::Get().Root->GetDescendants()) {
-            ZoneScopedN("Entity");
-            if (entity->HasComponent<MaterialComponent, MeshComponent, Transform3DComponent>()) {
-                auto& transformComponent = entity->GetComponent<Transform3DComponent>();
-                auto& materialComponent = entity->GetComponent<MaterialComponent>();
-                auto& meshComponent = entity->GetComponent<MeshComponent>();
+    for (auto& entity : World::Get().Root->GetDescendants()) {
+        if (entity->HasComponent<MaterialComponent, MeshComponent, Transform3DComponent>()) {
+            auto& transformComponent = entity->GetComponent<Transform3DComponent>();
+            auto& materialComponent = entity->GetComponent<MaterialComponent>();
+            auto& meshComponent = entity->GetComponent<MeshComponent>();
 
-                if (materialComponent.Material->Shader->HotReload == true) {
-                    materialComponent.Material->Shader->Reload();
-                }
+            if (materialComponent.Material->Shader->HotReload == true) {
+                materialComponent.Material->Shader->Reload();
+            }
 
-                ZoneScopedN("Find Batch");
-                auto it = Batches.find(meshComponent.Mesh->Name + materialComponent.Material->Name);
+            auto it = Batches.find(meshComponent.Mesh->Name + materialComponent.Material->Name);
 
-                if (it == Batches.end()) {
-                    std::string name = meshComponent.Mesh->Name + materialComponent.Material->Name;
+            if (it == Batches.end()) {
+                std::string name = meshComponent.Mesh->Name + materialComponent.Material->Name;
 
-                    auto [it, inserted] = Batches.try_emplace(name, meshComponent.Mesh, materialComponent.Material);
-                    ZoneScopedN("Matrices 1");
-                    it->second.Instances.emplace_back(
-                        transformComponent.GetModelMatrix().Transpose(), transformComponent.GetNormalMatrix().Transpose());
-                }
-                else {
-                    ZoneScopedN("Matrices 2");
-                    it->second.Instances.emplace_back(
-                        transformComponent.GetModelMatrix().Transpose(), transformComponent.GetNormalMatrix().Transpose());
-                }
+                auto [it, inserted] = Batches.try_emplace(name, meshComponent.Mesh, materialComponent.Material);
+                it->second.Instances.emplace_back(
+                    transformComponent.GetModelMatrix().Transpose(), transformComponent.GetNormalMatrix().Transpose());
+            }
+            else {
+                it->second.Instances.emplace_back(
+                    transformComponent.GetModelMatrix().Transpose(), transformComponent.GetNormalMatrix().Transpose());
             }
         }
     }
-    {
-        ZoneScopedN("Render Batches");
+    for (auto& batch : Batches | std::views::values) {
+        batch.Material->Use();
 
-        for (auto& batch : Batches | std::views::values) {
-            ZoneScopedN("Batch");
-            ZoneText(batch.Mesh->Name.c_str(), batch.Mesh->Name.size());
-            ZoneValue(batch.Instances.size());
+        int instanceCount = batch.Instances.size();
+        batch.Buffer.SetData(batch.Instances);
 
-            batch.Material->Use();
+        batch.Mesh->Generate();
+        batch.Mesh->VAO.Bind();
+        batch.Buffer.Bind();
 
-            int instanceCount = batch.Instances.size();
-            batch.Buffer.SetData(batch.Instances);
+        batch.Mesh->VAO.SetMatrix4AttribPointer(4, sizeof(InstanceData), 0);
+        batch.Mesh->VAO.SetMatrix3AttribPointer(8, sizeof(InstanceData), sizeof(M::Matrix4));
+        batch.Mesh->VAO.SetMatrix4AttribDivisor(4, 1);
+        batch.Mesh->VAO.SetMatrix3AttribDivisor(8, 1);
 
-            batch.Mesh->Generate();
-            batch.Mesh->VAO.Bind();
-            batch.Buffer.Bind();
-
-            batch.Mesh->VAO.SetMatrix4AttribPointer(4, sizeof(InstanceData), 0);
-            batch.Mesh->VAO.SetMatrix3AttribPointer(8, sizeof(InstanceData), sizeof(M::Matrix4));
-            batch.Mesh->VAO.SetMatrix4AttribDivisor(4, 1);
-            batch.Mesh->VAO.SetMatrix3AttribDivisor(8, 1);
-
-            batch.Mesh->DrawInstanced(instanceCount);
-        }
+        batch.Mesh->DrawInstanced(instanceCount);
     }
 }
 
