@@ -26,9 +26,9 @@ static MeshInstance3D& CreatePoint(M::Vector4 col) {
     material.Shader = &shader;
 
     auto& point = World::Get().CreateEntity<MeshInstance3D>();
-    point.GetComponent<MeshComponent>().Mesh = &mesh;
-    point.GetComponent<MaterialComponent>().Material = &material;
-    point.GetComponent<Transform3DComponent>().Scale = { 0.2 };
+    World::Get().Query.Pool<MeshComponent>().GetComponentById(point.Id).Mesh = &mesh;
+    World::Get().Query.Pool<MaterialComponent>().GetComponentById(point.Id).Material = &material;
+    World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.Id).Scale = { 0.2 };
     World::Get().Root->AttachChild(point);
 
     return point;
@@ -42,7 +42,7 @@ static std::vector<U::CheckedPtr<Entity>> points = {};
 static Entity& Plot(const M::Vector3 vec3, const M::Vector4 col = { 1, 1, 1, 1 }) {
     // if (vec3.y < max && vec3.y > min) {
     auto& point = CreatePoint(col);
-    auto& transform = point.GetComponent<Transform3DComponent>();
+    auto& transform = World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.Id);
     transform.Position.x = vec3.x;
     transform.Position.y = vec3.y;
     transform.Position.z = vec3.z;
@@ -72,14 +72,14 @@ void calculus::Start() {
     objectMaterial.Shader = &objectShader;
 
     auto& cube = World::Get().CreateEntity<MeshInstance3D>();
-    cube.GetComponent<MeshComponent>().Mesh = &mesh;
-    cube.GetComponent<MaterialComponent>().Material = &objectMaterial;
-    cube.GetComponent<Transform3DComponent>().Scale = { 1 };
-    auto& transform = cube.GetComponent<Transform3DComponent>();
+    World::Get().Query.Pool<MeshComponent>().GetComponentById(cube.Id).Mesh = &mesh;
+    World::Get().Query.Pool<MaterialComponent>().GetComponentById(cube.Id).Material = &objectMaterial;
+    World::Get().Query.Pool<Transform3DComponent>().GetComponentById(cube.Id).Scale = { 1 };
+    auto& transform = World::Get().Query.Pool<Transform3DComponent>().GetComponentById(cube.Id);
     cubeId = cube.Id;
     World::Get().Root->AttachChild(cube);
 
-    FourDimensionalProjection(16);
+    // FourDimensionalProjection(21);
 }
 
 static float elapsed = 0;
@@ -118,7 +118,7 @@ void calculus::Update(double dt) {
     }
 
     for (auto& point : points) {
-        auto& transform = point->GetComponent<Transform3DComponent>();
+        auto& transform = World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point->Id);
         transform.Position *= multiplier;
     }
 

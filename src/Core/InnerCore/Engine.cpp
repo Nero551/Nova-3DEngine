@@ -151,7 +151,6 @@ void Engine::Update() {
 
 
     World.Update(DeltaTime);
-
     for (auto& module : Modules | std::views::values) {
         module->Update(DeltaTime);
     }
@@ -179,6 +178,8 @@ void Engine::Render() {
     ZoneScopedN("Render");
     TracyGpuZone("Render");
 
+
+    World.Render();
     for (auto& module : Modules | std::views::values) {
         module->Render();
     }

@@ -113,41 +113,38 @@ void Renderer::BeginFrame(double dt) {
 void Renderer::RenderWorld() {
     auto& camera = World::Get().ActiveCamera;
 
-    const M::Matrix4 projection = camera->GetComponent<CameraComponent>().GetProjectionMatrix();
+
+    const M::Matrix4 projection = World::Get().Query.Pool<CameraComponent>().GetComponentById(camera->Id).GetProjectionMatrix();
     const M::Matrix4 view = GetSystem<CameraSystem>().GetViewMatrix();
 
     GUniformbuffer->Set(view.Transpose(), 0);
     GUniformbuffer->Set(projection.Transpose(), 64);
     GUniformbuffer->Set(Engine::Get().GetTime(), 128);
-    GUniformbuffer->Set(camera->GetComponent<Transform3DComponent>().GlobalPosition, 144);
+    GUniformbuffer->Set(World::Get().Query.Pool<Transform3DComponent>().GetComponentById(camera->Id).GlobalPosition, 144);
     GUniformbuffer->Bind();
 
     for (auto& batch : Batches | std::views::values) {
         batch.Instances.clear();
     }
-    for (auto& entity : World::Get().Root->GetDescendants()) {
-        if (entity->HasComponent<MaterialComponent, MeshComponent, Transform3DComponent>()) {
-            auto& transformComponent = entity->GetComponent<Transform3DComponent>();
-            auto& materialComponent = entity->GetComponent<MaterialComponent>();
-            auto& meshComponent = entity->GetComponent<MeshComponent>();
 
-            if (materialComponent.Material->Shader->HotReload == true) {
-                materialComponent.Material->Shader->Reload();
-            }
+    for (auto [entityId, transformComponent, meshComponent, materialComponent] :
+        World::Get().Query.With<Transform3DComponent, MeshComponent, MaterialComponent>()) {
+        if (materialComponent.Material->Shader->HotReload == true) {
+            materialComponent.Material->Shader->Reload();
+        }
 
-            auto it = Batches.find(meshComponent.Mesh->Name + materialComponent.Material->Name);
+        auto it = Batches.find(meshComponent.Mesh->Name + materialComponent.Material->Name);
 
-            if (it == Batches.end()) {
-                std::string name = meshComponent.Mesh->Name + materialComponent.Material->Name;
+        if (it == Batches.end()) {
+            std::string name = meshComponent.Mesh->Name + materialComponent.Material->Name;
 
-                auto [it, inserted] = Batches.try_emplace(name, meshComponent.Mesh, materialComponent.Material);
-                it->second.Instances.emplace_back(
-                    transformComponent.GetModelMatrix().Transpose(), transformComponent.GetNormalMatrix().Transpose());
-            }
-            else {
-                it->second.Instances.emplace_back(
-                    transformComponent.GetModelMatrix().Transpose(), transformComponent.GetNormalMatrix().Transpose());
-            }
+            auto [it, inserted] = Batches.try_emplace(name, meshComponent.Mesh, materialComponent.Material);
+            it->second.Instances.emplace_back(
+                transformComponent.GetModelMatrix().Transpose(), transformComponent.GetNormalMatrix().Transpose());
+        }
+        else {
+            it->second.Instances.emplace_back(
+                transformComponent.GetModelMatrix().Transpose(), transformComponent.GetNormalMatrix().Transpose());
         }
     }
     for (auto& batch : Batches | std::views::values) {
@@ -183,6 +180,9 @@ void Renderer::Render() {
 
 void Renderer::Update(double dt) {
     GetSystem<CameraSystem>().Update(dt);
+}
+
+void Renderer::FixedUpdate(double fdt) {
 }
 
 void Renderer::Stop() {

@@ -1,18 +1,7 @@
 #include "Entity.hpp"
-
-#include "../Scene.hpp"
 #include "Core/InnerCore/Engine.hpp"
 
 namespace N {
-std::vector<U::CheckedPtr<Component>> Entity::GetAllComponents() {
-    std::vector<U::CheckedPtr<Component>> components;
-    for (auto& component : Components | std::views::values) {
-        components.emplace_back(&*component);
-    }
-
-    return components;
-}
-
 void Entity::DestroyChild(const unsigned int id) {
     if (!HasChild(id)) {
         return;

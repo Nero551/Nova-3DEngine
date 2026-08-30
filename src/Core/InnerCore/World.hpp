@@ -1,8 +1,7 @@
 #pragma once
 
 #include "../OuterCore/Scene.hpp"
-#include "Core/OuterCore/ECS/ComponentPool.hpp"
-#include "Core/OuterCore/ECS/IComponentPool.hpp"
+#include "Core/OuterCore/ECS/ComponentQuery/ComponentPoolQuery.hpp"
 #include "Core/OuterCore/Service.hpp"
 #include "Core/Services/EventBus.hpp"
 #include "SystemOwner.hpp"
@@ -21,6 +20,7 @@ concept EntityType = std::derived_from<T, Entity>;
 struct World : SystemOwner {
     U::CheckedPtr<Entity> Root{ "World Has No Root Entity" };
     U::CheckedPtr<Entity> ActiveCamera{ "World Has No Active Camera" };
+    ComponentPoolQuery Query;
     int MaxLights = 24;
 
     /** @brief Gets the global World instance. */
@@ -70,19 +70,8 @@ struct World : SystemOwner {
      */
     U::CheckedPtr<Entity> TryFindEntity(unsigned int id);
 
-    // template <ComponentType T> ComponentPool<T>& GetComponentPool() {
-    //     const auto type = std::type_index(typeid(T));
-    //     if (!ComponentPools.contains(type)) {
-    //         ComponentPools.emplace(type, std::make_unique<ComponentPool<T>>());
-    //     }
-    //
-    //     return static_cast<ComponentPool<T>&>(*ComponentPools.at(type));
-    // }
-
 private:
     std::unordered_map<unsigned int, std::unique_ptr<Entity>> Entities;
-    // std::unordered_map<std::type_index, std::unique_ptr<IComponentPool>> ComponentPools;
-
     /** @brief ID assigned to the most recently created entity. */
     unsigned int currentEntityId = 0;
 

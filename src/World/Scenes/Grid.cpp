@@ -35,14 +35,17 @@ void Grid::CreateGridLine(const M::Quaternion rotation, const M::Vector3 positio
     auto& line = Primitives::CreateLine("Line");
 
     auto& l = World::Get().CreateEntity<MeshInstance3D>();
-    l.GetComponent<MeshComponent>().Mesh = &line;
-    l.GetComponent<MaterialComponent>().Material = &resourceManager.Load<Material>("GridLine Material");
-    l.GetComponent<MaterialComponent>().Material->Shader = &shader;
+    auto& materialComponent = World::Get().Query.Pool<MaterialComponent>().GetComponentById(l.Id);
+    auto& meshComponent = World::Get().Query.Pool<MeshComponent>().GetComponentById(l.Id);
+    auto& transformComponent = World::Get().Query.Pool<Transform3DComponent>().GetComponentById(l.Id);
+    meshComponent.Mesh = &line;
+    materialComponent.Material = &resourceManager.Load<Material>("GridLine Material");
+    materialComponent.Material->Shader = &shader;
 
-    l.GetComponent<Transform3DComponent>().Rotation = rotation;
-    l.GetComponent<Transform3DComponent>().Position = position;
-    l.GetComponent<Transform3DComponent>().Scale = { 1, 1, 40 };
-    l.GetComponent<MaterialComponent>().Material->Color = M::Color::Gray;
+    transformComponent.Rotation = rotation;
+    transformComponent.Position = position;
+    transformComponent.Scale = { 1, 1, 40 };
+    materialComponent.Material->Color = M::Color::Gray;
     GetRoot().AttachChild(l);
 }
 

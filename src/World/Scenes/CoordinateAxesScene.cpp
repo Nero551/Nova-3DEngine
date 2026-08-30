@@ -16,9 +16,11 @@
 
 namespace N {
 CoordinateAxesScene::CoordinateAxesScene() {
+    auto& world = World::Get();
+    auto& query = world.Query;
     auto& resourceManager = Service::Get<ResourceManager>();
 
-    SetRoot(World::Get().CreateEntity<Nova>());
+    SetRoot(world.CreateEntity<Nova>());
 
     auto& lightShader = resourceManager.Load<Shader>("lightShader");
     lightShader.AssignSource(
@@ -29,49 +31,55 @@ CoordinateAxesScene::CoordinateAxesScene() {
     auto& lightMaterial = resourceManager.Load<Material>("lightMaterial");
     lightMaterial.Shader = &lightShader;
 
-    auto& light = World::Get().CreateEntity<Light>();
-    light.GetComponent<Transform3DComponent>().Rotation = M::Quaternion::FromEulerXYZ({ M::Rad(32.5) });
+    auto& light = world.CreateEntity<Light>();
+    query.Pool<Transform3DComponent>().GetComponentById(light.Id).Rotation = M::Quaternion::FromEulerXYZ({ M::Rad(32.5) });
     GetRoot().AttachChild(light);
 
-    auto& light2 = World::Get().CreateEntity<Light>();
-    light2.GetComponent<Transform3DComponent>().Rotation = M::Quaternion::FromEulerXYZ({ M::Rad(-32.5) });
+    auto& light2 = world.CreateEntity<Light>();
+    query.Pool<Transform3DComponent>().GetComponentById(light2.Id).Rotation = M::Quaternion::FromEulerXYZ({ M::Rad(-32.5) });
     GetRoot().AttachChild(light2);
 
-    auto& shader = Service::Get<ResourceManager>().Load<Shader>("AxisShader");
+    auto& shader = resourceManager.Load<Shader>("AxisShader");
     shader.AssignSource(resourceManager.Load<ShaderSource>("axisFrag", "Assets/Shaders/axisShader.frag", ShaderStage::Fragment));
     shader.AssignSource(resourceManager.Load<ShaderSource>("axisVert", "Assets/Shaders/axisShader.vert", ShaderStage::Vertex));
 
     auto& line = Primitives::CreateLine("Line");
 
-    auto& xAxis = World::Get().CreateEntity<MeshInstance3D>();
-    xAxis.GetComponent<MeshComponent>().Mesh = &line;
-    xAxis.GetComponent<MaterialComponent>().Material = &resourceManager.Load<Material>("X-Axis Material");
-    xAxis.GetComponent<MaterialComponent>().Material->Shader = &shader;
+    auto& xAxis = world.CreateEntity<MeshInstance3D>();
+    query.Pool<MeshComponent>().GetComponentById(xAxis.Id).Mesh = &line;
 
-    xAxis.GetComponent<Transform3DComponent>().Rotation = M::Quaternion::FromEulerXYZ({ 0, M::Rad(90), 0 });
-    xAxis.GetComponent<Transform3DComponent>().Scale = { 1, 1, 200 };
-    xAxis.GetComponent<MaterialComponent>().Material->Color = M::Color::Red;
+    auto& xMaterial = query.Pool<MaterialComponent>().GetComponentById(xAxis.Id);
+    xMaterial.Material = &resourceManager.Load<Material>("X-Axis Material");
+    xMaterial.Material->Shader = &shader;
+
+    query.Pool<Transform3DComponent>().GetComponentById(xAxis.Id).Rotation = M::Quaternion::FromEulerXYZ({ 0, M::Rad(90), 0 });
+    query.Pool<Transform3DComponent>().GetComponentById(xAxis.Id).Scale = { 1, 1, 200 };
+    xMaterial.Material->Color = M::Color::Red;
 
     GetRoot().AttachChild(xAxis);
 
-    auto& yAxis = World::Get().CreateEntity<MeshInstance3D>();
-    yAxis.GetComponent<MeshComponent>().Mesh = &line;
-    yAxis.GetComponent<MaterialComponent>().Material = &resourceManager.Load<Material>("Y-Axis Material");
-    yAxis.GetComponent<MaterialComponent>().Material->Shader = &shader;
+    auto& yAxis = world.CreateEntity<MeshInstance3D>();
+    query.Pool<MeshComponent>().GetComponentById(yAxis.Id).Mesh = &line;
 
-    yAxis.GetComponent<Transform3DComponent>().Rotation = M::Quaternion::FromEulerXYZ({ M::Rad(-90), 0, 0 });
-    yAxis.GetComponent<Transform3DComponent>().Scale = { 1, 1, 200 };
-    yAxis.GetComponent<MaterialComponent>().Material->Color = M::Color::Green;
+    auto& yMaterial = query.Pool<MaterialComponent>().GetComponentById(yAxis.Id);
+    yMaterial.Material = &resourceManager.Load<Material>("Y-Axis Material");
+    yMaterial.Material->Shader = &shader;
+
+    query.Pool<Transform3DComponent>().GetComponentById(yAxis.Id).Rotation = M::Quaternion::FromEulerXYZ({ M::Rad(-90), 0, 0 });
+    query.Pool<Transform3DComponent>().GetComponentById(yAxis.Id).Scale = { 1, 1, 200 };
+    yMaterial.Material->Color = M::Color::Green;
 
     GetRoot().AttachChild(yAxis);
 
-    auto& zAxis = World::Get().CreateEntity<MeshInstance3D>();
-    zAxis.GetComponent<MeshComponent>().Mesh = &line;
-    zAxis.GetComponent<MaterialComponent>().Material = &resourceManager.Load<Material>("Z-Axis Material");
-    zAxis.GetComponent<MaterialComponent>().Material->Shader = &shader;
+    auto& zAxis = world.CreateEntity<MeshInstance3D>();
+    query.Pool<MeshComponent>().GetComponentById(zAxis.Id).Mesh = &line;
 
-    zAxis.GetComponent<Transform3DComponent>().Scale = { 1, 1, 200 };
-    zAxis.GetComponent<MaterialComponent>().Material->Color = M::Color::Blue;
+    auto& zMaterial = query.Pool<MaterialComponent>().GetComponentById(zAxis.Id);
+    zMaterial.Material = &resourceManager.Load<Material>("Z-Axis Material");
+    zMaterial.Material->Shader = &shader;
+
+    query.Pool<Transform3DComponent>().GetComponentById(zAxis.Id).Scale = { 1, 1, 200 };
+    zMaterial.Material->Color = M::Color::Blue;
 
     GetRoot().AttachChild(zAxis);
 

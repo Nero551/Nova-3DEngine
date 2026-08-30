@@ -8,69 +8,68 @@
 
 namespace N {
 void CameraSystem::Update(const double dt) {
-    {
-        auto& input = Engine::Get().GetModule<Input>();
-        auto& camera = World::Get().ActiveCamera;
-        auto& transform = camera->GetComponent<Transform3DComponent>();
-        auto& cameraComponent = camera->GetComponent<CameraComponent>();
+    auto& world = World::Get();
+    auto& query = world.Query;
+    auto& input = Engine::Get().GetModule<Input>();
+    auto& camera = world.ActiveCamera;
 
-        cameraComponent.AspectRatio = Engine::Get().Window.GetAspectRatio();
+    auto& transform = query.Pool<Transform3DComponent>().GetComponentById(camera->Id);
+    auto& cameraComponent = query.Pool<CameraComponent>().GetComponentById(camera->Id);
 
-        if (input.GetMouseMode() == MouseMode::Disabled) {
-            cameraComponent.Speed += input.GetScrollDelta().y / 3;
-            cameraComponent.Speed = std::clamp(cameraComponent.Speed, 1.0f, 50.0f);
+    cameraComponent.AspectRatio = Engine::Get().Window.GetAspectRatio();
 
-            const float xOffset = M::Rad(-input.GetMouseDelta().x * cameraComponent.Sensitivity * dt);
-            const float yOffset = M::Rad(-input.GetMouseDelta().y * cameraComponent.Sensitivity * dt);
+    if (input.GetMouseMode() == MouseMode::Disabled) {
+        cameraComponent.Speed += input.GetScrollDelta().y / 3;
+        cameraComponent.Speed = std::clamp(cameraComponent.Speed, 1.0f, 50.0f);
 
-            const float maxPitch = M::Rad(89.9);
+        const float xOffset = M::Rad(-input.GetMouseDelta().x * cameraComponent.Sensitivity);
+        const float yOffset = M::Rad(-input.GetMouseDelta().y * cameraComponent.Sensitivity);
 
-            cameraComponent.Yaw += xOffset;
-            cameraComponent.Pitch += yOffset;
-            cameraComponent.Pitch = std::clamp(cameraComponent.Pitch, -maxPitch, maxPitch);
+        const float maxPitch = M::Rad(89.9);
 
-            transform.Rotation = M::Quaternion::FromEulerXYZ({ cameraComponent.Pitch, cameraComponent.Yaw, 0 });
-        }
+        cameraComponent.Yaw += xOffset;
+        cameraComponent.Pitch += yOffset;
+        cameraComponent.Pitch = std::clamp(cameraComponent.Pitch, -maxPitch, maxPitch);
 
-        const float speed = cameraComponent.Speed * static_cast<float>(dt);
+        transform.Rotation = M::Quaternion::FromEulerXYZ({ cameraComponent.Pitch, cameraComponent.Yaw, 0 });
+    }
 
-        if (input.IsKeyHeld(Key::W)) {
-            transform.Position += speed * transform.GetForward();
-        }
+    const float speed = cameraComponent.Speed * static_cast<float>(dt);
 
-        if (input.IsKeyHeld(Key::S)) {
-            transform.Position -= speed * transform.GetForward();
-        }
+    if (input.IsKeyHeld(Key::W)) {
+        transform.Position += speed * transform.GetForward();
+    }
 
-        if (input.IsKeyHeld(Key::A)) {
-            transform.Position -= speed * transform.GetRight();
-        }
+    if (input.IsKeyHeld(Key::S)) {
+        transform.Position -= speed * transform.GetForward();
+    }
 
-        if (input.IsKeyHeld(Key::D)) {
-            transform.Position += speed * transform.GetRight();
-        }
+    if (input.IsKeyHeld(Key::A)) {
+        transform.Position -= speed * transform.GetRight();
+    }
 
-        if (input.IsKeyHeld(Key::Space)) {
-            transform.Position += speed * M::Vector3(0, 1, 0);
-        }
+    if (input.IsKeyHeld(Key::D)) {
+        transform.Position += speed * transform.GetRight();
+    }
 
-        if (input.IsKeyHeld(Key::LeftShift)) {
-            transform.Position -= speed * M::Vector3(0, 1, 0);
-        }
+    if (input.IsKeyHeld(Key::Space)) {
+        transform.Position += speed * M::Vector3(0, 1, 0);
+    }
+
+    if (input.IsKeyHeld(Key::LeftShift)) {
+        transform.Position -= speed * M::Vector3(0, 1, 0);
     }
 }
 
 M::Matrix4 CameraSystem::GetViewMatrix() {
-    auto& camera = World::Get().ActiveCamera;
-    auto& transformComponent = camera->GetComponent<Transform3DComponent>();
+    auto& world = World::Get();
+    auto& camera = world.ActiveCamera;
+    auto& transform = world.Query.Pool<Transform3DComponent>().GetComponentById(camera->Id);
 
-    M::Vector3 pos = transformComponent.Position;
-    M::Vector3 forward = transformComponent.GetForward();
-    M::Vector3 up = transformComponent.GetUp();
+    const M::Vector3 pos = transform.Position;
+    const M::Vector3 forward = transform.GetForward();
+    const M::Vector3 up = transform.GetUp();
 
-    M::Matrix4 view = M::Matrix4::LookAt(pos, pos + forward, up);
-    ;
-
-    return view;
+    return M::Matrix4::LookAt(pos, pos + forward, up);
 }
 } // namespace N

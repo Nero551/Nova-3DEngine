@@ -6,7 +6,7 @@ namespace N {
 struct Light : Nova3D {
     void Initialize() override {
         Nova3D::Initialize();
-        AddComponents<LightComponent>();
+        World::Get().Query.Pool<LightComponent>().Add(Id);
     }
 };
 } // namespace N
