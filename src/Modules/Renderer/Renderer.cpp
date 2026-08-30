@@ -21,11 +21,6 @@
 #include "Systems/LightingSystem.hpp"
 
 namespace N {
-void Renderer::AddSystems() {
-    AddSystem<CameraSystem>();
-    AddSystem<LightingSystem>();
-}
-
 void Renderer::SetupFramebuffers() {
     std::vector vertices = { Vertex({ -1.0f, -1.0f, 0.0f, 1.0f }, {}, { 0.0f, 0.0f }, {}),
         Vertex({ 1.0f, -1.0f, 0.0f, 1.0f }, {}, { 1.0f, 0.0f }, {}),
@@ -82,7 +77,10 @@ void Renderer::SetupFramebuffers() {
     Framebuffer->IsComplete();
 }
 
-void Renderer::OnStart() {
+void Renderer::Start() {
+    AddSystem<CameraSystem>();
+    AddSystem<LightingSystem>();
+
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_STENCIL_TEST);
     glEnable(GL_BLEND);
@@ -101,31 +99,22 @@ void Renderer::OnStart() {
         auto& renderer = Engine::Get().GetModule<Renderer>();
         renderer.Framebuffer->Resize(w, h);
     });
+
+    GetSystem<LightingSystem>().Start();
 }
 
-void Renderer::OnBeginFrame(double dt) {
+void Renderer::BeginFrame(double dt) {
     Framebuffer->Bind();
 
     glClearColor(0.08, 0.05, 0.1, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
-// TODO- THE MASSIVE LAG WAS FROM THE LIGHTING SYSTEM, ADD ABILITY TO ORDER SYSTEM CALLS (UPDATE, etc).
-//  MAKE LIGHTING SYSTEM USE UNIFORM BUFFER INSTEAD OF LOOPING OVER ALL ENTITIES
-
 void Renderer::RenderWorld() {
     auto& camera = World::Get().ActiveCamera;
 
     const M::Matrix4 projection = camera->GetComponent<CameraComponent>().GetProjectionMatrix();
     const M::Matrix4 view = GetSystem<CameraSystem>().GetViewMatrix();
-
-
-    // TODO tracy profiler
-    // TODO- i believe part of the high lag is the setting attrib pointers per frame.
-    //  instead i could make the batch itself own a VAO and build it at construction.
-    //  so it does setting attrib for matrices and the mesh it has in the batch, all at construction instead of per frame calls.
-    //  then mesh only owns VBO and EBO , no VAO in mesh.
-
 
     GUniformbuffer->Set(view.Transpose(), 0);
     GUniformbuffer->Set(projection.Transpose(), 64);
@@ -162,21 +151,7 @@ void Renderer::RenderWorld() {
         }
     }
     for (auto& batch : Batches | std::views::values) {
-        batch.Material->Use();
-
-        int instanceCount = batch.Instances.size();
-        batch.Buffer.SetData(batch.Instances);
-
-        batch.Mesh->Generate();
-        batch.Mesh->VAO.Bind();
-        batch.Buffer.Bind();
-
-        batch.Mesh->VAO.SetMatrix4AttribPointer(4, sizeof(InstanceData), 0);
-        batch.Mesh->VAO.SetMatrix3AttribPointer(8, sizeof(InstanceData), sizeof(M::Matrix4));
-        batch.Mesh->VAO.SetMatrix4AttribDivisor(4, 1);
-        batch.Mesh->VAO.SetMatrix3AttribDivisor(8, 1);
-
-        batch.Mesh->DrawInstanced(instanceCount);
+        batch.Render();
     }
 }
 
@@ -200,13 +175,17 @@ void Renderer::PresentFramebuffer() {
 // TODO- if there is multiple semi-transparent objects behind each other , depth testing breaks blending.
 //  fix this by classifying render passes by transparency, pairs well with future render batches / instancing.
 //  for ordering semi-transparent object by distance , use a map , it auto sorts.
-void Renderer::OnRender() {
+void Renderer::Render() {
     GetSystem<LightingSystem>().Render();
     RenderWorld();
     PresentFramebuffer();
 }
 
-void Renderer::OnStop() {
+void Renderer::Update(double dt) {
+    GetSystem<CameraSystem>().Update(dt);
+}
+
+void Renderer::Stop() {
     const auto& texture = Framebuffer->TextureAttachments.at(FramebufferAttachment::Color0);
 
     std::vector<unsigned char> pixels(static_cast<size_t>(texture->Width) * static_cast<size_t>(texture->Height) * 3);

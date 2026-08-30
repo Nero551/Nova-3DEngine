@@ -62,7 +62,7 @@ constexpr unsigned int Input::ToIndex(MouseButton button) {
     return static_cast<unsigned int>(button);
 }
 
-void Input::OnStart() {
+void Input::Start() {
     Window& window = Engine::Get().Window;
     glfwSetCursorPosCallback(window.GetGlfwWindow(), [](GLFWwindow*, const double xPos, const double yPos) {
         Engine::Get().GetModule<Input>().MousePosition = { static_cast<float>(xPos), static_cast<float>(yPos) };
@@ -73,7 +73,7 @@ void Input::OnStart() {
     });
 }
 
-void Input::OnBeginFrame(double dt) {
+void Input::BeginFrame(double dt) {
     if (FirstMouse) {
         PreviousMousePosition = GetMousePosition();
         FirstMouse = false;
@@ -89,7 +89,7 @@ void Input::OnBeginFrame(double dt) {
     }
 }
 
-void Input::OnEndFrame(double dt) {
+void Input::EndFrame(double dt) {
     ScrollOffset = { 0, 0 };
     PreviousMousePosition = MousePosition;
     PreviousKeys = CurrentKeys;

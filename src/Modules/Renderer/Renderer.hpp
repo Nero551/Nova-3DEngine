@@ -16,18 +16,17 @@ struct Renderer : Module {
     std::unordered_map<std::string, RenderBatch> Batches;
 
 protected:
-    void AddSystems() override;
-
     void SetupFramebuffers();
 
-    void OnStart() override;
-    void OnBeginFrame(double dt) override;
+    void Start() override;
+    void BeginFrame(double dt) override;
 
     void RenderWorld();
     void PresentFramebuffer();
 
-    void OnRender() override;
+    void Render() override;
+    void Update(double dt) override;
 
-    void OnStop() override;
+    void Stop() override;
 };
 } // namespace N

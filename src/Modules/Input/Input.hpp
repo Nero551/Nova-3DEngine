@@ -53,10 +53,10 @@ private:
     std::array<bool, MouseButtonCount> PreviousMouseButtons{};
 
 protected:
-    void OnStart() override;
+    void Start() override;
 
-    void OnBeginFrame(double dt) override;
+    void BeginFrame(double dt) override;
 
-    void OnEndFrame(double dt) override;
+    void EndFrame(double dt) override;
 };
 } // namespace N

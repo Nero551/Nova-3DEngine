@@ -1,10 +1,10 @@
 #include "Physics.hpp"
 
 namespace N {
-void Physics::OnStart() {
+void Physics::Start() {
 }
 
-void Physics::OnFixedUpdate(double fdt) {
+void Physics::FixedUpdate(double fdt) {
 }
 
 void Physics::AddSystems() {

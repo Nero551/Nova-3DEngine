@@ -21,5 +21,23 @@ struct RenderBatch {
         Buffer.Usage = BufferUsage::DynamicDraw;
         Buffer.Generate();
     }
+
+    void Render() {
+        Material->Use();
+
+        int instanceCount = Instances.size();
+        Buffer.SetData(Instances);
+
+        Mesh->Generate();
+        Mesh->VAO.Bind();
+        Buffer.Bind();
+
+        Mesh->VAO.SetMatrix4AttribPointer(4, sizeof(InstanceData), 0);
+        Mesh->VAO.SetMatrix3AttribPointer(8, sizeof(InstanceData), sizeof(M::Matrix4));
+        Mesh->VAO.SetMatrix4AttribDivisor(4, 1);
+        Mesh->VAO.SetMatrix3AttribDivisor(8, 1);
+
+        Mesh->DrawInstanced(instanceCount);
+    }
 };
 } // namespace N

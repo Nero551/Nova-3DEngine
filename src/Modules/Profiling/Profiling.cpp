@@ -3,7 +3,7 @@
 #include "Core/InnerCore/Engine.hpp"
 
 namespace N {
-void Profiling::OnStart() {
+void Profiling::Start() {
 }
 
 void Profiling::AddSystems() {
@@ -11,7 +11,7 @@ void Profiling::AddSystems() {
 
 static double elapsed = 0;
 
-void Profiling::OnUpdate(const double dt) {
+void Profiling::Update(const double dt) {
     elapsed += dt;
 
     FrameMs = dt * 1000.0;

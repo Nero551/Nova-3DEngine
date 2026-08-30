@@ -3,5 +3,5 @@
 
 void main()
 {
-    FragColor = vec4(Lighting(), 1.0) * MATERIAL.Color;
+    FragColor = MATERIAL.Color;
 }

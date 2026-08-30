@@ -10,9 +10,9 @@ struct Profiling : Module {
     int FrameCount;
 
 protected:
-    void OnStart() override;
+    void Start() override;
 
-    void OnUpdate(double dt) override;
+    void Update(double dt) override;
 
 private:
     std::deque<double> FrameTimes;

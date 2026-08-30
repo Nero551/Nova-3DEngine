@@ -29,7 +29,7 @@ protected:
      * Override this method to perform initialization.
      * @note Called by Engine. Do not call this method directly.
      */
-    virtual void OnStart() {
+    virtual void Start() {
     }
 
     /**
@@ -39,7 +39,7 @@ protected:
      * @param dt Time elapsed since the previous frame, in seconds.
      * @note Called by Engine. Do not call this method directly.
      */
-    virtual void OnUpdate(double dt) {
+    virtual void Update(double dt) {
     }
 
     /**
@@ -49,7 +49,7 @@ protected:
      * @param fdt Fixed time step between updates, in seconds.
      * @note Called by Engine. Do not call this method directly.
      */
-    virtual void OnFixedUpdate(double fdt) {
+    virtual void FixedUpdate(double fdt) {
     }
 
     /**
@@ -58,7 +58,7 @@ protected:
      * render-related work.
      * @note Called by Engine. Do not call this method directly.
      */
-    virtual void OnRender() {
+    virtual void Render() {
     }
 
     /**
@@ -68,7 +68,7 @@ protected:
      * @param dt Time elapsed since the previous frame, in seconds.
      * @note Called by Engine. Do not call this method directly.
      */
-    virtual void OnBeginFrame(double dt) {
+    virtual void BeginFrame(double dt) {
     }
 
     /**
@@ -78,7 +78,7 @@ protected:
      * @param dt Time elapsed since the previous frame, in seconds.
      * @note Called by Engine. Do not call this method directly.
      */
-    virtual void OnEndFrame(double dt) {
+    virtual void EndFrame(double dt) {
     }
 
     /**
@@ -86,24 +86,9 @@ protected:
      * Override this method to perform cleanup.
      * @note Called by Engine. Do not call this method directly.
      */
-    virtual void OnStop() {
+    virtual void Stop() {
     }
 
-private:
     friend struct Engine;
-
-    void Start();
-
-    void Update(double dt);
-
-    void FixedUpdate(double fdt);
-
-    void Stop();
-
-    void Render();
-
-    void BeginFrame(double dt);
-
-    void EndFrame(double dt);
 };
 } // namespace N

@@ -74,9 +74,6 @@ void Mesh::DrawInstanced(int instanceCount) {
 
     ApplyCulling();
     VAO.Bind();
-    VBO.Bind();
-    EBO.Bind();
-
     glDrawElementsInstanced(static_cast<GLenum>(Topology),
         static_cast<GLsizei>(Indices.size()),
         GL_UNSIGNED_INT,
@@ -84,8 +81,6 @@ void Mesh::DrawInstanced(int instanceCount) {
         static_cast<GLsizei>(instanceCount));
 
     VAO.Unbind();
-    VBO.Unbind();
-    EBO.Unbind();
 }
 
 void Mesh::Regenerate() {
@@ -101,7 +96,9 @@ void Mesh::ApplyCulling() const {
         glDisable(GL_CULL_FACE);
     }
     else {
-        glEnable(GL_CULL_FACE);
+        if (!glIsEnabled(GL_CULL_FACE)) {
+            glEnable(GL_CULL_FACE);
+        }
         glCullFace(static_cast<GLenum>(CullMode));
     }
 }
