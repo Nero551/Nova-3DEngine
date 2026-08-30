@@ -64,4 +64,4 @@ command -v doxygen
 
 echo "🥳 Nova Dependencies Installed!"
 
-"$ROOT/scripts/init-vcpkg.sh"
+"$ROOT/scripts/init-submodules.sh"

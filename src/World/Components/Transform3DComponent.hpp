@@ -13,16 +13,32 @@ struct Transform3DComponent : Component {
 
     bool InheritTransform = true;
 
-    [[nodiscard]] M::Matrix4 GetModelMatrix() const {
-        M::Matrix4 modelMatrix = M::Matrix4::Identity;
-        modelMatrix = modelMatrix.Translate({ GlobalPosition });
-        modelMatrix *= GlobalRotation.ToMatrix4();
-        modelMatrix = modelMatrix.Scale(GlobalScale);
+private:
+    M::Vector3 DirtyPos = M::Vector3::Zero;
+    M::Vector3 DirtyScale = M::Vector3::One;
+    M::Quaternion DirtyRotation = M::Quaternion::Identity;
+    M::Matrix4 DirtyModelMatrix = M::Matrix4::Identity;
 
-        return modelMatrix;
+public:
+    [[nodiscard]] M::Matrix4 GetModelMatrix() {
+        if (DirtyPos != GlobalPosition || DirtyScale != GlobalScale || DirtyRotation != GlobalRotation) {
+            DirtyPos = GlobalPosition;
+            DirtyRotation = GlobalRotation;
+            DirtyScale = GlobalScale;
+
+
+            M::Matrix4 modelMatrix = M::Matrix4::Identity;
+            modelMatrix = modelMatrix.Translate({ GlobalPosition });
+            modelMatrix *= GlobalRotation.ToMatrix4();
+            modelMatrix = modelMatrix.Scale(GlobalScale);
+            DirtyModelMatrix = modelMatrix;
+
+            return modelMatrix;
+        }
+        return DirtyModelMatrix;
     }
 
-    [[nodiscard]] M::Matrix3 GetNormalMatrix() const {
+    [[nodiscard]] M::Matrix3 GetNormalMatrix() {
         return GetModelMatrix().ToMatrix3().Inverse().Transpose();
     }
 

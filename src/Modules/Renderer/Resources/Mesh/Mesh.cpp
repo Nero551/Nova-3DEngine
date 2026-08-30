@@ -72,7 +72,7 @@ void Mesh::Draw() {
 void Mesh::DrawInstanced(int instanceCount) {
     Generate();
 
-    // ApplyCulling();
+    ApplyCulling();
     VAO.Bind();
     VBO.Bind();
     EBO.Bind();

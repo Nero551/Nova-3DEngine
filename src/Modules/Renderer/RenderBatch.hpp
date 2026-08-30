@@ -17,7 +17,7 @@ struct RenderBatch {
     std::vector<InstanceData> Instances;
     ArrayBuffer Buffer;
 
-    RenderBatch() {
+    RenderBatch(const U::CheckedPtr<struct Mesh>& mesh, const U::CheckedPtr<struct Material>& mat) : Material(mat), Mesh(mesh) {
         Buffer.Usage = BufferUsage::DynamicDraw;
         Buffer.Generate();
     }

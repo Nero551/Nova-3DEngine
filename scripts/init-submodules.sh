@@ -2,12 +2,10 @@
 set -e
 
 ROOT="$(git rev-parse --show-toplevel)"
-VCPKG="$ROOT/vcpkg"
 
-echo "📦 Checking vcpkg..."
+echo "📦 Checking Submodules..."
 
-if [ ! -f "$VCPKG/vcpkg" ]; then
-    echo "📥 Initializing vcpkg..."
+    echo "📥 Initializing Submodules..."
 
     git -C "$ROOT" submodule update --init --recursive
 
@@ -15,4 +13,4 @@ if [ ! -f "$VCPKG/vcpkg" ]; then
     "$VCPKG/bootstrap-vcpkg.sh"
 fi
 
-echo "✅ vcpkg Initialized"
+echo "✅ Submodules Initialized"

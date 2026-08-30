@@ -13,7 +13,7 @@ struct Renderer : Module {
     U::CheckedPtr<Material> ScreenMaterial{ "Renderer has no Screen Material to render on" };
     U::CheckedPtr<Mesh> ScreenMesh{ "Renderer has no Screen Mesh to render on" };
     U::CheckedPtr<Uniformbuffer> GUniformbuffer{ "Renderer has no Uniform buffer to use" };
-    std::vector<RenderBatch> Batches;
+    std::unordered_map<std::string, RenderBatch> Batches;
 
 protected:
     void AddSystems() override;

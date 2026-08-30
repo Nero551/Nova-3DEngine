@@ -8,6 +8,7 @@
 #include "Modules/Input/Input.hpp"
 #include "Modules/Physics/Physics.hpp"
 #include "Modules/Profiling/Profiling.hpp"
+#include "tracy/Tracy.hpp"
 
 namespace N {
 Engine::Engine() : Window(800, 600, "Nova") {
@@ -126,6 +127,8 @@ void Engine::EndFrame() {
     for (auto& service : Service::GetAll()) {
         service->EndFrame();
     }
+
+    FrameMark;
 }
 
 void Engine::Update() {

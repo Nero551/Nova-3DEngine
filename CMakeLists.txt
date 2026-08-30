@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 4.1.2)
 
 project(Nova)
 
-
 add_executable(Nova
         src/Main.cpp
 )
@@ -12,13 +11,17 @@ set_target_properties(Nova PROPERTIES UNITY_BUILD ON)
 target_precompile_headers(Nova PRIVATE
         "$<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/src/pch.hpp>"
 )
+
+set(TRACY_ENABLE ON)
 add_subdirectory(src/Core)
 add_subdirectory(src/Utilities)
 add_subdirectory(src/Modules)
 add_subdirectory(src/World)
 add_subdirectory(src/Math)
+add_subdirectory(External/tracy)
 
 target_include_directories(Nova PRIVATE
+        External/tracy/public
         src
 )
 
@@ -38,10 +41,14 @@ target_link_libraries(Nova
         glslang::glslang
         glslang::SPIRV
         glslang::glslang-default-resource-limits
+        Tracy::TracyClient
 )
+
+target_compile_definitions(Nova PRIVATE TRACY_ENABLE)
 
 target_compile_options(Nova PRIVATE
         -Wall
         #        -Wextra
         #        -Wpedantic
+        -g -fno-omit-frame-pointer -rdynamic
 )

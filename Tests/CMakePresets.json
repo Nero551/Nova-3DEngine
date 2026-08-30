@@ -5,7 +5,7 @@
       "name": "default",
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/build-tests",
-      "toolchainFile": "${sourceDir}/../vcpkg/scripts/buildsystems/vcpkg.cmake",
+      "toolchainFile": "${sourceDir}/../External/vcpkg/scripts/buildsystems/vcpkg.cmake",
       "cacheVariables": {
         "VCPKG_MANIFEST_DIR": "${sourceDir}/..",
         "CMAKE_C_COMPILER": "clang",

@@ -3,8 +3,6 @@ set -e
 
 ROOT="$(git rev-parse --show-toplevel)"
 
-"$ROOT/scripts/init-vcpkg.sh"
-
 echo "🔨 Building Tests..."
 
 cd "$ROOT/Tests"

@@ -1,5 +1,6 @@
 #include "Renderer.hpp"
 
+#include <tracy/Tracy.hpp>
 #include "../../World/Components/Transform3DComponent.hpp"
 #include "Components/CameraComponent.hpp"
 #include "Components/MaterialComponent.hpp"
@@ -57,7 +58,6 @@ void Renderer::SetupFramebuffers() {
     ScreenMesh->Vertices = vertices;
     ScreenMesh->Indices = indices;
     ScreenMesh->CullMode = CullMode::None;
-    // ScreenMesh->RenderMode = RenderMode::Wireframe;
 
     auto& window = Engine::Get().Window;
 
@@ -111,10 +111,18 @@ void Renderer::OnBeginFrame(double dt) {
 }
 
 void Renderer::RenderWorld() {
+    ZoneScopedN("Render World");
     auto& camera = World::Get().ActiveCamera;
 
-    M::Matrix4 projection = camera->GetComponent<CameraComponent>().GetProjectionMatrix();
-    M::Matrix4 view = GetSystem<CameraSystem>().GetViewMatrix();
+    const M::Matrix4 projection = camera->GetComponent<CameraComponent>().GetProjectionMatrix();
+    const M::Matrix4 view = GetSystem<CameraSystem>().GetViewMatrix();
+
+
+    // TODO tracy profiler
+    // TODO- i believe part of the high lag is the setting attrib pointers per frame.
+    //  instead i could make the batch itself own a VAO and build it at construction.
+    //  so it does setting attrib for matrices and the mesh it has in the batch, all at construction instead of per frame calls.
+    //  then mesh only owns VBO and EBO , no VAO in mesh.
 
 
     GUniformbuffer->Set(view.Transpose(), 0);
@@ -123,56 +131,67 @@ void Renderer::RenderWorld() {
     GUniformbuffer->Set(camera->GetComponent<Transform3DComponent>().GlobalPosition, 144);
     GUniformbuffer->Bind();
 
-    for (auto& batch : Batches) {
-        batch.Instances.clear();
+    {
+        ZoneScopedN("Clear Batches") for (auto& batch : Batches | std::views::values) {
+            batch.Instances.clear();
+        }
     }
+    {
+        ZoneScopedN("Collect Entities");
+        for (auto& entity : World::Get().Root->GetDescendants()) {
+            ZoneScopedN("Entity");
+            if (entity->HasComponent<MaterialComponent, MeshComponent, Transform3DComponent>()) {
+                auto& transformComponent = entity->GetComponent<Transform3DComponent>();
+                auto& materialComponent = entity->GetComponent<MaterialComponent>();
+                auto& meshComponent = entity->GetComponent<MeshComponent>();
 
-    for (auto& entity : World::Get().Root->GetDescendants()) {
-        if (entity->HasComponent<MaterialComponent, MeshComponent, Transform3DComponent>()) {
-            auto& transformComponent = entity->GetComponent<Transform3DComponent>();
-            auto& materialComponent = entity->GetComponent<MaterialComponent>();
-            auto& meshComponent = entity->GetComponent<MeshComponent>();
+                if (materialComponent.Material->Shader->HotReload == true) {
+                    materialComponent.Material->Shader->Reload();
+                }
 
-            if (materialComponent.Material->Shader->HotReload == true) {
-                materialComponent.Material->Shader->Reload();
-            }
+                ZoneScopedN("Find Batch");
+                auto it = Batches.find(meshComponent.Mesh->Name + materialComponent.Material->Name);
 
-            auto it = std::ranges::find_if(Batches, [meshComponent, materialComponent](const RenderBatch& batch) {
-                return batch.Mesh == meshComponent.Mesh && batch.Material == materialComponent.Material;
-            });
+                if (it == Batches.end()) {
+                    std::string name = meshComponent.Mesh->Name + materialComponent.Material->Name;
 
-            if (it == Batches.end()) {
-                Batches.emplace_back();
-
-                auto& batch = Batches.back();
-                batch.Material = materialComponent.Material;
-                batch.Mesh = meshComponent.Mesh;
-                batch.Instances.emplace_back(
-                    transformComponent.GetModelMatrix().Transpose(), transformComponent.GetNormalMatrix().Transpose());
-            }
-            else {
-                it->Instances.emplace_back(
-                    transformComponent.GetModelMatrix().Transpose(), transformComponent.GetNormalMatrix().Transpose());
+                    auto [it, inserted] = Batches.try_emplace(name, meshComponent.Mesh, materialComponent.Material);
+                    ZoneScopedN("Matrices 1");
+                    it->second.Instances.emplace_back(
+                        transformComponent.GetModelMatrix().Transpose(), transformComponent.GetNormalMatrix().Transpose());
+                }
+                else {
+                    ZoneScopedN("Matrices 2");
+                    it->second.Instances.emplace_back(
+                        transformComponent.GetModelMatrix().Transpose(), transformComponent.GetNormalMatrix().Transpose());
+                }
             }
         }
     }
+    {
+        ZoneScopedN("Render Batches");
 
-    for (auto& batch : Batches) {
-        batch.Material->Use();
+        for (auto& batch : Batches | std::views::values) {
+            ZoneScopedN("Batch");
+            ZoneText(batch.Mesh->Name.c_str(), batch.Mesh->Name.size());
+            ZoneValue(batch.Instances.size());
 
-        int instanceCount = batch.Instances.size();
-        batch.Buffer.SetData(batch.Instances);
+            batch.Material->Use();
 
-        batch.Mesh->Generate();
-        batch.Mesh->VAO.Bind();
-        batch.Buffer.Bind();
+            int instanceCount = batch.Instances.size();
+            batch.Buffer.SetData(batch.Instances);
 
-        batch.Mesh->VAO.SetMatrix4AttribPointer(4, sizeof(InstanceData), 0);
-        batch.Mesh->VAO.SetMatrix3AttribPointer(8, sizeof(InstanceData), sizeof(M::Matrix4));
-        batch.Mesh->VAO.SetMatrix4AttribDivisor(4, 1);
-        batch.Mesh->VAO.SetMatrix3AttribDivisor(8, 1);
+            batch.Mesh->Generate();
+            batch.Mesh->VAO.Bind();
+            batch.Buffer.Bind();
 
-        batch.Mesh->DrawInstanced(instanceCount);
+            batch.Mesh->VAO.SetMatrix4AttribPointer(4, sizeof(InstanceData), 0);
+            batch.Mesh->VAO.SetMatrix3AttribPointer(8, sizeof(InstanceData), sizeof(M::Matrix4));
+            batch.Mesh->VAO.SetMatrix4AttribDivisor(4, 1);
+            batch.Mesh->VAO.SetMatrix3AttribDivisor(8, 1);
+
+            batch.Mesh->DrawInstanced(instanceCount);
+        }
     }
 }
 

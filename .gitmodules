@@ -1,3 +1,6 @@
-[submodule "vcpkg"]
-	path = vcpkg
+[submodule "External/tracy"]
+	path = External/tracy
+	url = https://github.com/wolfpld/tracy.git
+[submodule "External/vcpkg"]
+	path = External/vcpkg
 	url = https://github.com/microsoft/vcpkg.git
