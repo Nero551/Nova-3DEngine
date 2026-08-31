@@ -23,9 +23,6 @@ void Framebuffer::Regenerate() {
 void Framebuffer::Bind() {
     Generate();
     glBindFramebuffer(static_cast<GLenum>(Target), Id);
-    if (!glCheckFramebufferStatus(static_cast<GLenum>(Target)) == GL_FRAMEBUFFER_COMPLETE) {
-        U::Logger::Error("Framebuffer is not complete");
-    }
 }
 
 void Framebuffer::Unbind() {
@@ -41,6 +38,9 @@ bool Framebuffer::IsComplete() {
     if (glCheckFramebufferStatus(static_cast<GLenum>(Target)) == GL_FRAMEBUFFER_COMPLETE) {
         Unbind();
         return true;
+    }
+    if (glCheckFramebufferStatus(static_cast<GLenum>(Target)) != GL_FRAMEBUFFER_COMPLETE) {
+        U::Logger::Error("Framebuffer: " + Name + " is not complete");
     }
     Unbind();
     return false;
@@ -58,6 +58,21 @@ void Framebuffer::AttachTexture(FramebufferAttachment textureAttachment, Texture
         0);
 
     Unbind();
+}
+
+void Framebuffer::Blit(Framebuffer& dst, int srcW, int srcH, int dstW, int dstH) {
+    if (!IsGenerated()) {
+        Generate();
+    }
+    if (!dst.IsGenerated()) {
+        dst.Generate();
+    }
+
+    glBindFramebuffer(static_cast<GLenum>(FrameBufferTarget::Read), Id);
+    glBindFramebuffer(static_cast<GLenum>(FrameBufferTarget::Draw), dst.Id);
+    glBlitFramebuffer(0, 0, srcW, srcH, 0, 0, dstW, dstH, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void Framebuffer::AttachRenderBuffer(FramebufferAttachment attachment, Renderbuffer& renderbuffer) {
@@ -82,9 +97,9 @@ void Framebuffer::Resize(int width, int height) {
     }
 
     for (auto& [attachment, buffer] : RenderBuffers) {
+        buffer->Regenerate();
         buffer->Width = width;
         buffer->Height = height;
-        buffer->Regenerate();
         buffer->Generate();
 
         AttachRenderBuffer(attachment, *buffer);

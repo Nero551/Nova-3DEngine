@@ -21,18 +21,17 @@
 #include "Systems/LightingSystem.hpp"
 
 namespace N {
-void Renderer::SetupFramebuffers() {
+void Renderer::SetupFramebuffer() {
     const std::vector vertices = { Vertex({ -1.0f, -1.0f, 0.0f, 1.0f }, {}, { 0.0f, 0.0f }, {}),
         Vertex({ 1.0f, -1.0f, 0.0f, 1.0f }, {}, { 1.0f, 0.0f }, {}),
         Vertex({ 1.0f, 1.0f, 0.0f, 1.0f }, {}, { 1.0f, 1.0f }, {}),
         Vertex({ -1.0f, 1.0f, 0.0f, 1.0f }, {}, { 0.0f, 1.0f }, {}) };
 
     const std::vector<unsigned int> indices = { 0, 1, 2, 2, 3, 0 };
-
-
     auto& resources = Service::Get<ResourceManager>();
+    auto& window = Engine::Get().Window;
+
     Framebuffer = &resources.Load<struct Framebuffer>("[Renderer] Framebuffer");
-    Framebuffer->Target = FrameBufferTarget::ReadDraw;
 
     ScreenMesh = &resources.Load<Mesh>("[Renderer] Screen Mesh");
     ScreenMaterial = &resources.Load<Material>("[Renderer] Screen Material");
@@ -54,37 +53,61 @@ void Renderer::SetupFramebuffers() {
     ScreenMesh->Indices = indices;
     ScreenMesh->CullMode = CullMode::None;
 
-    auto& window = Engine::Get().Window;
+    auto& screenTexture = resources.Load<Texture2D>("COLOR_BUFFER");
+    screenTexture.Width = window.GetWidth();
+    screenTexture.Height = window.GetHeight();
+    screenTexture.InternalFormat = TextureInternalFormat::RGB8;
+    screenTexture.Format = TextureFormat::RGB;
+    screenTexture.DataType = DataType::UnsignedByte;
+    screenTexture.AutoMipmaps = false;
+    screenTexture.MagFilter = TextureFilter::Linear;
+    screenTexture.MinFilter = TextureFilter::Linear;
 
-    auto& colorTexture = resources.Load<Texture2D>("colorbuffer");
-    colorTexture.InternalFormat = TextureInternalFormat::RGB8;
-    colorTexture.Format = TextureFormat::RGB;
-    colorTexture.DataType = DataType::UnsignedByte;
-    colorTexture.Width = window.GetWidth();
-    colorTexture.Height = window.GetHeight();
-    colorTexture.AutoMipmaps = false;
-    colorTexture.MagFilter = TextureFilter::Linear;
-    colorTexture.MinFilter = TextureFilter::Linear;
-
-    auto& depthstencilBuffer = resources.Load<Renderbuffer>("[Renderer] DepthStencil Render Buffer");
-    depthstencilBuffer.Height = window.GetHeight();
-    depthstencilBuffer.Width = window.GetWidth();
-    depthstencilBuffer.InternalFormat = TextureInternalFormat::Depth24Stencil8;
-
-    Framebuffer->Bind();
-    Framebuffer->AttachTexture(FramebufferAttachment::Color0, colorTexture);
-    Framebuffer->AttachRenderBuffer(FramebufferAttachment::DepthStencil, depthstencilBuffer);
+    Framebuffer->AttachTexture(FramebufferAttachment::Color0, screenTexture);
     Framebuffer->IsComplete();
 
     glfwSetFramebufferSizeCallback(Engine::Get().Window.GetGlfwWindow(), [](GLFWwindow*, const int w, const int h) {
         glViewport(0, 0, w, h);
         auto& renderer = Engine::Get().GetModule<Renderer>();
+        renderer.MSAAFramebuffer->Resize(w, h);
         renderer.Framebuffer->Resize(w, h);
     });
 }
 
+void Renderer::SetupMSAAFrameBuffer() {
+    auto& resources = Service::Get<ResourceManager>();
+    auto& window = Engine::Get().Window;
+
+    MSAAFramebuffer = &resources.Load<struct Framebuffer>("[Renderer] MSAA Framebuffer");
+    MSAAFramebuffer->Target = FrameBufferTarget::ReadDraw;
+
+    auto& colorBuffer = resources.Load<Renderbuffer>("[Renderer] MSAA Color Render Buffer");
+    colorBuffer.Width = window.GetWidth();
+    colorBuffer.Height = window.GetHeight();
+    colorBuffer.Samples = MSAASamples;
+    colorBuffer.InternalFormat = TextureInternalFormat::RGB8;
+
+    auto& depthstencilBuffer = resources.Load<Renderbuffer>("[Renderer] MSAA DepthStencil Render Buffer");
+    depthstencilBuffer.Height = window.GetHeight();
+    depthstencilBuffer.Width = window.GetWidth();
+    depthstencilBuffer.Samples = MSAASamples;
+    depthstencilBuffer.InternalFormat = TextureInternalFormat::Depth24Stencil8;
+
+    MSAAFramebuffer->AttachRenderBuffer(FramebufferAttachment::Color0, colorBuffer);
+    MSAAFramebuffer->AttachRenderBuffer(FramebufferAttachment::DepthStencil, depthstencilBuffer);
+    MSAAFramebuffer->IsComplete();
+}
+
 void Renderer::PresentFramebuffer() {
-    Framebuffer->Unbind();
+    auto& window = Engine::Get().Window;
+    int width = window.GetWidth();
+    int height = window.GetHeight();
+
+    // Copy image from MSAA buffer to Framebuffer, then render the framebuffer's color texture onto a quad on the default buffer.
+    MSAAFramebuffer->Blit(*Framebuffer, width, height, width, height);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
     glClearColor(0.08, 0.05, 0.1, 1);
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -93,8 +116,6 @@ void Renderer::PresentFramebuffer() {
         ScreenMaterial->AssignTexture(*texture, i);
         i++;
     }
-
-    ScreenMaterial->Shader->SetUniform(FloatUniform("TIME", static_cast<float>(Engine::Get().GetTime())));
 
     ScreenMaterial->Use();
     ScreenMesh->Draw();
@@ -111,17 +132,20 @@ void Renderer::Start() {
     glCullFace(GL_FRONT);
     glFrontFace(GL_CCW);
     glEnable(GL_PROGRAM_POINT_SIZE);
+    glEnable(GL_MULTISAMPLE);
 
     auto& resources = Service::Get<ResourceManager>();
     GUniformbuffer = &resources.Load<Uniformbuffer>("[Renderer] Global Uniform buffer");
     GUniformbuffer->Size = 160;
 
-    SetupFramebuffers();
+    SetupMSAAFrameBuffer();
+    SetupFramebuffer();
+
     GetSystem<LightingSystem>().Start();
 }
 
 void Renderer::BeginFrame(double dt) {
-    Framebuffer->Bind();
+    MSAAFramebuffer->Bind();
 
     glClearColor(0.08, 0.05, 0.1, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);

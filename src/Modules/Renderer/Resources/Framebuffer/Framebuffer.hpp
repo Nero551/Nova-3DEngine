@@ -102,6 +102,7 @@ struct Framebuffer : Resource {
      * @param texture Texture to attach.
      */
     void AttachTexture(FramebufferAttachment textureAttachment, Texture& texture);
+    void Blit(Framebuffer& dst, int srcW, int srcH, int dstW, int dstH);
 
     /**
      * @brief Attaches a renderbuffer to a framebuffer attachment point.
