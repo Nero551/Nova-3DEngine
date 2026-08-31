@@ -101,8 +101,7 @@ void Renderer::PresentFramebuffer() {
     int width = window.GetWidth();
     int height = window.GetHeight();
 
-    // Copy image from MSAA buffer to Framebuffer, then render the framebuffer's color texture onto a quad on the default buffer.
-    MSAAFramebuffer->Blit(*Framebuffer, width, height, width, height);
+    MSAAFramebuffer->Blit(*Framebuffer, width, height, width, height, BufferBit::Color);
 
     MSAAFramebuffer->Unbind();
 

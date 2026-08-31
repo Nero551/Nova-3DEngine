@@ -42,15 +42,12 @@ struct Renderbuffer : Resource {
 
     /**
      * @brief Checks whether the renderbuffer has been generated.
-     *
      * @return true if an OpenGL renderbuffer object exists, otherwise false.
      */
     bool IsGenerated() const;
 
-
     /**
      * @brief Generates the OpenGL renderbuffer object.
-     *
      * Allocates renderbuffer storage using the configured format, dimensions,
      * and sample count. Does nothing if already generated.
      */
@@ -59,27 +56,24 @@ struct Renderbuffer : Resource {
 
     /**
      * @brief Deletes the current OpenGL renderbuffer object.
-     *
      * The renderbuffer can be generated again afterward with Generate().
      */
     void Regenerate();
 
     /**
      * @brief Binds the renderbuffer to GL_RENDERBUFFER.
-     *
      * Automatically generates the renderbuffer if it has not been generated.
      */
     void Bind();
 
     /**
      * @brief Gets the OpenGL renderbuffer object ID.
-     *
      * @return OpenGL renderbuffer ID, or 0 if the renderbuffer has not been generated.
      */
     unsigned int GetId() const;
 
 private:
-    /// OpenGL renderbuffer object ID. Zero indicates that no renderbuffer exists.
+    // OpenGL renderbuffer object ID. Zero indicates that no renderbuffer exists.
     unsigned int Id = 0;
 };
 } // namespace N

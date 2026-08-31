@@ -21,7 +21,6 @@ void Uniformbuffer::Regenerate() {
 
 void Uniformbuffer::Bind() {
     Generate();
-
     glBindBufferBase(GL_UNIFORM_BUFFER, Binding, Id);
 }
 

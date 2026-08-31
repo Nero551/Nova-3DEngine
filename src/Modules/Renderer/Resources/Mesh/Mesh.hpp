@@ -47,8 +47,7 @@ struct Mesh : Resource {
     std::vector<unsigned int> Indices;
 
     /**
-     * @brief Creates a mesh from vertex and index data.
-     *
+     * @brief Creates a mesh resource.
      * @param name Resource name.
      */
     Mesh(const std::string& name);
@@ -67,8 +66,7 @@ struct Mesh : Resource {
 
     /**
      * @brief Generates the OpenGL resources required to render the mesh.
-     *
-     * Creates the VAO, VBO, EBO, and vertex attribute configuration from
+     * Generates the VAO, VBO, EBO, and vertex attribute configuration from
      * the mesh's stored vertex and index data.
      */
     void Generate();
@@ -82,6 +80,14 @@ struct Mesh : Resource {
      */
     void Draw();
 
+
+    /**
+     * @brief Draws the mesh using its configured rendering state using Instanced rendering.
+     * Applies the culling mode, front-face winding, render mode, and
+     * topology before issuing the draw call. Generates the OpenGL
+     * resources first if they have not yet been created.
+     * @param instanceCount number of meshes to render.
+     */
     void DrawInstanced(int instanceCount);
 
     /**
@@ -93,7 +99,9 @@ struct Mesh : Resource {
     void Regenerate();
 
 private:
-    /** Issues the OpenGL draw call for the mesh's index data. */
+    /** @brief Issues the OpenGL draw call using mesh's index & vertex data.
+     * Does NOT generate the VAO, VBO or EBO. nor binds the VAO.
+     */
     void DrawElements() const;
 
     /**

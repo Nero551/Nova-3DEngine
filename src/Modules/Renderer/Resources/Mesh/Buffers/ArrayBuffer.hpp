@@ -16,6 +16,7 @@ struct ArrayBuffer {
 
     /**
      * @brief Replaces the buffer's contents with the supplied array data.
+     * automatically generates buffer if not generated.
      * @param data Elements to copy into the buffer.
      */
     template <typename T> void SetData(const std::vector<T>& data) {

@@ -4,6 +4,8 @@
 #include "../Texture/Texture.hpp"
 #include "FramebufferAttachment.hpp"
 #include "FramebufferTarget.hpp"
+#include "Modules/Renderer/BufferBit.hpp"
+#include "Modules/Renderer/Resources/Texture/TextureFIlter.hpp"
 #include "OpenGL.hpp"
 #include "Renderbuffer/Renderbuffer.hpp"
 #include "Utilities/CheckedPtr.hpp"
@@ -48,7 +50,6 @@ struct Framebuffer : Resource {
 
     /**
      * @brief Creates a framebuffer resource.
-     *
      * @param name Resource name.
      */
     Framebuffer(const std::string& name);
@@ -58,14 +59,12 @@ struct Framebuffer : Resource {
 
     /**
      * @brief Generates the OpenGL framebuffer object.
-     *
      * Does nothing if the framebuffer has already been generated.
      */
     void Generate();
 
     /**
      * @brief Deletes the current OpenGL framebuffer object.
-     *
      * The framebuffer can be generated again afterward with Generate().
      */
     void Regenerate();
@@ -80,7 +79,6 @@ struct Framebuffer : Resource {
 
     /**
      * @brief Checks whether the OpenGL framebuffer object has been generated.
-     *
      * @return true if an OpenGL framebuffer object exists, otherwise false.
      */
     bool IsGenerated() const;
@@ -102,8 +100,23 @@ struct Framebuffer : Resource {
      * @param texture Texture to attach.
      */
     void AttachTexture(FramebufferAttachment textureAttachment, Texture& texture);
-    void Blit(Framebuffer& dst, int srcW, int srcH, int dstW, int dstH);
 
+    /**
+     * @brief Copies selected framebuffer buffers to another framebuffer.
+     *
+     * Copies the specified color, depth, and/or stencil buffers from this
+     * framebuffer to the destination framebuffer, optionally scaling them.
+     *
+     * @param dst Destination framebuffer.
+     * @param srcW Source width in pixels.
+     * @param srcH Source height in pixels.
+     * @param dstW Destination width in pixels.
+     * @param dstH Destination height in pixels.
+     * @param buffer Buffers to copy.
+     * @param filter Filter used when scaling the copied buffers.
+     */
+    void Blit(Framebuffer& dst, int srcW, int srcH, int dstW, int dstH, BufferBit buffer,
+        TextureFilter filter = TextureFilter::Nearest);
     /**
      * @brief Attaches a renderbuffer to a framebuffer attachment point.
      *

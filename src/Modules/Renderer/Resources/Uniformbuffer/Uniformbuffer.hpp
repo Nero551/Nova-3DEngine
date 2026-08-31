@@ -28,11 +28,13 @@ struct Uniformbuffer : Resource {
 
     /**
      * @brief Writes a value to the buffer at the specified byte offset.
+     * automatically generates the buffer if not generated.
      * @param value Value to write.
      * @param offset Byte offset within the buffer.
      * @param extraSize Additional bytes to write for alignment or padding.
      */
     template <typename T> void Set(const T& value, int offset, int extraSize = 0) {
+        Generate();
         glNamedBufferSubData(Id, offset, sizeof(T) + extraSize, &value);
     }
 

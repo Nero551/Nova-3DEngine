@@ -1,5 +1,7 @@
 #include "Framebuffer.hpp"
 
+#include "Modules/Renderer/BufferBit.hpp"
+
 namespace N {
 Framebuffer::Framebuffer(const std::string& name) : Resource(name) {
 }
@@ -51,7 +53,7 @@ void Framebuffer::AttachTexture(FramebufferAttachment textureAttachment, Texture
     glNamedFramebufferTexture(Id, static_cast<GLenum>(textureAttachment), texture.GetId(), 0);
 }
 
-void Framebuffer::Blit(Framebuffer& dst, int srcW, int srcH, int dstW, int dstH) {
+void Framebuffer::Blit(Framebuffer& dst, int srcW, int srcH, int dstW, int dstH, BufferBit buffer, TextureFilter filter) {
     if (!IsGenerated()) {
         Generate();
     }
@@ -59,7 +61,8 @@ void Framebuffer::Blit(Framebuffer& dst, int srcW, int srcH, int dstW, int dstH)
         dst.Generate();
     }
 
-    glBlitNamedFramebuffer(Id, dst.Id, 0, 0, srcW, srcH, 0, 0, dstW, dstH, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    glBlitNamedFramebuffer(
+        Id, dst.Id, 0, 0, srcW, srcH, 0, 0, dstW, dstH, static_cast<GLbitfield>(buffer), static_cast<GLenum>(filter));
 }
 
 void Framebuffer::AttachRenderBuffer(FramebufferAttachment attachment, Renderbuffer& renderbuffer) {

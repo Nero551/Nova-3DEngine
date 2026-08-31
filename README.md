@@ -109,5 +109,6 @@
 - Geometry shaders
 - Instancing
 - MSAA (Multisample anti-aliasing)
+- DSA (Direct State Access)
 
 ![Post-Processed Cube](Docs/Screenshots/Post-ProccesedCube.png)
