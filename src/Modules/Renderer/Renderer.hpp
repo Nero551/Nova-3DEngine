@@ -1,11 +1,14 @@
 #pragma once
 
+#include "Components/MaterialComponent.hpp"
+#include "Components/MeshComponent.hpp"
 #include "Core/InnerCore/Module.hpp"
 #include "RenderBatch.hpp"
 #include "Resources/Framebuffer/Framebuffer.hpp"
 #include "Resources/Material/Material.hpp"
 #include "Resources/Mesh/Mesh.hpp"
 #include "Resources/Uniformbuffer/Uniformbuffer.hpp"
+#include "World/Components/Transform3DComponent.hpp"
 
 namespace N {
 struct Renderer : Module {
@@ -17,12 +20,14 @@ struct Renderer : Module {
 
 protected:
     void SetupFramebuffers();
+    void PresentFramebuffer();
 
     void Start() override;
     void BeginFrame(double dt) override;
 
     void RenderWorld();
-    void PresentFramebuffer();
+    void FillBatches(
+        Transform3DComponent& transformComponent, MaterialComponent& materialComponent, MeshComponent& meshComponent);
 
     void Render() override;
     void Update(double dt) override;

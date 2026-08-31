@@ -22,12 +22,12 @@
 
 namespace N {
 void Renderer::SetupFramebuffers() {
-    std::vector vertices = { Vertex({ -1.0f, -1.0f, 0.0f, 1.0f }, {}, { 0.0f, 0.0f }, {}),
+    const std::vector vertices = { Vertex({ -1.0f, -1.0f, 0.0f, 1.0f }, {}, { 0.0f, 0.0f }, {}),
         Vertex({ 1.0f, -1.0f, 0.0f, 1.0f }, {}, { 1.0f, 0.0f }, {}),
         Vertex({ 1.0f, 1.0f, 0.0f, 1.0f }, {}, { 1.0f, 1.0f }, {}),
         Vertex({ -1.0f, 1.0f, 0.0f, 1.0f }, {}, { 0.0f, 1.0f }, {}) };
 
-    std::vector<unsigned int> indices = { 0, 1, 2, 2, 3, 0 };
+    const std::vector<unsigned int> indices = { 0, 1, 2, 2, 3, 0 };
 
 
     auto& resources = Service::Get<ResourceManager>();
@@ -75,6 +75,29 @@ void Renderer::SetupFramebuffers() {
     Framebuffer->AttachTexture(FramebufferAttachment::Color0, colorTexture);
     Framebuffer->AttachRenderBuffer(FramebufferAttachment::DepthStencil, depthstencilBuffer);
     Framebuffer->IsComplete();
+
+    glfwSetFramebufferSizeCallback(Engine::Get().Window.GetGlfwWindow(), [](GLFWwindow*, const int w, const int h) {
+        glViewport(0, 0, w, h);
+        auto& renderer = Engine::Get().GetModule<Renderer>();
+        renderer.Framebuffer->Resize(w, h);
+    });
+}
+
+void Renderer::PresentFramebuffer() {
+    Framebuffer->Unbind();
+    glClearColor(0.08, 0.05, 0.1, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    int i = 0;
+    for (auto& texture : Framebuffer->TextureAttachments | std::views::values) {
+        ScreenMaterial->AssignTexture(*texture, i);
+        i++;
+    }
+
+    ScreenMaterial->Shader->SetUniform(FloatUniform("TIME", static_cast<float>(Engine::Get().GetTime())));
+
+    ScreenMaterial->Use();
+    ScreenMesh->Draw();
 }
 
 void Renderer::Start() {
@@ -94,12 +117,6 @@ void Renderer::Start() {
     GUniformbuffer->Size = 160;
 
     SetupFramebuffers();
-    glfwSetFramebufferSizeCallback(Engine::Get().Window.GetGlfwWindow(), [](GLFWwindow*, const int w, const int h) {
-        glViewport(0, 0, w, h);
-        auto& renderer = Engine::Get().GetModule<Renderer>();
-        renderer.Framebuffer->Resize(w, h);
-    });
-
     GetSystem<LightingSystem>().Start();
 }
 
@@ -111,9 +128,8 @@ void Renderer::BeginFrame(double dt) {
 }
 
 void Renderer::RenderWorld() {
-    auto& camera = World::Get().ActiveCamera;
+    const auto& camera = World::Get().ActiveCamera;
     auto& query = World::Get().Query;
-
 
     const M::Matrix4 projection = query.Pool<CameraComponent>().GetComponentById(camera->Id).GetProjectionMatrix();
     const M::Matrix4 view = GetSystem<CameraSystem>().GetViewMatrix();
@@ -134,40 +150,24 @@ void Renderer::RenderWorld() {
             materialComponent.Material->Shader->Reload();
         }
 
-        auto it = Batches.find(meshComponent.Mesh->Name + materialComponent.Material->Name);
-
-        if (it == Batches.end()) {
-            std::string name = meshComponent.Mesh->Name + materialComponent.Material->Name;
-
-            auto [it, inserted] = Batches.try_emplace(name, meshComponent.Mesh, materialComponent.Material);
-            it->second.Instances.emplace_back(
-                transformComponent.GetModelMatrix().Transpose(), transformComponent.GetNormalMatrix().Transpose());
-        }
-        else {
-            it->second.Instances.emplace_back(
-                transformComponent.GetModelMatrix().Transpose(), transformComponent.GetNormalMatrix().Transpose());
-        }
+        FillBatches(transformComponent, materialComponent, meshComponent);
     }
     for (auto& batch : Batches | std::views::values) {
         batch.Render();
     }
 }
 
-void Renderer::PresentFramebuffer() {
-    Framebuffer->Unbind();
-    glClearColor(0.08, 0.05, 0.1, 1);
-    glClear(GL_COLOR_BUFFER_BIT);
+void Renderer::FillBatches(
+    Transform3DComponent& transformComponent, MaterialComponent& materialComponent, MeshComponent& meshComponent) {
+    auto it = Batches.find(meshComponent.Mesh->Name + materialComponent.Material->Name);
 
-    int i = 0;
-    for (auto& texture : Framebuffer->TextureAttachments | std::views::values) {
-        ScreenMaterial->AssignTexture(*texture, i);
-        i++;
+    if (it == Batches.end()) {
+        const std::string name = meshComponent.Mesh->Name + materialComponent.Material->Name;
+
+        it = Batches.try_emplace(name, meshComponent.Mesh, materialComponent.Material).first;
     }
-
-    ScreenMaterial->Shader->SetUniform(FloatUniform("TIME", static_cast<float>(Engine::Get().GetTime())));
-
-    ScreenMaterial->Use();
-    ScreenMesh->Draw();
+    it->second.Instances.emplace_back(
+        transformComponent.GetModelMatrix().Transpose(), transformComponent.GetNormalMatrix().Transpose());
 }
 
 // TODO- if there is multiple semi-transparent objects behind each other , depth testing breaks blending.
@@ -195,13 +195,7 @@ void Renderer::Stop() {
 
     glGetTexImage(GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels.data());
 
-    U::Image image = {
-        texture->Width,
-        texture->Height,
-        U::Image::ColorChannels::RGB,
-        pixels,
-
-    };
+    U::Image image = { texture->Width, texture->Height, U::Image::ColorChannels::RGB, pixels };
     image.SaveToDiskPNG("Assets/LastFrame.png", true);
 }
 } // namespace N

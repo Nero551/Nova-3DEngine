@@ -22,6 +22,6 @@ enum class TextureTarget {
     Texture2DArray = GL_TEXTURE_2D_ARRAY,
 
     /** Two-dimensional multisample texture. */
-    Texture2DMultisample = GL_TEXTURE_2D_MULTISAMPLE
+    Texture2DMultisample = GL_TEXTURE_2D_MULTISAMPLE,
 };
 } // namespace N

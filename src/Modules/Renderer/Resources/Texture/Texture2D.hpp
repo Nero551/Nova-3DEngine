@@ -1,8 +1,11 @@
 #pragma once
 
+#include "Modules/Renderer/DataType.hpp"
+#include "Modules/Renderer/Resources/Shader/TextureFIlter.hpp"
 #include "Texture.hpp"
+#include "TextureFormat.hpp"
+#include "TextureWrap.hpp"
 #include "Utilities/Image/Image.hpp"
-#include "Utilities/Logger.hpp"
 
 namespace N {
 /**
@@ -14,6 +17,27 @@ namespace N {
 struct Texture2D : Texture {
     /** CPU-side pixel data uploaded to the GPU when the texture is generated. */
     std::vector<unsigned char> Data{};
+
+    /** Wrapping mode applied to texture coordinates along the S axis. */
+    TextureWrap WrapS = TextureWrap::ClampToEdge;
+
+    /** Wrapping mode applied to texture coordinates along the T axis. */
+    TextureWrap WrapT = TextureWrap::ClampToEdge;
+
+    /** Filtering mode used when the texture is minified. */
+    TextureFilter MinFilter = TextureFilter::NearestMipmapLinear;
+
+    /** Filtering mode used when the texture is magnified. */
+    TextureFilter MagFilter = TextureFilter::Linear;
+
+    /** Whether mipmaps should be generated after texture storage is created. */
+    bool AutoMipmaps = true;
+
+    /** Data type used to interpret source pixel data. */
+    DataType DataType = DataType::UnsignedByte;
+
+    /** Format of the source pixel data supplied to OpenGL. */
+    TextureFormat Format = TextureFormat::RGBA;
 
     /**
      * @brief Creates a 2D texture resource.
@@ -48,5 +72,9 @@ struct Texture2D : Texture {
      * for the difference between image and OpenGL texture coordinates.
      */
     void UseImage(const U::Image& image);
+
+private:
+    /** @brief Configures the texture's wrapping and filtering parameters. */
+    void SetParameters() const;
 };
 } // namespace N

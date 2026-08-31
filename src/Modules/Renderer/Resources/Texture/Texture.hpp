@@ -1,12 +1,8 @@
 #pragma once
 
-#include "../../DataType.hpp"
 #include "Core/OuterCore/Resource.hpp"
-#include "Modules/Renderer/Resources/Shader/TextureFIlter.hpp"
-#include "TextureFormat.hpp"
 #include "TextureInternalFormat.hpp"
 #include "TextureTarget.hpp"
-#include "TextureWrap.hpp"
 
 namespace N {
 /**
@@ -21,35 +17,14 @@ namespace N {
  * Generate().
  */
 struct Texture : Resource {
-    /** Data type used to interpret source pixel data. */
-    DataType DataType = DataType::UnsignedByte;
-
-    /** Format of the source pixel data supplied to OpenGL. */
-    TextureFormat Format = TextureFormat::RGBA;
-
     /** Internal format used to store the texture data on the GPU. */
     TextureInternalFormat InternalFormat = TextureInternalFormat::RGBA8;
-
-    /** Whether mipmaps should be generated after texture storage is created. */
-    bool AutoMipmaps = true;
 
     /** Width of the texture in pixels. */
     int Width = 0;
 
     /** Height of the texture in pixels. */
     int Height = 0;
-
-    /** Wrapping mode applied to texture coordinates along the S axis. */
-    TextureWrap WrapS = TextureWrap::ClampToEdge;
-
-    /** Wrapping mode applied to texture coordinates along the T axis. */
-    TextureWrap WrapT = TextureWrap::ClampToEdge;
-
-    /** Filtering mode used when the texture is minified. */
-    TextureFilter MinFilter = TextureFilter::NearestMipmapLinear;
-
-    /** Filtering mode used when the texture is magnified. */
-    TextureFilter MagFilter = TextureFilter::Linear;
 
     /**
      * @brief Creates a texture resource.
@@ -114,16 +89,6 @@ struct Texture : Resource {
     void Unbind(unsigned int unit);
 
 protected:
-    /**
-     * @brief Configures common texture parameters.
-     *
-     * Applies the texture's wrapping and filtering configuration to the
-     * currently bound texture.
-     *
-     * Must be called while this texture is bound to its configured target.
-     */
-    virtual void SetParameters() const;
-
     /** OpenGL texture object ID. Zero indicates that no object is generated. */
     unsigned int Id = 0;
 

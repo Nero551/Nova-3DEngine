@@ -1,8 +1,5 @@
 #include "Texture.hpp"
-
 #include "OpenGL.hpp"
-#include "Utilities/Image/Image.hpp"
-#include "Utilities/Logger.hpp"
 
 namespace N {
 Texture::Texture(const std::string& name, TextureTarget target) : Resource(name), Target(target) {
@@ -44,12 +41,5 @@ void Texture::Bind(const unsigned int unit) {
 void Texture::Unbind(unsigned int unit) {
     glActiveTexture(GL_TEXTURE0 + unit);
     glBindTexture(static_cast<GLenum>(Target), 0);
-}
-
-void Texture::SetParameters() const {
-    glTexParameteri(static_cast<GLenum>(Target), GL_TEXTURE_WRAP_S, static_cast<GLint>(WrapS));
-    glTexParameteri(static_cast<GLenum>(Target), GL_TEXTURE_WRAP_T, static_cast<GLint>(WrapT));
-    glTexParameteri(static_cast<GLenum>(Target), GL_TEXTURE_MIN_FILTER, static_cast<GLint>(MinFilter));
-    glTexParameteri(static_cast<GLenum>(Target), GL_TEXTURE_MAG_FILTER, static_cast<GLint>(MagFilter));
 }
 } // namespace N

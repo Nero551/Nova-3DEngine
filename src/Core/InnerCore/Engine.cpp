@@ -33,7 +33,7 @@ void Engine::Run() {
         BeginFrame();
 
         accumulator += DeltaTime;
-        accumulator = std::min(accumulator, 0.25);
+        accumulator = std::min(accumulator, 1.0);
 
         while (accumulator >= FixedDeltaTime) {
             FixedUpdate();

@@ -1,7 +1,11 @@
 #pragma once
 #include <string>
 
+#include "Modules/Renderer/DataType.hpp"
+#include "Modules/Renderer/Resources/Shader/TextureFIlter.hpp"
 #include "Texture.hpp"
+#include "TextureFormat.hpp"
+#include "TextureWrap.hpp"
 #include "Utilities/Image/Image.hpp"
 
 namespace N {
@@ -32,8 +36,29 @@ struct Cubemap : Texture {
     /** Image representing the negative X face of the cubemap. */
     U::Image Left{};
 
+    /** Whether mipmaps should be generated after texture storage is created. */
+    bool AutoMipmaps = true;
+
+    /** Data type used to interpret source pixel data. */
+    DataType DataType = DataType::UnsignedByte;
+
+    /** Format of the source pixel data supplied to OpenGL. */
+    TextureFormat Format = TextureFormat::RGBA;
+
+    /** Wrapping mode applied to texture coordinates along the S axis. */
+    TextureWrap WrapS = TextureWrap::ClampToEdge;
+
+    /** Wrapping mode applied to texture coordinates along the T axis. */
+    TextureWrap WrapT = TextureWrap::ClampToEdge;
+
     /** Wrapping mode applied to texture coordinates along the R axis. */
     TextureWrap WrapR = TextureWrap::ClampToEdge;
+
+    /** Filtering mode used when the texture is minified. */
+    TextureFilter MinFilter = TextureFilter::NearestMipmapLinear;
+
+    /** Filtering mode used when the texture is magnified. */
+    TextureFilter MagFilter = TextureFilter::Linear;
 
     /**
      * @brief Creates a cubemap texture resource.
@@ -52,13 +77,8 @@ struct Cubemap : Texture {
      */
     void Generate() override;
 
-protected:
-    /**
-     * @brief Configures the cubemap's wrapping and filtering parameters.
-     *
-     * Applies the base texture parameters and additionally configures
-     * wrapping along the R axis.
-     */
-    void SetParameters() const override;
+private:
+    /** @brief Configures the cubemap's wrapping and filtering parameters. */
+    void SetParameters() const;
 };
 } // namespace N

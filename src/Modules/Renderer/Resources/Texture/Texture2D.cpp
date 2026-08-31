@@ -1,4 +1,7 @@
 #include "Texture2D.hpp"
+#include "OpenGL.hpp"
+
+#include "Utilities/Logger.hpp"
 
 namespace N {
 void Texture2D::Generate() {
@@ -58,5 +61,12 @@ void Texture2D::UseImage(const U::Image& image) {
     default:
         U::Logger::Error("Unsupported Texture Channel Count");
     }
+}
+
+void Texture2D::SetParameters() const {
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, static_cast<GLint>(WrapS));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, static_cast<GLint>(WrapT));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(MinFilter));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(MagFilter));
 }
 } // namespace N
