@@ -22,6 +22,9 @@ struct Renderbuffer : Resource {
     /** @brief Height of the renderbuffer in pixels. */
     int Height = 0;
 
+    /** @brief Number of samples, or 0 to disable multisampling. */
+    int Samples = 0;
+
     /**
      * @brief Creates a renderbuffer resource.
      *
@@ -44,13 +47,15 @@ struct Renderbuffer : Resource {
      */
     bool IsGenerated() const;
 
+
     /**
      * @brief Generates the OpenGL renderbuffer object.
      *
-     * Allocates renderbuffer storage using the current internal format,
-     * width, and height. Does nothing if the renderbuffer is already generated.
+     * Allocates renderbuffer storage using the configured format, dimensions,
+     * and sample count. Does nothing if already generated.
      */
     void Generate();
+
 
     /**
      * @brief Deletes the current OpenGL renderbuffer object.
