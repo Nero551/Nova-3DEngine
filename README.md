@@ -103,6 +103,9 @@
 - Framebuffers & Renderbuffers
 - Cubemaps
 - Uniform buffers
+-
+
+![Post-Processed Cube](Docs/Screenshots/Post-ProccesedCube.png)
 
 ### Week 10 — August 29–September 4
 
@@ -111,4 +114,4 @@
 - MSAA (Multisample anti-aliasing)
 - DSA (Direct State Access)
 
-![Post-Processed Cube](Docs/Screenshots/Post-ProccesedCube.png)
+![4D Projection (10k entities)](Docs/Screenshots/4D%20Projection.png)
