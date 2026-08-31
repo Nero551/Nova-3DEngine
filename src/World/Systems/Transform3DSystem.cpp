@@ -10,23 +10,6 @@ void Transform3DSystem::Update(double fdt) {
     for (auto [entityId, transform] : World::Get().Query.With<Transform3DComponent>()) {
         auto& entity = World::Get().FindEntity(entityId);
 
-        //
-        // U::Logger::Info(
-        //     "Transform entity: ",
-        //     entityId,
-        //     " position: ",
-        //     transform.Position.x, ", ",
-        //     transform.Position.y, ", ",
-        //     transform.Position.z
-        // );
-        //
-        // U::Logger::Info(
-        //     "Entity count: ",
-        //     world.Root->GetDescendants().size(),
-        //     " Transform count: ",
-        //     world.Query.Pool<Transform3DComponent>().Size()
-        // );
-
         if (entity.HasParent() && transform.InheritTransform) {
             auto& parent = entity.GetParent();
             if (World::Get().Query.Pool<Transform3DComponent>().HasId(parent.Id)) {

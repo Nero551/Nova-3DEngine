@@ -116,9 +116,14 @@ Vector3 Quaternion::Axis() const {
     Quaternion q = Normalized();
     float sine = std::sin(Angle());
     Vector3 axis;
-    axis.x = q.x / sine;
-    axis.y = q.y / sine;
-    axis.z = q.z / sine;
+    if (sine != 0) {
+        axis.x = q.x / sine;
+        axis.y = q.y / sine;
+        axis.z = q.z / sine;
+    }
+    else {
+        axis = { 0, 0, -1 };
+    }
     return axis;
 }
 

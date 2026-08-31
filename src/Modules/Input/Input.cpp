@@ -34,7 +34,7 @@ M::Vector2 Input::GetMousePosition() const {
 }
 
 M::Vector2 Input::GetMouseDelta() const {
-    return GetMousePosition() - PreviousMousePosition;
+    return MousePosition - PreviousMousePosition;
 }
 
 M::Vector2 Input::GetScrollDelta() const {
@@ -52,6 +52,7 @@ MouseMode Input::GetMouseMode() const {
 void Input::SetMouseMode(enum MouseMode mode) {
     MouseMode = mode;
     glfwSetInputMode(Engine::Get().Window.GetGlfwWindow(), GLFW_CURSOR, static_cast<int>(mode));
+    PreviousMousePosition = MousePosition;
 }
 
 constexpr unsigned int Input::ToIndex(Key key) {

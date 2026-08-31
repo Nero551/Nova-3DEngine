@@ -22,30 +22,30 @@ private:
 
 public:
     [[nodiscard]] M::Matrix4 GetModelMatrix() {
-        if (DirtyPos != GlobalPosition || DirtyScale != GlobalScale || DirtyRotation != GlobalRotation) {
-            DirtyPos = GlobalPosition;
-            DirtyRotation = GlobalRotation;
-            DirtyScale = GlobalScale;
+        // if (DirtyPos != GlobalPosition || DirtyScale != GlobalScale || DirtyRotation != GlobalRotation) {
+        //     DirtyPos = GlobalPosition;
+        //     DirtyRotation = GlobalRotation;
+        //     DirtyScale = GlobalScale;
 
 
-            M::Matrix4 modelMatrix = M::Matrix4::Identity;
-            modelMatrix = modelMatrix.Translate({ GlobalPosition });
-            modelMatrix *= GlobalRotation.ToMatrix4();
-            modelMatrix = modelMatrix.Scale(GlobalScale);
-            DirtyModelMatrix = modelMatrix;
+        M::Matrix4 modelMatrix = M::Matrix4::Identity;
+        modelMatrix = modelMatrix.Translate({ GlobalPosition });
+        modelMatrix *= GlobalRotation.ToMatrix4();
+        modelMatrix = modelMatrix.Scale(GlobalScale);
+        // DirtyModelMatrix = modelMatrix;
 
-            return modelMatrix;
-        }
-        return DirtyModelMatrix;
+        return modelMatrix;
+        // }
+        // return DirtyModelMatrix;
     }
 
     [[nodiscard]] M::Matrix3 GetNormalMatrix() {
-        if (DirtyPos != GlobalPosition || DirtyScale != GlobalScale || DirtyRotation != GlobalRotation) {
-            DirtyNormalMatrix = GetModelMatrix().ToMatrix3().Inverse().Transpose();
+        // if (DirtyPos != GlobalPosition || DirtyScale != GlobalScale || DirtyRotation != GlobalRotation) {
+        // DirtyNormalMatrix = GetModelMatrix().ToMatrix3().Inverse().Transpose();
 
-            return DirtyNormalMatrix;
-        }
-        return DirtyNormalMatrix;
+        return GetModelMatrix().ToMatrix3().Inverse().Transpose();
+        // }
+        // return DirtyNormalMatrix;
     }
 
     [[nodiscard]] M::Vector3 GetRight() const {
@@ -67,5 +67,6 @@ private:
     M::Vector3 GlobalScale = M::Vector3::One;
     friend struct Transform3DSystem;
     friend struct Renderer;
+    friend struct CameraSystem;
 };
 } // namespace N

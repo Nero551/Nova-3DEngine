@@ -1,5 +1,7 @@
 #include "CameraSystem.hpp"
 
+#include <cassert>
+
 #include "Core/InnerCore/Engine.hpp"
 #include "Core/OuterCore/ECS/Entity.hpp"
 #include "Modules/Input/Input.hpp"
@@ -33,6 +35,8 @@ void CameraSystem::Update(const double dt) {
 
         transform.Rotation = M::Quaternion::FromEulerXYZ({ cameraComponent.Pitch, cameraComponent.Yaw, 0 });
     }
+
+    U::Logger::Info(transform.GlobalRotation);
 
     const float speed = cameraComponent.Speed * static_cast<float>(dt);
 

@@ -79,7 +79,7 @@ void calculus::Start() {
     cubeId = cube.Id;
     World::Get().Root->AttachChild(cube);
 
-    // FourDimensionalProjection(21);
+    ThreeDimensionalProjection(5);
 }
 
 static float elapsed = 0;
@@ -111,10 +111,10 @@ void calculus::Update(double dt) {
     // }
     //
     if (input.IsKeyHeld(Key::Left)) {
-        multiplier -= 0.1;
+        multiplier -= 5 * dt;
     }
     if (input.IsKeyHeld(Key::Right)) {
-        multiplier += 0.1;
+        multiplier += 5 * dt;
     }
 
     for (auto& point : points) {

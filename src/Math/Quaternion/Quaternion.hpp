@@ -114,7 +114,9 @@ struct Quaternion {
     /** @brief Returns the quaternion polar angle `θ` from `q = cos(θ) + u sin(θ)`. */
     float Angle() const;
 
-    /** @brief Returns the normalized imaginary-axis direction `u` from `q = m(cos(θ) + u sin(θ))`. */
+    /** @brief Returns the normalized imaginary-axis direction `u` from `q = m(cos(θ) + u sin(θ)).
+     * if sin(angle) = 0, returns default axis {0, 0, -1}.
+     */
     Vector3 Axis() const;
 
     /** @brief Converts the quaternion to polar representation containing its axis, angle, and magnitude. */

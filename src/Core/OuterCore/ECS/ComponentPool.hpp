@@ -94,6 +94,6 @@ template <ComponentType T> struct ComponentPool : IComponentPool {
 private:
     std::vector<T> Components{};
     std::vector<unsigned int> EntityIds{};
-    std::unordered_map<unsigned int, size_t> Indices;
+    std::unordered_map<unsigned int, size_t> Indices{};
 };
 } // namespace N

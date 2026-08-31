@@ -153,7 +153,7 @@ void Renderer::RenderWorld() {
 }
 
 void Renderer::PresentFramebuffer() {
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    Framebuffer->Unbind();
     glClearColor(0.08, 0.05, 0.1, 1);
     glClear(GL_COLOR_BUFFER_BIT);
 

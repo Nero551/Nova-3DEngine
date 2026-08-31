@@ -9,7 +9,6 @@
 #include "World/Scenes/FirstScene.hpp"
 #include "World/Systems/Transform3DSystem.hpp"
 #include "World/experiments/calculus.hpp"
-#include "World/experiments/cubemaps.hpp"
 
 namespace N {
 World& World::Get() {
@@ -61,9 +60,11 @@ U::CheckedPtr<Entity> World::TryFindEntity(const unsigned int id) {
 void World::AddSystems() {
     AddSystem<Transform3DSystem>();
     AddSystem<calculus>();
-    AddSystem<cubemaps>();
 }
 
+
+// TODO- for some reason the running seems to be up to "chance". sometimes its fine , sometimes it isn't. yeah its not fine.
+//  chance increase when i have more entities , leads me to believe its some index mismatch issue in component pools
 void World::Start() {
     AddSystems();
     Engine::Get().GetModule<Input>().SetMouseMode(MouseMode::Disabled);
@@ -71,6 +72,7 @@ void World::Start() {
     Root = &CreateEntity<Nova>();
 
     auto& camera = CreateEntity<Camera>();
+    Query.Pool<Transform3DComponent>().GetComponentById(camera.Id).Position = { 0, 0, 10 };
     Root->AttachChild(camera);
     ActiveCamera = &camera;
 
