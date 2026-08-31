@@ -12,9 +12,11 @@
 
 namespace N {
 struct Renderer : Module {
+    // TODO use OpenGL DSA to get rid of useless 24/7 binds.
+
     U::CheckedPtr<Framebuffer> Framebuffer{ "Renderer has no Framebuffer to use" };
     U::CheckedPtr<struct Framebuffer> MSAAFramebuffer{ "Renderer has no MSAA Framebuffer to use" };
-    int MSAASamples = 8;
+    const int MSAASamples = 8;
 
     U::CheckedPtr<Material> ScreenMaterial{ "Renderer has no Screen Material to render on" };
     U::CheckedPtr<Mesh> ScreenMesh{ "Renderer has no Screen Mesh to render on" };

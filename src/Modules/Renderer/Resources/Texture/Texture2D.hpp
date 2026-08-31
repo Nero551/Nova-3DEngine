@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Modules/Renderer/DataType.hpp"
-#include "Modules/Renderer/Resources/Shader/TextureFIlter.hpp"
+#include "Modules/Renderer/Resources/Texture/TextureFIlter.hpp"
 #include "Texture.hpp"
 #include "TextureFormat.hpp"
 #include "TextureWrap.hpp"

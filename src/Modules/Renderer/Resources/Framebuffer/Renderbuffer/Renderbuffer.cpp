@@ -16,16 +16,14 @@ void Renderbuffer::Generate() {
     if (IsGenerated()) {
         return;
     }
-    glGenRenderbuffers(1, &Id);
-    glBindRenderbuffer(GL_RENDERBUFFER, Id);
+    glCreateRenderbuffers(1, &Id);
 
     if (Samples == 0) {
-        glRenderbufferStorage(GL_RENDERBUFFER, static_cast<GLenum>(InternalFormat), Width, Height);
+        glNamedRenderbufferStorage(Id, static_cast<GLenum>(InternalFormat), Width, Height);
     }
     else {
-        glRenderbufferStorageMultisample(GL_RENDERBUFFER, Samples, static_cast<GLenum>(InternalFormat), Width, Height);
+        glNamedRenderbufferStorageMultisample(Id, Samples, static_cast<GLenum>(InternalFormat), Width, Height);
     }
-    glBindRenderbuffer(GL_RENDERBUFFER, 0);
 }
 
 void Renderbuffer::Regenerate() {

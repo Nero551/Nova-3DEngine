@@ -23,7 +23,7 @@ void Texture::Regenerate() {
 }
 
 bool Texture::IsGenerated() const {
-    return GetId() != 0;
+    return Id != 0;
 }
 
 void Texture::Generate() {
@@ -34,12 +34,10 @@ void Texture::Bind(const unsigned int unit) {
         Generate();
     }
 
-    glActiveTexture(GL_TEXTURE0 + unit);
-    glBindTexture(static_cast<GLenum>(Target), Id);
+    glBindTextureUnit(unit, Id);
 }
 
-void Texture::Unbind(unsigned int unit) {
-    glActiveTexture(GL_TEXTURE0 + unit);
-    glBindTexture(static_cast<GLenum>(Target), 0);
+void Texture::Unbind(unsigned int unit) const {
+    glBindTextureUnit(unit, 0);
 }
 } // namespace N

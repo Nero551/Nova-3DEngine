@@ -2,11 +2,12 @@
 
 namespace N {
 void Uniformbuffer::Generate() {
-    glGenBuffers(1, &Id);
-    glBindBuffer(GL_UNIFORM_BUFFER, Id);
-    glBufferData(GL_UNIFORM_BUFFER, Size, nullptr, static_cast<GLenum>(Usage));
-    glBindBufferBase(GL_UNIFORM_BUFFER, Binding, Id);
-    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+    if (IsGenerated()) {
+        return;
+    }
+
+    glCreateBuffers(1, &Id);
+    glNamedBufferData(Id, Size, nullptr, static_cast<GLenum>(Usage));
 }
 
 bool Uniformbuffer::IsGenerated() const {
@@ -19,17 +20,13 @@ void Uniformbuffer::Regenerate() {
 }
 
 void Uniformbuffer::Bind() {
-    if (!IsGenerated()) {
-        Generate();
-    }
+    Generate();
 
-    glBindBuffer(GL_UNIFORM_BUFFER, Id);
     glBindBufferBase(GL_UNIFORM_BUFFER, Binding, Id);
 }
 
 void Uniformbuffer::Unbind() {
     glBindBufferBase(GL_UNIFORM_BUFFER, Binding, 0);
-    glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
 unsigned int Uniformbuffer::GetId() const {

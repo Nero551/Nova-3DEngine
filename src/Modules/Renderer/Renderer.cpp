@@ -64,7 +64,6 @@ void Renderer::SetupFramebuffer() {
     screenTexture.MinFilter = TextureFilter::Linear;
 
     Framebuffer->AttachTexture(FramebufferAttachment::Color0, screenTexture);
-    Framebuffer->IsComplete();
 
     glfwSetFramebufferSizeCallback(Engine::Get().Window.GetGlfwWindow(), [](GLFWwindow*, const int w, const int h) {
         glViewport(0, 0, w, h);
@@ -95,7 +94,6 @@ void Renderer::SetupMSAAFrameBuffer() {
 
     MSAAFramebuffer->AttachRenderBuffer(FramebufferAttachment::Color0, colorBuffer);
     MSAAFramebuffer->AttachRenderBuffer(FramebufferAttachment::DepthStencil, depthstencilBuffer);
-    MSAAFramebuffer->IsComplete();
 }
 
 void Renderer::PresentFramebuffer() {
@@ -106,7 +104,7 @@ void Renderer::PresentFramebuffer() {
     // Copy image from MSAA buffer to Framebuffer, then render the framebuffer's color texture onto a quad on the default buffer.
     MSAAFramebuffer->Blit(*Framebuffer, width, height, width, height);
 
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    MSAAFramebuffer->Unbind();
 
     glClearColor(0.08, 0.05, 0.1, 1);
     glClear(GL_COLOR_BUFFER_BIT);

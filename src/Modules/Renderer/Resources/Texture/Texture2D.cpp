@@ -10,28 +10,19 @@ void Texture2D::Generate() {
         return;
     }
 
-    glGenTextures(1, &Id);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, Id);
+    glCreateTextures(GL_TEXTURE_2D, 1, &Id);
     SetParameters();
 
-    glTexImage2D(GL_TEXTURE_2D,
-        0,
-        static_cast<GLint>(InternalFormat),
-        Width,
-        Height,
-        0,
-        static_cast<GLenum>(Format),
-        static_cast<GLenum>(DataType),
-        Data.data());
+    const int mipmapLevels = AutoMipmaps ? static_cast<int>(std::floor(std::log2(std::max(Width, Height)))) + 1 : 1;
+    glTextureStorage2D(Id, mipmapLevels, static_cast<GLint>(InternalFormat), Width, Height);
 
-
-    if (AutoMipmaps) {
-        glGenerateMipmap(GL_TEXTURE_2D);
+    if (!Data.empty()) {
+        glTextureSubImage2D(Id, 0, 0, 0, Width, Height, static_cast<GLenum>(Format), static_cast<GLenum>(DataType), Data.data());
     }
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, 0);
+    if (AutoMipmaps) {
+        glGenerateTextureMipmap(Id);
+    }
 }
 
 void Texture2D::UseImage(const U::Image& image) {
@@ -64,9 +55,9 @@ void Texture2D::UseImage(const U::Image& image) {
 }
 
 void Texture2D::SetParameters() const {
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, static_cast<GLint>(WrapS));
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, static_cast<GLint>(WrapT));
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(MinFilter));
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(MagFilter));
+    glTextureParameteri(Id, GL_TEXTURE_WRAP_S, static_cast<GLint>(WrapS));
+    glTextureParameteri(Id, GL_TEXTURE_WRAP_T, static_cast<GLint>(WrapT));
+    glTextureParameteri(Id, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(MinFilter));
+    glTextureParameteri(Id, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(MagFilter));
 }
 } // namespace N

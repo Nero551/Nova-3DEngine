@@ -19,40 +19,33 @@ void Cubemap::Generate() {
         return;
     }
 
-    glGenTextures(1, &Id);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, Id);
+    glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &Id);
     SetParameters();
 
-    GLint intern = static_cast<GLint>(InternalFormat);
     GLenum format = static_cast<GLenum>(Format);
     GLenum dataType = static_cast<GLenum>(DataType);
 
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, intern, Width, Height, 0, format, dataType, Front.Pixels.data());
+    const int mipmapLevels = AutoMipmaps ? static_cast<int>(std::floor(std::log2(std::max(Width, Height)))) + 1 : 1;
+    glTextureStorage2D(Id, mipmapLevels, static_cast<GLint>(InternalFormat), Width, Height);
 
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, intern, Width, Height, 0, format, dataType, Back.Pixels.data());
 
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, intern, Width, Height, 0, format, dataType, Top.Pixels.data());
-
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, intern, Width, Height, 0, format, dataType, Bottom.Pixels.data());
-
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, intern, Width, Height, 0, format, dataType, Right.Pixels.data());
-
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, intern, Width, Height, 0, format, dataType, Left.Pixels.data());
+    glTextureSubImage3D(Id, 0, 0, 0, 0, Width, Height, 1, format, dataType, Right.Pixels.data());
+    glTextureSubImage3D(Id, 0, 0, 0, 1, Width, Height, 1, format, dataType, Left.Pixels.data());
+    glTextureSubImage3D(Id, 0, 0, 0, 2, Width, Height, 1, format, dataType, Top.Pixels.data());
+    glTextureSubImage3D(Id, 0, 0, 0, 3, Width, Height, 1, format, dataType, Bottom.Pixels.data());
+    glTextureSubImage3D(Id, 0, 0, 0, 4, Width, Height, 1, format, dataType, Front.Pixels.data());
+    glTextureSubImage3D(Id, 0, 0, 0, 5, Width, Height, 1, format, dataType, Back.Pixels.data());
 
     if (AutoMipmaps) {
-        glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+        glGenerateTextureMipmap(Id);
     }
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 }
 
 void Cubemap::SetParameters() const {
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, static_cast<GLint>(WrapS));
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, static_cast<GLint>(WrapT));
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(MinFilter));
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(MagFilter));
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, static_cast<GLenum>(WrapR));
+    glTextureParameteri(Id, GL_TEXTURE_WRAP_S, static_cast<GLint>(WrapS));
+    glTextureParameteri(Id, GL_TEXTURE_WRAP_T, static_cast<GLint>(WrapT));
+    glTextureParameteri(Id, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(MinFilter));
+    glTextureParameteri(Id, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(MagFilter));
+    glTextureParameteri(Id, GL_TEXTURE_WRAP_R, static_cast<GLint>(WrapR));
 }
 } // namespace N

@@ -12,7 +12,7 @@ void Framebuffer::Generate() {
     if (IsGenerated()) {
         return;
     }
-    glGenFramebuffers(1, &Id);
+    glCreateFramebuffers(1, &Id);
 }
 
 void Framebuffer::Regenerate() {
@@ -33,31 +33,22 @@ bool Framebuffer::IsGenerated() const {
     return Id != 0;
 }
 
-bool Framebuffer::IsComplete() {
-    Bind();
-    if (glCheckFramebufferStatus(static_cast<GLenum>(Target)) == GL_FRAMEBUFFER_COMPLETE) {
-        Unbind();
-        return true;
-    }
-    if (glCheckFramebufferStatus(static_cast<GLenum>(Target)) != GL_FRAMEBUFFER_COMPLETE) {
+bool Framebuffer::IsComplete() const {
+    const GLenum status = glCheckNamedFramebufferStatus(Id, static_cast<GLenum>(Target));
+
+    if (status != GL_FRAMEBUFFER_COMPLETE) {
         U::Logger::Error("Framebuffer: " + Name + " is not complete");
+        return false;
     }
-    Unbind();
-    return false;
+
+    return true;
 }
 
 void Framebuffer::AttachTexture(FramebufferAttachment textureAttachment, Texture& texture) {
-    Bind();
+    Generate();
     texture.Generate();
-
     TextureAttachments.emplace(textureAttachment, &texture);
-    glFramebufferTexture2D(static_cast<GLenum>(Target),
-        static_cast<GLenum>(textureAttachment),
-        static_cast<GLenum>(texture.GetTarget()),
-        texture.GetId(),
-        0);
-
-    Unbind();
+    glNamedFramebufferTexture(Id, static_cast<GLenum>(textureAttachment), texture.GetId(), 0);
 }
 
 void Framebuffer::Blit(Framebuffer& dst, int srcW, int srcH, int dstW, int dstH) {
@@ -68,32 +59,24 @@ void Framebuffer::Blit(Framebuffer& dst, int srcW, int srcH, int dstW, int dstH)
         dst.Generate();
     }
 
-    glBindFramebuffer(static_cast<GLenum>(FrameBufferTarget::Read), Id);
-    glBindFramebuffer(static_cast<GLenum>(FrameBufferTarget::Draw), dst.Id);
-    glBlitFramebuffer(0, 0, srcW, srcH, 0, 0, dstW, dstH, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBlitNamedFramebuffer(Id, dst.Id, 0, 0, srcW, srcH, 0, 0, dstW, dstH, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 }
 
 void Framebuffer::AttachRenderBuffer(FramebufferAttachment attachment, Renderbuffer& renderbuffer) {
-    Bind();
+    Generate();
     renderbuffer.Generate();
     RenderBuffers.emplace(attachment, &renderbuffer);
-    glFramebufferRenderbuffer(
-        static_cast<GLenum>(Target), static_cast<GLenum>(attachment), GL_RENDERBUFFER, renderbuffer.GetId());
-
-    Unbind();
+    glNamedFramebufferRenderbuffer(Id, static_cast<GLenum>(attachment), GL_RENDERBUFFER, renderbuffer.GetId());
 }
 
 void Framebuffer::Resize(int width, int height) {
-    Bind();
-
     for (auto& [attachment, texture] : TextureAttachments) {
         texture->Regenerate();
-        texture->Height = height;
         texture->Width = width;
+        texture->Height = height;
         texture->Generate();
-        AttachTexture(attachment, *texture);
+
+        glNamedFramebufferTexture(Id, static_cast<GLenum>(attachment), texture->GetId(), 0);
     }
 
     for (auto& [attachment, buffer] : RenderBuffers) {
@@ -102,9 +85,8 @@ void Framebuffer::Resize(int width, int height) {
         buffer->Height = height;
         buffer->Generate();
 
-        AttachRenderBuffer(attachment, *buffer);
+        glNamedFramebufferRenderbuffer(Id, static_cast<GLenum>(attachment), GL_RENDERBUFFER, buffer->GetId());
     }
-    Unbind();
 }
 
 unsigned int Framebuffer::GetId() const {

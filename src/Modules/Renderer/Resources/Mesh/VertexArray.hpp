@@ -2,6 +2,7 @@
 #include <cstddef>
 
 #include "../../DataType.hpp"
+#include "Buffers/IndexBuffer.hpp"
 #include "Math/Matrix/Matrix4.hpp"
 #include "OpenGL.hpp"
 
@@ -28,40 +29,44 @@ struct VertexArray {
 
     /** @brief Binds VAO 0, restoring the default vertex array state. */
     void Unbind();
+    void SetVertexBuffer(const ArrayBuffer& vbo, int bindingIndex, int stride, int offset);
 
+    void SetIndexBuffer(const IndexBuffer& ebo);
     /**
      * @brief Enables a vertex attribute and describes its layout in the bound buffer.
      * @param index Attribute location.
      * @param size Number of components per attribute.
      * @param type Component data type.
-     * @param stride Byte distance between consecutive attributes.
+     * @param bindingIndex
      * @param offset Byte offset of the first attribute.
      * @param normalized Converts integer data to normalized floating-point values when true.
      */
-    void SetAttribPointer(int index, int size, DataType type, size_t stride, size_t offset, bool normalized = false);
+    void SetAttribPointer(int index, int size, DataType type, int bindingIndex, size_t offset, bool normalized = false);
 
     /**
      * @brief Maps a Matrix3 to three consecutive vertex attributes, one per column.
      * @param startIndex Attribute location of the first column.
      * @param stride
      * @param offset
+     * @param bindingIndex
      */
-    void SetMatrix3AttribPointer(int startIndex, int stride, int offset);
+    void SetMatrix3AttribPointer(int startIndex, int stride, int offset, int bindingIndex);
 
     /**
      * @brief Maps a Matrix4 to four consecutive vertex attributes, one per column.
      * @param startIndex Attribute location of the first column.
      * @param stride
      * @param offset
+     * @param bindingIndex
      */
-    void SetMatrix4AttribPointer(int startIndex, int stride, int offset);
+    void SetMatrix4AttribPointer(int startIndex, int stride, int offset, int bindingIndex);
 
     /**
      * @brief Controls how often an attribute advances when using instanced rendering.
-     * @param index Attribute location.
+     * @param bindingIndex Attribute location.
      * @param divisor Zero advances per vertex; non-zero advances once every divisor instances.
      */
-    void SetAttribDivisor(int index, int divisor);
+    void SetAttribDivisor(int bindingIndex, int divisor);
 
     /** @brief Applies the same instance divisor to all three columns of a Matrix3 attribute. */
     void SetMatrix3AttribDivisor(int startIndex, int divisor);

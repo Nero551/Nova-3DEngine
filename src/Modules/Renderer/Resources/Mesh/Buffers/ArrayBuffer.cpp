@@ -8,7 +8,7 @@ void ArrayBuffer::Generate() {
     if (IsGenerated()) {
         return;
     }
-    glGenBuffers(1, &Id);
+    glCreateBuffers(1, &Id);
 }
 
 bool ArrayBuffer::IsGenerated() {
@@ -20,27 +20,12 @@ void ArrayBuffer::Delete() {
     Id = 0;
 }
 
-ArrayBuffer::ArrayBuffer(ArrayBuffer&& other) noexcept : Id(std::exchange(other.Id, 0)) {
-}
-
-ArrayBuffer& ArrayBuffer::operator=(ArrayBuffer&& other) noexcept {
-    if (this == &other) {
-        return *this;
-    }
-
-    Delete();
-    Id = std::exchange(other.Id, 0);
-    return *this;
-}
-
 ArrayBuffer::~ArrayBuffer() {
     glDeleteBuffers(1, &Id);
 }
 
 void ArrayBuffer::Bind() {
-    if (!IsGenerated()) {
-        Generate();
-    }
+    Generate();
     glBindBuffer(GL_ARRAY_BUFFER, Id);
 }
 

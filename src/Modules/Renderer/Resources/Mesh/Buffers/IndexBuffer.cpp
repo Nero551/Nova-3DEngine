@@ -8,16 +8,12 @@ void IndexBuffer::Generate() {
     if (IsGenerated()) {
         return;
     }
-    glGenBuffers(1, &Id);
+    glCreateBuffers(1, &Id);
 }
 
 void IndexBuffer::SetData(const std::vector<unsigned int>& indices) {
-    if (!IsGenerated()) {
-        Generate();
-    }
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Id);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), static_cast<GLenum>(Usage));
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    Generate();
+    glNamedBufferData(Id, indices.size() * sizeof(unsigned int), indices.data(), static_cast<GLenum>(Usage));
 }
 
 bool IndexBuffer::IsGenerated() {
@@ -34,9 +30,7 @@ IndexBuffer::~IndexBuffer() {
 }
 
 void IndexBuffer::Bind() {
-    if (!IsGenerated()) {
-        Generate();
-    }
+    Generate();
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Id);
 }
 

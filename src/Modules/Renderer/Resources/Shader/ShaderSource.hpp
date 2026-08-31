@@ -20,7 +20,7 @@ struct ShaderSource : Resource {
     /** @brief SourceCode with modifications (preprocessing) */
     std::string GeneratedCode;
 
-    std::string Version = "version 450 core";
+    std::string Version = "version 460 core";
 
     // TODO- it would be really cool if i could have methods for adding code
     //  dynamically , like GenerateInt("MaxLights", 20)
@@ -28,7 +28,7 @@ struct ShaderSource : Resource {
     //  could also do full string and just concatenate. Generate("int MaxLights = 20;", lineNumber)
     //  although, all this requires a more advanced parser , like maybe line by line and storing which line has which code.
 
-    ShaderSource(const std::string& name, const std::string& path, ShaderStage stage, std::string version = "version 450 core");
+    ShaderSource(const std::string& name, const std::string& path, ShaderStage stage, std::string version = "version 460 core");
 
     ~ShaderSource() override;
     unsigned int GetId() const;

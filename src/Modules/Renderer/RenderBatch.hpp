@@ -32,8 +32,8 @@ struct RenderBatch {
         Mesh->VAO.Bind();
         Buffer.Bind();
 
-        Mesh->VAO.SetMatrix4AttribPointer(4, sizeof(InstanceData), 0);
-        Mesh->VAO.SetMatrix3AttribPointer(8, sizeof(InstanceData), sizeof(M::Matrix4));
+        Mesh->VAO.SetMatrix4AttribPointer(4, sizeof(InstanceData), 0, TODO);
+        Mesh->VAO.SetMatrix3AttribPointer(8, sizeof(InstanceData), sizeof(M::Matrix4), TODO);
         Mesh->VAO.SetMatrix4AttribDivisor(4, 1);
         Mesh->VAO.SetMatrix3AttribDivisor(8, 1);
 

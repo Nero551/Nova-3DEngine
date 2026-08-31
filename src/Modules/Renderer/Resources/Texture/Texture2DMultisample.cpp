@@ -7,13 +7,8 @@ void Texture2DMultisample::Generate() {
         return;
     }
 
-    glGenTextures(1, &Id);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, Id);
-
-    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, Samples, static_cast<GLint>(InternalFormat), Width, Height, GL_TRUE);
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+    glCreateTextures(GL_TEXTURE_2D_MULTISAMPLE, 1, &Id);
+    ;
+    glTextureStorage2DMultisample(Id, Samples, static_cast<GLint>(InternalFormat), Width, Height, GL_TRUE);
 }
 } // namespace N

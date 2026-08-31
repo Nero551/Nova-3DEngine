@@ -17,7 +17,6 @@ struct IndexBuffer {
      * @brief Replaces the buffer's contents with the supplied index data.
      * @param indices Unsigned integer indices used by indexed drawing.
      * Does nothing if the buffer has not been generated.
-     * The buffer is temporarily bound during the upload and unbound afterward.
      */
     void SetData(const std::vector<unsigned int>& indices);
 

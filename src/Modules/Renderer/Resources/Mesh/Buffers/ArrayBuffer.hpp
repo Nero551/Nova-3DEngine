@@ -11,29 +11,16 @@ struct ArrayBuffer {
     /** @brief Constructs an ungenerated array buffer. */
     ArrayBuffer();
 
-    ArrayBuffer(const ArrayBuffer&) = delete;
-    ArrayBuffer& operator=(const ArrayBuffer&) = delete;
-
-    ArrayBuffer(ArrayBuffer&& other) noexcept;
-    ArrayBuffer& operator=(ArrayBuffer&& other) noexcept;
-
     /** @brief Generates the buffer once; subsequent calls have no effect. */
     void Generate();
 
     /**
      * @brief Replaces the buffer's contents with the supplied array data.
      * @param data Elements to copy into the buffer.
-     * Does nothing if the buffer has not been generated.
-     * The buffer is temporarily bound during the upload and unbound afterward.
      */
     template <typename T> void SetData(const std::vector<T>& data) {
-        if (!IsGenerated()) {
-            Generate();
-        }
-
-        glBindBuffer(GL_ARRAY_BUFFER, Id);
-        glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(T), data.data(), static_cast<GLenum>(Usage));
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        Generate();
+        glNamedBufferData(Id, data.size() * sizeof(T), data.data(), static_cast<GLenum>(Usage));
     }
 
     /** @brief Returns true when a valid OpenGL buffer ID has been generated. */

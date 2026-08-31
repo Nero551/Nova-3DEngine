@@ -21,22 +21,16 @@ void Mesh::Generate() {
     if (IsGenerated()) {
         return;
     }
-    VAO.Bind();
-
     VBO.SetData(Vertices);
-    VBO.Bind();
-
     EBO.SetData(Indices);
-    EBO.Bind();
 
-    VAO.SetAttribPointer(0, 4, DataType::Float, sizeof(Vertex), offsetof(Vertex, Position));
-    VAO.SetAttribPointer(1, 4, DataType::Float, sizeof(Vertex), offsetof(Vertex, Color));
-    VAO.SetAttribPointer(2, 2, DataType::Float, sizeof(Vertex), offsetof(Vertex, UV));
-    VAO.SetAttribPointer(3, 3, DataType::Float, sizeof(Vertex), offsetof(Vertex, Normal));
+    VAO.SetIndexBuffer(EBO);
+    VAO.SetVertexBuffer(VBO, 0, sizeof(Vertex), 0);
 
-    VAO.Unbind();
-    VBO.Unbind();
-    EBO.Unbind();
+    VAO.SetAttribPointer(0, 4, DataType::Float, 0, offsetof(Vertex, Position));
+    VAO.SetAttribPointer(1, 4, DataType::Float, 0, offsetof(Vertex, Color));
+    VAO.SetAttribPointer(2, 2, DataType::Float, 0, offsetof(Vertex, UV));
+    VAO.SetAttribPointer(3, 3, DataType::Float, 0, offsetof(Vertex, Normal));
 }
 
 void Mesh::Draw() {

@@ -86,7 +86,7 @@ struct Texture : Resource {
      * @param unit Texture unit to which the texture is bound.
      */
     void Bind(unsigned int unit);
-    void Unbind(unsigned int unit);
+    void Unbind(unsigned int unit) const;
 
 protected:
     /** OpenGL texture object ID. Zero indicates that no object is generated. */

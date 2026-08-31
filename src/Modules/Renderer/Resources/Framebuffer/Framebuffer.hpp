@@ -93,7 +93,7 @@ struct Framebuffer : Resource {
      *
      * @return true if the framebuffer is complete, otherwise false.
      */
-    bool IsComplete();
+    bool IsComplete() const;
 
     /**
      * @brief Attaches a texture to a framebuffer attachment point.

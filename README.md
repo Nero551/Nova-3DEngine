@@ -107,6 +107,7 @@
 ### Week 10 — August 29–September 4
 
 - Geometry shaders
--
+- Instancing
+- MSAA (Multisample anti-aliasing)
 
 ![Post-Processed Cube](Docs/Screenshots/Post-ProccesedCube.png)
