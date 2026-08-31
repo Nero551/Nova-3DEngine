@@ -29,7 +29,7 @@ struct VertexArray {
 
     /** @brief Binds VAO 0, restoring the default vertex array state. */
     void Unbind();
-    void SetVertexBuffer(const ArrayBuffer& vbo, int bindingIndex, int stride, int offset);
+    void SetVertexBuffer(const ArrayBuffer& vbo, int bindingIndex, int stride, int offset = 0);
 
     void SetIndexBuffer(const IndexBuffer& ebo);
     /**
@@ -46,20 +46,18 @@ struct VertexArray {
     /**
      * @brief Maps a Matrix3 to three consecutive vertex attributes, one per column.
      * @param startIndex Attribute location of the first column.
-     * @param stride
      * @param offset
      * @param bindingIndex
      */
-    void SetMatrix3AttribPointer(int startIndex, int stride, int offset, int bindingIndex);
+    void SetMatrix3AttribPointer(int startIndex, int offset, int bindingIndex);
 
     /**
      * @brief Maps a Matrix4 to four consecutive vertex attributes, one per column.
      * @param startIndex Attribute location of the first column.
-     * @param stride
      * @param offset
      * @param bindingIndex
      */
-    void SetMatrix4AttribPointer(int startIndex, int stride, int offset, int bindingIndex);
+    void SetMatrix4AttribPointer(int startIndex, int offset, int bindingIndex);
 
     /**
      * @brief Controls how often an attribute advances when using instanced rendering.
@@ -67,12 +65,6 @@ struct VertexArray {
      * @param divisor Zero advances per vertex; non-zero advances once every divisor instances.
      */
     void SetAttribDivisor(int bindingIndex, int divisor);
-
-    /** @brief Applies the same instance divisor to all three columns of a Matrix3 attribute. */
-    void SetMatrix3AttribDivisor(int startIndex, int divisor);
-
-    /** @brief Applies the same instance divisor to all four columns of a Matrix4 attribute. */
-    void SetMatrix4AttribDivisor(int startIndex, int divisor);
 
     /** @brief Returns the underlying OpenGL VAO ID, or zero if ungenerated. */
     unsigned int GetId() const;

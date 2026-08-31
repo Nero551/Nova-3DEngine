@@ -49,17 +49,17 @@ void VertexArray::SetIndexBuffer(const IndexBuffer& ebo) {
 void VertexArray::SetAttribPointer(int index, int size, DataType type, int bindingIndex, size_t offset, bool normalized) {
     Generate();
     glEnableVertexArrayAttrib(Id, index);
-    glVertexArrayAttribBinding(Id, index, bindingIndex);
     glVertexArrayAttribFormat(Id, index, size, static_cast<GLenum>(type), normalized, offset);
+    glVertexArrayAttribBinding(Id, index, bindingIndex);
 }
 
-void VertexArray::SetMatrix3AttribPointer(int startIndex, int stride, int offset, int bindingIndex) {
+void VertexArray::SetMatrix3AttribPointer(int startIndex, int offset, int bindingIndex) {
     SetAttribPointer(startIndex, 3, DataType::Float, bindingIndex, 0 + offset);
     SetAttribPointer(startIndex + 1, 3, DataType::Float, bindingIndex, sizeof(M::Vector3) + offset);
     SetAttribPointer(startIndex + 2, 3, DataType::Float, bindingIndex, 2 * sizeof(M::Vector3) + offset);
 }
 
-void VertexArray::SetMatrix4AttribPointer(int startIndex, int stride, int offset, int bindingIndex) {
+void VertexArray::SetMatrix4AttribPointer(int startIndex, int offset, int bindingIndex) {
     SetAttribPointer(startIndex, 4, DataType::Float, bindingIndex, 0 + offset);
     SetAttribPointer(startIndex + 1, 4, DataType::Float, bindingIndex, sizeof(M::Vector4) + offset);
     SetAttribPointer(startIndex + 2, 4, DataType::Float, bindingIndex, 2 * sizeof(M::Vector4) + offset);
@@ -69,20 +69,6 @@ void VertexArray::SetMatrix4AttribPointer(int startIndex, int stride, int offset
 void VertexArray::SetAttribDivisor(int bindingIndex, int divisor) {
     Generate();
     glVertexArrayBindingDivisor(Id, bindingIndex, divisor);
-}
-
-
-void VertexArray::SetMatrix3AttribDivisor(int startIndex, int divisor) {
-    SetAttribDivisor(startIndex, divisor);
-    SetAttribDivisor(startIndex + 1, divisor);
-    SetAttribDivisor(startIndex + 2, divisor);
-}
-
-void VertexArray::SetMatrix4AttribDivisor(int startIndex, int divisor) {
-    SetAttribDivisor(startIndex, divisor);
-    SetAttribDivisor(startIndex + 1, divisor);
-    SetAttribDivisor(startIndex + 2, divisor);
-    SetAttribDivisor(startIndex + 3, divisor);
 }
 
 unsigned int VertexArray::GetId() const {

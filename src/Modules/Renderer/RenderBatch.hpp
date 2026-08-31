@@ -29,13 +29,11 @@ struct RenderBatch {
         Buffer.SetData(Instances);
 
         Mesh->Generate();
-        Mesh->VAO.Bind();
-        Buffer.Bind();
+        Mesh->VAO.SetVertexBuffer(Buffer, 1, sizeof(InstanceData));
 
-        Mesh->VAO.SetMatrix4AttribPointer(4, sizeof(InstanceData), 0, TODO);
-        Mesh->VAO.SetMatrix3AttribPointer(8, sizeof(InstanceData), sizeof(M::Matrix4), TODO);
-        Mesh->VAO.SetMatrix4AttribDivisor(4, 1);
-        Mesh->VAO.SetMatrix3AttribDivisor(8, 1);
+        Mesh->VAO.SetMatrix4AttribPointer(4, 0, 1);
+        Mesh->VAO.SetMatrix3AttribPointer(8, sizeof(M::Matrix4), 1);
+        Mesh->VAO.SetAttribDivisor(1, 1);
 
         Mesh->DrawInstanced(instanceCount);
     }
