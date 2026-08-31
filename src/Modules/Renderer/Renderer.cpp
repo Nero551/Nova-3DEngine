@@ -112,15 +112,16 @@ void Renderer::BeginFrame(double dt) {
 
 void Renderer::RenderWorld() {
     auto& camera = World::Get().ActiveCamera;
+    auto& query = World::Get().Query;
 
 
-    const M::Matrix4 projection = World::Get().Query.Pool<CameraComponent>().GetComponentById(camera->Id).GetProjectionMatrix();
+    const M::Matrix4 projection = query.Pool<CameraComponent>().GetComponentById(camera->Id).GetProjectionMatrix();
     const M::Matrix4 view = GetSystem<CameraSystem>().GetViewMatrix();
 
     GUniformbuffer->Set(view.Transpose(), 0);
     GUniformbuffer->Set(projection.Transpose(), 64);
     GUniformbuffer->Set(Engine::Get().GetTime(), 128);
-    GUniformbuffer->Set(World::Get().Query.Pool<Transform3DComponent>().GetComponentById(camera->Id).GlobalPosition, 144);
+    GUniformbuffer->Set(query.Pool<Transform3DComponent>().GetComponentById(camera->Id).GlobalPosition, 144);
     GUniformbuffer->Bind();
 
     for (auto& batch : Batches | std::views::values) {
@@ -128,7 +129,7 @@ void Renderer::RenderWorld() {
     }
 
     for (auto [entityId, transformComponent, meshComponent, materialComponent] :
-        World::Get().Query.With<Transform3DComponent, MeshComponent, MaterialComponent>()) {
+        query.With<Transform3DComponent, MeshComponent, MaterialComponent>()) {
         if (materialComponent.Material->Shader->HotReload == true) {
             materialComponent.Material->Shader->Reload();
         }

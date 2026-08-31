@@ -2,7 +2,8 @@
 
 #include "Core/InnerCore/Module.hpp"
 #include "Enums/Keys.hpp"
-#include "Enums/Mouse.hpp"
+#include "Enums/MouseButton.hpp"
+#include "Enums/MouseMode.hpp"
 #include "Math/Vector/Vector2.hpp"
 
 namespace N {

@@ -24,9 +24,10 @@ struct ResourceManager : Service {
      * @return Reference to the loaded resource.
      */
     template <ResourceType T, typename... Args> T& Load(const std::string& name, Args&&... args) {
-        if (Resources.contains(name)) {
+        std::string typeName = typeid(T).name();
+        if (Resources.contains(typeName + name)) {
             // N::U::Logger::Warning("Resource: " + name + " Already Loaded.");
-            return static_cast<T&>(*Resources.at(name));
+            return static_cast<T&>(*Resources.at(typeName + name));
         }
 
         if constexpr (!std::constructible_from<T, const std::string&, Args...>) {
@@ -35,9 +36,9 @@ struct ResourceManager : Service {
         }
         else {
             auto resource = std::make_unique<T>(name, std::forward<Args>(args)...);
-            Resources.emplace(name, std::move(resource));
+            Resources.emplace(typeName + name, std::move(resource));
 
-            return static_cast<T&>(*Resources.at(name));
+            return static_cast<T&>(*Resources.at(typeName + name));
         }
     }
 

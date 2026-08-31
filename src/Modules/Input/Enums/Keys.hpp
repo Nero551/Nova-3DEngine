@@ -2,6 +2,8 @@
 #include "OpenGL.hpp"
 
 namespace N {
+
+/** @brief Keyboard keys for input */
 enum class Key {
     // Letters
     A = GLFW_KEY_A,

@@ -1,13 +1,7 @@
 #pragma once
 
+/** @brief Mouse buttons for input */
 namespace N {
-enum class MouseMode {
-    Normal = GLFW_CURSOR_NORMAL,
-    Hidden = GLFW_CURSOR_HIDDEN,
-    Disabled = GLFW_CURSOR_DISABLED,
-    Captured = GLFW_CURSOR_CAPTURED
-};
-
 enum class MouseButton {
     Left = GLFW_MOUSE_BUTTON_LEFT,
     Right = GLFW_MOUSE_BUTTON_RIGHT,

@@ -79,7 +79,7 @@ void calculus::Start() {
     cubeId = cube.Id;
     World::Get().Root->AttachChild(cube);
 
-    ThreeDimensionalProjection(5);
+    FourDimensionalProjection(20);
 }
 
 static float elapsed = 0;

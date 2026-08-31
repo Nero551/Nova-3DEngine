@@ -63,8 +63,7 @@ void World::AddSystems() {
 }
 
 
-// TODO- for some reason the running seems to be up to "chance". sometimes its fine , sometimes it isn't. yeah its not fine.
-//  chance increase when i have more entities , leads me to believe its some index mismatch issue in component pools
+// TODO- quick flicker happens at the start of the run, its input mouse rapidly changing when changing MouseMode.
 void World::Start() {
     AddSystems();
     Engine::Get().GetModule<Input>().SetMouseMode(MouseMode::Disabled);

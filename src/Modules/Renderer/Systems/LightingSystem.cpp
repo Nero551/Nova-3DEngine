@@ -15,7 +15,7 @@ namespace N {
 void LightingSystem::Start() {
     auto& resources = Service::Get<ResourceManager>();
 
-    LightingBuffer = &resources.Load<Uniformbuffer>("[Lighting System] Lighting Buffer");
+    LightingBuffer = &resources.Load<Uniformbuffer>("[Renderer] Lighting Buffer");
     LightingBuffer->Binding = 1;
 
     constexpr size_t LightStride = 144;
