@@ -4,18 +4,18 @@
 #include "Core/OuterCore/Service.hpp"
 
 namespace N {
+/** @brief Concept constraining types that can be dispatched through the event system. */
 template <typename T>
 concept EventType = std::derived_from<T, IEvent>;
 
-// TODO- redesign this whole event system.
-//  preferably, Events would be able to handle themselves, meaning ability to sub, unsub, fire all on their own.
-//  EventBus will just be a organized queue that can be used and can't, depending on the situation.
-
+/** @brief Global event dispatcher and deferred event queue. */
 struct EventBus : Service {
+    /** @brief Constructs and immediately dispatches a global event. */
     template <EventType T, typename... Args> void InstantFire(Args&&... args) {
         if constexpr (!std::constructible_from<T, Args...>) {
             U::Logger::Fatal(std::string("Event: ") + typeid(T).name() + " Can't Be Constructed From the Given Arguments.");
         }
+
         auto listeners = Listeners.find(typeid(T));
         if (listeners == Listeners.end()) {
             return;
@@ -27,16 +27,20 @@ struct EventBus : Service {
         }
     }
 
+    /** @brief Queues a global event for deferred dispatch at the end of the frame. */
     template <EventType T, typename... Args> void Fire(Args&&... args) {
         if constexpr (!std::constructible_from<T, Args...>) {
             U::Logger::Fatal(std::string("Event: ") + typeid(T).name() + " Can't Be Constructed From the Given Arguments.");
         }
+
         auto event = std::make_unique<T>(std::forward<Args>(args)...);
         FireQueue.emplace_back(std::move(event));
     }
 
+    /** @brief Dispatches all events currently waiting in the fire queue. */
     void EmptyFireQueue();
 
+    /** @brief Subscribes a callback to a global event type and returns its subscription ID. */
     template <EventType T, typename F> std::size_t Sub(F&& callback) {
         auto method = [callback = std::forward<F>(callback)](IEvent& e) mutable { callback(static_cast<T&>(e)); };
 
@@ -45,6 +49,7 @@ struct EventBus : Service {
         return subscription;
     }
 
+    /** @brief Removes a global event subscription by its subscription ID. */
     template <EventType T> void UnSub(std::size_t subscription) {
         auto it = Listeners.find(typeid(T));
         if (it != Listeners.end()) {
@@ -52,8 +57,10 @@ struct EventBus : Service {
             while (i < it->second.size() && it->second.at(i).Subscription != subscription) {
                 i++;
             }
+
             if (i < it->second.size()) {
                 it->second.erase(it->second.begin() + i);
+
                 if (it->second.empty()) {
                     Listeners.erase(it);
                 }
@@ -62,13 +69,19 @@ struct EventBus : Service {
     }
 
 private:
+    /** @brief Stores a global event callback and its subscription ID. */
     struct Entry {
         std::size_t Subscription;
         std::function<void(IEvent&)> Callback;
     };
 
+    /** @brief Global event listeners grouped by event type. */
     std::unordered_map<std::type_index, std::vector<Entry>> Listeners;
+
+    /** @brief Events waiting for deferred dispatch. */
     std::vector<std::unique_ptr<IEvent>> FireQueue;
+
+    /** @brief Generates unique subscription IDs. */
     size_t NextSubscription = 0;
 
 protected:
