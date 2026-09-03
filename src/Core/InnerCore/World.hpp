@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../OuterCore/Scene.hpp"
-#include "Core/OuterCore/ECS/ComponentQuery/ComponentPoolQuery.hpp"
+#include "Core/OuterCore/ECS/ComponentPoolQuery.hpp"
 #include "Core/OuterCore/Service.hpp"
 #include "Core/Services/EventBus.hpp"
 #include "SystemOwner.hpp"
@@ -50,10 +50,11 @@ struct World : SystemOwner {
         entity->Id = id;
         entity->Initialize();
 
-        Entities.emplace(id, std::move(entity));
-        Service::Get<EventBus>().Fire<EntityCreated>(static_cast<T&>(*Entities.find(id)->second));
+        auto [it, inserted] = Entities.emplace(id, std::move(entity));
+        T& createdEntity = static_cast<T&>(*it->second);
+        Service::Get<EventBus>().Fire<EntityCreated>(createdEntity);
 
-        return static_cast<T&>(*Entities.find(id)->second);
+        return createdEntity;
     }
 
     /**
@@ -70,16 +71,7 @@ struct World : SystemOwner {
      */
     U::CheckedPtr<Entity> TryFindEntity(unsigned int id);
 
-private:
-    std::unordered_map<unsigned int, std::unique_ptr<Entity>> Entities;
-    /** @brief ID assigned to the most recently created entity. */
-    unsigned int currentEntityId = 0;
-
 protected:
-    friend struct Engine;
-    /** @brief Registers the systems owned by the world. */
-    void AddSystems() override;
-
     void Start();
 
     void Update(double dt);
@@ -93,5 +85,13 @@ protected:
     void EndFrame(double dt);
 
     void Render();
+
+    friend struct Engine;
+
+private:
+    std::unordered_map<unsigned int, std::unique_ptr<Entity>> Entities;
+
+    /** @brief ID assigned to the most recently created entity. */
+    unsigned int currentEntityId = 0;
 };
 } // namespace N

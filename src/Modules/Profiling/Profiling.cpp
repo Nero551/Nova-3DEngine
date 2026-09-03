@@ -6,9 +6,6 @@ namespace N {
 void Profiling::Start() {
 }
 
-void Profiling::AddSystems() {
-}
-
 static double elapsed = 0;
 
 void Profiling::Update(const double dt) {

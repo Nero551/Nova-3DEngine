@@ -3,7 +3,7 @@
 #include "Core/OuterCore/Event.hpp"
 
 namespace N {
-struct EntityDestroyed : Event {
+struct EntityDestroyed : Event<EntityDestroyed> {
     Entity& entity;
 
     EntityDestroyed(Entity& entity) : entity(entity) {

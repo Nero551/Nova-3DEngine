@@ -8,8 +8,8 @@ void EventBus::EmptyFireQueue() {
             continue;
         }
 
-        for (auto& callback : listeners->second) {
-            callback(*event);
+        for (auto& listener : listeners->second) {
+            listener.Callback(*event);
         }
     }
     FireQueue.clear();

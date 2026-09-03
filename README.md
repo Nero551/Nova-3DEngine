@@ -74,7 +74,6 @@
 
 - Assimp model loading
 - Shader Include preprocessing
-- Change Detection/Dirty system for variables/attributes
 - Parent Child transform relations
 
 ![Backpack](Docs/Screenshots/Backpack.png)
@@ -103,7 +102,6 @@
 - Framebuffers & Renderbuffers
 - Cubemaps
 - Uniform buffers
--
 
 ![Post-Processed Cube](Docs/Screenshots/Post-ProccesedCube.png)
 

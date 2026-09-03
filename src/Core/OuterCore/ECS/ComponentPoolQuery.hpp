@@ -1,7 +1,7 @@
 #pragma once
-#include "../ComponentPool.hpp"
-#include "../IComponentPool.hpp"
+#include "ComponentPool.hpp"
 #include "ComponentPoolQueryResult.hpp"
+#include "IComponentPool.hpp"
 
 namespace N {
 struct ComponentPoolQuery {

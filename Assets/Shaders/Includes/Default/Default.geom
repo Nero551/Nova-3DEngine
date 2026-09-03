@@ -17,7 +17,3 @@ out VS_OUT {
     vec2 UV;
     vec3 UVW;
 } GSOut;
-
-uniform mat4 MODEL_MATRIX;
-uniform mat3 NORMAL_MATRIX;
-

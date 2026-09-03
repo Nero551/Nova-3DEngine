@@ -1,5 +1,5 @@
 {
-  "name": "learning-opengl",
+  "name": "nova",
   "version-string": "0.1.0",
   "dependencies": [
     "glfw3",

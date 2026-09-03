@@ -30,8 +30,6 @@ protected:
     std::unordered_map<std::type_index, std::unique_ptr<System>> Systems;
 
     /** @brief Adds the systems owned by the derived class. */
-    virtual void AddSystems() {
-    }
 
     /** @brief Creates and registers a system of the specified type. */
     template <SystemType T> T& AddSystem() {

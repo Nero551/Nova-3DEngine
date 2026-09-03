@@ -99,6 +99,7 @@ int Shader::GetUniformLocation(const std::string& name) {
 
         if (location == -1) {
             // U::Logger::Warning("Shader: " + Name + " Uniform Not Found: " + name);
+            return -1;
         }
 
         UniformLocations[name] = location;
@@ -108,7 +109,10 @@ int Shader::GetUniformLocation(const std::string& name) {
 
 void Shader::UploadUniforms() {
     for (auto& [uniformName, uniform] : PendingUniforms) {
-        uniform->Upload(GetUniformLocation(uniformName));
+        int location = GetUniformLocation(uniformName);
+        if (location != -1) {
+            uniform->Upload(location);
+        }
     }
 }
 } // namespace N

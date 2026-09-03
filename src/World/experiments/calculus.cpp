@@ -4,6 +4,8 @@
 #include "Core/InnerCore/World.hpp"
 #include "Core/Services/ResourceManager.hpp"
 #include "Math/Color/Color.hpp"
+#include "Math/Common/Exponentials.hpp"
+#include "Math/Common/Logarithms.hpp"
 #include "Math/Functions/Function.hpp"
 #include "Math/Quaternion/Quaternion.hpp"
 #include "Math/Vector/Vector4.hpp"
@@ -40,7 +42,6 @@ static float min = -100;
 static std::vector<U::CheckedPtr<Entity>> points = {};
 
 static Entity& Plot(const M::Vector3 vec3, const M::Vector4 col = { 1, 1, 1, 1 }) {
-    // if (vec3.y < max && vec3.y > min) {
     auto& point = CreatePoint(col);
     auto& transform = World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.Id);
     transform.Position.x = vec3.x;
@@ -48,38 +49,16 @@ static Entity& Plot(const M::Vector3 vec3, const M::Vector4 col = { 1, 1, 1, 1 }
     transform.Position.z = vec3.z;
 
     return point;
-    // }
 }
 
-static constexpr float step = 0.025;
-static constexpr float xRange = 10;
+static constexpr float step = 0.03;
+static constexpr float xRange = 5;
 static float x = -5;
 
 static unsigned int cubeId = 0;
 
 void calculus::Start() {
-    auto& resourceManager = Service::Get<ResourceManager>();
-    auto& mesh = Primitives::CreateCube("mesh");
-    auto& objectShader = resourceManager.Load<Shader>("objectShader");
-
-    objectShader.AssignSource(
-        resourceManager.Load<ShaderSource>("objectFrag", "Assets/Shaders/shader.frag", ShaderStage::Fragment));
-    objectShader.AssignSource(
-        resourceManager.Load<ShaderSource>("objectVert", "Assets/Shaders/shader.vert", ShaderStage::Vertex));
-
-
-    auto& objectMaterial = resourceManager.Load<Material>("cubeMaterial");
-    objectMaterial.Shader = &objectShader;
-
-    auto& cube = World::Get().CreateEntity<MeshInstance3D>();
-    World::Get().Query.Pool<MeshComponent>().GetComponentById(cube.Id).Mesh = &mesh;
-    World::Get().Query.Pool<MaterialComponent>().GetComponentById(cube.Id).Material = &objectMaterial;
-    World::Get().Query.Pool<Transform3DComponent>().GetComponentById(cube.Id).Scale = { 1 };
-    auto& transform = World::Get().Query.Pool<Transform3DComponent>().GetComponentById(cube.Id);
-    cubeId = cube.Id;
-    World::Get().Root->AttachChild(cube);
-
-    FourDimensionalProjection(20);
+    // FourDimensionalProjection(20);
 }
 
 static float elapsed = 0;
@@ -88,49 +67,38 @@ static float passed = 0;
 static float multiplier = 1;
 
 void calculus::Update(double dt) {
-    // auto& resourceManager = Service::Get<ResourceManager>();
-    // auto& transform = World::Get().FindEntity(cubeId).GetComponent<Transform3DComponent>();
+    auto& resourceManager = Service::Get<ResourceManager>();
     auto& input = Engine::Get().GetModule<Input>();
 
-    // x += step;
-    // if (x >= xRange) {
-    //     return;
-    // }
-    //
-    //
-    // if (input.IsKeyHeld(Key::Z)) {
-    //     transform.Rotation *= M::Quaternion::FromEulerXYZ({ 0.1, 0, 0 });
-    // }
-    //
-    // if (input.IsKeyHeld(Key::X)) {
-    //     transform.Rotation *= M::Quaternion::FromEulerXYZ({ 0, 0.1, 0 });
-    // }
-    //
-    // if (input.IsKeyHeld(Key::C)) {
-    //     transform.Rotation *= M::Quaternion::FromEulerXYZ({ 0, 0, 0.1 });
-    // }
-    //
-    if (input.IsKeyHeld(Key::Left)) {
-        multiplier -= 5 * dt;
-    }
-    if (input.IsKeyHeld(Key::Right)) {
-        multiplier += 5 * dt;
+    x += step;
+    if (x >= xRange) {
+        return;
     }
 
-    for (auto& point : points) {
-        auto& transform = World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point->Id);
-        transform.Position *= multiplier;
-    }
-
-    multiplier = 1;
-
-    // M::Function sin = [](const float x) {
-    //     return std::sin(x);
-    // };
+    // if (input.IsKeyHeld(Key::Left)) {
+    //     multiplier -= 5 * dt;
+    // }
+    // if (input.IsKeyHeld(Key::Right)) {
+    //     multiplier += 5 * dt;
+    // }
     //
-    // U::Logger::Info(sin.Taylor(3, 0)(x));
-    // Plot({x, sin.Maclaurin(4)(x), 0});
-    // Plot({x, sin(x), 0}, M::Color::Red);
+    // for (auto& point : points) {
+    //     auto& transform = World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point->Id);
+    //     transform.Position *= multiplier;
+    // }
+    //
+    // multiplier = 1;
+
+    M::Function sin = [](const float x) { return std::sin(x); };
+
+    M::Function exp = [](const float x) { return M::Exp(x); };
+
+    Plot({ x, sin.Maclaurin(4)(x), 0 });
+    Plot({ x, sin.Derivative(x), 0 }, M::Color::Blue);
+    Plot({ x, sin.Integral(-5, x), 0 }, M::Color::Magenta);
+    Plot({ x, exp(x), 0 }, M::Color::Cyan);
+    Plot({ x, 1 / x, 0 }, M::Color::Yellow);
+    Plot({ x, sin(x), 0 }, M::Color::Red);
 }
 
 void calculus::TwoDimensionalProjection(float increase) {

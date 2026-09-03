@@ -16,7 +16,5 @@ protected:
 
 private:
     std::deque<double> FrameTimes;
-
-    void AddSystems() override;
 };
 } // namespace N

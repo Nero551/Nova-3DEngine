@@ -89,10 +89,10 @@ struct Function {
      * @code
      * F(x) = integral(lowerBound, x, f(t) dt)
      * @endcode
-     * using a Riemann sum.
+     * using a the specified integration method.
      * @param lowerBound Lower bound of integration.
      * @param dx Width of each integration interval.
-     * @param method Riemann-sum method used for integration.
+     * @param method sum method used for integration.
      * @return A function representing the accumulated integral.
      */
     [[nodiscard]] Function Integrate(
@@ -100,11 +100,11 @@ struct Function {
 
     /**
      * @brief Numerically evaluates a definite integral.
-     * Computes the integral of the function over [lowerBound, upperBound] using a Riemann sum.
+     * Computes the integral of the function over [lowerBound, upperBound] using a the specified integration method.
      * @param lowerBound Lower bound of integration.
      * @param upperBound Upper bound of integration.
      * @param dx Width of each rectangle.
-     * @param method Riemann-sum method used for integration.
+     * @param method sum method used for integration.
      * @return An approximation of the definite integral (signed area).
      */
     [[nodiscard]] float Integral(

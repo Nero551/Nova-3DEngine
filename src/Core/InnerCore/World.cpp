@@ -57,15 +57,11 @@ U::CheckedPtr<Entity> World::TryFindEntity(const unsigned int id) {
     return entity->second.get();
 }
 
-void World::AddSystems() {
-    AddSystem<Transform3DSystem>();
-    AddSystem<calculus>();
-}
-
-
 // TODO- quick flicker happens at the start of the run, its input mouse rapidly changing when changing MouseMode.
 void World::Start() {
-    AddSystems();
+    AddSystem<Transform3DSystem>();
+    // AddSystem<calculus>();
+
     Engine::Get().GetModule<Input>().SetMouseMode(MouseMode::Disabled);
 
     Root = &CreateEntity<Nova>();

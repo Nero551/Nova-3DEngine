@@ -1,6 +1,10 @@
 #include "Basis.hpp"
 
 namespace N::M {
+Matrix4 Basis::GetInverseMatrix() const {
+    return GetMatrix().Transpose();
+}
+
 Matrix4 Basis::GetMatrix() const {
     Matrix4 basisMatrix = Matrix4::Identity;
 
@@ -17,9 +21,5 @@ Matrix4 Basis::GetMatrix() const {
     basisMatrix.m[2][2] = Forward.z;
 
     return basisMatrix;
-}
-
-Matrix4 Basis::GetInverseMatrix() const {
-    return GetMatrix().Transpose();
 }
 } // namespace N::M

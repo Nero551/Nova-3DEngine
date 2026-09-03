@@ -1,5 +1,5 @@
 #pragma once
-#include "../ComponentPool.hpp"
+#include "ComponentPool.hpp"
 
 namespace N {
 template <ComponentType... Args> struct ComponentPoolQueryResult {

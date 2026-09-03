@@ -12,6 +12,7 @@ Main
     ├── Modules
     │   └── Systems
     └── World
+        ├── Systems
         └── Entities
                 └── Components
 ```
@@ -83,7 +84,6 @@ Entities are lightweight objects.
 An entity is simply:
 
 * A unique ID
-* A collection of components
 * Ids of children and parent
 
 Entities contain no game logic.
