@@ -41,7 +41,9 @@ struct EventBus : Service {
     void EmptyFireQueue();
 
     /** @brief Subscribes a callback to a global event type and returns its subscription ID. */
-    template <EventType T, typename F> std::size_t Sub(F&& callback) {
+    template <EventType T, typename F>
+        requires std::invocable<F, const T&>
+    std::size_t Sub(F&& callback) {
         auto method = [callback = std::forward<F>(callback)](IEvent& e) mutable { callback(static_cast<T&>(e)); };
 
         const auto subscription = ++NextSubscription;

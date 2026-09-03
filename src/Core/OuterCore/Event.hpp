@@ -18,9 +18,12 @@ template <typename T> struct Event : IEvent {
     }
 
     /** @brief Registers a listener and returns its unique subscription ID. */
-    std::size_t Sub(const std::function<void(T&)>& listener) {
+    template <typename F>
+        requires std::invocable<F, const T&>
+    std::size_t Sub(F&& callback) {
         const auto subscription = ++NextSubscription;
-        Listeners.push_back({ .Subscription = subscription, .Callback = listener });
+        auto method = [callback = std::forward<F>(callback)](T& e) mutable { callback(e); };
+        Listeners.push_back({ .Subscription = subscription, .Callback = method });
         return subscription;
     }
 
