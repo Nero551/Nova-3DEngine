@@ -2,6 +2,7 @@
 
 #include "Core/OuterCore/ECS/Component.hpp"
 #include "Math/Vector/Vector3.hpp"
+#include "Modules/Physics/Units.hpp"
 
 namespace N {
 struct BodyComponent : Component {

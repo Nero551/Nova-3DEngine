@@ -94,15 +94,20 @@ void Physics::Start() {
     //
     //
 
-    M::Vector2 day1 = M::Vector2::FromPolar({ M::Rad(360 - 45), 25 });
-    M::Vector2 day2 = M::Vector2::FromPolar({ M::Rad(60), 40 });
 
-    U::Logger::Info(day1 + day2);
-    U::Logger::Info();
+    M::Vector3 S = M::Vector3::FromSpherical({ 0, M::Rad(90 - 136), 17.3 });
+    M::Vector3 P = M::Vector3::FromSpherical({ 0, M::Rad(90 - 153), 19.6 });
+    P.y = 2.2;
+
+    U::Logger::Info(S);
+    U::Logger::Info(P);
+
+    U::Logger::Info(S - P);
+    U::Logger::Info((S - P).Length());
 
     //
     // U::Logger::Info(x.Derivative(2));
-    // U::Logger::Info(x.Derivative(2, 1, DifferentiationMethod::Forward, false));
+    // U::Logger::Info(x.Derivative(2, 1, DifferentiaHyperSphericaltioHyperSphericalnMethod::Forward, false));
     // U::Logger::Info(x.Differentiate().Derivative(2));
     // U::Logger::Info(x.Differentiate().Derivative(3));
 }

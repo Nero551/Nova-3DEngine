@@ -1,4 +1,5 @@
 #pragma once
+#include "Math/Common/Trigonometry.hpp"
 
 namespace N::M {
 /**
@@ -30,6 +31,13 @@ struct HyperSpherical {
      */
     HyperSpherical(float elevation, float azimuth, float hyperAngle, float magnitude = 1) :
         Elevation(elevation), Azimuth(azimuth), HyperAngle(hyperAngle), Magnitude(magnitude) {
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const HyperSpherical& hyperSpherical) {
+        os << "(" << hyperSpherical.Magnitude << ", " << Deg(hyperSpherical.Elevation) << "°, " << Deg(hyperSpherical.Azimuth)
+           << "°, " << Deg(hyperSpherical.HyperAngle) << "°"
+           << ")";
+        return os;
     }
 };
 } // namespace N::M

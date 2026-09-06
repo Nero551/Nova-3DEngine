@@ -1,4 +1,5 @@
 #pragma once
+#include "Math/Common/Trigonometry.hpp"
 
 namespace N::M {
 /**
@@ -25,6 +26,12 @@ struct Spherical {
      */
     Spherical(float elevation, float azimuth, float magnitude = 1) :
         Elevation(elevation), Azimuth(azimuth), Magnitude(magnitude) {
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const Spherical& spherical) {
+        os << "(" << spherical.Magnitude << ", " << Deg(spherical.Elevation) << "°, " << Deg(spherical.Azimuth) << "°"
+           << ")";
+        return os;
     }
 };
 } // namespace N::M
