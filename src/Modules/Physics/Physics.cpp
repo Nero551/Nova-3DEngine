@@ -1,11 +1,13 @@
 #include "Physics.hpp"
 
+#include "Components/BodyComponent.hpp"
 #include "Core/InnerCore/Engine.hpp"
 #include "Core/InnerCore/World.hpp"
 #include "Core/Services/ResourceManager.hpp"
 #include "Math/Color/Color.hpp"
 #include "Math/Common/Constraints.hpp"
 #include "Math/Common/Exponentials.hpp"
+#include "Math/Common/Trigonometry.hpp"
 #include "Math/Functions/Function.hpp"
 #include "Modules/Input/Input.hpp"
 #include "Modules/Renderer/Components/MaterialComponent.hpp"
@@ -49,6 +51,7 @@ static void Plot(const M::Vector3 vec3, const M::Vector4 col = { 1, 1, 1, 1 }) {
 
 
 static unsigned int cubeId = 0;
+static unsigned int cubeId2 = 0;
 
 void Physics::Start() {
     auto& resourceManager = Service::Get<ResourceManager>();
@@ -68,60 +71,100 @@ void Physics::Start() {
     auto& cube = World::Get().CreateEntity<MeshInstance3D>();
     query.Pool<MeshComponent>().GetComponentById(cube.Id).Mesh = &mesh;
     query.Pool<MaterialComponent>().GetComponentById(cube.Id).Material = &objectMaterial;
+    query.Pool<BodyComponent>().Add(cube.Id);
     cubeId = cube.Id;
     World::Get().Root->AttachChild(cube);
 
-    M::Function v = [](const float t) { return 40 - 5 * M::Pow(t, 2); };
+    auto& cube2 = World::Get().CreateEntity<MeshInstance3D>();
+    query.Pool<MeshComponent>().GetComponentById(cube2.Id).Mesh = &mesh;
+    query.Pool<MaterialComponent>().GetComponentById(cube2.Id).Material = &objectMaterial;
+    query.Pool<BodyComponent>().Add(cube2.Id).Mass = 10 * Units::Kilogram;
+    query.Pool<BodyComponent>().GetComponentById(cube2.Id).Pull = 3;
+    cubeId2 = cube2.Id;
+    World::Get().Root->AttachChild(cube2);
+    query.Pool<Transform3DComponent>().GetComponentById(cubeId2).Position = { 3, 10, 0 };
 
+
+    // M::Function x = [](const float t) {
+    //     return 3 * M::Pow(t, 2) - 2 * t + 3;
+    // };
+    //
+    //
+    // U::Logger::Info(x(3 / 8));
+    //
+    //
+
+    M::Vector2 day1 = M::Vector2::FromPolar({ M::Rad(360 - 45), 25 });
+    M::Vector2 day2 = M::Vector2::FromPolar({ M::Rad(60), 40 });
+
+    U::Logger::Info(day1 + day2);
     U::Logger::Info();
-}
 
-static M::Vector3 position = { 0, 10, 0 };
-static M::Vector3 velocity = { 0, 0, 0 };
-static M::Vector3 acceleration = { 0, 0, 0 };
-static M::Vector3 force = { 0, 0, 0 };
-static float mass = Units::Kilogram;
+    //
+    // U::Logger::Info(x.Derivative(2));
+    // U::Logger::Info(x.Derivative(2, 1, DifferentiationMethod::Forward, false));
+    // U::Logger::Info(x.Differentiate().Derivative(2));
+    // U::Logger::Info(x.Differentiate().Derivative(3));
+}
 
 static float time = 0;
 
-static const M::Vector3 Gravity = { 0, -9.8f, 0 };
-
 void Physics::FixedUpdate(double fdt) {
-    auto& resourceManager = Service::Get<ResourceManager>();
-    auto& input = Engine::Get().GetModule<Input>();
-    auto& query = World::Get().Query;
-    auto& cube = World::Get().FindEntity(cubeId);
-    auto& transform = query.Pool<Transform3DComponent>().GetComponentById(cube.Id);
-
+    // auto& resourceManager = Service::Get<ResourceManager>();g
+    // auto& input = Engine::Get().GetModule<Input>();
+    // auto& query = World::Get().Query;
+    // auto& transform = query.Pool<Transform3DComponent>().GetComponentById(cubeId);
+    // auto& transform2 = query.Pool<Transform3DComponent>().GetComponentById(cubeId2);
+    // auto& body = query.Pool<BodyComponent>().GetComponentById(cubeId);
+    // auto& body2 = query.Pool<BodyComponent>().GetComponentById(cubeId2);
+    //
     time += fdt;
+    //
+    // body2.Gravity = (transform.Position - transform2.Position).Normalized() * body.Pull;
+    // body2.Force = body2.Gravity * body2.Mass;
+    //
+    // if (input.IsKeyHeld(Key::Up))
+    //     body2.Force.y += 10;
+    //
+    // if (input.IsKeyHeld(Key::Down))
+    //     body2.Force.y -= 10;
+    //
+    // if (input.IsKeyHeld(Key::Left))
+    //     body2.Force.x -= 10;
+    //
+    // if (input.IsKeyHeld(Key::Right))
+    //     body2.Force.x += 10;
+    //
+    //
+    // M::Vector3 acceleration = body2.Force / body2.Mass;
+    // body2.Velocity += acceleration * fdt;
+    // transform2.Position += body2.Velocity * fdt;
+    //
+    //
+    // body.Gravity = (transform2.Position - transform.Position).Normalized() * body2.Pull;
+    // body.Force = body.Gravity * body.Mass;
+    // //
+    // // if (input.IsKeyHeld(Key::Up))
+    // //     body.Force.y += 10;
+    // //
+    // // if (input.IsKeyHeld(Key::Down))
+    // //     body.Force.y -= 10;
+    // //
+    // // if (input.IsKeyHeld(Key::Left))
+    // //     body.Force.x -= 10;
+    // //
+    // // if (input.IsKeyHeld(Key::Right))
+    // //     body.Force.x += 10;
+    //
+    //
+    // M::Vector3 acceleration2 = body.Force / body.Mass;
+    // body.Velocity += acceleration2 * fdt;
+    // transform.Position += body.Velocity * fdt;
 
-    force = Gravity * mass;
+    M::Function f = [](const float t) { return 2 + 3 * t - 4 * M::Pow(t, 2); };
 
-    if (input.IsKeyHeld(Key::Up))
-        force.y += 1.5f;
-
-    if (input.IsKeyHeld(Key::Down))
-        force.y -= 1.5f;
-
-    if (input.IsKeyHeld(Key::Left))
-        force.x -= 1.5f;
-
-    if (input.IsKeyHeld(Key::Right))
-        force.x += 1.5f;
-
-
-    acceleration = force / mass;
-    velocity += acceleration * fdt;
-    position += velocity * fdt;
-
-    transform.Position = position;
-    transform.Position.y = std::max(transform.Position.y, 0.0f);
-
-    // U::Logger::Info(position, velocity, acceleration, force);
-
-    Plot({ time, position.x, 0 }, M::Color::White);
-    Plot({ time, velocity.x, 0 }, M::Color::Blue);
-    Plot({ time, acceleration.x, 0 }, M::Color::Green);
-    // Plot({time, force.x, 0}, M::Color::Red);
+    Plot({ time, f(time), 0 }, M::Color::Blue);
+    Plot({ time, f.Derivative(time), 0 }, M::Color::Red);
+    // U::Logger::Info(f.Differentiate().Derivative(time));
 }
 } // namespace N

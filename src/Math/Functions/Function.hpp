@@ -70,18 +70,21 @@ struct Function {
      * @param x Point at which to evaluate the derivative.
      * @param dx Step size used for the numerical approximation.
      * @param method Finite-difference method used for differentiation.
+     * @param relativeStep where to use relative step or the specified dx only.
      * @return An approximation of f'(x).
      */
-    [[nodiscard]] float Derivative(
-        float x, float dx = 0.001f, DifferentiationMethod method = DifferentiationMethod::Central) const;
+    [[nodiscard]] float Derivative(float x, float dx = 0.001f, DifferentiationMethod method = DifferentiationMethod::Central,
+        bool relativeStep = true) const;
 
     /**
      * @brief Creates a function representing the numerical derivative.
      * @param dx Step size used for the numerical approximation.
      * @param method Finite-difference method used for differentiation.
+     * @param relativeStep whether to use relative step or the specified dx only.
      * @return A function approximating f'(x).
      */
-    [[nodiscard]] Function Differentiate(float dx = 0.001f, DifferentiationMethod method = DifferentiationMethod::Central) const;
+    [[nodiscard]] Function Differentiate(
+        float dx = 0.001f, DifferentiationMethod method = DifferentiationMethod::Central, bool relativeStep = true) const;
 
     /**
      * @brief Creates a function representing the numerical integral from a lower bound.

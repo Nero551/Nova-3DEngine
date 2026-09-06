@@ -1,11 +1,14 @@
 #pragma once
 #include "Component.hpp"
-#include "IComponentPool.hpp"
 
 #include "Core/Services/EventBus.hpp"
 #include "World/Events/EntityDestroyed.hpp"
 
 namespace N {
+struct IComponentPool {
+    virtual ~IComponentPool() = default;
+};
+
 template <typename T>
 concept ComponentType = std::derived_from<T, Component>;
 

@@ -36,9 +36,6 @@ static MeshInstance3D& CreatePoint(M::Vector4 col) {
     return point;
 }
 
-static float max = 100;
-static float min = -100;
-
 static std::vector<U::CheckedPtr<Entity>> points = {};
 
 static Entity& Plot(const M::Vector3 vec3, const M::Vector4 col = { 1, 1, 1, 1 }) {
@@ -51,18 +48,14 @@ static Entity& Plot(const M::Vector3 vec3, const M::Vector4 col = { 1, 1, 1, 1 }
     return point;
 }
 
-static constexpr float step = 0.03;
-static constexpr float xRange = 5;
-static float x = -5;
+static constexpr float step = 0.01;
+static constexpr float xRange = 10;
+static float x = -10;
 
-static unsigned int cubeId = 0;
 
 void calculus::Start() {
     // FourDimensionalProjection(20);
 }
-
-static float elapsed = 0;
-static float passed = 0;
 
 static float multiplier = 1;
 
@@ -89,16 +82,18 @@ void calculus::Update(double dt) {
     //
     // multiplier = 1;
 
-    M::Function sin = [](const float x) { return std::sin(x); };
+    // M::Function sin = [](const float x) { return std::sin(x); };
+    //
+    // M::Function exp = [](const float x) { return M::Exp(x); };
+    //
 
-    M::Function exp = [](const float x) { return M::Exp(x); };
 
-    Plot({ x, sin.Maclaurin(4)(x), 0 });
-    Plot({ x, sin.Derivative(x), 0 }, M::Color::Blue);
-    Plot({ x, sin.Integral(-5, x), 0 }, M::Color::Magenta);
-    Plot({ x, exp(x), 0 }, M::Color::Cyan);
-    Plot({ x, 1 / x, 0 }, M::Color::Yellow);
-    Plot({ x, sin(x), 0 }, M::Color::Red);
+    // Plot({ x, sin.Maclaurin(4)(x), 0 });
+    // Plot({ x, sin.Derivative(x), 0 }, M::Color::Blue);
+    // Plot({ x, sin.Integral(-5, x), 0 }, M::Color::Magenta);
+    // Plot({ x, exp(x), 0 }, M::Color::Cyan);
+    // Plot({ x, 1 / x, 0 }, M::Color::Yellow);
+    // Plot({ x, sin(x), 0 }, M::Color::Red);
 }
 
 void calculus::TwoDimensionalProjection(float increase) {

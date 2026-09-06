@@ -1,7 +1,6 @@
 #pragma once
 #include "ComponentPool.hpp"
 #include "ComponentPoolQueryResult.hpp"
-#include "IComponentPool.hpp"
 
 namespace N {
 struct ComponentPoolQuery {
@@ -15,10 +14,10 @@ struct ComponentPoolQuery {
         return static_cast<ComponentPool<T>&>(*it->second);
     }
 
-    template <ComponentType... Args> N::ComponentPoolQueryResult<Args...> With() {
+    template <ComponentType... Args> ComponentPoolQueryResult<Args...> With() {
         auto Pools = GetPools<Args...>();
         auto& firstPool = std::get<0>(Pools);
-        N::ComponentPoolQueryResult<Args...> result;
+        ComponentPoolQueryResult<Args...> result;
 
         std::apply(
             [&](auto&... pools) {

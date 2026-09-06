@@ -52,7 +52,7 @@ struct EventBus : Service {
     }
 
     /** @brief Removes a global event subscription by its subscription ID. */
-    template <EventType T> void UnSub(std::size_t subscription) {
+    template <EventType T> void Unsub(std::size_t subscription) {
         auto it = Listeners.find(typeid(T));
         if (it != Listeners.end()) {
             size_t i = 0;

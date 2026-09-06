@@ -60,7 +60,7 @@ U::CheckedPtr<Entity> World::TryFindEntity(const unsigned int id) {
 // TODO- quick flicker happens at the start of the run, its input mouse rapidly changing when changing MouseMode.
 void World::Start() {
     AddSystem<Transform3DSystem>();
-    // AddSystem<calculus>();
+    AddSystem<calculus>();
 
     Engine::Get().GetModule<Input>().SetMouseMode(MouseMode::Disabled);
 

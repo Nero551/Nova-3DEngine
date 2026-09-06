@@ -21,10 +21,10 @@ float Factorial(int x) {
     if (x < 0)
         U::Logger::Error("Factorial requires a non-negative integer");
 
-    float result = 1.0f;
+    int result = 1;
 
     for (int i = x; i > 0; i--)
-        result *= static_cast<float>(i);
+        result *= i;
 
     return result;
 }

@@ -21,7 +21,7 @@ struct Vector2 {
      * @brief Constructs a vector from polar coordinates (r,theta)
      * @param polar Polar coords to use.
      */
-    [[nodiscard]] static Vector2 FromPolar(Polar polar);
+    [[nodiscard]] static Vector2 FromPolar(const Polar& polar);
 
     /**
      * @brief Creates a zero vector.

@@ -35,13 +35,14 @@ Function Function::Inverse(float domainMin, float domainMax) const {
     return [f = *this, domainMin, domainMax](const float y) { return f.InverseEvaluate(y, domainMin, domainMax); };
 }
 
-float Function::Derivative(const float x, const float dx, const DifferentiationMethod method) const {
-    return Differentiate(dx, method).Evaluate(x);
+
+float Function::Derivative(const float x, const float dx, const DifferentiationMethod method, bool relativeStep) const {
+    return Differentiate(dx, method, relativeStep).Evaluate(x);
 }
 
-Function Function::Differentiate(const float dx, DifferentiationMethod method) const {
-    auto derivative = [f = *this, dx, method](const float x) -> float {
-        const float h = dx * std::max(1.0f, std::abs(x));
+Function Function::Differentiate(const float dx, DifferentiationMethod method, bool relativeStep) const {
+    auto derivative = [f = *this, dx, method, relativeStep](const float x) -> float {
+        const float h = relativeStep ? dx * std::max(1.0f, std::abs(x)) : dx;
         switch (method) {
         case DifferentiationMethod::Central:
             return (f(x + h) - f(x - h)) / (2.0f * h);
@@ -65,6 +66,8 @@ Function Function::Integrate(float lowerBound, float dx, IntegrationMethod metho
         float result = 0.0f;
 
         for (float x = lowerBound; x < upperBound; x += dx) {
+            // to prevent overshooting the upper bound. ex: dx = 3, x = 9, upper bound = 11. if not for this,
+            // it would calculate width between 9 and 11 as 3 and not 2. applies to tiny dx like 0.001 as well.
             const float width = std::min(dx, upperBound - x);
 
             switch (method) {
@@ -100,7 +103,8 @@ float Function::Integral(const float lowerBound, const float upperBound, const f
 Function Function::Taylor(int terms, float a) {
     Function taylor = [terms, a, f = *this](const float x) {
         float result = 0.0f;
-        auto currentFunc = f;
+        Function currentFunc = f;
+
         for (int n = 0; n < terms; n++) {
             result += currentFunc(a) * Pow(x - a, n) / Factorial(n);
             currentFunc = currentFunc.Differentiate();

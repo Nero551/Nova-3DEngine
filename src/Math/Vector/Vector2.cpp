@@ -6,7 +6,7 @@
 #include "Math/Common/Interpolation.hpp"
 
 namespace N::M {
-Vector2 Vector2::FromPolar(Polar polar) {
+Vector2 Vector2::FromPolar(const Polar& polar) {
     return { polar.Magnitude * std::cos(polar.Angle), polar.Magnitude * std::sin(polar.Angle) };
 }
 

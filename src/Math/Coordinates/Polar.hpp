@@ -21,7 +21,7 @@ struct Polar {
     /**
      * @brief Constructs a polar coordinate.
      * @param angle The angle in radians.
-     * @param magnitude The distance from the origin.
+     * @param magnitude The distance from the origin. Default is 1.
      */
     Polar(float angle, float magnitude = 1) : Angle(angle), Magnitude(magnitude) {
     }
