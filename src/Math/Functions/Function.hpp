@@ -4,6 +4,9 @@
 #include "Math/Common/Comparison.hpp"
 #include "Utilities/Logger.hpp"
 
+template <typename T>
+concept IsScalar = std::same_as<std::remove_cvref_t<T>, float>;
+
 namespace N::M {
 /** @brief Represents a mathematical function mapping an Input type to an Output type. */
 template <typename Input, typename Output> struct Function {
@@ -46,12 +49,11 @@ template <typename Input, typename Output> struct Function {
      */
     Function<float, Output> Differentiate(
         float dx = 0.001f, DifferentiationMethod method = DifferentiationMethod::Central, bool relativeStep = true) const
-        requires std::same_as<Input, float>
+        requires IsScalar<Input>
     {
         return [f = *this, dx, method, relativeStep](const float x) -> Output
         {
             const float h = relativeStep ? dx * std::max(1.0f, std::abs(x)) : dx;
-
             switch (method)
             {
             case DifferentiationMethod::Central:
@@ -62,7 +64,7 @@ template <typename Input, typename Output> struct Function {
                 return (f(x) - f(x - h)) / h;
             default:
                 U::Logger::Fatal("Invalid Differentiation Method");
-                return Output{}; // unreachable
+                return Output{};
             }
         };
     }
@@ -76,7 +78,7 @@ template <typename Input, typename Output> struct Function {
      * @note Requires a scalar-to-scalar function that is monotonic over the given domain.
      */
     float InverseEvaluate(float y, float domainMin, float domainMax) const
-        requires std::same_as<Input, float> && std::same_as<Output, float>
+        requires IsScalar<Input> && IsScalar<Output>
     {
         float x = 0.0f;
         while (!NearlyEquals(domainMax, domainMin))
@@ -99,7 +101,7 @@ template <typename Input, typename Output> struct Function {
      * @note The function must be monotonic over the given domain.
      */
     Function<float, float> Inverse(float domainMin, float domainMax) const
-        requires std::same_as<Input, float> && std::same_as<Output, float>
+        requires IsScalar<Input> && IsScalar<Output>
     {
         return [f = *this, domainMin, domainMax](const float y) -> float { return f.InverseEvaluate(y, domainMin, domainMax); };
     }
@@ -114,7 +116,7 @@ template <typename Input, typename Output> struct Function {
      */
     Output Derivative(
         float x, float dx = 0.001f, DifferentiationMethod method = DifferentiationMethod::Central, bool relativeStep = true) const
-        requires std::same_as<Input, float>
+        requires IsScalar<Input>
     {
         return Differentiate(dx, method, relativeStep)(x);
     }
@@ -129,7 +131,7 @@ template <typename Input, typename Output> struct Function {
      */
     Output Integral(
         float lowerBound, float upperBound, float dx = 0.001f, IntegrationMethod method = IntegrationMethod::Midpoint) const
-        requires std::same_as<Input, float>
+        requires IsScalar<Input>
     {
         return Integrate(lowerBound, dx, method)(upperBound);
     }
@@ -141,7 +143,7 @@ template <typename Input, typename Output> struct Function {
      * @return A function representing the Taylor polynomial approximation.
      */
     Function<float, Output> Taylor(float terms, float a) const
-        requires std::same_as<Input, float>
+        requires IsScalar<Input>
     {
         return [terms, a, f = *this](const float x) -> Output
         {
@@ -162,7 +164,7 @@ template <typename Input, typename Output> struct Function {
      * @return A function representing the Maclaurin polynomial approximation.
      */
     Function<float, Output> Maclaurin(float terms) const
-        requires std::same_as<Input, float>
+        requires IsScalar<Input>
     {
         return Taylor(terms, 0.0f);
     }
@@ -176,7 +178,7 @@ template <typename Input, typename Output> struct Function {
      */
     Function<float, Output> Integrate(
         float lowerBound, float dx = 0.001f, IntegrationMethod method = IntegrationMethod::Midpoint) const
-        requires std::same_as<Input, float>
+        requires IsScalar<Input>
     {
         return [f = *this, lowerBound, dx, method](const float upperBound) -> Output
         {
@@ -221,86 +223,82 @@ template <typename Input, typename Output> struct Function {
     /** @brief Adds two functions pointwise, producing f(x) + g(x). */
     Function operator+(const Function& g) const
     {
-        return [f = *this, g](const Input input) -> Output { return f(input) + g(input); };
+        return [f = *this, g](const Input x) -> Output { return f(x) + g(x); };
     }
 
     /** @brief Subtracts two functions pointwise, producing f(x) - g(x). */
     Function operator-(const Function& g) const
     {
-        return [f = *this, g](const Input input) -> Output { return f(input) - g(input); };
+        return [f = *this, g](const Input x) -> Output { return f(x) - g(x); };
     }
 
     /** @brief Multiplies two functions pointwise, producing f(x) * g(x). */
     Function operator*(const Function& g) const
     {
-        return [f = *this, g](const Input input) -> Output { return f(input) * g(input); };
+        return [f = *this, g](const Input x) -> Output { return f(x) * g(x); };
     }
 
     /** @brief Divides two functions pointwise, producing f(x) / g(x). */
     Function operator/(const Function& g) const
     {
-        return [f = *this, g](const Input input) -> Output { return f(input) / g(input); };
+        return [f = *this, g](const Input x) -> Output { return f(x) / g(x); };
     }
 
     /** @brief Adds another function pointwise to this function. */
     Function& operator+=(const Function& g)
     {
-        Func = [f = *this, g](const Input input) -> Output { return f(input) + g(input); };
-        return *this;
+        return *this = *this + g;
     }
 
     /** @brief Subtracts another function pointwise from this function. */
     Function& operator-=(const Function& g)
     {
-        Func = [f = *this, g](const Input input) -> Output { return f(input) - g(input); };
-        return *this;
+        return *this = *this - g;
     }
 
     /** @brief Multiplies this function pointwise by another function. */
     Function& operator*=(const Function& g)
     {
-        Func = [f = *this, g](const Input input) -> Output { return f(input) * g(input); };
-        return *this;
+        return *this = *this * g;
     }
 
     /** @brief Divides this function pointwise by another function. */
     Function& operator/=(const Function& g)
     {
-        Func = [f = *this, g](const Input input) -> Output { return f(input) / g(input); };
-        return *this;
+        return *this = *this / g;
     }
 
     /** @brief Negates the function, producing -f(x). */
     Function operator-() const
     {
-        return [f = *this](const Input input) -> Output { return -f(input); };
+        return [f = *this](const Input x) -> Output { return -f(x); };
     }
 
     /** @brief Adds a value of the Output type to the function result. */
     Function operator+(const Output& value) const
     {
-        return [f = *this, value](const Input input) -> Output { return f(input) + value; };
+        return [f = *this, value](const Input x) -> Output { return f(x) + value; };
     }
 
     /** @brief Subtracts a value of the Output type from the function result. */
     Function operator-(const Output& value) const
     {
-        return [f = *this, value](const Input input) -> Output { return f(input) - value; };
+        return [f = *this, value](const Input x) -> Output { return f(x) - value; };
     }
 
     /** @brief Multiplies the function result by a value of the Output type. */
     Function operator*(const Output& value) const
     {
-        return [f = *this, value](const Input input) -> Output { return f(input) * value; };
+        return [f = *this, value](const Input x) -> Output { return f(x) * value; };
     }
 
     /** @brief Divides the function result by a value of the Output type. */
     Function operator/(const Output& value) const
     {
-        return [f = *this, value](const Input input) -> Output { return f(input) / value; };
+        return [f = *this, value](const Input x) -> Output { return f(x) / value; };
     }
 
-    /** @brief Adds a value of the Output type to the function result from the left‑hand side. */
+    /** @brief Adds a value of the Output type to the function result from the left-hand side. */
     friend Function operator+(const Output& value, const Function& f)
     {
         return f + value;
@@ -309,7 +307,7 @@ template <typename Input, typename Output> struct Function {
     /** @brief Subtracts the function result from a value of the Output type. */
     friend Function operator-(const Output& value, const Function& f)
     {
-        return [f, value](const Input& input) -> Output { return value - f(input); };
+        return [f, value](const Input& x) -> Output { return value - f(x); };
     }
 
     /** @brief Multiplies a value of the Output type by the function result. */
@@ -321,123 +319,115 @@ template <typename Input, typename Output> struct Function {
     /** @brief Divides a value of the Output type by the function result. */
     friend Function operator/(const Output& value, const Function& f)
     {
-        return [f, value](const Input& input) -> Output { return value / f(input); };
+        return [f, value](const Input& x) -> Output { return value / f(x); };
     }
 
     /** @brief Adds a value of the Output type to this function. */
     Function& operator+=(const Output& value)
     {
-        Func = [f = *this, value](const Input input) -> Output { return f(input) + value; };
-        return *this;
+        return *this = *this + value;
     }
 
     /** @brief Subtracts a value of the Output type from the function result. */
     Function& operator-=(const Output& value)
     {
-        Func = [f = *this, value](const Input input) -> Output { return f(input) - value; };
-        return *this;
+        return *this = *this - value;
     }
 
     /** @brief Multiplies this function by a value of the Output type. */
     Function& operator*=(const Output& value)
     {
-        Func = [f = *this, value](const Input input) -> Output { return f(input) * value; };
-        return *this;
+        return *this = *this * value;
     }
 
     /** @brief Divides this function by a value of the Output type. */
     Function& operator/=(const Output& value)
     {
-        Func = [f = *this, value](const Input input) -> Output { return f(input) / value; };
-        return *this;
+        return *this = *this / value;
     }
 
     /** @brief Adds a scalar to the function result. */
     Function operator+(float scalar) const
-        requires(!std::same_as<Output, float>)
+        requires(!IsScalar<Output>)
     {
-        return [f = *this, scalar](const Input input) -> Output { return f(input) + scalar; };
+        return [f = *this, scalar](const Input x) -> Output { return f(x) + scalar; };
     }
 
     /** @brief Subtracts a scalar from the function result. */
     Function operator-(float scalar) const
-        requires(!std::same_as<Output, float>)
+        requires(!IsScalar<Output>)
     {
-        return [f = *this, scalar](const Input input) -> Output { return f(input) - scalar; };
+        return [f = *this, scalar](const Input x) -> Output { return f(x) - scalar; };
     }
 
     /** @brief Multiplies the function result by a scalar. */
     Function operator*(float scalar) const
-        requires(!std::same_as<Output, float>)
+        requires(!IsScalar<Output>)
     {
-        return [f = *this, scalar](const Input input) -> Output { return f(input) * scalar; };
+        return [f = *this, scalar](const Input x) -> Output { return f(x) * scalar; };
     }
 
     /** @brief Divides the function result by a scalar. */
     Function operator/(float scalar) const
-        requires(!std::same_as<Output, float>)
+        requires(!IsScalar<Output>)
     {
-        return [f = *this, scalar](const Input input) -> Output { return f(input) / scalar; };
+        return [f = *this, scalar](const Input x) -> Output { return f(x) / scalar; };
     }
 
-    /** @brief Adds a scalar to the function result from the left‑hand side. */
+    /** @brief Adds a scalar to the function result from the left-hand side. */
     friend Function operator+(float scalar, const Function& f)
-        requires(!std::same_as<Output, float>)
+        requires(!IsScalar<Output>)
     {
         return f + scalar;
     }
 
     /** @brief Subtracts the function result from a scalar. */
     friend Function operator-(float scalar, const Function& f)
-        requires(!std::same_as<Output, float>)
+        requires(!IsScalar<Output>)
     {
-        return [scalar, f](const Input& input) -> Output { return scalar - f(input); };
+        return [scalar, f](const Input& x) -> Output { return scalar - f(x); };
     }
 
     /** @brief Multiplies a scalar by the function result. */
     friend Function operator*(float scalar, const Function& f)
-        requires(!std::same_as<Output, float>)
+        requires(!IsScalar<Output>)
     {
         return f * scalar;
     }
 
     /** @brief Divides a scalar by the function result. */
     friend Function operator/(float scalar, const Function& f)
-        requires(!std::same_as<Output, float>)
+        requires(!IsScalar<Output>)
     {
-        return [scalar, f](const Input& input) -> Output { return scalar / f(input); };
+        return [scalar, f](const Input& x) -> Output { return scalar / f(x); };
     }
 
     /** @brief Adds a scalar to this function. */
     Function& operator+=(float scalar)
-        requires(!std::same_as<Output, float>)
+        requires(!IsScalar<Output>)
     {
-        Func = [f = *this, scalar](const Input input) -> Output { return f(input) + scalar; };
-        return *this;
+        return *this = *this + scalar;
     }
 
     /** @brief Subtracts a scalar from the function result. */
     Function& operator-=(float scalar)
-        requires(!std::same_as<Output, float>)
+        requires(!IsScalar<Output>)
     {
-        Func = [f = *this, scalar](const Input input) -> Output { return f(input) - scalar; };
-        return *this;
+        return *this = *this - scalar;
     }
 
     /** @brief Multiplies this function by a scalar. */
     Function& operator*=(float scalar)
-        requires(!std::same_as<Output, float>)
+        requires(!IsScalar<Output>)
     {
-        *this = *this * scalar;
-        return *this;
+        return *this = *this * scalar;
     }
 
     /** @brief Divides this function by a scalar. */
     Function& operator/=(float scalar)
-        requires(!std::same_as<Output, float>)
+        requires(!IsScalar<Output>)
     {
-        Func = [f = *this, scalar](const Input input) -> Output { return f(input) / scalar; };
-        return *this;
+        return *this = *this / scalar;
     }
 
 private:
