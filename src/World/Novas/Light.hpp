@@ -4,7 +4,8 @@
 
 namespace N {
 struct Light : Nova3D {
-    void Initialize() override {
+    void Initialize() override
+    {
         Nova3D::Initialize();
         World::Get().Query.Pool<LightComponent>().Add(Id);
     }

@@ -5,7 +5,8 @@
 
 namespace N {
 struct MeshInstance3D : Nova3D {
-    void Initialize() override {
+    void Initialize() override
+    {
         Nova3D::Initialize();
         World::Get().Query.Pool<MaterialComponent>().Add(Id);
         World::Get().Query.Pool<MeshComponent>().Add(Id);

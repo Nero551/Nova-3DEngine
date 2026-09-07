@@ -8,7 +8,8 @@
 #include "Core/Services/ResourceManager.hpp"
 
 namespace N {
-void LightingSystem::Start() {
+void LightingSystem::Start()
+{
     auto& resources = Service::Get<ResourceManager>();
 
     LightingBuffer = &resources.Load<Uniformbuffer>("[Renderer] Lighting Buffer");
@@ -20,13 +21,15 @@ void LightingSystem::Start() {
     LightingBuffer->Size = HeaderSize + World::Get().MaxLights * LightStride;
 }
 
-void LightingSystem::Render() {
+void LightingSystem::Render()
+{
     auto& world = World::Get();
 
     LightingBuffer->Set(static_cast<int>(world.Query.With<LightComponent, Transform3DComponent>().EntityIds.size()), 0);
 
     int i = 0;
-    for (auto [entityId, lightComponent, transform] : world.Query.With<LightComponent, Transform3DComponent>()) {
+    for (auto [entityId, lightComponent, transform] : world.Query.With<LightComponent, Transform3DComponent>())
+    {
         constexpr size_t LightStride = 144;
         const size_t LightOffset = 16 + i * LightStride;
 

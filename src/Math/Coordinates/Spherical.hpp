@@ -24,11 +24,11 @@ struct Spherical {
      * @param azimuth Angle around the vertical axis, in radians.
      * @param magnitude Length of the represented vector.
      */
-    Spherical(float elevation, float azimuth, float magnitude = 1) :
-        Elevation(elevation), Azimuth(azimuth), Magnitude(magnitude) {
-    }
+    Spherical(float elevation, float azimuth, float magnitude = 1) : Elevation(elevation), Azimuth(azimuth), Magnitude(magnitude)
+    {}
 
-    friend std::ostream& operator<<(std::ostream& os, const Spherical& spherical) {
+    friend std::ostream& operator<<(std::ostream& os, const Spherical& spherical)
+    {
         os << "(" << spherical.Magnitude << ", " << Deg(spherical.Elevation) << "°, " << Deg(spherical.Azimuth) << "°"
            << ")";
         return os;

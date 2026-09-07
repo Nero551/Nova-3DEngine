@@ -3,6 +3,7 @@ project(UnitTests)
 
 file(GLOB_RECURSE ENGINE_SOURCES
         ../src/Math/*.cpp
+        ../src/Utilities/*.cpp
 )
 
 file(GLOB_RECURSE TEST_SOURCES

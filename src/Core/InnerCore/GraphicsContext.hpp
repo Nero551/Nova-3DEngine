@@ -10,19 +10,23 @@ namespace N {
  * prevents initialization errors.
  */
 struct GraphicsContext {
-    GraphicsContext() {
+    GraphicsContext()
+    {
         glfwSetErrorCallback(
             [](const int error, const char* description) { U::Logger::Error("[GLFW]", error, ": ", description); });
-        if (!glfwInit()) {
+        if (!glfwInit())
+        {
             throw std::runtime_error("Failed to initialize GLFW");
         }
 
-        if (!glslang::InitializeProcess()) {
+        if (!glslang::InitializeProcess())
+        {
             throw std::runtime_error("Failed to initialize glslang");
         }
     }
 
-    ~GraphicsContext() {
+    ~GraphicsContext()
+    {
         glslang::FinalizeProcess();
         glfwTerminate();
     }

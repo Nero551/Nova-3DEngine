@@ -3,9 +3,11 @@
 #include "Utilities/Logger.hpp"
 
 namespace N {
-void Cubemap::Generate() {
+void Cubemap::Generate()
+{
     Texture::Generate();
-    if (IsGenerated()) {
+    if (IsGenerated())
+    {
         return;
     }
 
@@ -13,8 +15,8 @@ void Cubemap::Generate() {
     Height = Front.Height;
 
     if (Back.Width != Width || Back.Height != Height || Top.Width != Width || Top.Height != Height || Bottom.Width != Width ||
-        Bottom.Height != Height || Right.Width != Width || Right.Height != Height || Left.Width != Width ||
-        Left.Height != Height) {
+        Bottom.Height != Height || Right.Width != Width || Right.Height != Height || Left.Width != Width || Left.Height != Height)
+    {
         U::Logger::Error("Cubemap faces must all have the same dimensions.");
         return;
     }
@@ -36,12 +38,14 @@ void Cubemap::Generate() {
     glTextureSubImage3D(Id, 0, 0, 0, 4, Width, Height, 1, format, dataType, Front.Pixels.data());
     glTextureSubImage3D(Id, 0, 0, 0, 5, Width, Height, 1, format, dataType, Back.Pixels.data());
 
-    if (AutoMipmaps) {
+    if (AutoMipmaps)
+    {
         glGenerateTextureMipmap(Id);
     }
 }
 
-void Cubemap::SetParameters() const {
+void Cubemap::SetParameters() const
+{
     glTextureParameteri(Id, GL_TEXTURE_WRAP_S, static_cast<GLint>(WrapS));
     glTextureParameteri(Id, GL_TEXTURE_WRAP_T, static_cast<GLint>(WrapT));
     glTextureParameteri(Id, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(MinFilter));

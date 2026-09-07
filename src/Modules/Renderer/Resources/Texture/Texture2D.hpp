@@ -46,8 +46,8 @@ struct Texture2D : Texture {
      *
      * @param name Resource name.
      */
-    Texture2D(const std::string& name) : Texture(name, TextureTarget::Texture2D) {
-    }
+    Texture2D(const std::string& name) : Texture(name, TextureTarget::Texture2D)
+    {}
 
     /**
      * @brief Generates the OpenGL 2D texture object.

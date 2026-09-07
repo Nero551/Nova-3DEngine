@@ -6,7 +6,7 @@ namespace N {
 struct EntityCreated : Event<EntityCreated> {
     Entity& entity;
 
-    EntityCreated(Entity& entity) : entity(entity) {
-    }
+    EntityCreated(Entity& entity) : entity(entity)
+    {}
 };
 } // namespace N

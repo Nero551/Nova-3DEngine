@@ -2,7 +2,8 @@
 #include "Core/Services/ResourceManager.hpp"
 
 namespace N {
-Mesh& Primitives::CreateQuad(const std::string& name) {
+Mesh& Primitives::CreateQuad(const std::string& name)
+{
     std::vector<Vertex> vertices = {
         { { -0.5f, -0.5f, 0.0f, 1.0f }, { 1, 1, 1, 1 }, { 0, 0 }, { 0, 0, 1 } },
         { { 0.5f, -0.5f, 0.0f, 1.0f }, { 1, 1, 1, 1 }, { 1, 0 }, { 0, 0, 1 } },

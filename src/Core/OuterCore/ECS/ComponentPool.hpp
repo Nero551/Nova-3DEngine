@@ -17,37 +17,47 @@ template <ComponentType T> struct ComponentPool : IComponentPool {
         ComponentPool& Pool;
         size_t Index;
 
-        std::pair<unsigned int, T&> operator*() const {
+        std::pair<unsigned int, T&> operator*() const
+        {
             return { Pool.EntityIds[Index], Pool.Components[Index] };
         }
 
-        Iterator& operator++() {
+        Iterator& operator++()
+        {
             ++Index;
             return *this;
         }
 
-        bool operator!=(const Iterator& other) const {
+        bool operator!=(const Iterator& other) const
+        {
             return Index != other.Index;
         }
     };
 
-    Iterator begin() {
+    Iterator begin()
+    {
         return { *this, 0 };
     }
 
-    Iterator end() {
+    Iterator end()
+    {
         return { *this, Components.size() };
     }
 
-    ComponentPool() {
-        Service::Get<EventBus>().Sub<EntityDestroyed>([this](const EntityDestroyed& event) {
-            if (HasId(event.entity.Id)) {
-                RemoveById(event.entity.Id);
-            }
-        });
+    ComponentPool()
+    {
+        Service::Get<EventBus>().Sub<EntityDestroyed>(
+            [this](const EntityDestroyed& event)
+            {
+                if (HasId(event.entity.Id))
+                {
+                    RemoveById(event.entity.Id);
+                }
+            });
     }
 
-    T& Add(unsigned int entityId) {
+    T& Add(unsigned int entityId)
+    {
         EntityIds.push_back(entityId);
         Indices.emplace(entityId, EntityIds.size() - 1);
         Components.emplace_back();
@@ -55,42 +65,51 @@ template <ComponentType T> struct ComponentPool : IComponentPool {
         return Components.back();
     }
 
-    bool HasId(unsigned int entityId) const {
+    bool HasId(unsigned int entityId) const
+    {
         return Indices.contains(entityId);
     }
 
-    unsigned int GetIdByIndex(size_t index) const {
+    unsigned int GetIdByIndex(size_t index) const
+    {
         return EntityIds.at(index);
     }
 
-    T& GetComponentByIndex(size_t index) {
+    T& GetComponentByIndex(size_t index)
+    {
         return Components.at(index);
     }
 
-    T& GetComponentById(unsigned int entityId) {
+    T& GetComponentById(unsigned int entityId)
+    {
         auto it = Indices.find(entityId);
 
-        if (it != Indices.end()) {
+        if (it != Indices.end())
+        {
             return Components[it->second];
         }
         U::Logger::Fatal("Component not found");
     }
 
-    void RemoveByIndex(size_t index) {
+    void RemoveByIndex(size_t index)
+    {
         Components.erase(Components.begin() + index);
         Indices.erase(EntityIds[index]);
         EntityIds.erase(EntityIds.begin() + index);
     }
 
-    void RemoveById(unsigned int entityId) {
+    void RemoveById(unsigned int entityId)
+    {
         auto it = Indices.find(entityId);
 
-        if (it != Indices.end()) {
+        if (it != Indices.end())
+        {
             RemoveByIndex(it->second);
         }
     }
 
-    size_t Size() const {
+    size_t Size() const
+    {
         return EntityIds.size();
     }
 

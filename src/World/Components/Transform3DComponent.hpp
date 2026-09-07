@@ -21,8 +21,10 @@ private:
     M::Matrix3 DirtyNormalMatrix = M::Matrix3::Identity;
 
 public:
-    [[nodiscard]] M::Matrix4 GetModelMatrix() {
-        if (DirtyPos != GlobalPosition || DirtyScale != GlobalScale || DirtyRotation != GlobalRotation) {
+    [[nodiscard]] M::Matrix4 GetModelMatrix()
+    {
+        if (DirtyPos != GlobalPosition || DirtyScale != GlobalScale || DirtyRotation != GlobalRotation)
+        {
             DirtyPos = GlobalPosition;
             DirtyRotation = GlobalRotation;
             DirtyScale = GlobalScale;
@@ -39,8 +41,10 @@ public:
         return DirtyModelMatrix;
     }
 
-    [[nodiscard]] M::Matrix3 GetNormalMatrix() {
-        if (DirtyPos != GlobalPosition || DirtyScale != GlobalScale || DirtyRotation != GlobalRotation) {
+    [[nodiscard]] M::Matrix3 GetNormalMatrix()
+    {
+        if (DirtyPos != GlobalPosition || DirtyScale != GlobalScale || DirtyRotation != GlobalRotation)
+        {
             DirtyNormalMatrix = GetModelMatrix().ToMatrix3().Inverse().Transpose();
 
             return DirtyNormalMatrix;
@@ -48,15 +52,18 @@ public:
         return DirtyNormalMatrix;
     }
 
-    [[nodiscard]] M::Vector3 GetRight() const {
+    [[nodiscard]] M::Vector3 GetRight() const
+    {
         return GlobalRotation.Transform({ 1, 0, 0 });
     }
 
-    [[nodiscard]] M::Vector3 GetUp() const {
+    [[nodiscard]] M::Vector3 GetUp() const
+    {
         return GlobalRotation.Transform({ 0, 1, 0 });
     }
 
-    [[nodiscard]] M::Vector3 GetForward() const {
+    [[nodiscard]] M::Vector3 GetForward() const
+    {
         return GlobalRotation.Transform({ 0, 0, -1 });
     }
 

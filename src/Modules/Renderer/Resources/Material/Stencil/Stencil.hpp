@@ -31,8 +31,8 @@ struct Stencil {
     /** @brief Action to take if both stencil and depth tests pass. */
     StencilAction SDPass = StencilAction::Keep;
 
-    Stencil(const bool enabled) : Enabled(enabled) {
-    }
+    Stencil(const bool enabled) : Enabled(enabled)
+    {}
 
     /** @brief Applies the configured stencil state to the OpenGL context. */
     void Apply();

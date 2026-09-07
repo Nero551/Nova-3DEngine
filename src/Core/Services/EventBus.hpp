@@ -11,25 +11,31 @@ concept EventType = std::derived_from<T, IEvent>;
 /** @brief Global event dispatcher and deferred event queue. */
 struct EventBus : Service {
     /** @brief Constructs and immediately dispatches a global event. */
-    template <EventType T, typename... Args> void InstantFire(Args&&... args) {
-        if constexpr (!std::constructible_from<T, Args...>) {
+    template <EventType T, typename... Args> void InstantFire(Args&&... args)
+    {
+        if constexpr (!std::constructible_from<T, Args...>)
+        {
             U::Logger::Fatal(std::string("Event: ") + typeid(T).name() + " Can't Be Constructed From the Given Arguments.");
         }
 
         auto listeners = Listeners.find(typeid(T));
-        if (listeners == Listeners.end()) {
+        if (listeners == Listeners.end())
+        {
             return;
         }
 
         T event{ std::forward<Args>(args)... };
-        for (auto& callback : listeners->second) {
+        for (auto& callback : listeners->second)
+        {
             callback(event);
         }
     }
 
     /** @brief Queues a global event for deferred dispatch at the end of the frame. */
-    template <EventType T, typename... Args> void Fire(Args&&... args) {
-        if constexpr (!std::constructible_from<T, Args...>) {
+    template <EventType T, typename... Args> void Fire(Args&&... args)
+    {
+        if constexpr (!std::constructible_from<T, Args...>)
+        {
             U::Logger::Fatal(std::string("Event: ") + typeid(T).name() + " Can't Be Constructed From the Given Arguments.");
         }
 
@@ -43,7 +49,8 @@ struct EventBus : Service {
     /** @brief Subscribes a callback to a global event type and returns its subscription ID. */
     template <EventType T, typename F>
         requires std::invocable<F, const T&>
-    std::size_t Sub(F&& callback) {
+    std::size_t Sub(F&& callback)
+    {
         auto method = [callback = std::forward<F>(callback)](IEvent& e) mutable { callback(static_cast<T&>(e)); };
 
         const auto subscription = ++NextSubscription;
@@ -52,18 +59,23 @@ struct EventBus : Service {
     }
 
     /** @brief Removes a global event subscription by its subscription ID. */
-    template <EventType T> void Unsub(std::size_t subscription) {
+    template <EventType T> void Unsub(std::size_t subscription)
+    {
         auto it = Listeners.find(typeid(T));
-        if (it != Listeners.end()) {
+        if (it != Listeners.end())
+        {
             size_t i = 0;
-            while (i < it->second.size() && it->second.at(i).Subscription != subscription) {
+            while (i < it->second.size() && it->second.at(i).Subscription != subscription)
+            {
                 i++;
             }
 
-            if (i < it->second.size()) {
+            if (i < it->second.size())
+            {
                 it->second.erase(it->second.begin() + i);
 
-                if (it->second.empty()) {
+                if (it->second.empty())
+                {
                     Listeners.erase(it);
                 }
             }

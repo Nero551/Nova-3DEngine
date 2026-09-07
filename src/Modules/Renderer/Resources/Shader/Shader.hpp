@@ -54,7 +54,8 @@ struct Shader : Resource {
      *
      * @note The uniform is uploaded the next time the shader is used.
      */
-    template <UniformType T> void SetUniform(const T& uniform) {
+    template <UniformType T> void SetUniform(const T& uniform)
+    {
         PendingUniforms[uniform.Name] = std::make_unique<T>(uniform);
     }
 

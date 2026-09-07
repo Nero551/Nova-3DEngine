@@ -4,7 +4,8 @@
 
 namespace N {
 struct Nova3D : Nova {
-    void Initialize() override {
+    void Initialize() override
+    {
         Nova::Initialize();
         World::Get().Query.Pool<Transform3DComponent>().Add(Id);
     }

@@ -1,31 +1,29 @@
-# Generated from CLion C/C++ Code Style settings
 ---
 Language: Cpp
 BasedOnStyle: LLVM
 AccessModifierOffset: -4
+AlignAfterOpenBracket: false
 AlignConsecutiveAssignments: false
 AlignConsecutiveDeclarations: false
 AlignOperands: DontAlign
 AlignTrailingComments: false
 AllowShortBlocksOnASingleLine: Never
 AllowShortFunctionsOnASingleLine: None
+AlwaysBreakAfterDefinitionReturnType: None
 AlwaysBreakTemplateDeclarations: No
-Cpp11BracedListStyle: Block
-AlignAfterOpenBracket: false
-BinPackArguments: false
 BraceWrapping:
   AfterCaseLabel: true
   AfterClass: false
-  AfterControlStatement: Never
+  AfterControlStatement: Always
   AfterEnum: false
-  AfterFunction: false
+  AfterFunction: true
   AfterNamespace: false
   AfterStruct: false
   AfterUnion: false
   AfterExternBlock: false
   BeforeCatch: true
   BeforeElse: true
-  BeforeLambdaBody: false
+  BeforeLambdaBody: true
   BeforeWhile: true
   SplitEmptyFunction: false
   SplitEmptyRecord: false
@@ -35,6 +33,7 @@ BreakConstructorInitializers: AfterColon
 BreakConstructorInitializersBeforeComma: false
 ColumnLimit: 130
 ConstructorInitializerAllOnOneLineOrOnePerLine: false
+Cpp11BracedListStyle: Block
 IncludeCategories:
   - Regex: '^<.*'
     Priority: 1

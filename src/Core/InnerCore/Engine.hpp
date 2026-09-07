@@ -46,9 +46,11 @@ public:
     double GetTime() const;
 
     /** @brief Returns a registered module by type. */
-    template <ModuleType T> T& GetModule() {
+    template <ModuleType T> T& GetModule()
+    {
         auto module = Modules.find(typeid(T));
-        if (module == Modules.end()) {
+        if (module == Modules.end())
+        {
             U::Logger::Fatal(std::format("Module {} not found", typeid(T).name()));
         }
         return static_cast<T&>(*module->second);
@@ -79,7 +81,8 @@ private:
     void Configure();
 
     /** @brief Creates and registers a module. */
-    template <ModuleType T> T& AddModule() {
+    template <ModuleType T> T& AddModule()
+    {
         auto module = std::make_unique<T>();
         Modules.emplace(typeid(T), std::move(module));
         return static_cast<T&>(*Modules.find(typeid(T))->second);

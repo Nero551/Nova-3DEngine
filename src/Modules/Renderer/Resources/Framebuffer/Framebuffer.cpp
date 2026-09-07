@@ -3,42 +3,51 @@
 #include "Modules/Renderer/Enums/BufferBit.hpp"
 
 namespace N {
-Framebuffer::Framebuffer(const std::string& name) : Resource(name) {
-}
+Framebuffer::Framebuffer(const std::string& name) : Resource(name)
+{}
 
-Framebuffer::~Framebuffer() {
+Framebuffer::~Framebuffer()
+{
     glDeleteFramebuffers(1, &Id);
 }
 
-void Framebuffer::Generate() {
-    if (IsGenerated()) {
+void Framebuffer::Generate()
+{
+    if (IsGenerated())
+    {
         return;
     }
     glCreateFramebuffers(1, &Id);
 }
 
-void Framebuffer::Regenerate() {
+void Framebuffer::Regenerate()
+{
     glDeleteFramebuffers(1, &Id);
     Id = 0;
 }
 
-void Framebuffer::Bind() {
+void Framebuffer::Bind()
+{
     Generate();
     glBindFramebuffer(static_cast<GLenum>(Target), Id);
 }
 
-void Framebuffer::Unbind() {
+void Framebuffer::Unbind()
+{
     glBindFramebuffer(static_cast<GLenum>(Target), 0);
 }
 
-bool Framebuffer::IsGenerated() const {
+bool Framebuffer::IsGenerated() const
+{
     return Id != 0;
 }
 
-bool Framebuffer::IsComplete() const {
+bool Framebuffer::IsComplete() const
+{
     const GLenum status = glCheckNamedFramebufferStatus(Id, static_cast<GLenum>(Target));
 
-    if (status != GL_FRAMEBUFFER_COMPLETE) {
+    if (status != GL_FRAMEBUFFER_COMPLETE)
+    {
         U::Logger::Error("Framebuffer: " + Name + " is not complete");
         return false;
     }
@@ -46,18 +55,22 @@ bool Framebuffer::IsComplete() const {
     return true;
 }
 
-void Framebuffer::AttachTexture(FramebufferAttachment textureAttachment, Texture& texture) {
+void Framebuffer::AttachTexture(FramebufferAttachment textureAttachment, Texture& texture)
+{
     Generate();
     texture.Generate();
     TextureAttachments.emplace(textureAttachment, &texture);
     glNamedFramebufferTexture(Id, static_cast<GLenum>(textureAttachment), texture.GetId(), 0);
 }
 
-void Framebuffer::Blit(Framebuffer& dst, int srcW, int srcH, int dstW, int dstH, BufferBit buffer, TextureFilter filter) {
-    if (!IsGenerated()) {
+void Framebuffer::Blit(Framebuffer& dst, int srcW, int srcH, int dstW, int dstH, BufferBit buffer, TextureFilter filter)
+{
+    if (!IsGenerated())
+    {
         Generate();
     }
-    if (!dst.IsGenerated()) {
+    if (!dst.IsGenerated())
+    {
         dst.Generate();
     }
 
@@ -65,15 +78,18 @@ void Framebuffer::Blit(Framebuffer& dst, int srcW, int srcH, int dstW, int dstH,
         Id, dst.Id, 0, 0, srcW, srcH, 0, 0, dstW, dstH, static_cast<GLbitfield>(buffer), static_cast<GLenum>(filter));
 }
 
-void Framebuffer::AttachRenderBuffer(FramebufferAttachment attachment, Renderbuffer& renderbuffer) {
+void Framebuffer::AttachRenderBuffer(FramebufferAttachment attachment, Renderbuffer& renderbuffer)
+{
     Generate();
     renderbuffer.Generate();
     RenderBuffers.emplace(attachment, &renderbuffer);
     glNamedFramebufferRenderbuffer(Id, static_cast<GLenum>(attachment), GL_RENDERBUFFER, renderbuffer.GetId());
 }
 
-void Framebuffer::Resize(int width, int height) {
-    for (auto& [attachment, texture] : TextureAttachments) {
+void Framebuffer::Resize(int width, int height)
+{
+    for (auto& [attachment, texture] : TextureAttachments)
+    {
         texture->Regenerate();
         texture->Width = width;
         texture->Height = height;
@@ -82,7 +98,8 @@ void Framebuffer::Resize(int width, int height) {
         glNamedFramebufferTexture(Id, static_cast<GLenum>(attachment), texture->GetId(), 0);
     }
 
-    for (auto& [attachment, buffer] : RenderBuffers) {
+    for (auto& [attachment, buffer] : RenderBuffers)
+    {
         buffer->Regenerate();
         buffer->Width = width;
         buffer->Height = height;
@@ -92,7 +109,8 @@ void Framebuffer::Resize(int width, int height) {
     }
 }
 
-unsigned int Framebuffer::GetId() const {
+unsigned int Framebuffer::GetId() const
+{
     return Id;
 }
 } // namespace N

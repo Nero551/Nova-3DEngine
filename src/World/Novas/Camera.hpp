@@ -4,7 +4,8 @@
 
 namespace N {
 struct Camera : Nova3D {
-    void Initialize() override {
+    void Initialize() override
+    {
         Nova3D::Initialize();
         World::Get().Query.Pool<CameraComponent>().Add(Id);
     }

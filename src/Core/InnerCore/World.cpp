@@ -11,46 +11,56 @@
 #include "World/experiments/calculus.hpp"
 
 namespace N {
-World& World::Get() {
+World& World::Get()
+{
     return Engine::Get().World;
 }
 
-void World::RemoveEntity(const unsigned int id) {
+void World::RemoveEntity(const unsigned int id)
+{
     auto entity = TryFindEntity(id);
-    if (!entity) {
+    if (!entity)
+    {
         return;
     }
     const auto descendants = entity->GetDescendants();
 
-    if (entity->HasParent()) {
+    if (entity->HasParent())
+    {
         entity->ClearParent();
     }
 
-    if (entity->Id == Root->Id) {
+    if (entity->Id == Root->Id)
+    {
         Root.Reset();
     }
 
     Service::Get<EventBus>().Fire<EntityDestroyed>(*entity);
     Entities.erase(id);
 
-    for (auto& descendant : descendants) {
+    for (auto& descendant : descendants)
+    {
         Service::Get<EventBus>().Fire<EntityDestroyed>(*descendant);
         Entities.erase(descendant->Id);
     }
 }
 
-Entity& World::FindEntity(unsigned int id) {
+Entity& World::FindEntity(unsigned int id)
+{
     auto entity = Entities.find(id);
-    if (entity == Entities.end()) {
+    if (entity == Entities.end())
+    {
         U::Logger::Fatal(std::format("Entity Not Found: {}", id));
     }
     return *entity->second;
 }
 
-U::CheckedPtr<Entity> World::TryFindEntity(const unsigned int id) {
+U::CheckedPtr<Entity> World::TryFindEntity(const unsigned int id)
+{
     auto entity = Entities.find(id);
 
-    if (entity == Entities.end()) {
+    if (entity == Entities.end())
+    {
         return nullptr;
     }
 
@@ -58,7 +68,8 @@ U::CheckedPtr<Entity> World::TryFindEntity(const unsigned int id) {
 }
 
 // TODO- quick flicker happens at the start of the run, its input mouse rapidly changing when changing MouseMode.
-void World::Start() {
+void World::Start()
+{
     AddSystem<Transform3DSystem>();
     AddSystem<calculus>();
 
@@ -77,56 +88,73 @@ void World::Start() {
     FirstScene firstScene;
     coordinateAxes.GetRoot().AttachChild(firstScene.GetRoot());
 
-    for (auto& system : Systems | std::views::values) {
+    for (auto& system : Systems | std::views::values)
+    {
         system->Start();
     }
 }
 
-void World::Update(const double dt) {
-    if (Engine::Get().GetModule<Input>().IsKeyHeld(Key::Escape)) {
+void World::Update(const double dt)
+{
+    if (Engine::Get().GetModule<Input>().IsKeyHeld(Key::Escape))
+    {
         Engine::Get().Shutdown();
     }
 
-    if (Engine::Get().GetModule<Input>().IsKeyReleased(Key::Q)) {
-        if (Engine::Get().GetModule<Input>().GetMouseMode() == MouseMode::Disabled) {
+    if (Engine::Get().GetModule<Input>().IsKeyReleased(Key::Q))
+    {
+        if (Engine::Get().GetModule<Input>().GetMouseMode() == MouseMode::Disabled)
+        {
             Engine::Get().GetModule<Input>().SetMouseMode(MouseMode::Normal);
         }
-        else {
+        else
+        {
             Engine::Get().GetModule<Input>().SetMouseMode(MouseMode::Disabled);
         }
     }
 
-    for (auto& system : Systems | std::views::values) {
+    for (auto& system : Systems | std::views::values)
+    {
         system->Update(dt);
     }
 }
 
-void World::FixedUpdate(const double fdt) {
-    for (auto& system : Systems | std::views::values) {
+void World::FixedUpdate(const double fdt)
+{
+    for (auto& system : Systems | std::views::values)
+    {
         system->FixedUpdate(fdt);
     }
 }
 
-void World::Stop() {
-    for (auto& system : Systems | std::views::values) {
+void World::Stop()
+{
+    for (auto& system : Systems | std::views::values)
+    {
         system->Stop();
     }
 }
 
-void World::BeginFrame(const double dt) {
-    for (auto& system : Systems | std::views::values) {
+void World::BeginFrame(const double dt)
+{
+    for (auto& system : Systems | std::views::values)
+    {
         system->BeginFrame(dt);
     }
 }
 
-void World::EndFrame(const double dt) {
-    for (auto& system : Systems | std::views::values) {
+void World::EndFrame(const double dt)
+{
+    for (auto& system : Systems | std::views::values)
+    {
         system->EndFrame(dt);
     }
 }
 
-void World::Render() {
-    for (auto& system : Systems | std::views::values) {
+void World::Render()
+{
+    for (auto& system : Systems | std::views::values)
+    {
         system->Render();
     }
 }

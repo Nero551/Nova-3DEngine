@@ -3,7 +3,8 @@
 
 namespace N {
 struct Nova : Entity {
-    void Initialize() override {
+    void Initialize() override
+    {
         Entity::Initialize();
     }
 };

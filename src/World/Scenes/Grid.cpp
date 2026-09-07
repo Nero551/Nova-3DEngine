@@ -12,7 +12,8 @@
 #include "World/Novas/Nova.hpp"
 
 namespace N {
-Grid::Grid() {
+Grid::Grid()
+{
     SetRoot(World::Get().CreateEntity<Nova>());
 
     CreateXY();
@@ -27,7 +28,8 @@ Grid::Grid() {
     // CreateGridLine(M::Quaternion::FromEulerXYZ({M::Rad(theta), M::Rad(theta), M::Rad(theta)}), 0);
 }
 
-void Grid::CreateGridLine(const M::Quaternion rotation, const M::Vector3 position) {
+void Grid::CreateGridLine(const M::Quaternion rotation, const M::Vector3 position)
+{
     auto& resourceManager = Service::Get<ResourceManager>();
     auto& shader = Service::Get<ResourceManager>().Load<Shader>("AxisShader");
     shader.AssignSource(resourceManager.Load<ShaderSource>("axisFrag", "Assets/Shaders/axisShader.frag", ShaderStage::Fragment));
@@ -49,43 +51,58 @@ void Grid::CreateGridLine(const M::Quaternion rotation, const M::Vector3 positio
     GetRoot().AttachChild(l);
 }
 
-void Grid::CreateXY() {
-    for (float x = -20; x < 20; x++) {
-        if (x != 0) {
+void Grid::CreateXY()
+{
+    for (float x = -20; x < 20; x++)
+    {
+        if (x != 0)
+        {
             CreateGridLine(M::Quaternion::FromEulerXYZ({ M::Rad(90), 0, 0 }), { x, 0, 0 });
         }
     }
 
-    for (float y = -20; y < 20; y++) {
-        if (y != 0) {
+    for (float y = -20; y < 20; y++)
+    {
+        if (y != 0)
+        {
             CreateGridLine(M::Quaternion::FromEulerXYZ({ 0, M::Rad(90), 0 }), { 0, y, 0 });
         }
     }
 }
 
-void Grid::CreateXZ() {
-    for (float x = -20; x < 20; x++) {
-        if (x != 0) {
+void Grid::CreateXZ()
+{
+    for (float x = -20; x < 20; x++)
+    {
+        if (x != 0)
+        {
             CreateGridLine(M::Quaternion::FromEulerXYZ({ 0, 0, M::Rad(90) }), { x, 0, 0 });
         }
     }
 
-    for (float z = -20; z < 20; z++) {
-        if (z != 0) {
+    for (float z = -20; z < 20; z++)
+    {
+        if (z != 0)
+        {
             CreateGridLine(M::Quaternion::FromEulerXYZ({ M::Rad(90), 0, M::Rad(90) }), { 0, 0, z });
         }
     }
 }
 
-void Grid::CreateYZ() {
-    for (float y = -20; y < 20; y++) {
-        if (y != 0) {
+void Grid::CreateYZ()
+{
+    for (float y = -20; y < 20; y++)
+    {
+        if (y != 0)
+        {
             CreateGridLine(M::Quaternion::FromEulerXYZ({ 0, 0, 0 }), { 0, y, 0 });
         }
     }
 
-    for (float z = -20; z < 20; z++) {
-        if (z != 0) {
+    for (float z = -20; z < 20; z++)
+    {
+        if (z != 0)
+        {
             CreateGridLine(M::Quaternion::FromEulerXYZ({ M::Rad(90), 0, 0 }), { 0, 0, z });
         }
     }

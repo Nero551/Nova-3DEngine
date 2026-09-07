@@ -3,8 +3,10 @@
 #include "ShaderSource.hpp"
 
 namespace N {
-EShLanguage ShaderSourceValidator::ToEShLanguage(const ShaderStage& stage) {
-    switch (stage) {
+EShLanguage ShaderSourceValidator::ToEShLanguage(const ShaderStage& stage)
+{
+    switch (stage)
+    {
     case ShaderStage::Vertex:
         return EShLangVertex;
 
@@ -18,7 +20,8 @@ EShLanguage ShaderSourceValidator::ToEShLanguage(const ShaderStage& stage) {
     return EShLangVertex;
 }
 
-ShaderValidationResult ShaderSourceValidator::Validate(const ShaderSource& source) {
+ShaderValidationResult ShaderSourceValidator::Validate(const ShaderSource& source)
+{
     const int version = std::stoi(source.Version.substr(8));
     const EShLanguage language = ToEShLanguage(source.GetStage());
 
@@ -31,10 +34,12 @@ ShaderValidationResult ShaderSourceValidator::Validate(const ShaderSource& sourc
 
     ShaderValidationResult result{ .Success = success, .Log = {} };
 
-    if (!success) {
+    if (!success)
+    {
         result.Log = shader.getInfoLog();
 
-        if (const char* debugLog = shader.getInfoDebugLog(); debugLog && *debugLog) {
+        if (const char* debugLog = shader.getInfoDebugLog(); debugLog && *debugLog)
+        {
             result.Log += '\n';
             result.Log += debugLog;
         }

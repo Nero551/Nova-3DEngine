@@ -4,16 +4,19 @@
 #include "Utilities/Logger.hpp"
 
 namespace N {
-Window::Window(const int width, const int height, const std::string& title) {
+Window::Window(const int width, const int height, const std::string& title)
+{
     SetHints();
 
     GLFWwindow* glfwWindow = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
-    if (!glfwWindow) {
+    if (!glfwWindow)
+    {
         U::Logger::Fatal("Failed To Create Window");
     }
     glfwMakeContextCurrent(glfwWindow);
 
-    if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) {
+    if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
+    {
         U::Logger::Fatal("Failed To Initialize GLAD");
     }
 
@@ -23,32 +26,39 @@ Window::Window(const int width, const int height, const std::string& title) {
     GlfwWindow = glfwWindow;
 }
 
-Window::~Window() {
+Window::~Window()
+{
     glfwDestroyWindow(GlfwWindow);
 }
 
 
-float Window::GetAspectRatio() const {
+float Window::GetAspectRatio() const
+{
     return static_cast<float>(GetWidth()) / static_cast<float>(GetHeight());
 }
 
-bool Window::ShouldClose() {
+bool Window::ShouldClose()
+{
     return glfwWindowShouldClose(GlfwWindow);
 }
 
-void Window::SwapBuffers() {
+void Window::SwapBuffers()
+{
     glfwSwapBuffers(GlfwWindow);
 }
 
-void Window::PollEvents() {
+void Window::PollEvents()
+{
     glfwPollEvents();
 }
 
-void Window::SetTitle(const std::string& title) {
+void Window::SetTitle(const std::string& title)
+{
     glfwSetWindowTitle(GlfwWindow, title.c_str());
 }
 
-void Window::SetIcon(const U::Image& icon) {
+void Window::SetIcon(const U::Image& icon)
+{
     GLFWimage image;
     image.height = icon.Height;
     image.width = icon.Width;
@@ -56,42 +66,50 @@ void Window::SetIcon(const U::Image& icon) {
     glfwSetWindowIcon(GlfwWindow, 1, &image);
 }
 
-void Window::SetHeight(const int height) {
+void Window::SetHeight(const int height)
+{
     glfwSetWindowSize(GlfwWindow, GetWidth(), height);
 }
 
-void Window::SetWidth(const int width) {
+void Window::SetWidth(const int width)
+{
     glfwSetWindowSize(GlfwWindow, width, GetHeight());
 }
 
-void Window::SetSize(const int width, const int height) {
+void Window::SetSize(const int width, const int height)
+{
     SetWidth(width);
     SetHeight(height);
 }
 
-int Window::GetHeight() const {
+int Window::GetHeight() const
+{
     int height = 0;
     int width = 0;
     glfwGetWindowSize(GlfwWindow, &width, &height);
     return height;
 }
 
-int Window::GetWidth() const {
+int Window::GetWidth() const
+{
     int height = 0;
     int width = 0;
     glfwGetWindowSize(GlfwWindow, &width, &height);
     return width;
 }
 
-void Window::Close() {
+void Window::Close()
+{
     glfwSetWindowShouldClose(GlfwWindow, GL_TRUE);
 }
 
-GLFWwindow* Window::GetGlfwWindow() {
+GLFWwindow* Window::GetGlfwWindow()
+{
     return GlfwWindow;
 }
 
-void Window::SetHints() {
+void Window::SetHints()
+{
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);

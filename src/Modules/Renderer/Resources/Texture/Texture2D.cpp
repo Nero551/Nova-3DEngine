@@ -4,9 +4,11 @@
 #include "Utilities/Logger.hpp"
 
 namespace N {
-void Texture2D::Generate() {
+void Texture2D::Generate()
+{
     Texture::Generate();
-    if (IsGenerated()) {
+    if (IsGenerated())
+    {
         return;
     }
 
@@ -16,23 +18,27 @@ void Texture2D::Generate() {
     const int mipmapLevels = AutoMipmaps ? static_cast<int>(std::floor(std::log2(std::max(Width, Height)))) + 1 : 1;
     glTextureStorage2D(Id, mipmapLevels, static_cast<GLint>(InternalFormat), Width, Height);
 
-    if (!Data.empty()) {
+    if (!Data.empty())
+    {
         glTextureSubImage2D(Id, 0, 0, 0, Width, Height, static_cast<GLenum>(Format), static_cast<GLenum>(DataType), Data.data());
     }
 
-    if (AutoMipmaps) {
+    if (AutoMipmaps)
+    {
         glGenerateTextureMipmap(Id);
     }
 }
 
-void Texture2D::UseImage(const U::Image& image) {
+void Texture2D::UseImage(const U::Image& image)
+{
     Width = image.Width;
     Height = image.Height;
     Data = image.Pixels;
     DataType = DataType::UnsignedByte;
     AutoMipmaps = true;
 
-    switch (image.Channels) {
+    switch (image.Channels)
+    {
     case U::Image::ColorChannels::R:
         Format = TextureFormat::Red;
         InternalFormat = TextureInternalFormat::R8;
@@ -54,7 +60,8 @@ void Texture2D::UseImage(const U::Image& image) {
     }
 }
 
-void Texture2D::SetParameters() const {
+void Texture2D::SetParameters() const
+{
     glTextureParameteri(Id, GL_TEXTURE_WRAP_S, static_cast<GLint>(WrapS));
     glTextureParameteri(Id, GL_TEXTURE_WRAP_T, static_cast<GLint>(WrapT));
     glTextureParameteri(Id, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(MinFilter));

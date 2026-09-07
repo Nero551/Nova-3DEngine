@@ -4,7 +4,8 @@
 #include <complex>
 
 namespace N::M {
-Quaternion QLn(const Quaternion& q) {
+Quaternion QLn(const Quaternion& q)
+{
     Quaternion result;
     Vector3 axis = q.Axis();
 

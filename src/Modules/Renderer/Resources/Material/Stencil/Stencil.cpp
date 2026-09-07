@@ -1,13 +1,16 @@
 #include "Stencil.hpp"
 
 namespace N {
-void Stencil::Apply() {
-    if (!Enabled) {
+void Stencil::Apply()
+{
+    if (!Enabled)
+    {
         glDisable(GL_STENCIL_TEST);
         return;
     }
 
-    if (!glIsEnabled(GL_STENCIL_TEST)) {
+    if (!glIsEnabled(GL_STENCIL_TEST))
+    {
         glEnable(GL_STENCIL_TEST);
     }
 

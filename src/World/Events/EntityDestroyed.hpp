@@ -6,7 +6,7 @@ namespace N {
 struct EntityDestroyed : Event<EntityDestroyed> {
     Entity& entity;
 
-    EntityDestroyed(Entity& entity) : entity(entity) {
-    }
+    EntityDestroyed(Entity& entity) : entity(entity)
+    {}
 };
 } // namespace N

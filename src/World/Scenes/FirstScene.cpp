@@ -5,7 +5,8 @@
 #include "World/Novas/MeshInstance3D.hpp"
 
 namespace N {
-FirstScene::FirstScene() {
+FirstScene::FirstScene()
+{
     SetRoot(World::Get().CreateEntity<Nova3D>());
 }
 } // namespace N

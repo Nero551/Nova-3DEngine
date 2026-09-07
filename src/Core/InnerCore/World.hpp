@@ -43,7 +43,8 @@ struct World : SystemOwner {
      * @tparam T Entity type to create.
      * @return Reference to the newly created entity.
      */
-    template <EntityType T> T& CreateEntity() {
+    template <EntityType T> T& CreateEntity()
+    {
         const unsigned int id = ++currentEntityId;
         auto entity = std::make_unique<T>();
         entity->Id = id;

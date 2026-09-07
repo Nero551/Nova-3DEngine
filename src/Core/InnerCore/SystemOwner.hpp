@@ -17,9 +17,11 @@ struct SystemOwner {
     virtual ~SystemOwner() = default;
 
     /** @brief Returns a registered system of the specified type. */
-    template <SystemType T> T& GetSystem() {
+    template <SystemType T> T& GetSystem()
+    {
         auto system = Systems.find(typeid(T));
-        if (system == Systems.end()) {
+        if (system == Systems.end())
+        {
             U::Logger::Fatal(std::format("System Not Found: {}", typeid(T).name()));
         }
         return static_cast<T&>(*system->second);
@@ -32,8 +34,10 @@ protected:
     /** @brief Adds the systems owned by the derived class. */
 
     /** @brief Creates and registers a system of the specified type. */
-    template <SystemType T> T& AddSystem() {
-        if (Systems.contains(std::type_index(typeid(T)))) {
+    template <SystemType T> T& AddSystem()
+    {
+        if (Systems.contains(std::type_index(typeid(T))))
+        {
             U::Logger::Fatal("System Already Exists");
         }
 

@@ -10,30 +10,33 @@ template <ComponentType... Args> struct ComponentPoolQueryResult {
         ComponentPoolQueryResult& Result;
         size_t Index;
 
-        std::tuple<unsigned int, Args&...> operator*() const {
-            return std::apply(
-                [&](std::vector<Args*>... components) {
-                    return std::tuple<unsigned int, Args&...>{ Result.EntityIds[Index], *components[Index]... };
-                },
+        std::tuple<unsigned int, Args&...> operator*() const
+        {
+            return std::apply([&](std::vector<Args*>... components)
+                { return std::tuple<unsigned int, Args&...>{ Result.EntityIds[Index], *components[Index]... }; },
                 Result.Components);
         }
 
 
-        Iterator& operator++() {
+        Iterator& operator++()
+        {
             ++Index;
             return *this;
         }
 
-        bool operator!=(const Iterator& other) const {
+        bool operator!=(const Iterator& other) const
+        {
             return Index != other.Index;
         }
     };
 
-    Iterator begin() {
+    Iterator begin()
+    {
         return { *this, 0 };
     }
 
-    Iterator end() {
+    Iterator end()
+    {
         return { *this, EntityIds.size() };
     }
 };

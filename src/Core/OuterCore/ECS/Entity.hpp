@@ -35,8 +35,8 @@ struct Entity {
     * Intended to be overridden by derived entity types that require
     * initialization.
       */
-    virtual void Initialize() {
-    }
+    virtual void Initialize()
+    {}
     /**
 
     * @brief Destroys a direct child entity.

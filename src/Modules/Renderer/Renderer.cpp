@@ -17,10 +17,10 @@
 #include "Systems/LightingSystem.hpp"
 
 namespace N {
-void Renderer::SetupFramebuffer() {
+void Renderer::SetupFramebuffer()
+{
     const std::vector vertices = { Vertex({ -1.0f, -1.0f, 0.0f, 1.0f }, {}, { 0.0f, 0.0f }, {}),
-        Vertex({ 1.0f, -1.0f, 0.0f, 1.0f }, {}, { 1.0f, 0.0f }, {}),
-        Vertex({ 1.0f, 1.0f, 0.0f, 1.0f }, {}, { 1.0f, 1.0f }, {}),
+        Vertex({ 1.0f, -1.0f, 0.0f, 1.0f }, {}, { 1.0f, 0.0f }, {}), Vertex({ 1.0f, 1.0f, 0.0f, 1.0f }, {}, { 1.0f, 1.0f }, {}),
         Vertex({ -1.0f, 1.0f, 0.0f, 1.0f }, {}, { 0.0f, 1.0f }, {}) };
 
     const std::vector<unsigned int> indices = { 0, 1, 2, 2, 3, 0 };
@@ -61,15 +61,18 @@ void Renderer::SetupFramebuffer() {
 
     Framebuffer->AttachTexture(FramebufferAttachment::Color0, screenTexture);
 
-    glfwSetFramebufferSizeCallback(Engine::Get().Window.GetGlfwWindow(), [](GLFWwindow*, const int w, const int h) {
-        glViewport(0, 0, w, h);
-        auto& renderer = Engine::Get().GetModule<Renderer>();
-        renderer.MSAAFramebuffer->Resize(w, h);
-        renderer.Framebuffer->Resize(w, h);
-    });
+    glfwSetFramebufferSizeCallback(Engine::Get().Window.GetGlfwWindow(),
+        [](GLFWwindow*, const int w, const int h)
+        {
+            glViewport(0, 0, w, h);
+            auto& renderer = Engine::Get().GetModule<Renderer>();
+            renderer.MSAAFramebuffer->Resize(w, h);
+            renderer.Framebuffer->Resize(w, h);
+        });
 }
 
-void Renderer::SetupMSAAFrameBuffer() {
+void Renderer::SetupMSAAFrameBuffer()
+{
     auto& resources = Service::Get<ResourceManager>();
     auto& window = Engine::Get().Window;
 
@@ -92,7 +95,8 @@ void Renderer::SetupMSAAFrameBuffer() {
     MSAAFramebuffer->AttachRenderBuffer(FramebufferAttachment::DepthStencil, depthstencilBuffer);
 }
 
-void Renderer::PresentFramebuffer() {
+void Renderer::PresentFramebuffer()
+{
     auto& window = Engine::Get().Window;
     int width = window.GetWidth();
     int height = window.GetHeight();
@@ -105,7 +109,8 @@ void Renderer::PresentFramebuffer() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     int i = 0;
-    for (auto& texture : Framebuffer->TextureAttachments | std::views::values) {
+    for (auto& texture : Framebuffer->TextureAttachments | std::views::values)
+    {
         ScreenMaterial->AssignTexture(*texture, i);
         i++;
     }
@@ -114,7 +119,8 @@ void Renderer::PresentFramebuffer() {
     ScreenMesh->Draw();
 }
 
-void Renderer::Start() {
+void Renderer::Start()
+{
     AddSystem<CameraSystem>();
     AddSystem<LightingSystem>();
 
@@ -137,14 +143,16 @@ void Renderer::Start() {
     GetSystem<LightingSystem>().Start();
 }
 
-void Renderer::BeginFrame(double dt) {
+void Renderer::BeginFrame(double dt)
+{
     MSAAFramebuffer->Bind();
 
     glClearColor(0.08, 0.05, 0.1, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
-void Renderer::RenderWorld() {
+void Renderer::RenderWorld()
+{
     const auto& camera = World::Get().ActiveCamera;
     auto& query = World::Get().Query;
 
@@ -157,28 +165,34 @@ void Renderer::RenderWorld() {
     GUniformbuffer->Set(query.Pool<Transform3DComponent>().GetComponentById(camera->Id).GlobalPosition, 144);
     GUniformbuffer->Bind();
 
-    for (auto& batch : Batches | std::views::values) {
+    for (auto& batch : Batches | std::views::values)
+    {
         batch.Instances.clear();
     }
 
     for (auto [entityId, transformComponent, meshComponent, materialComponent] :
-        query.With<Transform3DComponent, MeshComponent, MaterialComponent>()) {
-        if (materialComponent.Material->Shader->HotReload == true) {
+        query.With<Transform3DComponent, MeshComponent, MaterialComponent>())
+    {
+        if (materialComponent.Material->Shader->HotReload == true)
+        {
             materialComponent.Material->Shader->Reload();
         }
 
         FillBatches(transformComponent, materialComponent, meshComponent);
     }
-    for (auto& batch : Batches | std::views::values) {
+    for (auto& batch : Batches | std::views::values)
+    {
         batch.Render();
     }
 }
 
 void Renderer::FillBatches(
-    Transform3DComponent& transformComponent, MaterialComponent& materialComponent, MeshComponent& meshComponent) {
+    Transform3DComponent& transformComponent, MaterialComponent& materialComponent, MeshComponent& meshComponent)
+{
     auto it = Batches.find(meshComponent.Mesh->Name + materialComponent.Material->Name);
 
-    if (it == Batches.end()) {
+    if (it == Batches.end())
+    {
         const std::string name = meshComponent.Mesh->Name + materialComponent.Material->Name;
 
         it = Batches.try_emplace(name, meshComponent.Mesh, materialComponent.Material).first;
@@ -190,20 +204,23 @@ void Renderer::FillBatches(
 // TODO- if there is multiple semi-transparent objects behind each other , depth testing breaks blending.
 //  fix this by classifying render passes by transparency, pairs well with future render batches / instancing.
 //  for ordering semi-transparent object by distance , use a map , it auto sorts.
-void Renderer::Render() {
+void Renderer::Render()
+{
     GetSystem<LightingSystem>().Render();
     RenderWorld();
     PresentFramebuffer();
 }
 
-void Renderer::Update(double dt) {
+void Renderer::Update(double dt)
+{
     GetSystem<CameraSystem>().Update(dt);
 }
 
-void Renderer::FixedUpdate(double fdt) {
-}
+void Renderer::FixedUpdate(double fdt)
+{}
 
-void Renderer::Stop() {
+void Renderer::Stop()
+{
     const auto& texture = Framebuffer->TextureAttachments.at(FramebufferAttachment::Color0);
 
     std::vector<unsigned char> pixels(static_cast<size_t>(texture->Width) * static_cast<size_t>(texture->Height) * 3);

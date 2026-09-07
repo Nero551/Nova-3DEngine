@@ -1,9 +1,11 @@
 #include "Texture2DMultisample.hpp"
 
 namespace N {
-void Texture2DMultisample::Generate() {
+void Texture2DMultisample::Generate()
+{
     Texture::Generate();
-    if (IsGenerated()) {
+    if (IsGenerated())
+    {
         return;
     }
 

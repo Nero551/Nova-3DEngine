@@ -11,7 +11,8 @@
 #include "World/Novas/MeshInstance3D.hpp"
 
 namespace N {
-static MeshInstance3D& CreatePoint(M::Vector4 col) {
+static MeshInstance3D& CreatePoint(M::Vector4 col)
+{
     auto& resourceManager = Service::Get<ResourceManager>();
     auto& mesh = Primitives::CreateCube("point");
     auto& material = resourceManager.Load<Material>(std::format("m{}{}{}", col.z, col.x, col.y));
@@ -33,7 +34,8 @@ static MeshInstance3D& CreatePoint(M::Vector4 col) {
 
 static std::vector<U::CheckedPtr<Entity>> points = {};
 
-static Entity& Plot(const M::Vector3 vec3, const M::Vector4 col = { 1, 1, 1, 1 }) {
+static Entity& Plot(const M::Vector3 vec3, const M::Vector4 col = { 1, 1, 1, 1 })
+{
     auto& point = CreatePoint(col);
     auto& transform = World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.Id);
     transform.Position.x = vec3.x;
@@ -48,18 +50,21 @@ static constexpr float xRange = 10;
 static float x = -10;
 
 
-void calculus::Start() {
+void calculus::Start()
+{
     // FourDimensionalProjection(20);
 }
 
 static float multiplier = 1;
 
-void calculus::Update(double dt) {
+void calculus::Update(double dt)
+{
     auto& resourceManager = Service::Get<ResourceManager>();
     auto& input = Engine::Get().GetModule<Input>();
 
     x += step;
-    if (x >= xRange) {
+    if (x >= xRange)
+    {
         return;
     }
 
@@ -91,8 +96,10 @@ void calculus::Update(double dt) {
     // Plot({ x, sin(x), 0 }, M::Color::Red);
 }
 
-void calculus::TwoDimensionalProjection(float increase) {
-    for (int theta = -180; theta < 180; theta += increase) {
+void calculus::TwoDimensionalProjection(float increase)
+{
+    for (int theta = -180; theta < 180; theta += increase)
+    {
         M::Vector2 v2 = M::Vector2::FromPolar(M::Polar(theta));
         float proj = v2.StereoProject();
         // auto& d2point = Plot({v2.x, v2.y, 0});
@@ -102,9 +109,12 @@ void calculus::TwoDimensionalProjection(float increase) {
     }
 }
 
-void calculus::ThreeDimensionalProjection(float increase) {
-    for (int theta = -180; theta < 180; theta += increase) {
-        for (int phi = -180; phi < 180; phi += increase) {
+void calculus::ThreeDimensionalProjection(float increase)
+{
+    for (int theta = -180; theta < 180; theta += increase)
+    {
+        for (int phi = -180; phi < 180; phi += increase)
+        {
             M::Vector3 v3 = M::Vector3::FromSpherical(M::Spherical(theta, phi));
             // auto& d3point = Plot(v3);
             M::Vector2 proj = v3.StereoProject();
@@ -115,10 +125,14 @@ void calculus::ThreeDimensionalProjection(float increase) {
     }
 }
 
-void calculus::FourDimensionalProjection(float increase) {
-    for (int theta = -180; theta < 180; theta += increase) {
-        for (int phi = -180; phi < 180; phi += increase) {
-            for (int h = -180; h < 180; h += increase) {
+void calculus::FourDimensionalProjection(float increase)
+{
+    for (int theta = -180; theta < 180; theta += increase)
+    {
+        for (int phi = -180; phi < 180; phi += increase)
+        {
+            for (int h = -180; h < 180; h += increase)
+            {
                 M::Vector4 v4 = M::Vector4::FromHyperSpherical(M::HyperSpherical(theta, phi, h));
                 M::Vector3 proj = v4.StereoProject();
                 auto& point = Plot(proj);

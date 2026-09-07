@@ -8,8 +8,8 @@ struct Texture2DMultisample : Texture {
     int Samples = 4;
 
     /** @brief Creates a 2D multisample texture resource. */
-    Texture2DMultisample(const std::string& name) : Texture(name, TextureTarget::Texture2DMultisample) {
-    }
+    Texture2DMultisample(const std::string& name) : Texture(name, TextureTarget::Texture2DMultisample)
+    {}
 
     /** @brief Generates the OpenGL multisample texture object. */
     void Generate() override;

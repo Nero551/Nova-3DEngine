@@ -4,7 +4,8 @@
 #include "Primitives.hpp"
 
 namespace N {
-Texture& Primitives::CreateWhiteTexture() {
+Texture& Primitives::CreateWhiteTexture()
+{
     std::vector<unsigned char> white = { 255, 255, 255, 255 };
     U::Image image = { 1, 1, U::Image::ColorChannels::RGBA, white };
     auto& whiteTexture = Service::Get<ResourceManager>().Load<Texture2D>("WhiteTexture");
@@ -13,7 +14,8 @@ Texture& Primitives::CreateWhiteTexture() {
     return whiteTexture;
 }
 
-Texture& Primitives::CreateBlackTexture() {
+Texture& Primitives::CreateBlackTexture()
+{
     std::vector<unsigned char> black = { 0, 0, 0, 255 };
     U::Image image = { 1, 1, U::Image::ColorChannels::RGBA, black };
     auto& blackTexture = Service::Get<ResourceManager>().Load<Texture2D>("BlackTexture");

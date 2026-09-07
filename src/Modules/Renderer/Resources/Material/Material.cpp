@@ -8,7 +8,8 @@
 #include "Utilities/Logger.hpp"
 
 namespace N {
-Material::Material(const std::string& name) : Resource(name) {
+Material::Material(const std::string& name) : Resource(name)
+{
     auto& whiteTexture = Primitives::CreateWhiteTexture();
 
     DiffuseMap = &whiteTexture;
@@ -16,19 +17,24 @@ Material::Material(const std::string& name) : Resource(name) {
     EmissionMap = &whiteTexture;
 }
 
-void Material::AssignTexture(Texture& texture, const unsigned int slot) {
-    if (slot >= MaxCustomTextures) {
+void Material::AssignTexture(Texture& texture, const unsigned int slot)
+{
+    if (slot >= MaxCustomTextures)
+    {
         U::Logger::Error("Material: ", Name, " Texture slot out of bounds: " + texture.Name);
         return;
     }
     CustomTextures[slot] = &texture;
 }
 
-void Material::Use() {
+void Material::Use()
+{
     SetProperties();
 
-    for (int slot = 0; slot < MaxCustomTextures; slot++) {
-        if (CustomTextures[slot]) {
+    for (int slot = 0; slot < MaxCustomTextures; slot++)
+    {
+        if (CustomTextures[slot])
+        {
             Shader->SetUniform(IntUniform(CustomTextures[slot]->Name, slot));
             CustomTextures[slot]->Bind(slot);
         }
@@ -41,7 +47,8 @@ void Material::Use() {
     Shader->Use();
 }
 
-void Material::SetProperties() const {
+void Material::SetProperties() const
+{
     Shader->SetUniform(Vector3Uniform("MATERIAL.Ambient", Ambient));
     Shader->SetUniform(Vector3Uniform("MATERIAL.Diffuse", Diffuse));
     Shader->SetUniform(Vector3Uniform("MATERIAL.Specular", Specular));

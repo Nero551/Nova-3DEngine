@@ -8,8 +8,8 @@ struct InstanceData {
     M::Matrix4 ModelMatrix;
     M::Matrix3 NormalMatrix;
 
-    InstanceData(const M::Matrix4& model, const M::Matrix3& normal) : ModelMatrix(model), NormalMatrix(normal) {
-    }
+    InstanceData(const M::Matrix4& model, const M::Matrix3& normal) : ModelMatrix(model), NormalMatrix(normal)
+    {}
 };
 
 struct RenderBatch {
@@ -18,12 +18,14 @@ struct RenderBatch {
     std::vector<InstanceData> Instances;
     ArrayBuffer Buffer;
 
-    RenderBatch(const U::CheckedPtr<struct Mesh>& mesh, const U::CheckedPtr<struct Material>& mat) : Material(mat), Mesh(mesh) {
+    RenderBatch(const U::CheckedPtr<struct Mesh>& mesh, const U::CheckedPtr<struct Material>& mat) : Material(mat), Mesh(mesh)
+    {
         Buffer.Usage = BufferUsage::DynamicDraw;
         Buffer.Generate();
     }
 
-    void Render() {
+    void Render()
+    {
         Material->Use();
 
         int instanceCount = Instances.size();

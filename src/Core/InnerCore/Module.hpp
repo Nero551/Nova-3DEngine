@@ -29,8 +29,8 @@ protected:
      * Override this method to perform initialization.
      * @note Called by Engine. Do not call this method directly.
      */
-    virtual void Start() {
-    }
+    virtual void Start()
+    {}
 
     /**
      * @brief Called once per variable-timestep frame.
@@ -39,8 +39,8 @@ protected:
      * @param dt Time elapsed since the previous frame, in seconds.
      * @note Called by Engine. Do not call this method directly.
      */
-    virtual void Update(double dt) {
-    }
+    virtual void Update(double dt)
+    {}
 
     /**
      * @brief Called once per fixed-timestep update.
@@ -49,8 +49,8 @@ protected:
      * @param fdt Fixed time step between updates, in seconds.
      * @note Called by Engine. Do not call this method directly.
      */
-    virtual void FixedUpdate(double fdt) {
-    }
+    virtual void FixedUpdate(double fdt)
+    {}
 
     /**
      * @brief Called when the module's rendering stage is executed.
@@ -58,8 +58,8 @@ protected:
      * render-related work.
      * @note Called by Engine. Do not call this method directly.
      */
-    virtual void Render() {
-    }
+    virtual void Render()
+    {}
 
     /**
      * @brief Called at the beginning of a frame.
@@ -68,8 +68,8 @@ protected:
      * @param dt Time elapsed since the previous frame, in seconds.
      * @note Called by Engine. Do not call this method directly.
      */
-    virtual void BeginFrame(double dt) {
-    }
+    virtual void BeginFrame(double dt)
+    {}
 
     /**
      * @brief Called at the end of a frame.
@@ -78,16 +78,16 @@ protected:
      * @param dt Time elapsed since the previous frame, in seconds.
      * @note Called by Engine. Do not call this method directly.
      */
-    virtual void EndFrame(double dt) {
-    }
+    virtual void EndFrame(double dt)
+    {}
 
     /**
      * @brief Called once when the module is stopped.
      * Override this method to perform cleanup.
      * @note Called by Engine. Do not call this method directly.
      */
-    virtual void Stop() {
-    }
+    virtual void Stop()
+    {}
 
     friend struct Engine;
 };

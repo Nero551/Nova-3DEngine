@@ -1,13 +1,16 @@
 #include "Blend.hpp"
 
 namespace N {
-void Blend::Apply() {
-    if (!Enabled) {
+void Blend::Apply()
+{
+    if (!Enabled)
+    {
         glDisable(GL_BLEND);
         return;
     }
 
-    if (!glIsEnabled(GL_BLEND)) {
+    if (!glIsEnabled(GL_BLEND))
+    {
         glEnable(GL_BLEND);
     }
 
@@ -15,9 +18,7 @@ void Blend::Apply() {
 
     glBlendColor(ConstantColor.x, ConstantColor.y, ConstantColor.z, ConstantColor.w);
 
-    glBlendFuncSeparate(static_cast<GLenum>(SourceRGB),
-        static_cast<GLenum>(DestinationRGB),
-        static_cast<GLenum>(SourceAlpha),
+    glBlendFuncSeparate(static_cast<GLenum>(SourceRGB), static_cast<GLenum>(DestinationRGB), static_cast<GLenum>(SourceAlpha),
         static_cast<GLenum>(DestinationAlpha));
 }
 } // namespace N

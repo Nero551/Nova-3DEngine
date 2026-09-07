@@ -8,7 +8,8 @@
 #include "Utilities/Logger.hpp"
 
 namespace N::U {
-Image::Image(const std::string& filePath, const bool flip) {
+Image::Image(const std::string& filePath, const bool flip)
+{
     stbi_set_flip_vertically_on_load(flip);
 
     int nrChannels = 1;
@@ -16,7 +17,8 @@ Image::Image(const std::string& filePath, const bool flip) {
 
     Channels = static_cast<ColorChannels>(nrChannels);
 
-    if (!pixels) {
+    if (!pixels)
+    {
         Logger::Error("Failed To Load Image: " + filePath);
         return;
     }
@@ -28,23 +30,27 @@ Image::Image(const std::string& filePath, const bool flip) {
     stbi_image_free(pixels);
 }
 
-Image::Image(const int width, const int height, const ColorChannels channels, const std::vector<unsigned char>& pixels) {
+Image::Image(const int width, const int height, const ColorChannels channels, const std::vector<unsigned char>& pixels)
+{
     Width = width;
     Height = height;
     Channels = channels;
     Pixels = pixels;
 }
 
-void Image::SaveToDiskPNG(const std::string& filepath, bool flip) {
+void Image::SaveToDiskPNG(const std::string& filepath, bool flip)
+{
     stbi_flip_vertically_on_write(flip);
     stbi_write_png(
         filepath.c_str(), Width, Height, static_cast<size_t>(Channels), Pixels.data(), Width * static_cast<size_t>(Channels));
 }
 
-void Image::FlipVertically() {
+void Image::FlipVertically()
+{
     const size_t rowSize = static_cast<size_t>(Width) * static_cast<size_t>(Channels);
 
-    for (int y = 0; y < Height / 2; ++y) {
+    for (int y = 0; y < Height / 2; ++y)
+    {
         auto top = Pixels.begin() + static_cast<size_t>(y) * rowSize;
         auto bottom = Pixels.begin() + static_cast<size_t>(Height - 1 - y) * rowSize;
 

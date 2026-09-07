@@ -11,7 +11,7 @@ struct Vertex {
     M::Vector3 Normal;
 
     Vertex(const M::Vector4 pos, const M::Vector4 col, const M::Vector2 uv, const M::Vector3 normal) :
-        Position(pos), Color(col), UV(uv), Normal(normal) {
-    }
+        Position(pos), Color(col), UV(uv), Normal(normal)
+    {}
 };
 } // namespace N

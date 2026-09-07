@@ -3,23 +3,26 @@
 #include "Core/InnerCore/Engine.hpp"
 
 namespace N {
-void Profiling::Start() {
-}
+void Profiling::Start()
+{}
 
 static double elapsed = 0;
 
-void Profiling::Update(const double dt) {
+void Profiling::Update(const double dt)
+{
     elapsed += dt;
 
     FrameMs = dt * 1000.0;
     FrameCount++;
 
-    if (FrameTimes.size() > 60) {
+    if (FrameTimes.size() > 60)
+    {
         FrameTimes.pop_front();
     }
     FrameTimes.push_back(dt * 1000.0);
 
-    if (elapsed >= 1.0) {
+    if (elapsed >= 1.0)
+    {
         elapsed = 0.0;
 
         double sum = 0.0;

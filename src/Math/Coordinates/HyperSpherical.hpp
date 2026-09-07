@@ -30,10 +30,11 @@ struct HyperSpherical {
      * @param magnitude Length of the represented vector.
      */
     HyperSpherical(float elevation, float azimuth, float hyperAngle, float magnitude = 1) :
-        Elevation(elevation), Azimuth(azimuth), HyperAngle(hyperAngle), Magnitude(magnitude) {
-    }
+        Elevation(elevation), Azimuth(azimuth), HyperAngle(hyperAngle), Magnitude(magnitude)
+    {}
 
-    friend std::ostream& operator<<(std::ostream& os, const HyperSpherical& hyperSpherical) {
+    friend std::ostream& operator<<(std::ostream& os, const HyperSpherical& hyperSpherical)
+    {
         os << "(" << hyperSpherical.Magnitude << ", " << Deg(hyperSpherical.Elevation) << "°, " << Deg(hyperSpherical.Azimuth)
            << "°, " << Deg(hyperSpherical.HyperAngle) << "°"
            << ")";

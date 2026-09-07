@@ -3,20 +3,24 @@
 #include "Utilities/Logger.hpp"
 
 namespace N::M {
-float Pow(const float x, const float power) {
+float Pow(const float x, const float power)
+{
     return std::pow(x, power);
 }
 
-float Sqrt(const float x) {
+float Sqrt(const float x)
+{
     return std::sqrt(x);
 }
 
 
-float Exp(const float x) {
+float Exp(const float x)
+{
     return std::exp(x);
 }
 
-float Factorial(int x) {
+float Factorial(int x)
+{
     if (x < 0)
         U::Logger::Error("Factorial requires a non-negative integer");
 

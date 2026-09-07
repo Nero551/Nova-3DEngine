@@ -7,7 +7,7 @@
 #include "Math/Color/Color.hpp"
 #include "Math/Common/Exponentials.hpp"
 #include "Math/Common/Logarithms.hpp"
-#include "Math/Functions/MVFunction.hpp"
+#include "Math/Functions/Function.hpp"
 #include "Modules/Renderer/Components/MaterialComponent.hpp"
 #include "Modules/Renderer/Components/MeshComponent.hpp"
 #include "Modules/Renderer/Primitives/Primitives.hpp"
@@ -16,7 +16,8 @@
 #include "World/Novas/MeshInstance3D.hpp"
 
 namespace N {
-static MeshInstance3D& CreatePoint(M::Vector4 col) {
+static MeshInstance3D& CreatePoint(M::Vector4 col)
+{
     auto& resourceManager = Service::Get<ResourceManager>();
     auto& mesh = Primitives::CreateCube("point");
     auto& material = resourceManager.Load<Material>(std::format("m{}{}{}", col.z, col.x, col.y));
@@ -36,9 +37,11 @@ static MeshInstance3D& CreatePoint(M::Vector4 col) {
     return point;
 }
 
-static void Plot(const M::Vector3 vec3, const M::Vector4 col = { 1, 1, 1, 1 }) {
+static void Plot(const M::Vector3 vec3, const M::Vector4 col = { 1, 1, 1, 1 })
+{
     float max = 40;
-    if (vec3.x < max && vec3.y < max && vec3.z < max) {
+    if (vec3.x < max && vec3.y < max && vec3.z < max)
+    {
         auto& point = CreatePoint(col);
         auto& transform = World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.Id);
         transform.Position.x = vec3.x;
@@ -51,7 +54,8 @@ static void Plot(const M::Vector3 vec3, const M::Vector4 col = { 1, 1, 1, 1 }) {
 static unsigned int cubeId = 0;
 static unsigned int cubeId2 = 0;
 
-void Physics::Start() {
+void Physics::Start()
+{
     auto& resourceManager = Service::Get<ResourceManager>();
     auto& query = World::Get().Query;
     auto& mesh = Primitives::CreateCube("mesh");
@@ -93,7 +97,7 @@ void Physics::Start() {
     //
 
 
-    M::MVFunction<float, M::Quaternion> mf = [](const float input) { return M::Quaternion{ input * 2, input, input - 5, 0 }; };
+    M::Function<float, M::Quaternion> mf = [](const float input) { return M::Quaternion{ input * 2, input, input - 5, 0 }; };
 
     M::Quaternion q = { 1, 2, 3, 4 };
 
@@ -103,8 +107,11 @@ void Physics::Start() {
 
 static float time = 0;
 
-void Physics::FixedUpdate(double fdt) {
-    M::MVFunction<float, M::Vector2> f = [](const float t) { return M::Vector2{ M::Pow(t, 3), M::Pow(t, 2) }; };
+void Physics::FixedUpdate(double fdt)
+{
+    M::Function<float, M::Vector2> f = [](const float t) { return M::Vector2{ std::sin(t), std::sin(t) }; };
+
+    // f.Differentiate();
 
     Plot({ f(time).x, f(time).y, -time }, M::Color::Blue);
 

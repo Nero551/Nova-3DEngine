@@ -1,11 +1,13 @@
 #include "Basis.hpp"
 
 namespace N::M {
-Matrix4 Basis::GetInverseMatrix() const {
+Matrix4 Basis::GetInverseMatrix() const
+{
     return GetMatrix().Transpose();
 }
 
-Matrix4 Basis::GetMatrix() const {
+Matrix4 Basis::GetMatrix() const
+{
     Matrix4 basisMatrix = Matrix4::Identity;
 
     basisMatrix.m[0][0] = Right.x;

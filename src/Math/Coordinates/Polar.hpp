@@ -24,10 +24,11 @@ struct Polar {
      * @param angle The angle in radians.
      * @param magnitude The distance from the origin. Default is 1.
      */
-    Polar(float angle, float magnitude = 1) : Angle(angle), Magnitude(magnitude) {
-    }
+    Polar(float angle, float magnitude = 1) : Angle(angle), Magnitude(magnitude)
+    {}
 
-    friend std::ostream& operator<<(std::ostream& os, const Polar& polar) {
+    friend std::ostream& operator<<(std::ostream& os, const Polar& polar)
+    {
         os << "(" << polar.Magnitude << ", " << Deg(polar.Angle) << "°)";
         return os;
     }

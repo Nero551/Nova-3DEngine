@@ -12,30 +12,36 @@
 #include "tracy/TracyOpenGL.hpp"
 
 namespace N {
-Engine::Engine() : Window(800, 600, "Nova") {
-    if (Instance) {
+Engine::Engine() : Window(800, 600, "Nova")
+{
+    if (Instance)
+    {
         U::Logger::Fatal("Only one Engine may exist.");
     }
     Instance = this;
 }
 
-Engine& Engine::Get() {
+Engine& Engine::Get()
+{
     return *Instance;
 }
 
-void Engine::Run() {
+void Engine::Run()
+{
     LastFrame = glfwGetTime();
     double accumulator = 0;
     Running = true;
 
     Start();
-    while (Running) {
+    while (Running)
+    {
         BeginFrame();
 
         accumulator += DeltaTime;
         accumulator = std::min(accumulator, 1.0);
 
-        while (accumulator >= FixedDeltaTime) {
+        while (accumulator >= FixedDeltaTime)
+        {
             FixedUpdate();
             accumulator -= FixedDeltaTime;
         }
@@ -47,15 +53,18 @@ void Engine::Run() {
     Stop();
 }
 
-void Engine::Shutdown() {
+void Engine::Shutdown()
+{
     Running = false;
 }
 
-double Engine::GetTime() const {
+double Engine::GetTime() const
+{
     return Time;
 }
 
-void Engine::Configure() {
+void Engine::Configure()
+{
     Window.SetIcon({ "Assets/icon.png" });
     // Window.SetSize(1980, 1200);
     glfwSwapInterval(1);
@@ -70,44 +79,52 @@ void Engine::Configure() {
     AddModule<Physics>();
 }
 
-void Engine::Start() {
+void Engine::Start()
+{
     Configure();
     ZoneScopedN("Start");
     TracyGpuZone("Start");
 
     World.Start();
 
-    for (auto& module : Modules | std::views::values) {
+    for (auto& module : Modules | std::views::values)
+    {
         module->Start();
     }
 
-    for (auto& service : Service::GetAll()) {
+    for (auto& service : Service::GetAll())
+    {
         service->Start();
     }
 }
 
-void Engine::Stop() {
+void Engine::Stop()
+{
     ZoneScopedN("Stop");
     TracyGpuZone("Stop");
 
     World.Stop();
 
-    for (auto& module : Modules | std::views::values) {
+    for (auto& module : Modules | std::views::values)
+    {
         module->Stop();
     }
 
-    for (auto& service : Service::GetAll()) {
+    for (auto& service : Service::GetAll())
+    {
         service->Stop();
     }
 
     Service::DestroyServices();
 
-    if (Instance == this) {
+    if (Instance == this)
+    {
         Instance.Reset();
     }
 }
 
-void Engine::BeginFrame() {
+void Engine::BeginFrame()
+{
     ZoneScopedN("Begin Frame");
     TracyGpuZone("Begin Frame");
 
@@ -126,18 +143,21 @@ void Engine::BeginFrame() {
         service->BeginFrame(DeltaTime);
 }
 
-void Engine::EndFrame() {
+void Engine::EndFrame()
+{
     ZoneScopedN("End Frame");
     TracyGpuZone("End Frame");
 
     Window.SwapBuffers();
     World.EndFrame(DeltaTime);
 
-    for (auto& module : Modules | std::views::values) {
+    for (auto& module : Modules | std::views::values)
+    {
         module->EndFrame(DeltaTime);
     }
 
-    for (auto& service : Service::GetAll()) {
+    for (auto& service : Service::GetAll())
+    {
         service->EndFrame();
     }
 
@@ -145,45 +165,54 @@ void Engine::EndFrame() {
     TracyGpuCollect;
 }
 
-void Engine::Update() {
+void Engine::Update()
+{
     ZoneScopedN("Update");
     TracyGpuZone("Update");
 
     World.Update(DeltaTime);
 
-    for (auto& module : Modules | std::views::values) {
+    for (auto& module : Modules | std::views::values)
+    {
         module->Update(DeltaTime);
     }
 
-    for (auto& service : Service::GetAll()) {
+    for (auto& service : Service::GetAll())
+    {
         service->Update(DeltaTime);
     }
 }
 
-void Engine::FixedUpdate() {
+void Engine::FixedUpdate()
+{
     ZoneScopedN("Fixed Update");
     TracyGpuZone("Fixed Update");
 
     World.FixedUpdate(FixedDeltaTime);
-    for (auto& module : Modules | std::views::values) {
+    for (auto& module : Modules | std::views::values)
+    {
         module->FixedUpdate(FixedDeltaTime);
     }
 
-    for (auto& service : Service::GetAll()) {
+    for (auto& service : Service::GetAll())
+    {
         service->FixedUpdate(FixedDeltaTime);
     }
 }
 
-void Engine::Render() {
+void Engine::Render()
+{
     ZoneScopedN("Render");
     TracyGpuZone("Render");
 
     World.Render();
-    for (auto& module : Modules | std::views::values) {
+    for (auto& module : Modules | std::views::values)
+    {
         module->Render();
     }
 
-    for (auto& service : Service::GetAll()) {
+    for (auto& service : Service::GetAll())
+    {
         service->Render();
     }
 }

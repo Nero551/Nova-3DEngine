@@ -18,10 +18,11 @@ struct QPolar {
      * @param angle Quaternion polar angle in radians.
      * @param magnitude Quaternion magnitude.
      */
-    QPolar(Vector3 axis, float angle, float magnitude = 1) : Axis(axis.Normalized()), Angle(angle), Magnitude(magnitude) {
-    }
+    QPolar(Vector3 axis, float angle, float magnitude = 1) : Axis(axis.Normalized()), Angle(angle), Magnitude(magnitude)
+    {}
 
-    friend std::ostream& operator<<(std::ostream& os, const QPolar& polar) {
+    friend std::ostream& operator<<(std::ostream& os, const QPolar& polar)
+    {
         os << "(" << polar.Magnitude << ", " << polar.Axis << ", " << Deg(polar.Angle) << "°"
            << ")";
         return os;

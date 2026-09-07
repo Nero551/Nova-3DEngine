@@ -13,7 +13,8 @@
 #include "World/Novas/Nova3D.hpp"
 
 namespace N {
-CoordinateAxesScene::CoordinateAxesScene() {
+CoordinateAxesScene::CoordinateAxesScene()
+{
     auto& world = World::Get();
     auto& query = world.Query;
     auto& resourceManager = Service::Get<ResourceManager>();
