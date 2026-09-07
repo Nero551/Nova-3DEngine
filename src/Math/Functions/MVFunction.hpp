@@ -1,6 +1,6 @@
 #pragma once
 
-namespace N {
+namespace N::M {
 /** @brief Represents a mathematical multi-variable function mapping an Input type to an Output type. */
 template <typename Input, typename Output> struct MVFunction {
     /** @brief Constructs a function from a callable returning Output when given Input. */
@@ -21,12 +21,12 @@ template <typename Input, typename Output> struct MVFunction {
 
     /** @brief Composes this function with another function, producing f(g(x)). */
     MVFunction operator()(const MVFunction& g) const {
-        return *this.Compose(g);
+        return Compose(g);
     }
 
     /** @brief Evaluates the function at the given input. */
     Output operator()(const Input& input) const {
-        return *this.Evaluate(input);
+        return Evaluate(input);
     }
 
     /** @brief Adds two functions pointwise, producing f(x) + g(x). */
@@ -209,4 +209,4 @@ template <typename Input, typename Output> struct MVFunction {
 private:
     std::function<Output(Input)> Func;
 };
-} // namespace N
+} // namespace N::M

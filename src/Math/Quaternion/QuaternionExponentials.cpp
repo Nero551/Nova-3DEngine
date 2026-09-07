@@ -1,11 +1,11 @@
-#include "Exponentials.hpp"
+#include "QuaternionExponentials.hpp"
 #include "Math/Common/Exponentials.hpp"
 
 #include "Math/Common/Logarithms.hpp"
-#include "Math/Quaternion/Logarithms.hpp"
+#include "Math/Quaternion/QuaternionLogarithms.hpp"
 
 namespace N::M {
-Quaternion M::Exp(const Quaternion& q) {
+Quaternion M::QExp(const Quaternion& q) {
     float r = q.Magnitude();
     float theta = q.Angle();
     Vector3 axis = q.Axis();
@@ -22,11 +22,11 @@ Quaternion M::Exp(const Quaternion& q) {
     return result;
 }
 
-Quaternion Pow(const float x, const Quaternion& q) {
-    return Exp(Ln(x) * q);
+Quaternion QPow(const float x, const Quaternion& q) {
+    return QExp(Ln(x) * q);
 }
 
-Quaternion Pow(const Quaternion& q, float power) {
+Quaternion QPow(const Quaternion& q, float power) {
     float magnitude = Pow(q.Magnitude(), power);
     float theta = q.Angle();
     Vector3 axis = q.Axis();
@@ -41,11 +41,11 @@ Quaternion Pow(const Quaternion& q, float power) {
     return result;
 }
 
-Quaternion Pow(const Quaternion& q, const Quaternion& p) {
-    return Exp(p * Ln(q));
+Quaternion QPow(const Quaternion& q, const Quaternion& p) {
+    return QExp(p * QLn(q));
 }
 
-Quaternion Sqrt(const Quaternion& q) {
-    return Pow(q, 1.0f / 2.0f);
+Quaternion QSqrt(const Quaternion& q) {
+    return QPow(q, 1.0f / 2.0f);
 }
 } // namespace N::M

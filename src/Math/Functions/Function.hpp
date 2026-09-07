@@ -19,8 +19,6 @@ concept Func = std::invocable<T, float> && std::same_as<std::invoke_result_t<T, 
  * Functions can be constructed from any callable satisfying the Func concept.
  */
 struct Function {
-    // TODO- try doing multivariable using vectors instead of float args.
-
     /**
      * @brief Constructs a function from a callable object.
      * @param f Callable that accepts a float and returns a float.

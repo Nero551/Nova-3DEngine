@@ -1,8 +1,8 @@
-#include "Logarithms.hpp"
+#include "ComplexLogarithms.hpp"
 #include "Math/Common/Logarithms.hpp"
 
 namespace N::M {
-Complex Ln(const Complex& z) {
+Complex CLn(const Complex& z) {
     Complex result;
     result.Real = Ln(z.Magnitude());
     result.Imaginary = z.Argument();
@@ -10,7 +10,7 @@ Complex Ln(const Complex& z) {
     return result;
 }
 
-Complex Log(const Complex& base, const Complex& z) {
-    return Ln(z) / Ln(base);
+Complex CLog(const Complex& base, const Complex& z) {
+    return CLn(z) / CLn(base);
 }
 } // namespace N::M

@@ -1,10 +1,10 @@
-#include "Logarithms.hpp"
+#include "QuaternionLogarithms.hpp"
 #include "Math/Common/Logarithms.hpp"
 
 #include <complex>
 
 namespace N::M {
-Quaternion Ln(const Quaternion& q) {
+Quaternion QLn(const Quaternion& q) {
     Quaternion result;
     Vector3 axis = q.Axis();
 

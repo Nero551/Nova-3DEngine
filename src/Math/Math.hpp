@@ -7,8 +7,8 @@
 #include "Complex/Logarithms.hpp"
 #include "Quaternion/Logarithms.hpp"
 
-#include "Common/Exponentials.hpp"
-#include "Complex/Exponentials.hpp"
+#include "Common/ComplexExponentials.hpp"
+#include "Complex/ComplexExponentials.hpp"
 #include "Quaternion/Exponentials.hpp"
 
 #include "Common/Comparison.hpp"

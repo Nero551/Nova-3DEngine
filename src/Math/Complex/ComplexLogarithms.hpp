@@ -3,8 +3,8 @@
 
 namespace N::M {
 /** @brief Computes the natural logarithm of a complex number. */
-Complex Ln(const Complex& z);
+Complex CLn(const Complex& z);
 
 /** @brief Computes the logarithm of a complex number with a complex base. */
-Complex Log(const Complex& base, const Complex& z);
+Complex CLog(const Complex& base, const Complex& z);
 } // namespace N::M

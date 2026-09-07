@@ -14,8 +14,8 @@
 // Complex
 #include "Math/Complex/Complex.hpp"
 #include "Math/Complex/Constants.hpp"
-#include "Math/Complex/Exponentials.hpp"
-#include "Math/Complex/Logarithms.hpp"
+#include "Math/Complex/ComplexExponentials.hpp"
+#include "Math/Complex/ComplexLogarithms.hpp"
 
 // Coordinates
 #include "Math/Coordinates/HyperSpherical.hpp"
@@ -35,8 +35,8 @@
 #include "Math/Matrix/Matrix4.hpp"
 
 // Quaternion
-#include "Math/Quaternion/Exponentials.hpp"
-#include "Math/Quaternion/Logarithms.hpp"
+#include "Math/Quaternion/QuaternionExponentials.hpp"
+#include "Math/Quaternion/QuaternionLogarithms.hpp"
 #include "Math/Quaternion/Quaternion.hpp"
 
 // Vector
@@ -53,6 +53,8 @@ using namespace N::M; // Fixed namespace (was N::M but actual is E::M)
 // Common
 //==============================================================================
 TEST_CASE (
+
+
 
 "Math::NearlyEquals"
 )
@@ -79,6 +81,8 @@ TEST_CASE (
 
 TEST_CASE (
 
+
+
 "Math::Clamp"
 )
  {
@@ -89,6 +93,8 @@ TEST_CASE (
 }
 
 TEST_CASE (
+
+
 
 "Math::Pow, Sqrt, Exp, Factorial"
 )
@@ -113,6 +119,8 @@ TEST_CASE (
 
 TEST_CASE (
 
+
+
 "Math::Lerp"
 )
  {
@@ -123,6 +131,8 @@ TEST_CASE (
 }
 
 TEST_CASE (
+
+
 
 "Math::Ease functions"
 )
@@ -152,6 +162,8 @@ TEST_CASE (
 
 TEST_CASE (
 
+
+
 "Math::Ln and Log"
 )
  {
@@ -165,6 +177,8 @@ TEST_CASE (
 }
 
 TEST_CASE (
+
+
 
 "Math::Random"
 )
@@ -189,6 +203,8 @@ TEST_CASE (
 
 TEST_CASE (
 
+
+
 "Math::Trigonometry"
 )
  {
@@ -211,6 +227,8 @@ TEST_CASE (
 //==============================================================================
 TEST_CASE (
 
+
+
 "Complex construction and constants"
 )
  {
@@ -224,6 +242,8 @@ TEST_CASE (
 }
 
 TEST_CASE (
+
+
 
 "Complex arithmetic"
 )
@@ -241,6 +261,8 @@ TEST_CASE (
 
 TEST_CASE (
 
+
+
 "Complex magnitude, conjugate, inverse"
 )
  {
@@ -253,6 +275,8 @@ TEST_CASE (
 }
 
 TEST_CASE (
+
+
 
 "Complex polar and argument"
 )
@@ -269,37 +293,41 @@ TEST_CASE (
 
 TEST_CASE (
 
+
+
 "Complex exponentials and logarithms"
 )
  {
     Complex z(0, PI / 2);
-    Complex e = Exp(z);
+    Complex e = CExp(z);
     REQUIRE(e.Real == Approx(0.0f).margin(1e-6f));
     REQUIRE(e.Imaginary == Approx(1.0f));
 
-    Complex ln = Ln(z);
+    Complex ln = CLn(z);
     REQUIRE(ln.Real == Approx(Ln(PI / 2)));
     REQUIRE(ln.Imaginary == Approx(PI / 2));
 
-    Complex p = Pow(E, z);
+    Complex p = CPow(E, z);
     REQUIRE(p.Real == Approx(0.0f).margin(1e-6f));
     REQUIRE(p.Imaginary == Approx(1.0f));
 
-    Complex p2 = Pow(z, 2.0f);
+    Complex p2 = CPow(z, 2.0f);
     REQUIRE(p2.NearlyEquals(z * z));
 
     Complex w(1, 1);
-    Complex p3 = Pow(z, w);
+    Complex p3 = CPow(z, w);
     (void)p3;
 }
 
 TEST_CASE (
 
+
+
 "Complex sqrt"
 )
  {
     Complex z(0, 1);
-    Complex sqrt = Sqrt(z);
+    Complex sqrt = CSqrt(z);
     REQUIRE(z.NearlyEquals(sqrt * sqrt));
 }
 
@@ -307,6 +335,8 @@ TEST_CASE (
 // Coordinates
 //==============================================================================
 TEST_CASE (
+
+
 
 "Polar conversion"
 )
@@ -322,6 +352,8 @@ TEST_CASE (
 
 TEST_CASE (
 
+
+
 "Spherical conversion"
 )
  {
@@ -334,6 +366,8 @@ TEST_CASE (
 }
 
 TEST_CASE (
+
+
 
 "HyperSpherical conversion"
 )
@@ -348,6 +382,8 @@ TEST_CASE (
 }
 
 TEST_CASE (
+
+
 
 "QPolar conversion"
 )
@@ -366,6 +402,8 @@ TEST_CASE (
 //==============================================================================
 TEST_CASE (
 
+
+
 "Function construction and evaluation"
 )
  {
@@ -377,6 +415,8 @@ TEST_CASE (
 }
 
 TEST_CASE (
+
+
 
 "Function composition"
 )
@@ -395,6 +435,8 @@ TEST_CASE (
 
 TEST_CASE (
 
+
+
 "Function inverse"
 )
  {
@@ -407,6 +449,8 @@ TEST_CASE (
 }
 
 TEST_CASE (
+
+
 
 "Function derivative and integrate"
 )
@@ -427,6 +471,8 @@ TEST_CASE (
 
 TEST_CASE (
 
+
+
 "Function Taylor and Maclaurin"
 )
  {
@@ -440,6 +486,8 @@ TEST_CASE (
 }
 
 TEST_CASE (
+
+
 
 "Function arithmetic"
 )
@@ -471,6 +519,8 @@ TEST_CASE (
 //==============================================================================
 TEST_CASE (
 
+
+
 "Basis matrix"
 )
  {
@@ -499,6 +549,8 @@ TEST_CASE (
 // Matrices
 //==============================================================================
 TEST_CASE (
+
+
 
 "Matrix2 construction and ops"
 )
@@ -535,6 +587,8 @@ TEST_CASE (
 
 TEST_CASE (
 
+
+
 "Matrix2 identities"
 )
  {
@@ -559,6 +613,8 @@ TEST_CASE (
 }
 
 TEST_CASE (
+
+
 
 "Matrix3 construction and ops"
 )
@@ -586,6 +642,8 @@ TEST_CASE (
 }
 
 TEST_CASE (
+
+
 
 "Matrix3 identities"
 )
@@ -615,6 +673,8 @@ TEST_CASE (
 
 TEST_CASE (
 
+
+
 "Matrix3 transformations"
 )
  {
@@ -637,6 +697,8 @@ TEST_CASE (
 
 TEST_CASE (
 
+
+
 "Matrix3 transformation identities"
 )
  {
@@ -653,6 +715,8 @@ TEST_CASE (
 
 TEST_CASE (
 
+
+
 "Matrix4 construction and ops"
 )
  {
@@ -668,6 +732,8 @@ TEST_CASE (
 }
 
 TEST_CASE (
+
+
 
 "Matrix4 identities"
 )
@@ -697,6 +763,8 @@ TEST_CASE (
 }
 
 TEST_CASE (
+
+
 
 "Matrix4 transformations"
 )
@@ -729,6 +797,8 @@ TEST_CASE (
 
 TEST_CASE (
 
+
+
 "Matrix-vector identities"
 )
  {
@@ -746,6 +816,8 @@ TEST_CASE (
 //==============================================================================
 TEST_CASE (
 
+
+
 "Quaternion construction and constants"
 )
  {
@@ -762,6 +834,8 @@ TEST_CASE (
 
 TEST_CASE (
 
+
+
 "Quaternion identities"
 )
  {
@@ -777,6 +851,8 @@ TEST_CASE (
 }
 
 TEST_CASE (
+
+
 
 "Quaternion arithmetic"
 )
@@ -805,6 +881,8 @@ TEST_CASE (
 
 TEST_CASE (
 
+
+
 "Quaternion conjugate, magnitude, inverse"
 )
  {
@@ -819,6 +897,8 @@ TEST_CASE (
 
 TEST_CASE (
 
+
+
 "Quaternion dot product"
 )
  {
@@ -828,6 +908,8 @@ TEST_CASE (
 }
 
 TEST_CASE (
+
+
 
 "Quaternion polar and angle/axis"
 )
@@ -847,6 +929,8 @@ TEST_CASE (
 
 TEST_CASE (
 
+
+
 "Quaternion from Euler and matrix"
 )
  {
@@ -861,6 +945,8 @@ TEST_CASE (
 
 TEST_CASE (
 
+
+
 "Quaternion transform vector"
 )
  {
@@ -872,50 +958,56 @@ TEST_CASE (
 
 TEST_CASE (
 
+
+
 "Quaternion exponentials and logarithms"
 )
  {
     Quaternion q(1.2f, 0.5f, -0.7f, 0.8f);
 
-    Quaternion result = Ln(Exp(q));
+    Quaternion result = QLn(QExp(q));
 
     REQUIRE(result.NearlyEquals(q));
 
-    Quaternion sq = Sqrt(q);
+    Quaternion sq = QSqrt(q);
     REQUIRE((sq * sq).NearlyEquals(q));
 
-    Quaternion p = Pow(q, 2.0f);
+    Quaternion p = QPow(q, 2.0f);
     REQUIRE(p.NearlyEquals(q * q));
 
-    REQUIRE(Ln(Exp(Quaternion(0, 1, 0, 0))).NearlyEquals(
+    REQUIRE(QLn(QExp(Quaternion(0, 1, 0, 0))).NearlyEquals(
         Quaternion(0, 1, 0, 0)
     ));
 
-    REQUIRE(Ln(Exp(Quaternion(0, -1, 0, 0))).NearlyEquals(
+    REQUIRE(QLn(QExp(Quaternion(0, -1, 0, 0))).NearlyEquals(
         Quaternion(0, -1, 0, 0)
     ));
 }
 
 TEST_CASE (
 
+
+
 "Quaternion Exp/Ln principal branch"
 )
  {
     Quaternion q(1.2f, 0.5f, -0.7f, 0.8f);
 
-    Quaternion result = Ln(Exp(q));
+    Quaternion result = QLn(QExp(q));
 
     REQUIRE(result.NearlyEquals(q));
 }
 
 TEST_CASE (
 
+
+
 "Quaternion Exp/Ln wraps outside principal branch"
 )
  {
     Quaternion q(1.2f, 2.0f, -0.7f, 3.1f);
 
-    Quaternion result = Ln(Exp(q));
+    Quaternion result = QLn(QExp(q));
 
     REQUIRE_FALSE(result.NearlyEquals(q));
 }
@@ -924,6 +1016,8 @@ TEST_CASE (
 // Vectors
 //==============================================================================
 TEST_CASE (
+
+
 
 "Vector2 construction and constants"
 )
@@ -936,6 +1030,8 @@ TEST_CASE (
 }
 
 TEST_CASE (
+
+
 
 "Vector2 identities"
 )
@@ -963,6 +1059,8 @@ TEST_CASE (
 
 TEST_CASE (
 
+
+
 "Vector2 operations"
 )
  {
@@ -984,6 +1082,8 @@ TEST_CASE (
 
 TEST_CASE (
 
+
+
 "Vector2 polar"
 )
  {
@@ -1001,6 +1101,8 @@ TEST_CASE (
 
 TEST_CASE (
 
+
+
 "Vector3 construction and constants"
 )
  {
@@ -1016,6 +1118,8 @@ TEST_CASE (
 }
 
 TEST_CASE (
+
+
 
 "Vector3 identities"
 )
@@ -1050,6 +1154,8 @@ TEST_CASE (
 
 TEST_CASE (
 
+
+
 "Vector3 operations"
 )
  {
@@ -1075,6 +1181,8 @@ TEST_CASE (
 
 TEST_CASE (
 
+
+
 "Vector3 spherical"
 )
  {
@@ -1095,6 +1203,8 @@ TEST_CASE (
 
 TEST_CASE (
 
+
+
 "Vector4 construction and constants"
 )
  {
@@ -1107,6 +1217,8 @@ TEST_CASE (
 }
 
 TEST_CASE (
+
+
 
 "Vector4 identities"
 )
@@ -1134,6 +1246,8 @@ TEST_CASE (
 
 TEST_CASE (
 
+
+
 "Vector4 operations"
 )
  {
@@ -1152,6 +1266,8 @@ TEST_CASE (
 }
 
 TEST_CASE (
+
+
 
 "Vector4 hyperspherical"
 )

@@ -6,8 +6,7 @@
 #include "Core/Services/ResourceManager.hpp"
 #include "Math/Color/Color.hpp"
 #include "Math/Common/Exponentials.hpp"
-#include "Math/Common/Trigonometry.hpp"
-#include "Math/Functions/Function.hpp"
+#include "Math/Common/Logarithms.hpp"
 #include "Math/Functions/MVFunction.hpp"
 #include "Modules/Renderer/Components/MaterialComponent.hpp"
 #include "Modules/Renderer/Components/MeshComponent.hpp"
@@ -94,7 +93,7 @@ void Physics::Start() {
     //
 
 
-    MVFunction<float, M::Quaternion> mf = [](const float input) { return M::Quaternion{ input * 2, input, input - 5, 0 }; };
+    M::MVFunction<float, M::Quaternion> mf = [](const float input) { return M::Quaternion{ input * 2, input, input - 5, 0 }; };
 
     M::Quaternion q = { 1, 2, 3, 4 };
 
@@ -105,6 +104,10 @@ void Physics::Start() {
 static float time = 0;
 
 void Physics::FixedUpdate(double fdt) {
+    M::MVFunction<float, M::Vector2> f = [](const float t) { return M::Vector2{ M::Pow(t, 3), M::Pow(t, 2) }; };
+
+    Plot({ f(time).x, f(time).y, -time }, M::Color::Blue);
+
     // auto& resourceManager = Service::Get<ResourceManager>();g
     // auto& input = Engine::Get().GetModule<Input>();
     // auto& query = World::Get().Query;
@@ -155,11 +158,5 @@ void Physics::FixedUpdate(double fdt) {
     // M::Vector3 acceleration2 = body.Force / body.Mass;
     // body.Velocity += acceleration2 * fdt;
     // transform.Position += body.Velocity * fdt;
-
-    M::Function f = [](const float t) { return 2 + 3 * t - 4 * M::Pow(t, 2); };
-
-    Plot({ time, f(time), 0 }, M::Color::Blue);
-    Plot({ time, f.Derivative(time), 0 }, M::Color::Red);
-    // U::Logger::Info(f.Differentiate().Derivative(time));
 }
 } // namespace N
