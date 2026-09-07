@@ -1,7 +1,5 @@
 #include "CameraSystem.hpp"
 
-#include <cassert>
-
 #include "Core/InnerCore/Engine.hpp"
 #include "Core/OuterCore/ECS/Entity.hpp"
 #include "Modules/Input/Input.hpp"

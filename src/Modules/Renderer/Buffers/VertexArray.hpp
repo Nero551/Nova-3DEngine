@@ -1,10 +1,7 @@
 #pragma once
-#include <cstddef>
 
-#include "../../DataType.hpp"
-#include "Buffers/IndexBuffer.hpp"
-#include "Math/Matrix/Matrix4.hpp"
-#include "OpenGL.hpp"
+#include "../Enums/DataType.hpp"
+#include "IndexBuffer.hpp"
 
 namespace N {
 /** @brief OpenGL vertex array object that stores vertex buffer and attribute configuration. */

@@ -4,20 +4,6 @@
 #include "Utilities/Logger.hpp"
 
 namespace N {
-void Window::SetHints() {
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
-    glfwWindowHintString(GLFW_X11_CLASS_NAME, "nova_engine");
-    glfwWindowHintString(GLFW_WAYLAND_APP_ID, "nova_engine");
-    glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
-    glfwWindowHint(GLFW_DEPTH_BITS, 24);
-    glfwWindowHint(GLFW_STENCIL_BITS, 8);
-    glfwWindowHint(GLFW_SAMPLES, 4);
-}
-
 Window::Window(const int width, const int height, const std::string& title) {
     SetHints();
 
@@ -37,10 +23,10 @@ Window::Window(const int width, const int height, const std::string& title) {
     GlfwWindow = glfwWindow;
 }
 
-
 Window::~Window() {
     glfwDestroyWindow(GlfwWindow);
 }
+
 
 float Window::GetAspectRatio() const {
     return static_cast<float>(GetWidth()) / static_cast<float>(GetHeight());
@@ -103,5 +89,19 @@ void Window::Close() {
 
 GLFWwindow* Window::GetGlfwWindow() {
     return GlfwWindow;
+}
+
+void Window::SetHints() {
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
+    glfwWindowHintString(GLFW_X11_CLASS_NAME, "nova_engine");
+    glfwWindowHintString(GLFW_WAYLAND_APP_ID, "nova_engine");
+    glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
+    glfwWindowHint(GLFW_DEPTH_BITS, 24);
+    glfwWindowHint(GLFW_STENCIL_BITS, 8);
+    glfwWindowHint(GLFW_SAMPLES, 4);
 }
 } // namespace N

@@ -1,6 +1,5 @@
 #include "Exponentials.hpp"
 
-#include "Logarithms.hpp"
 #include "Utilities/Logger.hpp"
 
 namespace N::M {

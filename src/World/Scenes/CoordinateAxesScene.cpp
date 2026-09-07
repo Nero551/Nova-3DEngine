@@ -4,8 +4,6 @@
 #include "Core/Services/ResourceManager.hpp"
 #include "Grid.hpp"
 #include "Math/Color/Color.hpp"
-#include "Modules/Input/Enums/Keys.hpp"
-#include "Modules/Input/Input.hpp"
 #include "Modules/Renderer/Components/MaterialComponent.hpp"
 #include "Modules/Renderer/Components/MeshComponent.hpp"
 #include "Modules/Renderer/Primitives/Primitives.hpp"
@@ -32,11 +30,13 @@ CoordinateAxesScene::CoordinateAxesScene() {
     lightMaterial.Shader = &lightShader;
 
     auto& light = world.CreateEntity<Light>();
-    query.Pool<Transform3DComponent>().GetComponentById(light.Id).Rotation = M::Quaternion::FromEulerXYZ({ M::Rad(32.5) });
+    query.Pool<Transform3DComponent>().GetComponentById(light.Id).Rotation =
+        M::Quaternion::FromEulerXYZ(M::Vector3{ M::Rad(32.5) });
     GetRoot().AttachChild(light);
 
     auto& light2 = world.CreateEntity<Light>();
-    query.Pool<Transform3DComponent>().GetComponentById(light2.Id).Rotation = M::Quaternion::FromEulerXYZ({ M::Rad(-32.5) });
+    query.Pool<Transform3DComponent>().GetComponentById(light2.Id).Rotation =
+        M::Quaternion::FromEulerXYZ(M::Vector3{ M::Rad(-32.5) });
     GetRoot().AttachChild(light2);
 
     auto& shader = resourceManager.Load<Shader>("AxisShader");

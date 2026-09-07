@@ -3,8 +3,6 @@
 
 #include <complex>
 
-#include "Math/Common/Exponentials.hpp"
-
 namespace N::M {
 Quaternion Ln(const Quaternion& q) {
     Quaternion result;

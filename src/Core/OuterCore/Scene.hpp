@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ECS/Entity.hpp"
-#include "Utilities/CheckedPtr.hpp"
 
 namespace N {
 /**

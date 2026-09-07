@@ -1,7 +1,9 @@
 #include "VertexArray.hpp"
 
-#include "Buffers/ArrayBuffer.hpp"
-#include "Buffers/IndexBuffer.hpp"
+#include "ArrayBuffer.hpp"
+#include "IndexBuffer.hpp"
+#include "Math/Vector/Vector3.hpp"
+#include "Math/Vector/Vector4.hpp"
 
 namespace N {
 VertexArray::VertexArray() {

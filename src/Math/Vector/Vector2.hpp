@@ -33,7 +33,7 @@ struct Vector2 {
      *
      * @param all Value assigned to x and y.
      */
-    Vector2(float all);
+    explicit Vector2(float all);
 
     /**
      * @brief Creates a vector from its individual components.

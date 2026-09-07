@@ -1,5 +1,6 @@
 #pragma once
 #include "Core/InnerCore/Engine.hpp"
+#include "Math/Vector/Vector3.hpp"
 #include "Uniform.hpp"
 
 namespace N {

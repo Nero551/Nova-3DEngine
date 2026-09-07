@@ -8,7 +8,6 @@ void Texture2DMultisample::Generate() {
     }
 
     glCreateTextures(GL_TEXTURE_2D_MULTISAMPLE, 1, &Id);
-    ;
     glTextureStorage2DMultisample(Id, Samples, static_cast<GLint>(InternalFormat), Width, Height, GL_TRUE);
 }
 } // namespace N

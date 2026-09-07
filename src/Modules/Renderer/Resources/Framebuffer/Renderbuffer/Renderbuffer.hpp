@@ -2,7 +2,6 @@
 
 #include "../../Texture/TextureInternalFormat.hpp"
 #include "Core/OuterCore/Resource.hpp"
-#include "OpenGL.hpp"
 
 namespace N {
 /**

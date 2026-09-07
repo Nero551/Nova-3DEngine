@@ -34,16 +34,16 @@ struct Material : Resource {
     M::Vector4 Color = { 0.5 };
 
     /** Ambient lighting color. */
-    M::Vector3 Ambient = { 0.7 };
+    M::Vector3 Ambient = M::Vector3{ 0.7 };
 
     /** Diffuse lighting color. */
-    M::Vector3 Diffuse = { 0.3 };
+    M::Vector3 Diffuse = M::Vector3{ 0.3 };
 
     /** Specular lighting color. */
-    M::Vector3 Specular = { 0.7 };
+    M::Vector3 Specular = M::Vector3{ 0.7 };
 
     /** Emissive color of the material. */
-    M::Vector3 Emission = { 0 };
+    M::Vector3 Emission = M::Vector3{ 0 };
 
     /** Stencil testing and stencil buffer operations used by the material. */
     Stencil Stencil = true;

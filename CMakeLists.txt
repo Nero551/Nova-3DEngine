@@ -12,7 +12,7 @@ target_precompile_headers(Nova PRIVATE
         "$<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/src/pch.hpp>"
 )
 
-set(TRACY_ENABLE ON)
+set(TRACY_ENABLE ON CACHE BOOL "Enable Tracy" FORCE)
 add_subdirectory(src/Core)
 add_subdirectory(src/Utilities)
 add_subdirectory(src/Modules)
@@ -21,7 +21,6 @@ add_subdirectory(src/Math)
 add_subdirectory(External/tracy)
 
 target_include_directories(Nova PRIVATE
-        External/tracy/public
         src
 )
 
@@ -43,8 +42,6 @@ target_link_libraries(Nova
         glslang::glslang-default-resource-limits
         Tracy::TracyClient
 )
-
-target_compile_definitions(Nova PRIVATE TRACY_ENABLE)
 
 target_compile_options(Nova PRIVATE
         -Wall

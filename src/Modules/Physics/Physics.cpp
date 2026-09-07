@@ -5,11 +5,10 @@
 #include "Core/InnerCore/World.hpp"
 #include "Core/Services/ResourceManager.hpp"
 #include "Math/Color/Color.hpp"
-#include "Math/Common/Constraints.hpp"
 #include "Math/Common/Exponentials.hpp"
 #include "Math/Common/Trigonometry.hpp"
 #include "Math/Functions/Function.hpp"
-#include "Modules/Input/Input.hpp"
+#include "Math/Functions/MVFunction.hpp"
 #include "Modules/Renderer/Components/MaterialComponent.hpp"
 #include "Modules/Renderer/Components/MeshComponent.hpp"
 #include "Modules/Renderer/Primitives/Primitives.hpp"
@@ -32,7 +31,7 @@ static MeshInstance3D& CreatePoint(M::Vector4 col) {
     auto& point = World::Get().CreateEntity<MeshInstance3D>();
     World::Get().Query.Pool<MeshComponent>().GetComponentById(point.Id).Mesh = &mesh;
     World::Get().Query.Pool<MaterialComponent>().GetComponentById(point.Id).Material = &material;
-    World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.Id).Scale = { 0.2 };
+    World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.Id).Scale = M::Vector3{ 0.2 };
     World::Get().Root->AttachChild(point);
 
     return point;
@@ -95,21 +94,12 @@ void Physics::Start() {
     //
 
 
-    M::Vector3 S = M::Vector3::FromSpherical({ 0, M::Rad(90 - 136), 17.3 });
-    M::Vector3 P = M::Vector3::FromSpherical({ 0, M::Rad(90 - 153), 19.6 });
-    P.y = 2.2;
+    MVFunction<float, M::Quaternion> mf = [](const float input) { return M::Quaternion{ input * 2, input, input - 5, 0 }; };
 
-    U::Logger::Info(S);
-    U::Logger::Info(P);
+    M::Quaternion q = { 1, 2, 3, 4 };
 
-    U::Logger::Info(S - P);
-    U::Logger::Info((S - P).Length());
-
-    //
-    // U::Logger::Info(x.Derivative(2));
-    // U::Logger::Info(x.Derivative(2, 1, DifferentiaHyperSphericaltioHyperSphericalnMethod::Forward, false));
-    // U::Logger::Info(x.Differentiate().Derivative(2));
-    // U::Logger::Info(x.Differentiate().Derivative(3));
+    mf *= 3.0f;
+    U::Logger::Info(mf.Evaluate(3));
 }
 
 static float time = 0;

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Utilities/CheckedPtr.hpp"
-#include "Utilities/Logger.hpp"
 
 namespace N {
 /**

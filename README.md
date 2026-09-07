@@ -1,6 +1,6 @@
 # Nova (2026-06-26) 3D game engine hobby project
 
-## Installing System Dependencies
+## Installing System Dependencies for Linux.
 
 - ./scripts.setup-linux.sh
 

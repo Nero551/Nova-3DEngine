@@ -1,4 +1,5 @@
 #pragma once
+#include "OpenGL.hpp"
 
 namespace N {
 struct Uniform {

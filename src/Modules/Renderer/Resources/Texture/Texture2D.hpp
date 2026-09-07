@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Modules/Renderer/DataType.hpp"
+#include "Modules/Renderer/Enums/DataType.hpp"
 #include "Modules/Renderer/Resources/Texture/TextureFIlter.hpp"
 #include "Texture.hpp"
 #include "TextureFormat.hpp"

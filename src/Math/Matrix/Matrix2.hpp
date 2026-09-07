@@ -34,7 +34,7 @@ struct Matrix2 {
      *
      * @param mAll Value assigned to every element.
      */
-    Matrix2(float mAll);
+    explicit Matrix2(float mAll);
 
     /**
      * @brief Creates a matrix from its individual elements.

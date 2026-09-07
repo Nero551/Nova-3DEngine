@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../OuterCore/Scene.hpp"
 #include "Core/OuterCore/ECS/ComponentPoolQuery.hpp"
 #include "Core/OuterCore/Service.hpp"
 #include "Core/Services/EventBus.hpp"

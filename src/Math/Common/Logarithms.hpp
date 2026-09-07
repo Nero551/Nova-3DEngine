@@ -1,5 +1,4 @@
 #pragma once
-#include "Math/Complex/Complex.hpp"
 
 namespace N::M {
 float Ln(float x);

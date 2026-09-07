@@ -68,7 +68,7 @@ struct Quaternion {
     Quaternion();
 
     /** @brief Constructs a quaternion with all components equal to `all`. */
-    Quaternion(float all);
+    explicit Quaternion(float all);
 
     /**
      * @brief Constructs a quaternion from its four components.

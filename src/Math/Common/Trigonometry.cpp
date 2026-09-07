@@ -1,8 +1,6 @@
 #include "Trigonometry.hpp"
 
-#include "Comparison.hpp"
 #include "Constants.hpp"
-#include "Exponentials.hpp"
 
 namespace N::M {
 float Rad(const float deg) {

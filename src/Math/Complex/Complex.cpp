@@ -81,16 +81,16 @@ Complex& Complex::operator*=(const Complex& b) {
     return *this = *this * b;
 }
 
+Complex& Complex::operator/=(const Complex& b) {
+    return *this = *this / b;
+}
+
 Complex& Complex::operator+=(const Complex& b) {
     return *this = *this + b;
 }
 
 Complex& Complex::operator-=(const Complex& b) {
     return *this = *this - b;
-}
-
-Complex& Complex::operator/=(const Complex& b) {
-    return *this = *this / b;
 }
 
 Complex Complex::operator*(const float scalar) const {
@@ -113,16 +113,16 @@ Complex& Complex::operator*=(float scalar) {
     return *this = *this * scalar;
 }
 
+Complex& Complex::operator/=(float scalar) {
+    return *this = *this / scalar;
+}
+
 Complex& Complex::operator+=(float scalar) {
     return *this = *this + scalar;
 }
 
 Complex& Complex::operator-=(float scalar) {
     return *this = *this - scalar;
-}
-
-Complex& Complex::operator/=(float scalar) {
-    return *this = *this / scalar;
 }
 
 Complex operator*(float scalar, const Complex& a) {

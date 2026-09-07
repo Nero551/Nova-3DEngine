@@ -1,15 +1,12 @@
 #pragma once
-#include <vector>
 
 #include "../Texture/Texture.hpp"
 #include "FramebufferAttachment.hpp"
 #include "FramebufferTarget.hpp"
-#include "Modules/Renderer/BufferBit.hpp"
+#include "Modules/Renderer/Enums/BufferBit.hpp"
 #include "Modules/Renderer/Resources/Texture/TextureFIlter.hpp"
-#include "OpenGL.hpp"
 #include "Renderbuffer/Renderbuffer.hpp"
 #include "Utilities/CheckedPtr.hpp"
-#include "Utilities/Logger.hpp"
 
 namespace N {
 /**

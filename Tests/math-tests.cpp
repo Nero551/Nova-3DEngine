@@ -1,6 +1,6 @@
+#include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
-#include <catch2/catch_approx.hpp>
 
 // Common
 #include "Math/Common/Comparison.hpp"
@@ -18,10 +18,10 @@
 #include "Math/Complex/Logarithms.hpp"
 
 // Coordinates
-#include "Math/Coordinates/Polar.hpp"
-#include "Math/Coordinates/Spherical.hpp"
 #include "Math/Coordinates/HyperSpherical.hpp"
+#include "Math/Coordinates/Polar.hpp"
 #include "Math/Coordinates/QPolar.hpp"
+#include "Math/Coordinates/Spherical.hpp"
 
 // Functions
 #include "Math/Functions/Function.hpp"
@@ -35,9 +35,9 @@
 #include "Math/Matrix/Matrix4.hpp"
 
 // Quaternion
-#include "Math/Quaternion/Quaternion.hpp"
 #include "Math/Quaternion/Exponentials.hpp"
 #include "Math/Quaternion/Logarithms.hpp"
+#include "Math/Quaternion/Quaternion.hpp"
 
 // Vector
 #include "Math/Vector/Vector2.hpp"

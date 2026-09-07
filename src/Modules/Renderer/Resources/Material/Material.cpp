@@ -24,6 +24,23 @@ void Material::AssignTexture(Texture& texture, const unsigned int slot) {
     CustomTextures[slot] = &texture;
 }
 
+void Material::Use() {
+    SetProperties();
+
+    for (int slot = 0; slot < MaxCustomTextures; slot++) {
+        if (CustomTextures[slot]) {
+            Shader->SetUniform(IntUniform(CustomTextures[slot]->Name, slot));
+            CustomTextures[slot]->Bind(slot);
+        }
+    }
+
+    Depth.Apply();
+    Stencil.Apply();
+    Blend.Apply();
+
+    Shader->Use();
+}
+
 void Material::SetProperties() const {
     Shader->SetUniform(Vector3Uniform("MATERIAL.Ambient", Ambient));
     Shader->SetUniform(Vector3Uniform("MATERIAL.Diffuse", Diffuse));
@@ -40,22 +57,5 @@ void Material::SetProperties() const {
 
     Shader->SetUniform(IntUniform("MATERIAL.EmissionMap", 14));
     EmissionMap->Bind(14);
-}
-
-void Material::Use() {
-    SetProperties();
-
-    for (int slot = 0; slot < MaxCustomTextures; slot++) {
-        if (CustomTextures[slot]) {
-            Shader->SetUniform(IntUniform(CustomTextures[slot]->Name, slot));
-            CustomTextures[slot]->Bind(slot);
-        }
-    }
-
-    Depth.Apply();
-    Stencil.Apply();
-    Blend.Apply();
-
-    Shader->Use();
 }
 } // namespace N

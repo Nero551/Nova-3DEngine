@@ -14,7 +14,7 @@ Image::Image(const std::string& filePath, const bool flip) {
     int nrChannels = 1;
     unsigned char* pixels = stbi_load(filePath.c_str(), &Width, &Height, &nrChannels, 0);
 
-    Channels = static_cast<enum ColorChannels>(nrChannels);
+    Channels = static_cast<ColorChannels>(nrChannels);
 
     if (!pixels) {
         Logger::Error("Failed To Load Image: " + filePath);

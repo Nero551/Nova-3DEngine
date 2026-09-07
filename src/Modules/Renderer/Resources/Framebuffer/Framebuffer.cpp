@@ -1,6 +1,6 @@
 #include "Framebuffer.hpp"
 
-#include "Modules/Renderer/BufferBit.hpp"
+#include "Modules/Renderer/Enums/BufferBit.hpp"
 
 namespace N {
 Framebuffer::Framebuffer(const std::string& name) : Resource(name) {

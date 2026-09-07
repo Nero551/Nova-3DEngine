@@ -9,9 +9,9 @@ namespace N::M {
  * @brief 3D floating-point vector.
  *
  * Coordinate convention:
- * - X: right
- * - Y: up
- * - Z: forward
+ * +X: right
+ * +Y: up
+ * -Z: forward
  *
  * The coordinate system follows the right-hand rule.
  *
@@ -35,7 +35,7 @@ struct Vector3 {
      *
      * @param all Value assigned to x, y, and z.
      */
-    Vector3(float all);
+    explicit Vector3(float all);
 
     /**
      * @brief Creates a vector from its individual components.

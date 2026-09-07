@@ -3,16 +3,11 @@
 #include "Core/InnerCore/Engine.hpp"
 #include "Core/InnerCore/World.hpp"
 #include "Core/Services/ResourceManager.hpp"
-#include "Math/Color/Color.hpp"
-#include "Math/Common/Exponentials.hpp"
-#include "Math/Common/Logarithms.hpp"
-#include "Math/Functions/Function.hpp"
 #include "Math/Quaternion/Quaternion.hpp"
 #include "Math/Vector/Vector4.hpp"
 #include "Modules/Input/Input.hpp"
 #include "Modules/Renderer/Primitives/Primitives.hpp"
 #include "Modules/Renderer/Resources/Texture/Cubemap.hpp"
-#include "Modules/Renderer/Resources/Texture/Texture2D.hpp"
 #include "World/Novas/MeshInstance3D.hpp"
 
 namespace N {
@@ -30,7 +25,7 @@ static MeshInstance3D& CreatePoint(M::Vector4 col) {
     auto& point = World::Get().CreateEntity<MeshInstance3D>();
     World::Get().Query.Pool<MeshComponent>().GetComponentById(point.Id).Mesh = &mesh;
     World::Get().Query.Pool<MaterialComponent>().GetComponentById(point.Id).Material = &material;
-    World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.Id).Scale = { 0.2 };
+    World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.Id).Scale = M::Vector3{ 0.2 };
     World::Get().Root->AttachChild(point);
 
     return point;
@@ -128,7 +123,7 @@ void calculus::FourDimensionalProjection(float increase) {
                 M::Vector3 proj = v4.StereoProject();
                 auto& point = Plot(proj);
                 points.emplace_back(&point);
-            };
+            }
         }
     }
 }

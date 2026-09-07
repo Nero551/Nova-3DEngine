@@ -83,6 +83,10 @@ void Mesh::Regenerate() {
     VAO.Delete();
 }
 
+void Mesh::DrawElements() const {
+    glDrawElements(static_cast<GLenum>(Topology), static_cast<GLsizei>(Indices.size()), GL_UNSIGNED_INT, nullptr);
+}
+
 void Mesh::ApplyCulling() const {
     glFrontFace(static_cast<GLenum>(FrontFace));
 
@@ -95,9 +99,5 @@ void Mesh::ApplyCulling() const {
         }
         glCullFace(static_cast<GLenum>(CullMode));
     }
-}
-
-void Mesh::DrawElements() const {
-    glDrawElements(static_cast<GLenum>(Topology), static_cast<GLsizei>(Indices.size()), GL_UNSIGNED_INT, nullptr);
 }
 } // namespace N

@@ -2,7 +2,6 @@
 
 #include <OpenGL.hpp>
 
-#include "Math/Complex/Logarithms.hpp"
 #include "Uniforms/FloatUniform.hpp"
 #include "Utilities/Logger.hpp"
 

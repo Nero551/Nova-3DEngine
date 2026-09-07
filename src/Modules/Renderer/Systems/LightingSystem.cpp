@@ -3,13 +3,9 @@
 #include "../../../World/Components/Transform3DComponent.hpp"
 #include "../Components/LightComponent.hpp"
 #include "../Components/MaterialComponent.hpp"
-#include "../Resources/Shader/Uniforms/FloatUniform.hpp"
 #include "../Resources/Shader/Uniforms/IntUniform.hpp"
 #include "../Resources/Shader/Uniforms/Vector3Uniform.hpp"
 #include "Core/Services/ResourceManager.hpp"
-#include "Modules/Input/Enums/Keys.hpp"
-#include "World/Events/EntityCreated.hpp"
-#include "World/Events/EntityDestroyed.hpp"
 
 namespace N {
 void LightingSystem::Start() {

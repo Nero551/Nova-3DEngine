@@ -155,8 +155,30 @@ bool Quaternion::NearlyEquals(const Quaternion& p, const float epsilon) const {
         M::NearlyEquals(z, p.z, epsilon);
 }
 
+bool Quaternion::operator==(const Quaternion& p) const {
+    return w == p.w && x == p.x && y == p.y && z == p.z;
+}
+
+bool Quaternion::operator!=(const Quaternion& p) const {
+    return !(*this == p);
+}
+
 Quaternion Quaternion::operator-() const {
     return { -w, -x, -y, -z };
+}
+
+Quaternion Quaternion::operator*(const Quaternion& p) const {
+    Quaternion result;
+    result.w = (w * p.w) - (x * p.x) - (y * p.y) - (z * p.z);
+    result.x = (w * p.x) + (x * p.w) + (y * p.z) - (z * p.y);
+    result.y = (w * p.y) - (x * p.z) + (y * p.w) + (z * p.x);
+    result.z = (w * p.z) + (x * p.y) - (y * p.x) + (z * p.w);
+
+    return result;
+}
+
+Quaternion Quaternion::operator/(const Quaternion& p) const {
+    return *this * p.Inverse();
 }
 
 Quaternion Quaternion::operator+(const Quaternion& p) const {
@@ -186,20 +208,6 @@ Quaternion& Quaternion::operator+=(const Quaternion& p) {
 
 Quaternion& Quaternion::operator-=(const Quaternion& p) {
     return *this = *this - p;
-}
-
-Quaternion Quaternion::operator*(const Quaternion& p) const {
-    Quaternion result;
-    result.w = (w * p.w) - (x * p.x) - (y * p.y) - (z * p.z);
-    result.x = (w * p.x) + (x * p.w) + (y * p.z) - (z * p.y);
-    result.y = (w * p.y) - (x * p.z) + (y * p.w) + (z * p.x);
-    result.z = (w * p.z) + (x * p.y) - (y * p.x) + (z * p.w);
-
-    return result;
-}
-
-Quaternion Quaternion::operator/(const Quaternion& p) const {
-    return *this * p.Inverse();
 }
 
 Quaternion Quaternion::operator*(float scalar) const {
@@ -232,14 +240,6 @@ Quaternion& Quaternion::operator+=(float scalar) {
 
 Quaternion& Quaternion::operator-=(float scalar) {
     return *this = *this - scalar;
-}
-
-bool Quaternion::operator==(const Quaternion& p) const {
-    return w == p.w && x == p.x && y == p.y && z == p.z;
-}
-
-bool Quaternion::operator!=(const Quaternion& p) const {
-    return !(*this == p);
 }
 
 Quaternion operator*(float scalar, const Quaternion& q) {

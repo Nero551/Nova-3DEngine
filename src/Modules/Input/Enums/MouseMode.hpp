@@ -1,5 +1,4 @@
 #pragma once
-#include "OpenGL.hpp"
 
 namespace N {
 /** @brief Specifies how the mouse cursor is handled by the window. */

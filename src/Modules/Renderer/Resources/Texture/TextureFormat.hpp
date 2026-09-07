@@ -1,7 +1,5 @@
 #pragma once
 
-#include "OpenGL.hpp"
-
 namespace N {
 /**
  * @brief Format of pixel data supplied to OpenGL.
