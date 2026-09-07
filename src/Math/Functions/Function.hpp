@@ -36,7 +36,7 @@ template <typename Input, typename Output> struct Function {
      */
     template <typename Middle> Function<Middle, Output> Compose(const Function<Middle, Input>& g) const
     {
-        return [f = *this, g](const Middle input) -> Output { return f(g(input)); };
+        return [f = *this, g](const Middle& input) { return f(g(input)); };
     }
 
     /**
@@ -51,7 +51,7 @@ template <typename Input, typename Output> struct Function {
         float dx = 0.001f, DifferentiationMethod method = DifferentiationMethod::Central, bool relativeStep = true) const
         requires IsScalar<Input>
     {
-        return [f = *this, dx, method, relativeStep](const float x) -> Output
+        return [f = *this, dx, method, relativeStep](const float x)
         {
             const float h = relativeStep ? dx * std::max(1.0f, std::abs(x)) : dx;
             switch (method)
@@ -142,10 +142,10 @@ template <typename Input, typename Output> struct Function {
      * @param a Point about which the polynomial is expanded.
      * @return A function representing the Taylor polynomial approximation.
      */
-    Function<float, Output> Taylor(float terms, float a) const
+    Function<float, Output> Taylor(unsigned int terms, float a) const
         requires IsScalar<Input>
     {
-        return [terms, a, f = *this](const float x) -> Output
+        return [terms, a, f = *this](const float x)
         {
             Output result{};
             Function currentFunc = f;
@@ -163,7 +163,7 @@ template <typename Input, typename Output> struct Function {
      * @param terms Number of terms in the Taylor polynomial.
      * @return A function representing the Maclaurin polynomial approximation.
      */
-    Function<float, Output> Maclaurin(float terms) const
+    Function<float, Output> Maclaurin(unsigned int terms) const
         requires IsScalar<Input>
     {
         return Taylor(terms, 0.0f);
@@ -180,7 +180,7 @@ template <typename Input, typename Output> struct Function {
         float lowerBound, float dx = 0.001f, IntegrationMethod method = IntegrationMethod::Midpoint) const
         requires IsScalar<Input>
     {
-        return [f = *this, lowerBound, dx, method](const float upperBound) -> Output
+        return [f = *this, lowerBound, dx, method](const float upperBound)
         {
             Output result{};
             for (float x = lowerBound; x < upperBound; x += dx)
@@ -223,25 +223,25 @@ template <typename Input, typename Output> struct Function {
     /** @brief Adds two functions pointwise, producing f(x) + g(x). */
     Function operator+(const Function& g) const
     {
-        return [f = *this, g](const Input x) -> Output { return f(x) + g(x); };
+        return [f = *this, g](const Input& x) { return f(x) + g(x); };
     }
 
     /** @brief Subtracts two functions pointwise, producing f(x) - g(x). */
     Function operator-(const Function& g) const
     {
-        return [f = *this, g](const Input x) -> Output { return f(x) - g(x); };
+        return [f = *this, g](const Input& x) { return f(x) - g(x); };
     }
 
     /** @brief Multiplies two functions pointwise, producing f(x) * g(x). */
     Function operator*(const Function& g) const
     {
-        return [f = *this, g](const Input x) -> Output { return f(x) * g(x); };
+        return [f = *this, g](const Input& x) { return f(x) * g(x); };
     }
 
     /** @brief Divides two functions pointwise, producing f(x) / g(x). */
     Function operator/(const Function& g) const
     {
-        return [f = *this, g](const Input x) -> Output { return f(x) / g(x); };
+        return [f = *this, g](const Input& x) { return f(x) / g(x); };
     }
 
     /** @brief Adds another function pointwise to this function. */
@@ -271,31 +271,31 @@ template <typename Input, typename Output> struct Function {
     /** @brief Negates the function, producing -f(x). */
     Function operator-() const
     {
-        return [f = *this](const Input x) -> Output { return -f(x); };
+        return [f = *this](const Input& x) { return -f(x); };
     }
 
     /** @brief Adds a value of the Output type to the function result. */
     Function operator+(const Output& value) const
     {
-        return [f = *this, value](const Input x) -> Output { return f(x) + value; };
+        return [f = *this, value](const Input& x) { return f(x) + value; };
     }
 
     /** @brief Subtracts a value of the Output type from the function result. */
     Function operator-(const Output& value) const
     {
-        return [f = *this, value](const Input x) -> Output { return f(x) - value; };
+        return [f = *this, value](const Input& x) { return f(x) - value; };
     }
 
     /** @brief Multiplies the function result by a value of the Output type. */
     Function operator*(const Output& value) const
     {
-        return [f = *this, value](const Input x) -> Output { return f(x) * value; };
+        return [f = *this, value](const Input& x) { return f(x) * value; };
     }
 
     /** @brief Divides the function result by a value of the Output type. */
     Function operator/(const Output& value) const
     {
-        return [f = *this, value](const Input x) -> Output { return f(x) / value; };
+        return [f = *this, value](const Input& x) { return f(x) / value; };
     }
 
     /** @brief Adds a value of the Output type to the function result from the left-hand side. */
@@ -307,7 +307,7 @@ template <typename Input, typename Output> struct Function {
     /** @brief Subtracts the function result from a value of the Output type. */
     friend Function operator-(const Output& value, const Function& f)
     {
-        return [f, value](const Input& x) -> Output { return value - f(x); };
+        return [f, value](const Input& x) { return value - f(x); };
     }
 
     /** @brief Multiplies a value of the Output type by the function result. */
@@ -319,7 +319,7 @@ template <typename Input, typename Output> struct Function {
     /** @brief Divides a value of the Output type by the function result. */
     friend Function operator/(const Output& value, const Function& f)
     {
-        return [f, value](const Input& x) -> Output { return value / f(x); };
+        return [f, value](const Input& x) { return value / f(x); };
     }
 
     /** @brief Adds a value of the Output type to this function. */
@@ -350,28 +350,28 @@ template <typename Input, typename Output> struct Function {
     Function operator+(float scalar) const
         requires(!IsScalar<Output>)
     {
-        return [f = *this, scalar](const Input x) -> Output { return f(x) + scalar; };
+        return [f = *this, scalar](const Input& x) { return f(x) + scalar; };
     }
 
     /** @brief Subtracts a scalar from the function result. */
     Function operator-(float scalar) const
         requires(!IsScalar<Output>)
     {
-        return [f = *this, scalar](const Input x) -> Output { return f(x) - scalar; };
+        return [f = *this, scalar](const Input& x) { return f(x) - scalar; };
     }
 
     /** @brief Multiplies the function result by a scalar. */
     Function operator*(float scalar) const
         requires(!IsScalar<Output>)
     {
-        return [f = *this, scalar](const Input x) -> Output { return f(x) * scalar; };
+        return [f = *this, scalar](const Input& x) { return f(x) * scalar; };
     }
 
     /** @brief Divides the function result by a scalar. */
     Function operator/(float scalar) const
         requires(!IsScalar<Output>)
     {
-        return [f = *this, scalar](const Input x) -> Output { return f(x) / scalar; };
+        return [f = *this, scalar](const Input& x) { return f(x) / scalar; };
     }
 
     /** @brief Adds a scalar to the function result from the left-hand side. */
@@ -385,7 +385,7 @@ template <typename Input, typename Output> struct Function {
     friend Function operator-(float scalar, const Function& f)
         requires(!IsScalar<Output>)
     {
-        return [scalar, f](const Input& x) -> Output { return scalar - f(x); };
+        return [scalar, f](const Input& x) { return scalar - f(x); };
     }
 
     /** @brief Multiplies a scalar by the function result. */
@@ -399,7 +399,7 @@ template <typename Input, typename Output> struct Function {
     friend Function operator/(float scalar, const Function& f)
         requires(!IsScalar<Output>)
     {
-        return [scalar, f](const Input& x) -> Output { return scalar / f(x); };
+        return [scalar, f](const Input& x) { return scalar / f(x); };
     }
 
     /** @brief Adds a scalar to this function. */

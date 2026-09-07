@@ -7,6 +7,7 @@
 #include "Math/Color/Color.hpp"
 #include "Math/Common/Exponentials.hpp"
 #include "Math/Common/Logarithms.hpp"
+#include "Math/Complex/Complex.hpp"
 #include "Math/Functions/Function.hpp"
 #include "Modules/Renderer/Components/MaterialComponent.hpp"
 #include "Modules/Renderer/Components/MeshComponent.hpp"
@@ -109,11 +110,9 @@ static float time = 0;
 
 void Physics::FixedUpdate(double fdt)
 {
-    M::Function<float, M::Vector2> f = [](const float t) { return M::Vector2{ std::sin(t), std::sin(t) }; };
+    M::Function<float, M::Complex> f = [](const float t) { return M::Complex{ std::cos(t), std::sin(t) }; };
 
-    // f.Differentiate();
-
-    Plot({ f(time).x, f(time).y, -time }, M::Color::Blue);
+    Plot({ f(time).Real, f(time).Imaginary, time }, M::Color::Purple);
 
     // auto& resourceManager = Service::Get<ResourceManager>();g
     // auto& input = Engine::Get().GetModule<Input>();

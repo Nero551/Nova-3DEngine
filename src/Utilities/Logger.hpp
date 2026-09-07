@@ -4,9 +4,10 @@ namespace N::U {
 /** @brief Provides formatted console logging and pointer validation. */
 struct Logger {
     /** @brief Prints a message to the console. */
-    template <typename T> static void Print(const T& message)
+    template <typename... Args> static void Print(const Args&... args)
     {
-        std::cout << message << "\n";
+        (..., (std::cout << args));
+        std::cout << '\n';
     }
 
     /** @brief Logs an informational message. */
