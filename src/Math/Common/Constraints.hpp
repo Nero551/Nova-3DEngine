@@ -1,6 +1,7 @@
 #pragma once
 
-namespace N::M {
+namespace N::M
+{
 float Clamp(float value, float min, float max);
 
 /** @brief Smooth maximum */

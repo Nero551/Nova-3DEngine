@@ -3,13 +3,14 @@
 #include "Math/Common/Exponentials.hpp"
 #include "Math/Common/Logarithms.hpp"
 
-namespace N::M {
-Complex CPow(float x, const Complex& z)
+namespace N::M
+{
+Complex CPow(float x, const Complex &z)
 {
     return CExp(Ln(x) * z);
 }
 
-Complex CPow(const Complex& z, float power)
+Complex CPow(const Complex &z, float power)
 {
     Complex result;
 
@@ -21,19 +22,19 @@ Complex CPow(const Complex& z, float power)
     return result;
 }
 
-Complex CPow(const Complex& z, const Complex& w)
+Complex CPow(const Complex &z, const Complex &w)
 {
     return CExp(w * CLn(z));
 }
 
-Complex CSqrt(const Complex& z)
+Complex CSqrt(const Complex &z)
 {
     return CPow(z, 1.0f / 2.0f);
 }
 
-Complex CExp(const Complex& z)
+Complex CExp(const Complex &z)
 {
     float m = Exp(z.Real);
-    return { m * std::cos(z.Imaginary), m * std::sin(z.Imaginary) };
+    return {m * std::cos(z.Imaginary), m * std::sin(z.Imaginary)};
 }
 } // namespace N::M

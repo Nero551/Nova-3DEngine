@@ -3,7 +3,8 @@
 #include "Math/Vector/Vector4.hpp"
 #include "Matrix3.hpp"
 
-namespace N::M {
+namespace N::M
+{
 /**
  * @brief 4x4 floating-point matrix.
  *
@@ -30,7 +31,8 @@ namespace N::M {
  *
  * Translation occupies the last column.
  */
-struct Matrix4 {
+struct Matrix4
+{
     float m[4][4] = {};
 
     /**
@@ -55,22 +57,22 @@ struct Matrix4 {
      *     [ m20 m21 m22 m23 ]
      *     [ m30 m31 m32 m33 ]
      */
-    Matrix4(float m00, float m01, float m02, float m03, float m10, float m11, float m12, float m13, float m20, float m21,
-        float m22, float m23, float m30, float m31, float m32, float m33);
+    Matrix4(float m00, float m01, float m02, float m03, float m10, float m11, float m12, float m13,
+        float m20, float m21, float m22, float m23, float m30, float m31, float m32, float m33);
 
     /**
      * @brief Applies a 3D translation.
      *
      * @param translation Translation along the X, Y, and Z axes.
      */
-    [[nodiscard]] Matrix4 Translate(const Vector3& translation) const;
+    [[nodiscard]] Matrix4 Translate(const Vector3 &translation) const;
 
     /**
      * @brief Applies a 3D scale.
      *
      * @param scale Scale factors along the X, Y, and Z axes.
      */
-    [[nodiscard]] Matrix4 Scale(const Vector3& scale) const;
+    [[nodiscard]] Matrix4 Scale(const Vector3 &scale) const;
 
     /**
      * @brief Applies a rotation around the X axis.
@@ -96,12 +98,10 @@ struct Matrix4 {
     /**
      * @brief Applies an Euler rotation.
      *
-     * Rotations are applied in XYZ order:
-     * X, then Y, then Z.
-     *
+     * Rotations are applied in XYZ order: X, then Y, then Z.
      * @param eulerRotation Rotation angles around X, Y, and Z in radians.
      */
-    [[nodiscard]] Matrix4 Rotate(const Vector3& eulerRotation) const;
+    [[nodiscard]] Matrix4 Rotate(const Vector3 &eulerRotation) const;
 
     /**
      * @brief Applies a rotation around an arbitrary axis.
@@ -109,7 +109,7 @@ struct Matrix4 {
      * @param axis Axis of rotation.
      * @param radian Rotation angle in radians.
      */
-    [[nodiscard]] Matrix4 RotateAroundAxis(const Vector3& axis, float radian) const;
+    [[nodiscard]] Matrix4 RotateAroundAxis(const Vector3 &axis, float radian) const;
 
     /**
      * @brief Extracts the upper-left 3x3 portion of the matrix.
@@ -131,8 +131,7 @@ struct Matrix4 {
     /**
      * @brief Returns the inverse of this matrix.
      *
-     * If the matrix is not invertible, an warning is sent
-     * and Identity is returned.
+     * If the matrix is not invertible, an warning is sent and Identity is returned.
      */
     [[nodiscard]] Matrix4 Inverse() const;
 
@@ -150,34 +149,30 @@ struct Matrix4 {
      * @param mat4 Matrix to compare against.
      * @param epsilon Maximum allowed difference between corresponding elements.
      */
-    [[nodiscard]] bool NearlyEquals(const Matrix4& mat4, float epsilon = EPSILON) const;
+    [[nodiscard]] bool NearlyEquals(const Matrix4 &mat4, float epsilon = EPSILON) const;
 
-    Matrix4 operator+(const Matrix4& mat4) const;
-    Matrix4 operator-(const Matrix4& mat4) const;
-    Matrix4 operator*(const Matrix4& mat4) const;
+    Matrix4 operator+(const Matrix4 &mat4) const;
+    Matrix4 operator-(const Matrix4 &mat4) const;
+    Matrix4 operator*(const Matrix4 &mat4) const;
 
-    Matrix4& operator+=(const Matrix4& mat4);
-    Matrix4& operator-=(const Matrix4& mat4);
-    Matrix4& operator*=(const Matrix4& mat4);
+    Matrix4 &operator+=(const Matrix4 &mat4);
+    Matrix4 &operator-=(const Matrix4 &mat4);
+    Matrix4 &operator*=(const Matrix4 &mat4);
 
-    /**
-     * @brief Multiplies this matrix by a column vector.
-     */
-    Vector4 operator*(const Vector4& vec4) const;
+    /** @brief Multiplies this matrix by a column vector. */
+    Vector4 operator*(const Vector4 &vec4) const;
 
     Matrix4 operator*(float scalar) const;
     Matrix4 operator/(float scalar) const;
 
-    Matrix4& operator*=(float scalar);
-    Matrix4& operator/=(float scalar);
+    Matrix4 &operator*=(float scalar);
+    Matrix4 &operator/=(float scalar);
 
-    /**
-     * @brief Returns the additive inverse of this matrix.
-     */
+    /** @brief Returns the additive inverse of this matrix.*/
     Matrix4 operator-() const;
 
-    bool operator==(const Matrix4& mat4) const;
-    bool operator!=(const Matrix4& mat4) const;
+    bool operator==(const Matrix4 &mat4) const;
+    bool operator!=(const Matrix4 &mat4) const;
 
     /**
      * @brief Creates an orthographic projection matrix.
@@ -189,7 +184,8 @@ struct Matrix4 {
      * @param near Near clipping plane.
      * @param far Far clipping plane.
      */
-    static Matrix4 Orthographic(float left, float right, float bottom, float top, float near, float far);
+    static Matrix4 Orthographic(
+        float left, float right, float bottom, float top, float near, float far);
 
     /**
      * @brief Creates a perspective projection matrix.
@@ -208,20 +204,16 @@ struct Matrix4 {
      * @param target Point the camera is looking toward.
      * @param up Approximate world-up direction.
      */
-    static Matrix4 LookAt(const Vector3& pos, const Vector3& target, const Vector3& up);
+    static Matrix4 LookAt(const Vector3 &pos, const Vector3 &target, const Vector3 &up);
 
-    /**
-     * @brief Matrix containing only zeros.
-     */
+    /** @brief Matrix containing only zeros. */
     static const Matrix4 Zero;
 
-    /**
-     * @brief 4x4 identity matrix.
-     */
+    /** @brief 4x4 identity matrix. */
     static const Matrix4 Identity;
 };
 
-Matrix4 operator*(float scalar, const Matrix4& mat4);
+Matrix4 operator*(float scalar, const Matrix4 &mat4);
 
-std::ostream& operator<<(std::ostream& os, const Matrix4& mat4);
+std::ostream &operator<<(std::ostream &os, const Matrix4 &mat4);
 } // namespace N::M

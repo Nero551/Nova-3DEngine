@@ -3,7 +3,8 @@
 #include "../../Texture/TextureInternalFormat.hpp"
 #include "Core/OuterCore/Resource.hpp"
 
-namespace N {
+namespace N
+{
 /**
  * @brief Represents an OpenGL renderbuffer resource.
  *
@@ -11,7 +12,8 @@ namespace N {
  * or stencil information. Renderbuffers are primarily intended for use as
  * framebuffer attachments and cannot be directly sampled by shaders.
  */
-struct Renderbuffer : Resource {
+struct Renderbuffer : Resource
+{
     /** @brief Internal format used to store the renderbuffer's data. */
     TextureInternalFormat InternalFormat = TextureInternalFormat::Depth24Stencil8;
 
@@ -32,7 +34,7 @@ struct Renderbuffer : Resource {
      *
      * @param name Resource name.
      */
-    Renderbuffer(const std::string& name);
+    Renderbuffer(const std::string &name);
 
     /**
      * @brief Releases the underlying OpenGL renderbuffer object.
@@ -52,7 +54,6 @@ struct Renderbuffer : Resource {
      */
     void Generate();
 
-
     /**
      * @brief Deletes the current OpenGL renderbuffer object.
      * The renderbuffer can be generated again afterward with Generate().
@@ -71,7 +72,7 @@ struct Renderbuffer : Resource {
      */
     unsigned int GetId() const;
 
-private:
+  private:
     // OpenGL renderbuffer object ID. Zero indicates that no renderbuffer exists.
     unsigned int Id = 0;
 };

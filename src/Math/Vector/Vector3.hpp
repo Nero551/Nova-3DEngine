@@ -4,7 +4,8 @@
 #include "Math/Coordinates/Spherical.hpp"
 #include "Vector2.hpp"
 
-namespace N::M {
+namespace N::M
+{
 /**
  * @brief 3D floating-point vector.
  *
@@ -17,7 +18,8 @@ namespace N::M {
  *
  * Vectors are treated as column vectors when used with matrices.
  */
-struct Vector3 {
+struct Vector3
+{
     float x;
     float y;
     float z;
@@ -66,7 +68,7 @@ struct Vector3 {
     /**
      * @brief Calculates the dot product with another vector.
      */
-    [[nodiscard]] float Dot(const Vector3& vec3) const;
+    [[nodiscard]] float Dot(const Vector3 &vec3) const;
 
     /**
      * @brief Calculates the cross product with another vector.
@@ -74,12 +76,12 @@ struct Vector3 {
      * The resulting vector is perpendicular to both input vectors
      * and follows the right-hand rule.
      */
-    [[nodiscard]] Vector3 Cross(const Vector3& vec3) const;
+    [[nodiscard]] Vector3 Cross(const Vector3 &vec3) const;
 
     /**
      * @brief Calculates the distance to another vector.
      */
-    [[nodiscard]] float Distance(const Vector3& vec3) const;
+    [[nodiscard]] float Distance(const Vector3 &vec3) const;
 
     /** @brief uses stereographic projection to project a 3d vector onto a 2d plane */
     [[nodiscard]] Vector2 StereoProject() const;
@@ -89,7 +91,6 @@ struct Vector3 {
      * @return The angle in radians, in the range [-PI, PI].
      */
     [[nodiscard]] float Elevation() const;
-
 
     /**
      * @brief Returns the angle of the vector measured from the XZ plane.
@@ -106,7 +107,7 @@ struct Vector3 {
      * @param vec3 Vector to compare against.
      * @param epsilon Maximum allowed difference between components.
      */
-    [[nodiscard]] bool NearlyEquals(const Vector3& vec3, float epsilon = EPSILON) const;
+    [[nodiscard]] bool NearlyEquals(const Vector3 &vec3, float epsilon = EPSILON) const;
 
     /**
      * @brief Determines whether two non-zero vectors are parallel.
@@ -115,14 +116,14 @@ struct Vector3 {
      *
      * Zero vectors are never considered parallel.
      */
-    [[nodiscard]] bool IsParallelTo(const Vector3& vec3) const;
+    [[nodiscard]] bool IsParallelTo(const Vector3 &vec3) const;
 
     /**
      * @brief Determines whether two non-zero vectors are perpendicular.
      *
      * Zero vectors are never considered perpendicular.
      */
-    [[nodiscard]] bool IsPerpendicularTo(const Vector3& vec3) const;
+    [[nodiscard]] bool IsPerpendicularTo(const Vector3 &vec3) const;
 
     /**
      * @brief Linearly interpolates between this vector and another vector.
@@ -135,25 +136,25 @@ struct Vector3 {
      * @param vec3 Target vector.
      * @param t Interpolation amount.
      */
-    [[nodiscard]] Vector3 Lerp(const Vector3& vec3, float t) const;
+    [[nodiscard]] Vector3 Lerp(const Vector3 &vec3, float t) const;
 
-    Vector3 operator+(const Vector3& vec3) const;
-    Vector3 operator-(const Vector3& vec3) const;
+    Vector3 operator+(const Vector3 &vec3) const;
+    Vector3 operator-(const Vector3 &vec3) const;
 
     /**
      * @brief Performs component-wise multiplication.
      */
-    Vector3 operator*(const Vector3& vec3) const;
+    Vector3 operator*(const Vector3 &vec3) const;
 
     /**
      * @brief Performs component-wise division.
      */
-    Vector3 operator/(const Vector3& vec3) const;
+    Vector3 operator/(const Vector3 &vec3) const;
 
-    Vector3& operator+=(const Vector3& vec3);
-    Vector3& operator-=(const Vector3& vec3);
-    Vector3& operator*=(const Vector3& vec3);
-    Vector3& operator/=(const Vector3& vec3);
+    Vector3 &operator+=(const Vector3 &vec3);
+    Vector3 &operator-=(const Vector3 &vec3);
+    Vector3 &operator*=(const Vector3 &vec3);
+    Vector3 &operator/=(const Vector3 &vec3);
 
     /**
      * @brief Adds a scalar to every component.
@@ -175,25 +176,25 @@ struct Vector3 {
      */
     Vector3 operator/(float scalar) const;
 
-    Vector3& operator+=(float scalar);
-    Vector3& operator-=(float scalar);
-    Vector3& operator*=(float scalar);
-    Vector3& operator/=(float scalar);
+    Vector3 &operator+=(float scalar);
+    Vector3 &operator-=(float scalar);
+    Vector3 &operator*=(float scalar);
+    Vector3 &operator/=(float scalar);
 
     /**
      * @brief Returns the negated vector.
      */
     Vector3 operator-() const;
 
-    bool operator==(const Vector3& vec3) const;
-    bool operator!=(const Vector3& vec3) const;
+    bool operator==(const Vector3 &vec3) const;
+    bool operator!=(const Vector3 &vec3) const;
 
-    friend Vector3 operator+(float scalar, const Vector3& vec3);
-    friend Vector3 operator-(float scalar, const Vector3& vec3);
-    friend Vector3 operator*(float scalar, const Vector3& vec3);
-    friend Vector3 operator/(float scalar, const Vector3& vec3);
+    friend Vector3 operator+(float scalar, const Vector3 &vec3);
+    friend Vector3 operator-(float scalar, const Vector3 &vec3);
+    friend Vector3 operator*(float scalar, const Vector3 &vec3);
+    friend Vector3 operator/(float scalar, const Vector3 &vec3);
 
-    friend std::ostream& operator<<(std::ostream& os, const Vector3& vec3);
+    friend std::ostream &operator<<(std::ostream &os, const Vector3 &vec3);
 
     /**
      * @brief Zero vector (0, 0, 0).

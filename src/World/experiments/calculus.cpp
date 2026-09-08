@@ -10,23 +10,27 @@
 #include "Modules/Renderer/Resources/Texture/Cubemap.hpp"
 #include "World/Novas/MeshInstance3D.hpp"
 
-namespace N {
-static MeshInstance3D& CreatePoint(M::Vector4 col)
+namespace N
 {
-    auto& resourceManager = Service::Get<ResourceManager>();
-    auto& mesh = Primitives::CreateCube("point");
-    auto& material = resourceManager.Load<Material>(std::format("m{}{}{}", col.z, col.x, col.y));
+static MeshInstance3D &CreatePoint(M::Vector4 col)
+{
+    auto &resourceManager = Service::Get<ResourceManager>();
+    auto &mesh = Primitives::CreateCube("point");
+    auto &material = resourceManager.Load<Material>(std::format("m{}{}{}", col.z, col.x, col.y));
     material.Color = col;
-    auto& shader = resourceManager.Load<Shader>("pointShader");
+    auto &shader = resourceManager.Load<Shader>("pointShader");
 
-    shader.AssignSource(resourceManager.Load<ShaderSource>("pointVert", "Assets/Shaders/shader.vert", ShaderStage::Vertex));
-    shader.AssignSource(resourceManager.Load<ShaderSource>("pointFrag", "Assets/Shaders/shader.frag", ShaderStage::Fragment));
+    shader.AssignSource(resourceManager.Load<ShaderSource>(
+        "pointVert", "Assets/Shaders/shader.vert", ShaderStage::Vertex));
+    shader.AssignSource(resourceManager.Load<ShaderSource>(
+        "pointFrag", "Assets/Shaders/shader.frag", ShaderStage::Fragment));
     material.Shader = &shader;
 
-    auto& point = World::Get().CreateEntity<MeshInstance3D>();
+    auto &point = World::Get().CreateEntity<MeshInstance3D>();
     World::Get().Query.Pool<MeshComponent>().GetComponentById(point.Id).Mesh = &mesh;
     World::Get().Query.Pool<MaterialComponent>().GetComponentById(point.Id).Material = &material;
-    World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.Id).Scale = M::Vector3{ 0.2 };
+    World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.Id).Scale =
+        M::Vector3{0.2};
     World::Get().Root->AttachChild(point);
 
     return point;
@@ -34,10 +38,10 @@ static MeshInstance3D& CreatePoint(M::Vector4 col)
 
 static std::vector<U::CheckedPtr<Entity>> points = {};
 
-static Entity& Plot(const M::Vector3 vec3, const M::Vector4 col = { 1, 1, 1, 1 })
+static Entity &Plot(const M::Vector3 vec3, const M::Vector4 col = {1, 1, 1, 1})
 {
-    auto& point = CreatePoint(col);
-    auto& transform = World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.Id);
+    auto &point = CreatePoint(col);
+    auto &transform = World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.Id);
     transform.Position.x = vec3.x;
     transform.Position.y = vec3.y;
     transform.Position.z = vec3.z;
@@ -49,7 +53,6 @@ static constexpr float step = 0.01;
 static constexpr float xRange = 10;
 static float x = -10;
 
-
 void calculus::Start()
 {
     // FourDimensionalProjection(20);
@@ -59,8 +62,8 @@ static float multiplier = 1;
 
 void calculus::Update(double dt)
 {
-    auto& resourceManager = Service::Get<ResourceManager>();
-    auto& input = Engine::Get().GetModule<Input>();
+    auto &resourceManager = Service::Get<ResourceManager>();
+    auto &input = Engine::Get().GetModule<Input>();
 
     x += step;
     if (x >= xRange)
@@ -76,7 +79,8 @@ void calculus::Update(double dt)
     // }
     //
     // for (auto& point : points) {
-    //     auto& transform = World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point->Id);
+    //     auto& transform =
+    //     World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point->Id);
     //     transform.Position *= multiplier;
     // }
     //
@@ -86,7 +90,6 @@ void calculus::Update(double dt)
     //
     // M::Function exp = [](const float x) { return M::Exp(x); };
     //
-
 
     // Plot({ x, sin.Maclaurin(4)(x), 0 });
     // Plot({ x, sin.Derivative(x), 0 }, M::Color::Blue);
@@ -103,7 +106,7 @@ void calculus::TwoDimensionalProjection(float increase)
         M::Vector2 v2 = M::Vector2::FromPolar(M::Polar(theta));
         float proj = v2.StereoProject();
         // auto& d2point = Plot({v2.x, v2.y, 0});
-        auto& point = Plot({ proj, 0, 0 });
+        auto &point = Plot({proj, 0, 0});
         points.emplace_back(&point);
         // points.emplace_back(&d2point);
     }
@@ -118,7 +121,7 @@ void calculus::ThreeDimensionalProjection(float increase)
             M::Vector3 v3 = M::Vector3::FromSpherical(M::Spherical(theta, phi));
             // auto& d3point = Plot(v3);
             M::Vector2 proj = v3.StereoProject();
-            auto& point = Plot({ proj.x, proj.y, 0 });
+            auto &point = Plot({proj.x, proj.y, 0});
             points.emplace_back(&point);
             // points.emplace_back(&d3point);
         }
@@ -135,7 +138,7 @@ void calculus::FourDimensionalProjection(float increase)
             {
                 M::Vector4 v4 = M::Vector4::FromHyperSpherical(M::HyperSpherical(theta, phi, h));
                 M::Vector3 proj = v4.StereoProject();
-                auto& point = Plot(proj);
+                auto &point = Plot(proj);
                 points.emplace_back(&point);
             }
         }

@@ -7,17 +7,18 @@
 #include "../Shader/Uniforms/Vector4Uniform.hpp"
 #include "Utilities/Logger.hpp"
 
-namespace N {
-Material::Material(const std::string& name) : Resource(name)
+namespace N
 {
-    auto& whiteTexture = Primitives::CreateWhiteTexture();
+Material::Material(const std::string &name) : Resource(name)
+{
+    auto &whiteTexture = Primitives::CreateWhiteTexture();
 
     DiffuseMap = &whiteTexture;
     SpecularMap = &whiteTexture;
     EmissionMap = &whiteTexture;
 }
 
-void Material::AssignTexture(Texture& texture, const unsigned int slot)
+void Material::AssignTexture(Texture &texture, const unsigned int slot)
 {
     if (slot >= MaxCustomTextures)
     {

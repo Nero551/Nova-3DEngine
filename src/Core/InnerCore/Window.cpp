@@ -3,12 +3,13 @@
 #include "Engine.hpp"
 #include "Utilities/Logger.hpp"
 
-namespace N {
-Window::Window(const int width, const int height, const std::string& title)
+namespace N
+{
+Window::Window(const int width, const int height, const std::string &title)
 {
     SetHints();
 
-    GLFWwindow* glfwWindow = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
+    GLFWwindow *glfwWindow = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
     if (!glfwWindow)
     {
         U::Logger::Fatal("Failed To Create Window");
@@ -31,7 +32,6 @@ Window::~Window()
     glfwDestroyWindow(GlfwWindow);
 }
 
-
 float Window::GetAspectRatio() const
 {
     return static_cast<float>(GetWidth()) / static_cast<float>(GetHeight());
@@ -52,17 +52,17 @@ void Window::PollEvents()
     glfwPollEvents();
 }
 
-void Window::SetTitle(const std::string& title)
+void Window::SetTitle(const std::string &title)
 {
     glfwSetWindowTitle(GlfwWindow, title.c_str());
 }
 
-void Window::SetIcon(const U::Image& icon)
+void Window::SetIcon(const U::Image &icon)
 {
     GLFWimage image;
     image.height = icon.Height;
     image.width = icon.Width;
-    image.pixels = const_cast<unsigned char*>(icon.Pixels.data());
+    image.pixels = const_cast<unsigned char *>(icon.Pixels.data());
     glfwSetWindowIcon(GlfwWindow, 1, &image);
 }
 
@@ -103,7 +103,7 @@ void Window::Close()
     glfwSetWindowShouldClose(GlfwWindow, GL_TRUE);
 }
 
-GLFWwindow* Window::GetGlfwWindow()
+GLFWwindow *Window::GetGlfwWindow()
 {
     return GlfwWindow;
 }

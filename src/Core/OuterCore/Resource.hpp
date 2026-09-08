@@ -1,6 +1,7 @@
 #pragma once
 
-namespace N {
+namespace N
+{
 /**
  * @brief Base class for resources managed by ResourceManager.
  *
@@ -8,19 +9,20 @@ namespace N {
  * polymorphic destruction through a virtual destructor.
  * Resources are non-copyable but movable.
  */
-struct Resource {
+struct Resource
+{
     std::string Name;
 
     Resource(std::string name) : Name(std::move(name)) {};
 
     virtual ~Resource() = default;
 
-    Resource(const Resource&) = delete;
+    Resource(const Resource &) = delete;
 
-    Resource& operator=(const Resource&) = delete;
+    Resource &operator=(const Resource &) = delete;
 
-    Resource(Resource&&) = default;
+    Resource(Resource &&) = default;
 
-    Resource& operator=(Resource&&) = default;
+    Resource &operator=(Resource &&) = default;
 };
 } // namespace N

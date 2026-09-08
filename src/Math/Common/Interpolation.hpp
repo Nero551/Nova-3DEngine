@@ -1,5 +1,6 @@
 #pragma once
-namespace N::M {
+namespace N::M
+{
 float Lerp(float a, float b, float t);
 float EaseInQuad(float t);
 float EaseOutQuad(float t);

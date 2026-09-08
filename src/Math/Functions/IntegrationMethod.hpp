@@ -1,3 +1,9 @@
 #pragma once
 
-enum class IntegrationMethod { Left, Right, Midpoint, Trapezoid };
+enum class IntegrationMethod
+{
+    Left,
+    Right,
+    Midpoint,
+    Trapezoid
+};

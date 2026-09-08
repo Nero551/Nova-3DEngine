@@ -4,34 +4,36 @@
 #include "Math/Matrix/Matrix4.hpp"
 #include "Math/Quaternion/Quaternion.hpp"
 
-namespace N {
+namespace N
+{
 //
-struct Transform3DComponent : Component {
+struct Transform3DComponent : Component
+{
     M::Vector3 Position = M::Vector3::Zero;
     M::Quaternion Rotation = M::Quaternion::Identity;
     M::Vector3 Scale = M::Vector3::One;
 
     bool InheritTransform = true;
 
-private:
+  private:
     M::Vector3 DirtyPos = M::Vector3::Zero;
     M::Vector3 DirtyScale = M::Vector3::One;
     M::Quaternion DirtyRotation = M::Quaternion::Identity;
     M::Matrix4 DirtyModelMatrix = M::Matrix4::Identity;
     M::Matrix3 DirtyNormalMatrix = M::Matrix3::Identity;
 
-public:
+  public:
     [[nodiscard]] M::Matrix4 GetModelMatrix()
     {
-        if (DirtyPos != GlobalPosition || DirtyScale != GlobalScale || DirtyRotation != GlobalRotation)
+        if (DirtyPos != GlobalPosition || DirtyScale != GlobalScale ||
+            DirtyRotation != GlobalRotation)
         {
             DirtyPos = GlobalPosition;
             DirtyRotation = GlobalRotation;
             DirtyScale = GlobalScale;
 
-
             M::Matrix4 modelMatrix = M::Matrix4::Identity;
-            modelMatrix = modelMatrix.Translate({ GlobalPosition });
+            modelMatrix = modelMatrix.Translate({GlobalPosition});
             modelMatrix *= GlobalRotation.ToMatrix4();
             modelMatrix = modelMatrix.Scale(GlobalScale);
             DirtyModelMatrix = modelMatrix;
@@ -43,7 +45,8 @@ public:
 
     [[nodiscard]] M::Matrix3 GetNormalMatrix()
     {
-        if (DirtyPos != GlobalPosition || DirtyScale != GlobalScale || DirtyRotation != GlobalRotation)
+        if (DirtyPos != GlobalPosition || DirtyScale != GlobalScale ||
+            DirtyRotation != GlobalRotation)
         {
             DirtyNormalMatrix = GetModelMatrix().ToMatrix3().Inverse().Transpose();
 
@@ -54,20 +57,20 @@ public:
 
     [[nodiscard]] M::Vector3 GetRight() const
     {
-        return GlobalRotation.Transform({ 1, 0, 0 });
+        return GlobalRotation.Transform({1, 0, 0});
     }
 
     [[nodiscard]] M::Vector3 GetUp() const
     {
-        return GlobalRotation.Transform({ 0, 1, 0 });
+        return GlobalRotation.Transform({0, 1, 0});
     }
 
     [[nodiscard]] M::Vector3 GetForward() const
     {
-        return GlobalRotation.Transform({ 0, 0, -1 });
+        return GlobalRotation.Transform({0, 0, -1});
     }
 
-private:
+  private:
     // TODO-this is temporary until i have a proper change detection system (reflection)
     M::Vector3 GlobalPosition = M::Vector3::Zero;
     M::Quaternion GlobalRotation = M::Quaternion::Identity;

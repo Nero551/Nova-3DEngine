@@ -1,7 +1,8 @@
 #pragma once
 #include "Math/Common/Trigonometry.hpp"
 
-namespace N::M {
+namespace N::M
+{
 /**
  * @brief Represents a vector using hyperspherical coordinates.
  *
@@ -15,7 +16,8 @@ namespace N::M {
  *
  * The angles are expressed in radians.
  */
-struct HyperSpherical {
+struct HyperSpherical
+{
     float Elevation;
     float Azimuth;
     float HyperAngle;
@@ -29,14 +31,15 @@ struct HyperSpherical {
      * @param hyperAngle Angle determining the fourth-dimensional component, in radians.
      * @param magnitude Length of the represented vector.
      */
-    HyperSpherical(float elevation, float azimuth, float hyperAngle, float magnitude = 1) :
-        Elevation(elevation), Azimuth(azimuth), HyperAngle(hyperAngle), Magnitude(magnitude)
-    {}
-
-    friend std::ostream& operator<<(std::ostream& os, const HyperSpherical& hyperSpherical)
+    HyperSpherical(float elevation, float azimuth, float hyperAngle, float magnitude = 1)
+        : Elevation(elevation), Azimuth(azimuth), HyperAngle(hyperAngle), Magnitude(magnitude)
     {
-        os << "(" << hyperSpherical.Magnitude << ", " << Deg(hyperSpherical.Elevation) << "°, " << Deg(hyperSpherical.Azimuth)
-           << "°, " << Deg(hyperSpherical.HyperAngle) << "°"
+    }
+
+    friend std::ostream &operator<<(std::ostream &os, const HyperSpherical &hyperSpherical)
+    {
+        os << "(" << hyperSpherical.Magnitude << ", " << Deg(hyperSpherical.Elevation) << "°, "
+           << Deg(hyperSpherical.Azimuth) << "°, " << Deg(hyperSpherical.HyperAngle) << "°"
            << ")";
         return os;
     }

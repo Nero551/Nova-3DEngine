@@ -10,7 +10,8 @@
 #include "Topology.hpp"
 #include "Vertex.hpp"
 
-namespace N {
+namespace N
+{
 /**
  * @brief Represents a renderable mesh resource.
  *
@@ -18,7 +19,8 @@ namespace N {
  * to render the mesh. GPU resources are generated lazily when Generate()
  * is called.
  */
-struct Mesh : Resource {
+struct Mesh : Resource
+{
     VertexArray VAO;
     ArrayBuffer VBO;
     IndexBuffer EBO;
@@ -50,7 +52,7 @@ struct Mesh : Resource {
      * @brief Creates a mesh resource.
      * @param name Resource name.
      */
-    Mesh(const std::string& name);
+    Mesh(const std::string &name);
 
     /** Releases the OpenGL resources owned by the mesh. */
     ~Mesh() override;
@@ -80,12 +82,11 @@ struct Mesh : Resource {
      */
     void Draw();
 
-
     /**
-     * @brief Draws the mesh using its configured rendering state using Instanced rendering.
-     * Applies the culling mode, front-face winding, render mode, and
-     * topology before issuing the draw call. Generates the OpenGL
-     * resources first if they have not yet been created.
+     * @brief Draws the mesh using its configured rendering state using Instanced
+     * rendering. Applies the culling mode, front-face winding, render mode, and topology
+     * before issuing the draw call. Generates the OpenGL resources first if they have not
+     * yet been created.
      * @param instanceCount number of meshes to render.
      */
     void DrawInstanced(int instanceCount);
@@ -98,7 +99,7 @@ struct Mesh : Resource {
      */
     void Regenerate();
 
-private:
+  private:
     /** @brief Issues the OpenGL draw call using mesh's index & vertex data.
      * Does NOT generate the VAO, VBO or EBO. nor binds the VAO.
      */

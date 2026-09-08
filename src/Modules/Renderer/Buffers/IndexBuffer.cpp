@@ -1,8 +1,8 @@
 #include "IndexBuffer.hpp"
 
-namespace N {
-IndexBuffer::IndexBuffer()
-{}
+namespace N
+{
+IndexBuffer::IndexBuffer() {}
 
 void IndexBuffer::Generate()
 {
@@ -13,10 +13,11 @@ void IndexBuffer::Generate()
     glCreateBuffers(1, &Id);
 }
 
-void IndexBuffer::SetData(const std::vector<unsigned int>& indices)
+void IndexBuffer::SetData(const std::vector<unsigned int> &indices)
 {
     Generate();
-    glNamedBufferData(Id, indices.size() * sizeof(unsigned int), indices.data(), static_cast<GLenum>(Usage));
+    glNamedBufferData(
+        Id, indices.size() * sizeof(unsigned int), indices.data(), static_cast<GLenum>(Usage));
 }
 
 bool IndexBuffer::IsGenerated()

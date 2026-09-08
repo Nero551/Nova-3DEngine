@@ -2,7 +2,8 @@
 
 #include <complex>
 
-namespace N::M {
+namespace N::M
+{
 float Ln(const float x)
 {
     return std::log(x);

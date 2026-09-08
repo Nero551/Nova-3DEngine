@@ -3,20 +3,22 @@
 
 #include "Utilities/Image/Image.hpp"
 
-namespace N {
+namespace N
+{
 /**
  * @brief Wrapper around a GLFW window.
  * Owns the underlying GLFW window and provides basic window
  * management and event handling.
  */
-struct Window {
+struct Window
+{
     /**
      * @brief Creates a window.
      * @param width Window width in pixels.
      * @param height Window height in pixels.
      * @param title Window title.
      */
-    Window(int width, int height, const std::string& title);
+    Window(int width, int height, const std::string &title);
 
     /** @brief Destroys the underlying GLFW window. */
     ~Window();
@@ -36,9 +38,9 @@ struct Window {
     /** Processes pending GLFW events. */
     void PollEvents();
 
-    void SetTitle(const std::string& title);
+    void SetTitle(const std::string &title);
 
-    void SetIcon(const U::Image& icon);
+    void SetIcon(const U::Image &icon);
 
     /** @param height New height in pixels */
     void SetHeight(int height);
@@ -61,10 +63,10 @@ struct Window {
 
     void Close();
 
-    GLFWwindow* GetGlfwWindow();
+    GLFWwindow *GetGlfwWindow();
 
-private:
-    GLFWwindow* GlfwWindow;
+  private:
+    GLFWwindow *GlfwWindow;
 
     void SetHints();
 };

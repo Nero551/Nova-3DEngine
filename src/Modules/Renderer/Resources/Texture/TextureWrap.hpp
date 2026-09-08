@@ -1,10 +1,12 @@
 #pragma once
 
-namespace N {
+namespace N
+{
 /**
  * @brief Defines how texture coordinates outside the [0, 1] range are handled.
  */
-enum class TextureWrap {
+enum class TextureWrap
+{
     /** Repeats the texture when texture coordinates exceed the [0, 1] range. */
     Repeat = GL_REPEAT,
 
@@ -14,7 +16,8 @@ enum class TextureWrap {
     /** Clamps texture coordinates to the edge of the texture. */
     ClampToEdge = GL_CLAMP_TO_EDGE,
 
-    /** Uses the configured border color when texture coordinates fall outside the texture. */
+    /** Uses the configured border color when texture coordinates fall outside the
+     * texture. */
     ClampToBorder = GL_CLAMP_TO_BORDER
 };
 } // namespace N

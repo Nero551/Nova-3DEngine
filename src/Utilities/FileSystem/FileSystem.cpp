@@ -5,8 +5,9 @@
 
 #include "Utilities/Logger.hpp"
 
-namespace N::U {
-std::string FileSystem::ReadFile(const std::string& path)
+namespace N::U
+{
+std::string FileSystem::ReadFile(const std::string &path)
 {
     std::ifstream file(path);
     std::stringstream buffer;
@@ -20,7 +21,7 @@ std::string FileSystem::ReadFile(const std::string& path)
     return buffer.str();
 }
 
-void FileSystem::WriteFile(const std::string& path, const std::string& content)
+void FileSystem::WriteFile(const std::string &path, const std::string &content)
 {
     std::ofstream file(path);
 

@@ -1,8 +1,10 @@
 #pragma once
 #include "OpenGL.hpp"
 
-namespace N {
-enum class DepthFunction {
+namespace N
+{
+enum class DepthFunction
+{
     Never = GL_NEVER,
     Less = GL_LESS,
     Equal = GL_EQUAL,
@@ -12,4 +14,4 @@ enum class DepthFunction {
     GreaterEqual = GL_GEQUAL,
     Always = GL_ALWAYS
 };
-}
+} // namespace N

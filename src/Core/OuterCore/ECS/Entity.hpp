@@ -2,7 +2,8 @@
 
 #include "Utilities/CheckedPtr.hpp"
 
-namespace N {
+namespace N
+{
 /**
 
 * @brief Represents an entity in the world.
@@ -13,20 +14,21 @@ namespace N {
 * Components are stored by their type and each entity may contain at most
 * one component of a given type.
   */
-struct Entity {
+struct Entity
+{
     unsigned int Id = 0;
 
     virtual ~Entity() = default;
 
     Entity() = default;
 
-    Entity(const Entity&) = delete;
+    Entity(const Entity &) = delete;
 
-    Entity& operator=(const Entity&) = delete;
+    Entity &operator=(const Entity &) = delete;
 
-    Entity(Entity&&) = default;
+    Entity(Entity &&) = default;
 
-    Entity& operator=(Entity&&) = default;
+    Entity &operator=(Entity &&) = default;
 
     /**
 
@@ -35,8 +37,7 @@ struct Entity {
     * Intended to be overridden by derived entity types that require
     * initialization.
       */
-    virtual void Initialize()
-    {}
+    virtual void Initialize() {}
     /**
 
     * @brief Destroys a direct child entity.
@@ -53,7 +54,7 @@ struct Entity {
     *
     * @param child Entity to attach.
       */
-    void AttachChild(Entity& child);
+    void AttachChild(Entity &child);
 
     /**
      * @brief Detaches a direct child from this entity.
@@ -69,7 +70,7 @@ struct Entity {
     * @param id Id of the child entity.
     * @return Reference to the requested child.
       */
-    Entity& GetChild(unsigned int id);
+    Entity &GetChild(unsigned int id);
 
     /**
      * @brief Attempts to get a direct child by ID.
@@ -121,7 +122,7 @@ struct Entity {
      * @param entity Potential ancestor entity.
      * @return True if this entity is a descendant of the given entity.
      */
-    bool IsDescendantOf(const Entity& entity);
+    bool IsDescendantOf(const Entity &entity);
 
     /**
      * @brief Gets all ancestors of the entity.
@@ -136,7 +137,7 @@ struct Entity {
      * @param entity Potential descendant entity.
      * @return True if this entity is an ancestor.
      */
-    bool IsAncestorOf(const Entity& entity);
+    bool IsAncestorOf(const Entity &entity);
 
     /**
      * @brief Checks whether this entity has the specified ancestor.
@@ -149,13 +150,13 @@ struct Entity {
      * @brief Gets the entity's parent.
      * @return Reference to the parent entity.
      */
-    Entity& GetParent();
+    Entity &GetParent();
 
     /**
      * @brief Sets the parent of this entity.
      * @param parent new parent entity.
      */
-    void SetParent(Entity& parent);
+    void SetParent(Entity &parent);
 
     /** @brief Removes the entity from its current parent. */
     void ClearParent();
@@ -174,9 +175,9 @@ struct Entity {
      * Traverses the parent chain until an entity without a parent is found.
      * @return Reference to the root entity.
      */
-    Entity& GetRoot();
+    Entity &GetRoot();
 
-private:
+  private:
     std::vector<unsigned int> Children;
 
     /** @brief Parent entity in the hierarchy. */
@@ -187,6 +188,6 @@ private:
      * @param entities Vector to append discovered descendants to.
      * @param entity Entity whose descendants should be traversed.
      */
-    void RecursiveChildren(std::vector<U::CheckedPtr<Entity>>& entities, const Entity& entity);
+    void RecursiveChildren(std::vector<U::CheckedPtr<Entity>> &entities, const Entity &entity);
 };
 } // namespace N

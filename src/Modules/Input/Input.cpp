@@ -4,7 +4,8 @@
 
 #include "Core/InnerCore/Engine.hpp"
 
-namespace N {
+namespace N
+{
 bool Input::IsKeyHeld(const Key key)
 {
     return CurrentKeys[ToIndex(key)];
@@ -79,12 +80,20 @@ constexpr unsigned int Input::ToIndex(MouseButton button)
 
 void Input::Start()
 {
-    Window& window = Engine::Get().Window;
-    glfwSetCursorPosCallback(window.GetGlfwWindow(), [](GLFWwindow*, const double xPos, const double yPos)
-        { Engine::Get().GetModule<Input>().MousePosition = { static_cast<float>(xPos), static_cast<float>(yPos) }; });
+    Window &window = Engine::Get().Window;
+    glfwSetCursorPosCallback(window.GetGlfwWindow(),
+        [](GLFWwindow *, const double xPos, const double yPos)
+        {
+            Engine::Get().GetModule<Input>().MousePosition = {
+                static_cast<float>(xPos), static_cast<float>(yPos)};
+        });
 
-    glfwSetScrollCallback(window.GetGlfwWindow(), [](GLFWwindow*, const double xOffset, const double yOffset)
-        { Engine::Get().GetModule<Input>().ScrollOffset = { static_cast<float>(xOffset), static_cast<float>(yOffset) }; });
+    glfwSetScrollCallback(window.GetGlfwWindow(),
+        [](GLFWwindow *, const double xOffset, const double yOffset)
+        {
+            Engine::Get().GetModule<Input>().ScrollOffset = {
+                static_cast<float>(xOffset), static_cast<float>(yOffset)};
+        });
 }
 
 void Input::BeginFrame(double dt)
@@ -95,7 +104,7 @@ void Input::BeginFrame(double dt)
         FirstMouse = false;
     }
 
-    GLFWwindow* window = Engine::Get().Window.GetGlfwWindow();
+    GLFWwindow *window = Engine::Get().Window.GetGlfwWindow();
     for (int key = GLFW_KEY_SPACE; key <= GLFW_KEY_LAST; ++key)
     {
         CurrentKeys[key] = glfwGetKey(window, key) == GLFW_PRESS;
@@ -109,7 +118,7 @@ void Input::BeginFrame(double dt)
 
 void Input::EndFrame(double dt)
 {
-    ScrollOffset = { 0, 0 };
+    ScrollOffset = {0, 0};
     PreviousMousePosition = MousePosition;
     PreviousKeys = CurrentKeys;
     PreviousMouseButtons = CurrentMouseButtons;

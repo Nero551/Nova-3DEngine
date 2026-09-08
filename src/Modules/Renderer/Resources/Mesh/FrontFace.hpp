@@ -1,13 +1,15 @@
 #pragma once
 
-namespace N {
+namespace N
+{
 /**
  * @brief Defines the vertex winding order considered front-facing.
  *
  * OpenGL uses the winding order of a triangle's vertices to determine
  * whether the triangle is front-facing or back-facing during rasterization.
  */
-enum class FrontFace {
+enum class FrontFace
+{
     /** @brief Considers clockwise-wound triangles front-facing. */
     Clockwise = GL_CW,
 

@@ -3,8 +3,10 @@
 #include "Modules/Renderer/Components/MeshComponent.hpp"
 #include "Nova3D.hpp"
 
-namespace N {
-struct MeshInstance3D : Nova3D {
+namespace N
+{
+struct MeshInstance3D : Nova3D
+{
     void Initialize() override
     {
         Nova3D::Initialize();

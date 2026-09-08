@@ -10,4 +10,6 @@
  * @brief Contains utility functions, helpers, and supporting structures for
  * Nova.
  */
-namespace N::U {}
+namespace N::U
+{
+}

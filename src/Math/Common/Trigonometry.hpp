@@ -1,6 +1,7 @@
 #pragma once
 
-namespace N::M {
+namespace N::M
+{
 float Rad(float deg);
 float Deg(float rad);
 

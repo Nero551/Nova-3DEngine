@@ -3,7 +3,8 @@
 #include "../Common/Constants.hpp"
 #include "../Coordinates/Polar.hpp"
 
-namespace N::M {
+namespace N::M
+{
 /**
  * @brief Represents a complex number in Cartesian form.
  *
@@ -17,7 +18,8 @@ namespace N::M {
  * i^2 = -1
  * @endcode
  */
-struct Complex {
+struct Complex
+{
     float Real;
     float Imaginary;
 
@@ -102,38 +104,37 @@ struct Complex {
      * @param epsilon The maximum allowed difference between components.
      * @return @c true if both components are approximately equal.
      */
-    bool NearlyEquals(const Complex& b, float epsilon = EPSILON) const;
+    bool NearlyEquals(const Complex &b, float epsilon = EPSILON) const;
 
-    bool operator==(const Complex& b) const;
-    bool operator!=(const Complex& b) const;
+    bool operator==(const Complex &b) const;
+    bool operator!=(const Complex &b) const;
 
     Complex operator-() const;
-    Complex operator*(const Complex& b) const;
-    Complex operator/(const Complex& b) const;
-    Complex operator+(const Complex& b) const;
-    Complex operator-(const Complex& b) const;
+    Complex operator*(const Complex &b) const;
+    Complex operator/(const Complex &b) const;
+    Complex operator+(const Complex &b) const;
+    Complex operator-(const Complex &b) const;
 
-    Complex& operator*=(const Complex& b);
-    Complex& operator/=(const Complex& b);
-    Complex& operator+=(const Complex& b);
-    Complex& operator-=(const Complex& b);
+    Complex &operator*=(const Complex &b);
+    Complex &operator/=(const Complex &b);
+    Complex &operator+=(const Complex &b);
+    Complex &operator-=(const Complex &b);
 
     Complex operator*(float scalar) const;
     Complex operator/(float scalar) const;
     Complex operator+(float scalar) const;
     Complex operator-(float scalar) const;
 
-    Complex& operator*=(float scalar);
-    Complex& operator/=(float scalar);
-    Complex& operator+=(float scalar);
-    Complex& operator-=(float scalar);
+    Complex &operator*=(float scalar);
+    Complex &operator/=(float scalar);
+    Complex &operator+=(float scalar);
+    Complex &operator-=(float scalar);
 
+    friend Complex operator*(float scalar, const Complex &a);
+    friend Complex operator/(float scalar, const Complex &a);
+    friend Complex operator+(float scalar, const Complex &a);
+    friend Complex operator-(float scalar, const Complex &a);
 
-    friend Complex operator*(float scalar, const Complex& a);
-    friend Complex operator/(float scalar, const Complex& a);
-    friend Complex operator+(float scalar, const Complex& a);
-    friend Complex operator-(float scalar, const Complex& a);
-
-    friend std::ostream& operator<<(std::ostream& os, const Complex& complex);
+    friend std::ostream &operator<<(std::ostream &os, const Complex &complex);
 };
 } // namespace N::M

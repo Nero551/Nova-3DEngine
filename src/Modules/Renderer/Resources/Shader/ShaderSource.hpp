@@ -6,12 +6,14 @@
 #include "Core/OuterCore/Resource.hpp"
 #include "ShaderStage.hpp"
 
-namespace N {
+namespace N
+{
 /**
  * @brief Represents a shader source file and its OpenGL shader object.
  * Handles loading, preprocessing, and reloading of a shader source.
  */
-struct ShaderSource : Resource {
+struct ShaderSource : Resource
+{
     std::string Path;
 
     /** @brief code loaded from the source , no modifications */
@@ -25,10 +27,12 @@ struct ShaderSource : Resource {
     // TODO- it would be really cool if i could have methods for adding code
     //  dynamically , like GenerateInt("MaxLights", 20)
     //  and it adds it to the shader code, (hint: dont forget std::variants)
-    //  could also do full string and just concatenate. Generate("int MaxLights = 20;", lineNumber)
-    //  although, all this requires a more advanced parser , like maybe line by line and storing which line has which code.
+    //  could also do full string and just concatenate. Generate("int MaxLights = 20;",
+    //  lineNumber) although, all this requires a more advanced parser , like maybe line
+    //  by line and storing which line has which code.
 
-    ShaderSource(const std::string& name, const std::string& path, ShaderStage stage, std::string version = "version 460 core");
+    ShaderSource(const std::string &name, const std::string &path, ShaderStage stage,
+        std::string version = "version 460 core");
 
     ~ShaderSource() override;
     unsigned int GetId() const;
@@ -45,7 +49,7 @@ struct ShaderSource : Resource {
     /** @brief Reloads and preprocesses the shader source. */
     void Reload();
 
-private:
+  private:
     unsigned int Id = 0;
     ShaderStage Stage;
 
@@ -53,6 +57,7 @@ private:
     std::unordered_set<std::string> Includes;
 
     void Preprocess();
-    void PreprocessIncludes(const std::string& path, std::string& code, std::unordered_set<std::string>& includesProcessing);
+    void PreprocessIncludes(const std::string &path, std::string &code,
+        std::unordered_set<std::string> &includesProcessing);
 };
 } // namespace N

@@ -1,6 +1,7 @@
 #include "Uniformbuffer.hpp"
 
-namespace N {
+namespace N
+{
 void Uniformbuffer::Generate()
 {
     if (IsGenerated())

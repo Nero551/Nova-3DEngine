@@ -2,7 +2,8 @@
 
 #include "SystemOwner.hpp"
 
-namespace N {
+namespace N
+{
 /**
  * @brief Base class for all engine modules.
  * Modules provide engine-specific functionality and participate in the
@@ -10,27 +11,28 @@ namespace N {
  * Lifecycle callbacks are invoked by Engine and may be overridden by
  * derived modules to implement initialization, updating, rendering,
  * and shutdown behavior.
- * @remark Order: OnStart -> OnBeginFrame -> OnFixedUpdate -> OnUpdate -> OnRender -> OnEndFrame -> OnStop
+ * @remark Order: OnStart -> OnBeginFrame -> OnFixedUpdate -> OnUpdate -> OnRender ->
+ * OnEndFrame -> OnStop
  */
-struct Module : SystemOwner {
+struct Module : SystemOwner
+{
     Module() = default;
 
-    Module(const Module&) = delete;
+    Module(const Module &) = delete;
 
-    Module& operator=(const Module&) = delete;
+    Module &operator=(const Module &) = delete;
 
-    Module(Module&&) = default;
+    Module(Module &&) = default;
 
-    Module& operator=(Module&&) = default;
+    Module &operator=(Module &&) = default;
 
-protected:
+  protected:
     /**
      * @brief Called once when the module is started.
      * Override this method to perform initialization.
      * @note Called by Engine. Do not call this method directly.
      */
-    virtual void Start()
-    {}
+    virtual void Start() {}
 
     /**
      * @brief Called once per variable-timestep frame.
@@ -39,8 +41,7 @@ protected:
      * @param dt Time elapsed since the previous frame, in seconds.
      * @note Called by Engine. Do not call this method directly.
      */
-    virtual void Update(double dt)
-    {}
+    virtual void Update(double dt) {}
 
     /**
      * @brief Called once per fixed-timestep update.
@@ -49,8 +50,7 @@ protected:
      * @param fdt Fixed time step between updates, in seconds.
      * @note Called by Engine. Do not call this method directly.
      */
-    virtual void FixedUpdate(double fdt)
-    {}
+    virtual void FixedUpdate(double fdt) {}
 
     /**
      * @brief Called when the module's rendering stage is executed.
@@ -58,8 +58,7 @@ protected:
      * render-related work.
      * @note Called by Engine. Do not call this method directly.
      */
-    virtual void Render()
-    {}
+    virtual void Render() {}
 
     /**
      * @brief Called at the beginning of a frame.
@@ -68,8 +67,7 @@ protected:
      * @param dt Time elapsed since the previous frame, in seconds.
      * @note Called by Engine. Do not call this method directly.
      */
-    virtual void BeginFrame(double dt)
-    {}
+    virtual void BeginFrame(double dt) {}
 
     /**
      * @brief Called at the end of a frame.
@@ -78,16 +76,14 @@ protected:
      * @param dt Time elapsed since the previous frame, in seconds.
      * @note Called by Engine. Do not call this method directly.
      */
-    virtual void EndFrame(double dt)
-    {}
+    virtual void EndFrame(double dt) {}
 
     /**
      * @brief Called once when the module is stopped.
      * Override this method to perform cleanup.
      * @note Called by Engine. Do not call this method directly.
      */
-    virtual void Stop()
-    {}
+    virtual void Stop() {}
 
     friend struct Engine;
 };

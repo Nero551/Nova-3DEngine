@@ -4,7 +4,8 @@
 #include "TextureInternalFormat.hpp"
 #include "TextureTarget.hpp"
 
-namespace N {
+namespace N
+{
 /**
  * @brief Base class for OpenGL texture resources.
  *
@@ -16,7 +17,8 @@ namespace N {
  * implementing their specific GPU storage and data upload behavior through
  * Generate().
  */
-struct Texture : Resource {
+struct Texture : Resource
+{
     /** Internal format used to store the texture data on the GPU. */
     TextureInternalFormat InternalFormat = TextureInternalFormat::RGBA8;
 
@@ -35,7 +37,7 @@ struct Texture : Resource {
      * @param name Resource name.
      * @param target OpenGL texture target represented by this texture.
      */
-    Texture(const std::string& name, TextureTarget target);
+    Texture(const std::string &name, TextureTarget target);
 
     /** @brief Releases the underlying OpenGL texture object. */
     ~Texture() override;
@@ -88,11 +90,11 @@ struct Texture : Resource {
     void Bind(unsigned int unit);
     void Unbind(unsigned int unit) const;
 
-protected:
+  protected:
     /** OpenGL texture object ID. Zero indicates that no object is generated. */
     unsigned int Id = 0;
 
-private:
+  private:
     /** OpenGL texture target associated with this texture type. */
     TextureTarget Target;
 };

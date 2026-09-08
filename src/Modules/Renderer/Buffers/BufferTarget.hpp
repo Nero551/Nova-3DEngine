@@ -1,9 +1,11 @@
 #pragma once
 #include "OpenGL.hpp"
 
-namespace N {
+namespace N
+{
 /** @brief Specifies the purpose and binding target of a buffer. */
-enum class BufferTarget : GLenum {
+enum class BufferTarget : GLenum
+{
     /** @brief Vertex attribute data. */
     Array = GL_ARRAY_BUFFER,
     /** @brief Element/index data. */

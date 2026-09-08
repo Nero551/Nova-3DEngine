@@ -1,13 +1,16 @@
 #pragma once
 #include "Math/Vector/Vector3.hpp"
 
-namespace N::M {
+namespace N::M
+{
 /**
  * @brief Represents a quaternion in polar form.
  * A quaternion can be represented as `q = m(cos(θ) + u sin(θ))`,
- * where `m` is the magnitude, `θ` is the angle, and `u` is the normalized imaginary-axis direction.
+ * where `m` is the magnitude, `θ` is the angle, and `u` is the normalized imaginary-axis
+ * direction.
  */
-struct QPolar {
+struct QPolar
+{
     Vector3 Axis;
     float Angle;
     float Magnitude;
@@ -18,10 +21,12 @@ struct QPolar {
      * @param angle Quaternion polar angle in radians.
      * @param magnitude Quaternion magnitude.
      */
-    QPolar(Vector3 axis, float angle, float magnitude = 1) : Axis(axis.Normalized()), Angle(angle), Magnitude(magnitude)
-    {}
+    QPolar(Vector3 axis, float angle, float magnitude = 1)
+        : Axis(axis.Normalized()), Angle(angle), Magnitude(magnitude)
+    {
+    }
 
-    friend std::ostream& operator<<(std::ostream& os, const QPolar& polar)
+    friend std::ostream &operator<<(std::ostream &os, const QPolar &polar)
     {
         os << "(" << polar.Magnitude << ", " << polar.Axis << ", " << Deg(polar.Angle) << "°"
            << ")";

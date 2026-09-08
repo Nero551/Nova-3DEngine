@@ -3,7 +3,8 @@
 #include "Math/Common/Constants.hpp"
 #include "Math/Coordinates/Polar.hpp"
 
-namespace N::M {
+namespace N::M
+{
 /**
  * @brief 2D floating-point vector.
  *
@@ -13,7 +14,8 @@ namespace N::M {
  *
  * Vectors are treated as column vectors when used with matrices.
  */
-struct Vector2 {
+struct Vector2
+{
     float x;
     float y;
 
@@ -21,7 +23,7 @@ struct Vector2 {
      * @brief Constructs a vector from polar coordinates (r,theta)
      * @param polar Polar coords to use.
      */
-    [[nodiscard]] static Vector2 FromPolar(const Polar& polar);
+    [[nodiscard]] static Vector2 FromPolar(const Polar &polar);
 
     /**
      * @brief Creates a zero vector.
@@ -69,7 +71,7 @@ struct Vector2 {
     /**
      * @brief Calculates the dot product with another vector.
      */
-    [[nodiscard]] float Dot(const Vector2& vec2) const;
+    [[nodiscard]] float Dot(const Vector2 &vec2) const;
 
     /**
      * @brief Linearly interpolates between this vector and another vector.
@@ -82,14 +84,15 @@ struct Vector2 {
      * @param vec2 Target vector.
      * @param t Interpolation amount.
      */
-    [[nodiscard]] Vector2 Lerp(const Vector2& vec2, float t) const;
+    [[nodiscard]] Vector2 Lerp(const Vector2 &vec2, float t) const;
 
     /**
      * @brief Calculates the distance to another vector.
      */
-    [[nodiscard]] float Distance(const Vector2& vec2) const;
+    [[nodiscard]] float Distance(const Vector2 &vec2) const;
 
-    /** @brief uses stereographic projection to project a 2d vector onto a 1d plane (line) */
+    /** @brief uses stereographic projection to project a 2d vector onto a 1d plane (line)
+     */
     [[nodiscard]] float StereoProject() const;
 
     /**
@@ -103,10 +106,10 @@ struct Vector2 {
      * @param vec2 Vector to compare against.
      * @param epsilon Maximum allowed difference between corresponding components.
      */
-    [[nodiscard]] bool NearlyEquals(const Vector2& vec2, float epsilon = EPSILON) const;
+    [[nodiscard]] bool NearlyEquals(const Vector2 &vec2, float epsilon = EPSILON) const;
 
-    Vector2 operator+(const Vector2& vec2) const;
-    Vector2 operator-(const Vector2& vec2) const;
+    Vector2 operator+(const Vector2 &vec2) const;
+    Vector2 operator-(const Vector2 &vec2) const;
 
     /**
      * @brief Performs component-wise multiplication.
@@ -116,11 +119,11 @@ struct Vector2 {
      * Example:
      *     (2, 3) * (4, 5) = (8, 15)
      */
-    Vector2 operator*(const Vector2& vec2) const;
+    Vector2 operator*(const Vector2 &vec2) const;
 
-    Vector2& operator+=(const Vector2& vec2);
-    Vector2& operator-=(const Vector2& vec2);
-    Vector2& operator*=(const Vector2& vec2);
+    Vector2 &operator+=(const Vector2 &vec2);
+    Vector2 &operator-=(const Vector2 &vec2);
+    Vector2 &operator*=(const Vector2 &vec2);
 
     /**
      * @brief Adds a scalar to every component.
@@ -142,25 +145,25 @@ struct Vector2 {
      */
     Vector2 operator/(float scalar) const;
 
-    Vector2& operator+=(float scalar);
-    Vector2& operator-=(float scalar);
-    Vector2& operator*=(float scalar);
-    Vector2& operator/=(float scalar);
+    Vector2 &operator+=(float scalar);
+    Vector2 &operator-=(float scalar);
+    Vector2 &operator*=(float scalar);
+    Vector2 &operator/=(float scalar);
 
     /**
      * @brief Returns the negated vector.
      */
     Vector2 operator-() const;
 
-    bool operator==(const Vector2& vec2) const;
-    bool operator!=(const Vector2& vec2) const;
+    bool operator==(const Vector2 &vec2) const;
+    bool operator!=(const Vector2 &vec2) const;
 
-    friend Vector2 operator+(float scalar, const Vector2& vec2);
-    friend Vector2 operator-(float scalar, const Vector2& vec2);
-    friend Vector2 operator*(float scalar, const Vector2& vec2);
-    friend Vector2 operator/(float scalar, const Vector2& vec2);
+    friend Vector2 operator+(float scalar, const Vector2 &vec2);
+    friend Vector2 operator-(float scalar, const Vector2 &vec2);
+    friend Vector2 operator*(float scalar, const Vector2 &vec2);
+    friend Vector2 operator/(float scalar, const Vector2 &vec2);
 
-    friend std::ostream& operator<<(std::ostream& os, const Vector2& vec2);
+    friend std::ostream &operator<<(std::ostream &os, const Vector2 &vec2);
 
     /**
      * @brief Zero vector (0, 0).

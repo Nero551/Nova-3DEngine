@@ -3,11 +3,13 @@
 #include "Modules/Renderer/Buffers/ArrayBuffer.hpp"
 #include "OpenGL.hpp"
 
-namespace N {
+namespace N
+{
 /**
  * @brief Represents an OpenGL Uniform Buffer Object.
  */
-struct Uniformbuffer : Resource {
+struct Uniformbuffer : Resource
+{
     // TODO: Store uniforms and calculate their offsets automatically.
     // Values currently have to be written to the buffer manually.
 
@@ -20,8 +22,7 @@ struct Uniformbuffer : Resource {
     /** @brief Uniform buffer binding point. */
     unsigned int Binding = 0;
 
-    Uniformbuffer(const std::string& name) : Resource(name)
-    {}
+    Uniformbuffer(const std::string &name) : Resource(name) {}
 
     /** @brief Generates the OpenGL uniform buffer. */
     void Generate();
@@ -33,7 +34,7 @@ struct Uniformbuffer : Resource {
      * @param offset Byte offset within the buffer.
      * @param extraSize Additional bytes to write for alignment or padding.
      */
-    template <typename T> void Set(const T& value, int offset, int extraSize = 0)
+    template <typename T> void Set(const T &value, int offset, int extraSize = 0)
     {
         Generate();
         glNamedBufferSubData(Id, offset, sizeof(T) + extraSize, &value);
@@ -54,7 +55,7 @@ struct Uniformbuffer : Resource {
     /** @brief Gets the OpenGL uniform buffer object ID. */
     unsigned int GetId() const;
 
-private:
+  private:
     /** OpenGL uniform buffer object ID. */
     unsigned int Id = 0;
 };

@@ -6,7 +6,8 @@
 #include "World.hpp"
 
 /** @brief Root namespace for Nova engine functionality. */
-namespace N {
+namespace N
+{
 template <typename T>
 concept ModuleType = std::derived_from<T, Module>;
 
@@ -14,28 +15,30 @@ concept ModuleType = std::derived_from<T, Module>;
  * @brief Main Nova engine and game loop.
  * Manages the window, world, modules, and frame lifecycle.
  */
-struct Engine {
-private:
+struct Engine
+{
+  private:
     GraphicsContext GraphicsContext{};
 
-public:
+  public:
     Window Window;
     World World;
 
-    Engine(const Engine&) = delete;
-    Engine& operator=(const Engine&) = delete;
-    Engine(Engine&&) = delete;
-    Engine& operator=(Engine&&) = delete;
+    Engine(const Engine &) = delete;
+    Engine &operator=(const Engine &) = delete;
+    Engine(Engine &&) = delete;
+    Engine &operator=(Engine &&) = delete;
 
     /** @brief Constructs the engine and registers it as the global instance. */
     Engine();
 
     /** @brief Returns the global engine instance. */
-    static Engine& Get();
+    static Engine &Get();
 
     /**
      * @brief Runs the engine's main loop.
-     * @remark Order: Start -> BeginFrame -> FixedUpdate -> Update -> Render -> EndFrame -> Stop
+     * @remark Order: Start -> BeginFrame -> FixedUpdate -> Update -> Render -> EndFrame
+     * -> Stop
      */
     void Run();
 
@@ -46,17 +49,17 @@ public:
     double GetTime() const;
 
     /** @brief Returns a registered module by type. */
-    template <ModuleType T> T& GetModule()
+    template <ModuleType T> T &GetModule()
     {
         auto module = Modules.find(typeid(T));
         if (module == Modules.end())
         {
             U::Logger::Fatal(std::format("Module {} not found", typeid(T).name()));
         }
-        return static_cast<T&>(*module->second);
+        return static_cast<T &>(*module->second);
     }
 
-private:
+  private:
     /** @brief Global engine instance. */
     inline static U::CheckedPtr<Engine> Instance = nullptr;
 
@@ -81,11 +84,11 @@ private:
     void Configure();
 
     /** @brief Creates and registers a module. */
-    template <ModuleType T> T& AddModule()
+    template <ModuleType T> T &AddModule()
     {
         auto module = std::make_unique<T>();
         Modules.emplace(typeid(T), std::move(module));
-        return static_cast<T&>(*Modules.find(typeid(T))->second);
+        return static_cast<T &>(*Modules.find(typeid(T))->second);
     }
 
     /** @brief Starts the engine and its systems. */

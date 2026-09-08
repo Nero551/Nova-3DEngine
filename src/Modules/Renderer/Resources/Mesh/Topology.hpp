@@ -1,11 +1,13 @@
 #pragma once
 
-namespace N {
+namespace N
+{
 
 /**
  * @brief Defines how vertices are assembled into primitives for rendering.
  */
-enum class Topology {
+enum class Topology
+{
     /** Renders each vertex as an individual point. */
     Points = GL_POINTS,
 
@@ -15,7 +17,8 @@ enum class Topology {
     /** Renders every group of three vertices as an independent triangle. */
     Triangles = GL_TRIANGLES,
 
-    /** Renders connected triangles, where each new vertex forms a triangle with the previous two vertices. */
+    /** Renders connected triangles, where each new vertex forms a triangle with the previous two
+     * vertices. */
     TriangleStrip = GL_TRIANGLE_STRIP,
 
     /** Renders connected line segments, where each new vertex extends the previous line. */

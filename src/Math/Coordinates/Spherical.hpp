@@ -1,7 +1,8 @@
 #pragma once
 #include "Math/Common/Trigonometry.hpp"
 
-namespace N::M {
+namespace N::M
+{
 /**
  * @brief Represents a vector using spherical coordinates.
  *
@@ -13,7 +14,8 @@ namespace N::M {
  *
  * The angles are expressed in radians.
  */
-struct Spherical {
+struct Spherical
+{
     float Elevation;
     float Azimuth;
     float Magnitude;
@@ -24,12 +26,15 @@ struct Spherical {
      * @param azimuth Angle around the vertical axis, in radians.
      * @param magnitude Length of the represented vector.
      */
-    Spherical(float elevation, float azimuth, float magnitude = 1) : Elevation(elevation), Azimuth(azimuth), Magnitude(magnitude)
-    {}
-
-    friend std::ostream& operator<<(std::ostream& os, const Spherical& spherical)
+    Spherical(float elevation, float azimuth, float magnitude = 1)
+        : Elevation(elevation), Azimuth(azimuth), Magnitude(magnitude)
     {
-        os << "(" << spherical.Magnitude << ", " << Deg(spherical.Elevation) << "°, " << Deg(spherical.Azimuth) << "°"
+    }
+
+    friend std::ostream &operator<<(std::ostream &os, const Spherical &spherical)
+    {
+        os << "(" << spherical.Magnitude << ", " << Deg(spherical.Elevation) << "°, "
+           << Deg(spherical.Azimuth) << "°"
            << ")";
         return os;
     }

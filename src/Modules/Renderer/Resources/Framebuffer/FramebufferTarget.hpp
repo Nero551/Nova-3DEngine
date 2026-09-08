@@ -1,13 +1,15 @@
 #pragma once
 
-namespace N {
+namespace N
+{
 /**
  * @brief Specifies which framebuffer target is affected by framebuffer operations.
  *
  * Controls whether operations apply to both the read and draw framebuffer,
  * only the read framebuffer, or only the draw framebuffer.
  */
-enum class FrameBufferTarget {
+enum class FrameBufferTarget
+{
     /** Both the read and draw framebuffer. */
     ReadDraw = GL_FRAMEBUFFER,
 

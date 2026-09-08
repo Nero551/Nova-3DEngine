@@ -1,59 +1,12 @@
----
-Language: Cpp
 BasedOnStyle: LLVM
-AccessModifierOffset: -4
 AlignAfterOpenBracket: false
-AlignConsecutiveAssignments: false
-AlignConsecutiveDeclarations: false
-AlignOperands: DontAlign
-AlignTrailingComments: false
-AllowShortBlocksOnASingleLine: Never
-AllowShortFunctionsOnASingleLine: None
-AlwaysBreakAfterDefinitionReturnType: None
-AlwaysBreakTemplateDeclarations: No
-BraceWrapping:
-  AfterCaseLabel: true
-  AfterClass: false
-  AfterControlStatement: Always
-  AfterEnum: false
-  AfterFunction: true
-  AfterNamespace: false
-  AfterStruct: false
-  AfterUnion: false
-  AfterExternBlock: false
-  BeforeCatch: true
-  BeforeElse: true
-  BeforeLambdaBody: true
-  BeforeWhile: true
-  SplitEmptyFunction: false
-  SplitEmptyRecord: false
-  SplitEmptyNamespace: false
-BreakBeforeBraces: Custom
-BreakConstructorInitializers: AfterColon
-BreakConstructorInitializersBeforeComma: false
-ColumnLimit: 130
-ConstructorInitializerAllOnOneLineOrOnePerLine: false
-Cpp11BracedListStyle: Block
-IncludeCategories:
-  - Regex: '^<.*'
-    Priority: 1
-  - Regex: '^".*'
-    Priority: 2
-  - Regex: '.*'
-    Priority: 3
-IncludeIsMainRegex: '([-_](test|unittest))?$'
-IndentCaseBlocks: true
+AlignArrayOfStructures: Left
+AllowShortCaseExpressionOnASingleLine: false
+AllowShortEnumsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Empty
+BreakBeforeBraces: Allman
+ColumnLimit: 100
 IndentWidth: 4
-InsertNewlineAtEOF: true
-MacroBlockBegin: ''
-MacroBlockEnd: ''
-MaxEmptyLinesToKeep: 2
-NamespaceIndentation: Inner
-PointerAlignment: Left
-SpaceInEmptyParentheses: false
-SpacesInAngles: Never
-SpacesInConditionalStatement: false
-SpacesInCStyleCastParentheses: false
-SpacesInParentheses: false
-TabWidth: 4
-...
+RequiresClausePosition: WithPreceding
+AlignOperands: DontAlign
+ReflowComments: Never

@@ -1,8 +1,10 @@
 #pragma once
 
 /** @brief Mouse buttons for input */
-namespace N {
-enum class MouseButton {
+namespace N
+{
+enum class MouseButton
+{
     Left = GLFW_MOUSE_BUTTON_LEFT,
     Right = GLFW_MOUSE_BUTTON_RIGHT,
     Middle = GLFW_MOUSE_BUTTON_MIDDLE,

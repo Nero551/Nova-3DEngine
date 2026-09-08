@@ -2,7 +2,8 @@
 
 #include "Utilities/Logger.hpp"
 
-namespace N {
+namespace N
+{
 void Cubemap::Generate()
 {
     Texture::Generate();
@@ -14,8 +15,10 @@ void Cubemap::Generate()
     Width = Front.Width;
     Height = Front.Height;
 
-    if (Back.Width != Width || Back.Height != Height || Top.Width != Width || Top.Height != Height || Bottom.Width != Width ||
-        Bottom.Height != Height || Right.Width != Width || Right.Height != Height || Left.Width != Width || Left.Height != Height)
+    if (Back.Width != Width || Back.Height != Height || Top.Width != Width ||
+        Top.Height != Height || Bottom.Width != Width || Bottom.Height != Height ||
+        Right.Width != Width || Right.Height != Height || Left.Width != Width ||
+        Left.Height != Height)
     {
         U::Logger::Error("Cubemap faces must all have the same dimensions.");
         return;
@@ -27,9 +30,9 @@ void Cubemap::Generate()
     GLenum format = static_cast<GLenum>(Format);
     GLenum dataType = static_cast<GLenum>(DataType);
 
-    const int mipmapLevels = AutoMipmaps ? static_cast<int>(std::floor(std::log2(std::max(Width, Height)))) + 1 : 1;
+    const int mipmapLevels =
+        AutoMipmaps ? static_cast<int>(std::floor(std::log2(std::max(Width, Height)))) + 1 : 1;
     glTextureStorage2D(Id, mipmapLevels, static_cast<GLint>(InternalFormat), Width, Height);
-
 
     glTextureSubImage3D(Id, 0, 0, 0, 0, Width, Height, 1, format, dataType, Right.Pixels.data());
     glTextureSubImage3D(Id, 0, 0, 0, 1, Width, Height, 1, format, dataType, Left.Pixels.data());

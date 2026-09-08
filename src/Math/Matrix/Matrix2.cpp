@@ -3,7 +3,8 @@
 #include "Math/Common/Comparison.hpp"
 #include "Utilities/Logger.hpp"
 
-namespace N::M {
+namespace N::M
+{
 Matrix2::Matrix2(const float mAll)
 {
     for (int row = 0; row < 2; row++)
@@ -26,7 +27,7 @@ Matrix2::Matrix2(const float m00, const float m01, const float m10, const float 
 //? Operations
 
 //? Methods
-Matrix2 Matrix2::Scale(const Vector2& scale) const
+Matrix2 Matrix2::Scale(const Vector2 &scale) const
 {
     Matrix2 scaleMatrix = Identity;
     scaleMatrix.m[0][0] = scale.x;
@@ -77,7 +78,7 @@ Matrix2 Matrix2::Transpose() const
     return result;
 }
 
-bool Matrix2::NearlyEquals(const Matrix2& mat2, const float epsilon) const
+bool Matrix2::NearlyEquals(const Matrix2 &mat2, const float epsilon) const
 {
     for (int row = 0; row < 2; row++)
     {
@@ -93,7 +94,7 @@ bool Matrix2::NearlyEquals(const Matrix2& mat2, const float epsilon) const
 }
 
 //* Matrices
-Matrix2 Matrix2::operator+(const Matrix2& mat2) const
+Matrix2 Matrix2::operator+(const Matrix2 &mat2) const
 {
     Matrix2 result = Zero;
     for (int row = 0; row < 2; row++)
@@ -106,7 +107,7 @@ Matrix2 Matrix2::operator+(const Matrix2& mat2) const
     return result;
 }
 
-Matrix2 Matrix2::operator-(const Matrix2& mat2) const
+Matrix2 Matrix2::operator-(const Matrix2 &mat2) const
 {
     Matrix2 result = Zero;
     for (int row = 0; row < 2; row++)
@@ -119,7 +120,7 @@ Matrix2 Matrix2::operator-(const Matrix2& mat2) const
     return result;
 }
 
-Matrix2 Matrix2::operator*(const Matrix2& mat2) const
+Matrix2 Matrix2::operator*(const Matrix2 &mat2) const
 {
     Matrix2 result(0);
 
@@ -137,25 +138,25 @@ Matrix2 Matrix2::operator*(const Matrix2& mat2) const
     return result;
 }
 
-Matrix2& Matrix2::operator+=(const Matrix2& mat2)
+Matrix2 &Matrix2::operator+=(const Matrix2 &mat2)
 {
     return *this = *this + mat2;
 }
 
-Matrix2& Matrix2::operator-=(const Matrix2& mat2)
+Matrix2 &Matrix2::operator-=(const Matrix2 &mat2)
 {
     return *this = *this - mat2;
 }
 
-Matrix2& Matrix2::operator*=(const Matrix2& mat2)
+Matrix2 &Matrix2::operator*=(const Matrix2 &mat2)
 {
     return *this = *this * mat2;
 }
 
 //* Vectors
-Vector2 Matrix2::operator*(const Vector2& vec2) const
+Vector2 Matrix2::operator*(const Vector2 &vec2) const
 {
-    return { m[0][0] * vec2.x + m[0][1] * vec2.y, m[1][0] * vec2.x + m[1][1] * vec2.y };
+    return {m[0][0] * vec2.x + m[0][1] * vec2.y, m[1][0] * vec2.x + m[1][1] * vec2.y};
 }
 
 //* Scalars
@@ -185,12 +186,12 @@ Matrix2 Matrix2::operator/(const float scalar) const
     return result;
 }
 
-Matrix2& Matrix2::operator*=(const float scalar)
+Matrix2 &Matrix2::operator*=(const float scalar)
 {
     return *this = *this * scalar;
 }
 
-Matrix2& Matrix2::operator/=(const float scalar)
+Matrix2 &Matrix2::operator/=(const float scalar)
 {
     return *this = *this / scalar;
 }
@@ -201,7 +202,7 @@ Matrix2 Matrix2::operator-() const
 }
 
 //* Equality
-bool Matrix2::operator==(const Matrix2& mat2) const
+bool Matrix2::operator==(const Matrix2 &mat2) const
 {
     for (int row = 0; row < 2; row++)
     {
@@ -214,7 +215,7 @@ bool Matrix2::operator==(const Matrix2& mat2) const
     return true;
 }
 
-bool Matrix2::operator!=(const Matrix2& mat2) const
+bool Matrix2::operator!=(const Matrix2 &mat2) const
 {
     return !(*this == mat2);
 }
@@ -224,13 +225,13 @@ Matrix2 const Matrix2::Zero = Matrix2(0);
 
 Matrix2 const Matrix2::Identity = Matrix2(1, 0, 0, 1);
 
-Matrix2 operator*(const float scalar, const Matrix2& mat2)
+Matrix2 operator*(const float scalar, const Matrix2 &mat2)
 {
     return mat2 * scalar;
 }
 
 //* Others
-std::ostream& operator<<(std::ostream& os, const Matrix2& mat2)
+std::ostream &operator<<(std::ostream &os, const Matrix2 &mat2)
 {
     os << "[ " << mat2.m[0][0] << "  " << mat2.m[0][1] << " ]\n";
     os << "[ " << mat2.m[1][0] << "  " << mat2.m[1][1] << " ]";

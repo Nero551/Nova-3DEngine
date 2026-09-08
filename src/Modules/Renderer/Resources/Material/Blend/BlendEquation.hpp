@@ -1,11 +1,14 @@
 #pragma once
 #include "OpenGL.hpp"
 
-namespace N {
+namespace N
+{
 /**
- * @brief Defines the mathematical operation used to combine source and destination colors during blending.
+ * @brief Defines the mathematical operation used to combine source and destination colors
+ * during blending.
  */
-enum class BlendEquation {
+enum class BlendEquation
+{
     /** Adds the source and destination colors. */
     Add = GL_FUNC_ADD,
 

@@ -6,11 +6,13 @@
 #include "ShaderSource.hpp"
 #include "ShaderStage.hpp"
 
-namespace N {
+namespace N
+{
 /**
  * @brief Result produced by shader source validation.
  */
-struct ShaderValidationResult {
+struct ShaderValidationResult
+{
     /**
      * @brief Whether the shader passed validation.
      */
@@ -36,14 +38,15 @@ struct ShaderValidationResult {
  * OpenGL shader compilation should still be performed because the graphics
  * driver remains the final authority for whether a shader can be compiled.
  */
-struct ShaderSourceValidator {
+struct ShaderSourceValidator
+{
     /**
      * @brief Converts a shader stage to glslang's shader stage.
      *
      * @param stage The shader stage used by the engine.
      * @return The corresponding glslang shader language.
      */
-    static EShLanguage ToEShLanguage(const ShaderStage& stage);
+    static EShLanguage ToEShLanguage(const ShaderStage &stage);
 
     /**
      * @brief Validates a shader source.
@@ -55,6 +58,6 @@ struct ShaderSourceValidator {
      * @return A ShaderValidationResult containing the validation status
      *         and any diagnostics produced by glslang.
      */
-    static ShaderValidationResult Validate(const ShaderSource& source);
+    static ShaderValidationResult Validate(const ShaderSource &source);
 };
 } // namespace N

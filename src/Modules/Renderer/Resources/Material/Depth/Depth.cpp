@@ -1,6 +1,7 @@
 #include "Depth.hpp"
 
-namespace N {
+namespace N
+{
 void Depth::Apply()
 {
     if (!Enabled)

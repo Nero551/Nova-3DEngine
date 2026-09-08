@@ -1,7 +1,8 @@
 #pragma once
 #include "OpenGL.hpp"
 
-namespace N {
+namespace N
+{
 /**
  * @brief Specifies an attachment point of a framebuffer.
  *
@@ -11,7 +12,8 @@ namespace N {
  * Multiple color attachments can be used simultaneously for techniques such
  * as deferred rendering and multiple render targets.
  */
-enum class FramebufferAttachment {
+enum class FramebufferAttachment
+{
     /** First color attachment used as a color render target. */
     Color0 = GL_COLOR_ATTACHMENT0,
 

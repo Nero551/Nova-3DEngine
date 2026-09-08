@@ -2,11 +2,12 @@
 #include "Core/OuterCore/ECS/Entity.hpp"
 #include "Core/OuterCore/Event.hpp"
 
-namespace N {
-struct EntityDestroyed : Event<EntityDestroyed> {
-    Entity& entity;
+namespace N
+{
+struct EntityDestroyed : Event<EntityDestroyed>
+{
+    Entity &entity;
 
-    EntityDestroyed(Entity& entity) : entity(entity)
-    {}
+    EntityDestroyed(Entity &entity) : entity(entity) {}
 };
 } // namespace N

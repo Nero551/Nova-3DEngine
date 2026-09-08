@@ -2,13 +2,15 @@
 
 #include "Core/OuterCore/ECS/System.hpp"
 
-namespace N {
-struct calculus : System {
+namespace N
+{
+struct calculus : System
+{
     void Start() override;
 
     void Update(double dt) override;
 
-private:
+  private:
     void TwoDimensionalProjection(float increase);
     void ThreeDimensionalProjection(float increase);
     void FourDimensionalProjection(float increase);

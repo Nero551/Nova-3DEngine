@@ -1,6 +1,7 @@
 #include "Random.hpp"
 
-namespace N::M {
+namespace N::M
+{
 static std::mt19937 rng(std::random_device{}());
 
 float Random(const float min, const float max)

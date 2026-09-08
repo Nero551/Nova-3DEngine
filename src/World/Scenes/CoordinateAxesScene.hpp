@@ -2,8 +2,10 @@
 
 #include "Core/OuterCore/Scene.hpp"
 
-namespace N {
-struct CoordinateAxesScene : Scene {
+namespace N
+{
+struct CoordinateAxesScene : Scene
+{
     CoordinateAxesScene();
 };
 } // namespace N

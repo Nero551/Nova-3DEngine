@@ -1,6 +1,5 @@
 #include "Renderer.hpp"
 
-#include <tracy/Tracy.hpp>
 #include "../../World/Components/Transform3DComponent.hpp"
 #include "Components/CameraComponent.hpp"
 #include "Components/MaterialComponent.hpp"
@@ -15,27 +14,30 @@
 #include "Resources/Texture/Texture2D.hpp"
 #include "Systems/CameraSystem.hpp"
 #include "Systems/LightingSystem.hpp"
+#include <tracy/Tracy.hpp>
 
-namespace N {
+namespace N
+{
 void Renderer::SetupFramebuffer()
 {
-    const std::vector vertices = { Vertex({ -1.0f, -1.0f, 0.0f, 1.0f }, {}, { 0.0f, 0.0f }, {}),
-        Vertex({ 1.0f, -1.0f, 0.0f, 1.0f }, {}, { 1.0f, 0.0f }, {}), Vertex({ 1.0f, 1.0f, 0.0f, 1.0f }, {}, { 1.0f, 1.0f }, {}),
-        Vertex({ -1.0f, 1.0f, 0.0f, 1.0f }, {}, { 0.0f, 1.0f }, {}) };
+    const std::vector vertices = {Vertex({-1.0f, -1.0f, 0.0f, 1.0f}, {}, {0.0f, 0.0f}, {}),
+        Vertex({1.0f, -1.0f, 0.0f, 1.0f}, {}, {1.0f, 0.0f}, {}),
+        Vertex({1.0f, 1.0f, 0.0f, 1.0f}, {}, {1.0f, 1.0f}, {}),
+        Vertex({-1.0f, 1.0f, 0.0f, 1.0f}, {}, {0.0f, 1.0f}, {})};
 
-    const std::vector<unsigned int> indices = { 0, 1, 2, 2, 3, 0 };
-    auto& resources = Service::Get<ResourceManager>();
-    auto& window = Engine::Get().Window;
+    const std::vector<unsigned int> indices = {0, 1, 2, 2, 3, 0};
+    auto &resources = Service::Get<ResourceManager>();
+    auto &window = Engine::Get().Window;
 
     Framebuffer = &resources.Load<struct Framebuffer>("[Renderer] Framebuffer");
 
     ScreenMesh = &resources.Load<Mesh>("[Renderer] Screen Mesh");
     ScreenMaterial = &resources.Load<Material>("[Renderer] Screen Material");
-    auto& screenShader = resources.Load<Shader>("[Renderer] Screen Shader");
-    auto& screenVert =
-        resources.Load<ShaderSource>("[Renderer] Screen Vertex", "Assets/Shaders/screen.vert", ShaderStage::Vertex);
-    auto& screenFrag =
-        resources.Load<ShaderSource>("[Renderer] Screen Fragment", "Assets/Shaders/screen.frag", ShaderStage::Fragment);
+    auto &screenShader = resources.Load<Shader>("[Renderer] Screen Shader");
+    auto &screenVert = resources.Load<ShaderSource>(
+        "[Renderer] Screen Vertex", "Assets/Shaders/screen.vert", ShaderStage::Vertex);
+    auto &screenFrag = resources.Load<ShaderSource>(
+        "[Renderer] Screen Fragment", "Assets/Shaders/screen.frag", ShaderStage::Fragment);
 
     screenShader.AssignSource(screenVert);
     screenShader.AssignSource(screenFrag);
@@ -49,7 +51,7 @@ void Renderer::SetupFramebuffer()
     ScreenMesh->Indices = indices;
     ScreenMesh->CullMode = CullMode::None;
 
-    auto& screenTexture = resources.Load<Texture2D>("COLOR_BUFFER");
+    auto &screenTexture = resources.Load<Texture2D>("COLOR_BUFFER");
     screenTexture.Width = window.GetWidth();
     screenTexture.Height = window.GetHeight();
     screenTexture.InternalFormat = TextureInternalFormat::RGB8;
@@ -62,10 +64,10 @@ void Renderer::SetupFramebuffer()
     Framebuffer->AttachTexture(FramebufferAttachment::Color0, screenTexture);
 
     glfwSetFramebufferSizeCallback(Engine::Get().Window.GetGlfwWindow(),
-        [](GLFWwindow*, const int w, const int h)
+        [](GLFWwindow *, const int w, const int h)
         {
             glViewport(0, 0, w, h);
-            auto& renderer = Engine::Get().GetModule<Renderer>();
+            auto &renderer = Engine::Get().GetModule<Renderer>();
             renderer.MSAAFramebuffer->Resize(w, h);
             renderer.Framebuffer->Resize(w, h);
         });
@@ -73,19 +75,20 @@ void Renderer::SetupFramebuffer()
 
 void Renderer::SetupMSAAFrameBuffer()
 {
-    auto& resources = Service::Get<ResourceManager>();
-    auto& window = Engine::Get().Window;
+    auto &resources = Service::Get<ResourceManager>();
+    auto &window = Engine::Get().Window;
 
     MSAAFramebuffer = &resources.Load<struct Framebuffer>("[Renderer] MSAA Framebuffer");
     MSAAFramebuffer->Target = FrameBufferTarget::ReadDraw;
 
-    auto& colorBuffer = resources.Load<Renderbuffer>("[Renderer] MSAA Color Render Buffer");
+    auto &colorBuffer = resources.Load<Renderbuffer>("[Renderer] MSAA Color Render Buffer");
     colorBuffer.Width = window.GetWidth();
     colorBuffer.Height = window.GetHeight();
     colorBuffer.Samples = MSAASamples;
     colorBuffer.InternalFormat = TextureInternalFormat::RGB8;
 
-    auto& depthstencilBuffer = resources.Load<Renderbuffer>("[Renderer] MSAA DepthStencil Render Buffer");
+    auto &depthstencilBuffer =
+        resources.Load<Renderbuffer>("[Renderer] MSAA DepthStencil Render Buffer");
     depthstencilBuffer.Height = window.GetHeight();
     depthstencilBuffer.Width = window.GetWidth();
     depthstencilBuffer.Samples = MSAASamples;
@@ -97,7 +100,7 @@ void Renderer::SetupMSAAFrameBuffer()
 
 void Renderer::PresentFramebuffer()
 {
-    auto& window = Engine::Get().Window;
+    auto &window = Engine::Get().Window;
     int width = window.GetWidth();
     int height = window.GetHeight();
 
@@ -109,7 +112,7 @@ void Renderer::PresentFramebuffer()
     glClear(GL_COLOR_BUFFER_BIT);
 
     int i = 0;
-    for (auto& texture : Framebuffer->TextureAttachments | std::views::values)
+    for (auto &texture : Framebuffer->TextureAttachments | std::views::values)
     {
         ScreenMaterial->AssignTexture(*texture, i);
         i++;
@@ -133,7 +136,7 @@ void Renderer::Start()
     glEnable(GL_PROGRAM_POINT_SIZE);
     glEnable(GL_MULTISAMPLE);
 
-    auto& resources = Service::Get<ResourceManager>();
+    auto &resources = Service::Get<ResourceManager>();
     GUniformbuffer = &resources.Load<Uniformbuffer>("[Renderer] Global Uniform buffer");
     GUniformbuffer->Size = 160;
 
@@ -151,21 +154,25 @@ void Renderer::BeginFrame(double dt)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
+// TODO- after i learn compute shaders, i could move this entire rendering pipeline on a
+// compute shader.
 void Renderer::RenderWorld()
 {
-    const auto& camera = World::Get().ActiveCamera;
-    auto& query = World::Get().Query;
+    const auto &camera = World::Get().ActiveCamera;
+    auto &query = World::Get().Query;
 
-    const M::Matrix4 projection = query.Pool<CameraComponent>().GetComponentById(camera->Id).GetProjectionMatrix();
+    const M::Matrix4 projection =
+        query.Pool<CameraComponent>().GetComponentById(camera->Id).GetProjectionMatrix();
     const M::Matrix4 view = GetSystem<CameraSystem>().GetViewMatrix();
 
     GUniformbuffer->Set(view.Transpose(), 0);
     GUniformbuffer->Set(projection.Transpose(), 64);
     GUniformbuffer->Set(Engine::Get().GetTime(), 128);
-    GUniformbuffer->Set(query.Pool<Transform3DComponent>().GetComponentById(camera->Id).GlobalPosition, 144);
+    GUniformbuffer->Set(
+        query.Pool<Transform3DComponent>().GetComponentById(camera->Id).GlobalPosition, 144);
     GUniformbuffer->Bind();
 
-    for (auto& batch : Batches | std::views::values)
+    for (auto &batch : Batches | std::views::values)
     {
         batch.Instances.clear();
     }
@@ -180,14 +187,14 @@ void Renderer::RenderWorld()
 
         FillBatches(transformComponent, materialComponent, meshComponent);
     }
-    for (auto& batch : Batches | std::views::values)
+    for (auto &batch : Batches | std::views::values)
     {
         batch.Render();
     }
 }
 
-void Renderer::FillBatches(
-    Transform3DComponent& transformComponent, MaterialComponent& materialComponent, MeshComponent& meshComponent)
+void Renderer::FillBatches(Transform3DComponent &transformComponent,
+    MaterialComponent &materialComponent, MeshComponent &meshComponent)
 {
     auto it = Batches.find(meshComponent.Mesh->Name + materialComponent.Material->Name);
 
@@ -197,13 +204,15 @@ void Renderer::FillBatches(
 
         it = Batches.try_emplace(name, meshComponent.Mesh, materialComponent.Material).first;
     }
-    it->second.Instances.emplace_back(
-        transformComponent.GetModelMatrix().Transpose(), transformComponent.GetNormalMatrix().Transpose());
+    it->second.Instances.emplace_back(transformComponent.GetModelMatrix().Transpose(),
+        transformComponent.GetNormalMatrix().Transpose());
 }
 
-// TODO- if there is multiple semi-transparent objects behind each other , depth testing breaks blending.
-//  fix this by classifying render passes by transparency, pairs well with future render batches / instancing.
-//  for ordering semi-transparent object by distance , use a map , it auto sorts.
+// TODO- if there is multiple semi-transparent objects behind each other , depth testing
+// breaks blending.
+//  fix this by classifying render passes by transparency, pairs well with future render
+//  batches / instancing. for ordering semi-transparent object by distance , use a map ,
+//  it auto sorts.
 void Renderer::Render()
 {
     GetSystem<LightingSystem>().Render();
@@ -216,20 +225,20 @@ void Renderer::Update(double dt)
     GetSystem<CameraSystem>().Update(dt);
 }
 
-void Renderer::FixedUpdate(double fdt)
-{}
+void Renderer::FixedUpdate(double fdt) {}
 
 void Renderer::Stop()
 {
-    const auto& texture = Framebuffer->TextureAttachments.at(FramebufferAttachment::Color0);
+    const auto &texture = Framebuffer->TextureAttachments.at(FramebufferAttachment::Color0);
 
-    std::vector<unsigned char> pixels(static_cast<size_t>(texture->Width) * static_cast<size_t>(texture->Height) * 3);
+    std::vector<unsigned char> pixels(
+        static_cast<size_t>(texture->Width) * static_cast<size_t>(texture->Height) * 3);
 
     glBindTexture(GL_TEXTURE_2D, texture->GetId());
 
     glGetTexImage(GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels.data());
 
-    U::Image image = { texture->Width, texture->Height, U::Image::ColorChannels::RGB, pixels };
+    U::Image image = {texture->Width, texture->Height, U::Image::ColorChannels::RGB, pixels};
     image.SaveToDiskPNG("Assets/LastFrame.png", true);
 }
 } // namespace N

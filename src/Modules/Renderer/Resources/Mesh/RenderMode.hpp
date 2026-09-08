@@ -3,7 +3,8 @@
 /**
  * @brief Determines how geometry is rasterized.
  */
-enum class RenderMode {
+enum class RenderMode
+{
     /** Renders filled polygons. */
     Solid,
 

@@ -3,7 +3,8 @@
 
 #include "Utilities/Logger.hpp"
 
-namespace N {
+namespace N
+{
 void Texture2D::Generate()
 {
     Texture::Generate();
@@ -15,12 +16,14 @@ void Texture2D::Generate()
     glCreateTextures(GL_TEXTURE_2D, 1, &Id);
     SetParameters();
 
-    const int mipmapLevels = AutoMipmaps ? static_cast<int>(std::floor(std::log2(std::max(Width, Height)))) + 1 : 1;
+    const int mipmapLevels =
+        AutoMipmaps ? static_cast<int>(std::floor(std::log2(std::max(Width, Height)))) + 1 : 1;
     glTextureStorage2D(Id, mipmapLevels, static_cast<GLint>(InternalFormat), Width, Height);
 
     if (!Data.empty())
     {
-        glTextureSubImage2D(Id, 0, 0, 0, Width, Height, static_cast<GLenum>(Format), static_cast<GLenum>(DataType), Data.data());
+        glTextureSubImage2D(Id, 0, 0, 0, Width, Height, static_cast<GLenum>(Format),
+            static_cast<GLenum>(DataType), Data.data());
     }
 
     if (AutoMipmaps)
@@ -29,7 +32,7 @@ void Texture2D::Generate()
     }
 }
 
-void Texture2D::UseImage(const U::Image& image)
+void Texture2D::UseImage(const U::Image &image)
 {
     Width = image.Width;
     Height = image.Height;

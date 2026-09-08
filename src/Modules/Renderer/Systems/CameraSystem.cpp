@@ -6,16 +6,17 @@
 #include "Modules/Renderer/Components/CameraComponent.hpp"
 #include "World/Components/Transform3DComponent.hpp"
 
-namespace N {
+namespace N
+{
 void CameraSystem::Update(const double dt)
 {
-    auto& world = World::Get();
-    auto& query = world.Query;
-    auto& input = Engine::Get().GetModule<Input>();
-    auto& camera = world.ActiveCamera;
+    auto &world = World::Get();
+    auto &query = world.Query;
+    auto &input = Engine::Get().GetModule<Input>();
+    auto &camera = world.ActiveCamera;
 
-    auto& transform = query.Pool<Transform3DComponent>().GetComponentById(camera->Id);
-    auto& cameraComponent = query.Pool<CameraComponent>().GetComponentById(camera->Id);
+    auto &transform = query.Pool<Transform3DComponent>().GetComponentById(camera->Id);
+    auto &cameraComponent = query.Pool<CameraComponent>().GetComponentById(camera->Id);
 
     cameraComponent.AspectRatio = Engine::Get().Window.GetAspectRatio();
 
@@ -33,7 +34,8 @@ void CameraSystem::Update(const double dt)
         cameraComponent.Pitch += yOffset;
         cameraComponent.Pitch = std::clamp(cameraComponent.Pitch, -maxPitch, maxPitch);
 
-        transform.Rotation = M::Quaternion::FromEulerXYZ({ cameraComponent.Pitch, cameraComponent.Yaw, 0 });
+        transform.Rotation =
+            M::Quaternion::FromEulerXYZ({cameraComponent.Pitch, cameraComponent.Yaw, 0});
     }
 
     const float speed = cameraComponent.Speed * static_cast<float>(dt);
@@ -71,9 +73,9 @@ void CameraSystem::Update(const double dt)
 
 M::Matrix4 CameraSystem::GetViewMatrix()
 {
-    auto& world = World::Get();
-    auto& camera = world.ActiveCamera;
-    auto& transform = world.Query.Pool<Transform3DComponent>().GetComponentById(camera->Id);
+    auto &world = World::Get();
+    auto &camera = world.ActiveCamera;
+    auto &transform = world.Query.Pool<Transform3DComponent>().GetComponentById(camera->Id);
 
     const M::Vector3 pos = transform.Position;
     const M::Vector3 forward = transform.GetForward();

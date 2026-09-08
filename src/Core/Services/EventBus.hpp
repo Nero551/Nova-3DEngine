@@ -3,19 +3,22 @@
 #include "../OuterCore/Event.hpp"
 #include "Core/OuterCore/Service.hpp"
 
-namespace N {
+namespace N
+{
 /** @brief Concept constraining types that can be dispatched through the event system. */
 template <typename T>
 concept EventType = std::derived_from<T, IEvent>;
 
 /** @brief Global event dispatcher and deferred event queue. */
-struct EventBus : Service {
+struct EventBus : Service
+{
     /** @brief Constructs and immediately dispatches a global event. */
-    template <EventType T, typename... Args> void InstantFire(Args&&... args)
+    template <EventType T, typename... Args> void InstantFire(Args &&...args)
     {
         if constexpr (!std::constructible_from<T, Args...>)
         {
-            U::Logger::Fatal(std::string("Event: ") + typeid(T).name() + " Can't Be Constructed From the Given Arguments.");
+            U::Logger::Fatal(std::string("Event: ") + typeid(T).name() +
+                " Can't Be Constructed From the Given Arguments.");
         }
 
         auto listeners = Listeners.find(typeid(T));
@@ -24,19 +27,20 @@ struct EventBus : Service {
             return;
         }
 
-        T event{ std::forward<Args>(args)... };
-        for (auto& callback : listeners->second)
+        T event{std::forward<Args>(args)...};
+        for (auto &callback : listeners->second)
         {
             callback(event);
         }
     }
 
     /** @brief Queues a global event for deferred dispatch at the end of the frame. */
-    template <EventType T, typename... Args> void Fire(Args&&... args)
+    template <EventType T, typename... Args> void Fire(Args &&...args)
     {
         if constexpr (!std::constructible_from<T, Args...>)
         {
-            U::Logger::Fatal(std::string("Event: ") + typeid(T).name() + " Can't Be Constructed From the Given Arguments.");
+            U::Logger::Fatal(std::string("Event: ") + typeid(T).name() +
+                " Can't Be Constructed From the Given Arguments.");
         }
 
         auto event = std::make_unique<T>(std::forward<Args>(args)...);
@@ -46,15 +50,16 @@ struct EventBus : Service {
     /** @brief Dispatches all events currently waiting in the fire queue. */
     void EmptyFireQueue();
 
-    /** @brief Subscribes a callback to a global event type and returns its subscription ID. */
-    template <EventType T, typename F>
-        requires std::invocable<F, const T&>
-    std::size_t Sub(F&& callback)
+    /** @brief Subscribes a callback to a global event type and returns its subscription
+     * ID. */
+    template <EventType T, typename F> requires std::invocable<F, const T &>
+    std::size_t Sub(F &&callback)
     {
-        auto method = [callback = std::forward<F>(callback)](IEvent& e) mutable { callback(static_cast<T&>(e)); };
+        auto method = [callback = std::forward<F>(callback)](IEvent &e) mutable
+        { callback(static_cast<T &>(e)); };
 
         const auto subscription = ++NextSubscription;
-        Listeners[typeid(T)].push_back({ .Subscription = subscription, .Callback = method });
+        Listeners[typeid(T)].push_back({.Subscription = subscription, .Callback = method});
         return subscription;
     }
 
@@ -82,11 +87,12 @@ struct EventBus : Service {
         }
     }
 
-private:
+  private:
     /** @brief Stores a global event callback and its subscription ID. */
-    struct Entry {
+    struct Entry
+    {
         std::size_t Subscription;
-        std::function<void(IEvent&)> Callback;
+        std::function<void(IEvent &)> Callback;
     };
 
     /** @brief Global event listeners grouped by event type. */
@@ -98,7 +104,7 @@ private:
     /** @brief Generates unique subscription IDs. */
     size_t NextSubscription = 0;
 
-protected:
+  protected:
     void EndFrame() override;
 };
 } // namespace N

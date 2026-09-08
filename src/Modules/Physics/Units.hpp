@@ -11,7 +11,8 @@
  * These constants provide a consistent unit convention across the engine and allow
  * values to be written explicitly in terms of physical units when useful.
  */
-namespace N::Units {
+namespace N::Units
+{
 constexpr float Meter = 1.0f;
 constexpr float Kilometer = 1e3f * Meter;
 constexpr float Micrometer = 1e-6f * Meter;

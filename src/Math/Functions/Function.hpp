@@ -4,27 +4,36 @@
 #include "Math/Common/Comparison.hpp"
 #include "Utilities/Logger.hpp"
 
+namespace N::M
+{
+/** @brief Checks whether a type is a floating-point scalar (float). */
 template <typename T>
 concept IsScalar = std::same_as<std::remove_cvref_t<T>, float>;
 
-namespace N::M {
+/** @brief Forward declaration of a mathematical function mapping an input type to an output type. */
+template <typename Input, typename Output> struct Function;
+
+/** @brief Checks whether a callable accepts Input, returns Output, and is not already a Function. */
+template <typename F, typename Input, typename Output>
+concept CompatibleCallable = std::same_as<std::invoke_result_t<F, Input>, Output> &&
+    (!std::same_as<std::remove_cvref_t<F>, Function<Input, Output>>);
+
 /** @brief Represents a mathematical function mapping an Input type to an Output type. */
-template <typename Input, typename Output> struct Function {
+template <typename Input, typename Output> struct Function
+{
     /**
      * @brief Constructs a function from a callable returning Output when given Input.
      * @param f Callable used to evaluate the function.
      */
-    template <typename F>
-        requires(std::same_as<std::invoke_result_t<F, Input>, Output> && !std::same_as<std::remove_cvref_t<F>, Function>)
-    Function(F&& f) : Func(std::forward<F>(f))
-    {}
+    template <typename F> requires CompatibleCallable<F, Input, Output>
+    Function(F &&f) : Func(std::forward<F>(f)){};
 
     /**
      * @brief Evaluates the function at the given input.
      * @param input Input value at which to evaluate the function.
      * @return The function value at input.
      */
-    Output Evaluate(const Input& input) const
+    Output Evaluate(const Input &input) const
     {
         return Func(input);
     }
@@ -34,9 +43,10 @@ template <typename Input, typename Output> struct Function {
      * @param g Function applied before this function.
      * @return The composed function.
      */
-    template <typename Middle> Function<Middle, Output> Compose(const Function<Middle, Input>& g) const
+    template <typename Middle>
+    Function<Middle, Output> Compose(const Function<Middle, Input> &g) const
     {
-        return [f = *this, g](const Middle& input) { return f(g(input)); };
+        return [f = *this, g](const Middle &input) { return f(g(input)); };
     }
 
     /**
@@ -47,9 +57,9 @@ template <typename Input, typename Output> struct Function {
      * @return A function representing the numerical derivative.
      * @note Only available for functions with a scalar Input type.
      */
-    Function<float, Output> Differentiate(
-        float dx = 0.001f, DifferentiationMethod method = DifferentiationMethod::Central, bool relativeStep = true) const
-        requires IsScalar<Input>
+    Function<float, Output> Differentiate(float dx = 0.001f,
+        DifferentiationMethod method = DifferentiationMethod::Central,
+        bool relativeStep = true) const requires IsScalar<Input>
     {
         return [f = *this, dx, method, relativeStep](const float x)
         {
@@ -75,7 +85,8 @@ template <typename Input, typename Output> struct Function {
      * @param domainMin Lower bound of the search domain.
      * @param domainMax Upper bound of the search domain.
      * @return An input value whose function value approximately equals y.
-     * @note Requires a scalar-to-scalar function that is monotonic over the given domain.
+     * @note Requires a scalar-to-scalar function that is monotonic over the
+     * given domain.
      */
     float InverseEvaluate(float y, float domainMin, float domainMax) const
         requires IsScalar<Input> && IsScalar<Output>
@@ -103,7 +114,8 @@ template <typename Input, typename Output> struct Function {
     Function<float, float> Inverse(float domainMin, float domainMax) const
         requires IsScalar<Input> && IsScalar<Output>
     {
-        return [f = *this, domainMin, domainMax](const float y) -> float { return f.InverseEvaluate(y, domainMin, domainMax); };
+        return [f = *this, domainMin, domainMax](const float y) -> float
+        { return f.InverseEvaluate(y, domainMin, domainMax); };
     }
 
     /**
@@ -114,9 +126,9 @@ template <typename Input, typename Output> struct Function {
      * @param relativeStep Whether dx scales with the input magnitude.
      * @return The numerical derivative at x.
      */
-    Output Derivative(
-        float x, float dx = 0.001f, DifferentiationMethod method = DifferentiationMethod::Central, bool relativeStep = true) const
-        requires IsScalar<Input>
+    Output Derivative(float x, float dx = 0.001f,
+        DifferentiationMethod method = DifferentiationMethod::Central,
+        bool relativeStep = true) const requires IsScalar<Input>
     {
         return Differentiate(dx, method, relativeStep)(x);
     }
@@ -129,9 +141,8 @@ template <typename Input, typename Output> struct Function {
      * @param method Numerical integration method to use.
      * @return The approximate value of the definite integral.
      */
-    Output Integral(
-        float lowerBound, float upperBound, float dx = 0.001f, IntegrationMethod method = IntegrationMethod::Midpoint) const
-        requires IsScalar<Input>
+    Output Integral(float lowerBound, float upperBound, float dx = 0.001f,
+        IntegrationMethod method = IntegrationMethod::Midpoint) const requires IsScalar<Input>
     {
         return Integrate(lowerBound, dx, method)(upperBound);
     }
@@ -142,8 +153,7 @@ template <typename Input, typename Output> struct Function {
      * @param a Point about which the polynomial is expanded.
      * @return A function representing the Taylor polynomial approximation.
      */
-    Function<float, Output> Taylor(unsigned int terms, float a) const
-        requires IsScalar<Input>
+    Function<float, Output> Taylor(unsigned int terms, float a) const requires IsScalar<Input>
     {
         return [terms, a, f = *this](const float x)
         {
@@ -163,8 +173,7 @@ template <typename Input, typename Output> struct Function {
      * @param terms Number of terms in the Taylor polynomial.
      * @return A function representing the Maclaurin polynomial approximation.
      */
-    Function<float, Output> Maclaurin(unsigned int terms) const
-        requires IsScalar<Input>
+    Function<float, Output> Maclaurin(unsigned int terms) const requires IsScalar<Input>
     {
         return Taylor(terms, 0.0f);
     }
@@ -176,9 +185,8 @@ template <typename Input, typename Output> struct Function {
      * @param method Numerical integration method to use.
      * @return A function whose value is the integral from lowerBound to its input.
      */
-    Function<float, Output> Integrate(
-        float lowerBound, float dx = 0.001f, IntegrationMethod method = IntegrationMethod::Midpoint) const
-        requires IsScalar<Input>
+    Function<float, Output> Integrate(float lowerBound, float dx = 0.001f,
+        IntegrationMethod method = IntegrationMethod::Midpoint) const requires IsScalar<Input>
     {
         return [f = *this, lowerBound, dx, method](const float upperBound)
         {
@@ -209,61 +217,62 @@ template <typename Input, typename Output> struct Function {
     }
 
     /** @brief Composes this function with another function, producing f(g(x)). */
-    template <typename Middle> Function<Middle, Output> operator()(const Function<Middle, Input>& g) const
+    template <typename Middle>
+    Function<Middle, Output> operator()(const Function<Middle, Input> &g) const
     {
         return Compose(g);
     }
 
     /** @brief Evaluates the function at the given input. */
-    Output operator()(const Input& input) const
+    Output operator()(const Input &input) const
     {
         return Evaluate(input);
     }
 
     /** @brief Adds two functions pointwise, producing f(x) + g(x). */
-    Function operator+(const Function& g) const
+    Function operator+(const Function &g) const
     {
-        return [f = *this, g](const Input& x) { return f(x) + g(x); };
+        return [f = *this, g](const Input &x) { return f(x) + g(x); };
     }
 
     /** @brief Subtracts two functions pointwise, producing f(x) - g(x). */
-    Function operator-(const Function& g) const
+    Function operator-(const Function &g) const
     {
-        return [f = *this, g](const Input& x) { return f(x) - g(x); };
+        return [f = *this, g](const Input &x) { return f(x) - g(x); };
     }
 
     /** @brief Multiplies two functions pointwise, producing f(x) * g(x). */
-    Function operator*(const Function& g) const
+    Function operator*(const Function &g) const
     {
-        return [f = *this, g](const Input& x) { return f(x) * g(x); };
+        return [f = *this, g](const Input &x) { return f(x) * g(x); };
     }
 
     /** @brief Divides two functions pointwise, producing f(x) / g(x). */
-    Function operator/(const Function& g) const
+    Function operator/(const Function &g) const
     {
-        return [f = *this, g](const Input& x) { return f(x) / g(x); };
+        return [f = *this, g](const Input &x) { return f(x) / g(x); };
     }
 
     /** @brief Adds another function pointwise to this function. */
-    Function& operator+=(const Function& g)
+    Function &operator+=(const Function &g)
     {
         return *this = *this + g;
     }
 
     /** @brief Subtracts another function pointwise from this function. */
-    Function& operator-=(const Function& g)
+    Function &operator-=(const Function &g)
     {
         return *this = *this - g;
     }
 
     /** @brief Multiplies this function pointwise by another function. */
-    Function& operator*=(const Function& g)
+    Function &operator*=(const Function &g)
     {
         return *this = *this * g;
     }
 
     /** @brief Divides this function pointwise by another function. */
-    Function& operator/=(const Function& g)
+    Function &operator/=(const Function &g)
     {
         return *this = *this / g;
     }
@@ -271,166 +280,155 @@ template <typename Input, typename Output> struct Function {
     /** @brief Negates the function, producing -f(x). */
     Function operator-() const
     {
-        return [f = *this](const Input& x) { return -f(x); };
+        return [f = *this](const Input &x) { return -f(x); };
     }
 
     /** @brief Adds a value of the Output type to the function result. */
-    Function operator+(const Output& value) const
+    Function operator+(const Output &value) const
     {
-        return [f = *this, value](const Input& x) { return f(x) + value; };
+        return [f = *this, value](const Input &x) { return f(x) + value; };
     }
 
     /** @brief Subtracts a value of the Output type from the function result. */
-    Function operator-(const Output& value) const
+    Function operator-(const Output &value) const
     {
-        return [f = *this, value](const Input& x) { return f(x) - value; };
+        return [f = *this, value](const Input &x) { return f(x) - value; };
     }
 
     /** @brief Multiplies the function result by a value of the Output type. */
-    Function operator*(const Output& value) const
+    Function operator*(const Output &value) const
     {
-        return [f = *this, value](const Input& x) { return f(x) * value; };
+        return [f = *this, value](const Input &x) { return f(x) * value; };
     }
 
     /** @brief Divides the function result by a value of the Output type. */
-    Function operator/(const Output& value) const
+    Function operator/(const Output &value) const
     {
-        return [f = *this, value](const Input& x) { return f(x) / value; };
+        return [f = *this, value](const Input &x) { return f(x) / value; };
     }
 
-    /** @brief Adds a value of the Output type to the function result from the left-hand side. */
-    friend Function operator+(const Output& value, const Function& f)
+    /** @brief Adds a value of the Output type to the function result from the
+     * left-hand side. */
+    friend Function operator+(const Output &value, const Function &f)
     {
         return f + value;
     }
 
     /** @brief Subtracts the function result from a value of the Output type. */
-    friend Function operator-(const Output& value, const Function& f)
+    friend Function operator-(const Output &value, const Function &f)
     {
-        return [f, value](const Input& x) { return value - f(x); };
+        return [f, value](const Input &x) { return value - f(x); };
     }
 
     /** @brief Multiplies a value of the Output type by the function result. */
-    friend Function operator*(const Output& value, const Function& f)
+    friend Function operator*(const Output &value, const Function &f)
     {
         return f * value;
     }
 
     /** @brief Divides a value of the Output type by the function result. */
-    friend Function operator/(const Output& value, const Function& f)
+    friend Function operator/(const Output &value, const Function &f)
     {
-        return [f, value](const Input& x) { return value / f(x); };
+        return [f, value](const Input &x) { return value / f(x); };
     }
 
     /** @brief Adds a value of the Output type to this function. */
-    Function& operator+=(const Output& value)
+    Function &operator+=(const Output &value)
     {
         return *this = *this + value;
     }
 
     /** @brief Subtracts a value of the Output type from the function result. */
-    Function& operator-=(const Output& value)
+    Function &operator-=(const Output &value)
     {
         return *this = *this - value;
     }
 
     /** @brief Multiplies this function by a value of the Output type. */
-    Function& operator*=(const Output& value)
+    Function &operator*=(const Output &value)
     {
         return *this = *this * value;
     }
 
     /** @brief Divides this function by a value of the Output type. */
-    Function& operator/=(const Output& value)
+    Function &operator/=(const Output &value)
     {
         return *this = *this / value;
     }
 
     /** @brief Adds a scalar to the function result. */
-    Function operator+(float scalar) const
-        requires(!IsScalar<Output>)
+    Function operator+(float scalar) const requires(!IsScalar<Output>)
     {
-        return [f = *this, scalar](const Input& x) { return f(x) + scalar; };
+        return [f = *this, scalar](const Input &x) { return f(x) + scalar; };
     }
 
     /** @brief Subtracts a scalar from the function result. */
-    Function operator-(float scalar) const
-        requires(!IsScalar<Output>)
+    Function operator-(float scalar) const requires(!IsScalar<Output>)
     {
-        return [f = *this, scalar](const Input& x) { return f(x) - scalar; };
+        return [f = *this, scalar](const Input &x) { return f(x) - scalar; };
     }
 
     /** @brief Multiplies the function result by a scalar. */
-    Function operator*(float scalar) const
-        requires(!IsScalar<Output>)
+    Function operator*(float scalar) const requires(!IsScalar<Output>)
     {
-        return [f = *this, scalar](const Input& x) { return f(x) * scalar; };
+        return [f = *this, scalar](const Input &x) { return f(x) * scalar; };
     }
 
     /** @brief Divides the function result by a scalar. */
-    Function operator/(float scalar) const
-        requires(!IsScalar<Output>)
+    Function operator/(float scalar) const requires(!IsScalar<Output>)
     {
-        return [f = *this, scalar](const Input& x) { return f(x) / scalar; };
+        return [f = *this, scalar](const Input &x) { return f(x) / scalar; };
     }
 
     /** @brief Adds a scalar to the function result from the left-hand side. */
-    friend Function operator+(float scalar, const Function& f)
-        requires(!IsScalar<Output>)
+    friend Function operator+(float scalar, const Function &f) requires(!IsScalar<Output>)
     {
         return f + scalar;
     }
 
     /** @brief Subtracts the function result from a scalar. */
-    friend Function operator-(float scalar, const Function& f)
-        requires(!IsScalar<Output>)
+    friend Function operator-(float scalar, const Function &f) requires(!IsScalar<Output>)
     {
-        return [scalar, f](const Input& x) { return scalar - f(x); };
+        return [scalar, f](const Input &x) { return scalar - f(x); };
     }
 
     /** @brief Multiplies a scalar by the function result. */
-    friend Function operator*(float scalar, const Function& f)
-        requires(!IsScalar<Output>)
+    friend Function operator*(float scalar, const Function &f) requires(!IsScalar<Output>)
     {
         return f * scalar;
     }
 
     /** @brief Divides a scalar by the function result. */
-    friend Function operator/(float scalar, const Function& f)
-        requires(!IsScalar<Output>)
+    friend Function operator/(float scalar, const Function &f) requires(!IsScalar<Output>)
     {
-        return [scalar, f](const Input& x) { return scalar / f(x); };
+        return [scalar, f](const Input &x) { return scalar / f(x); };
     }
 
     /** @brief Adds a scalar to this function. */
-    Function& operator+=(float scalar)
-        requires(!IsScalar<Output>)
+    Function &operator+=(float scalar) requires(!IsScalar<Output>)
     {
         return *this = *this + scalar;
     }
 
     /** @brief Subtracts a scalar from the function result. */
-    Function& operator-=(float scalar)
-        requires(!IsScalar<Output>)
+    Function &operator-=(float scalar) requires(!IsScalar<Output>)
     {
         return *this = *this - scalar;
     }
 
     /** @brief Multiplies this function by a scalar. */
-    Function& operator*=(float scalar)
-        requires(!IsScalar<Output>)
+    Function &operator*=(float scalar) requires(!IsScalar<Output>)
     {
         return *this = *this * scalar;
     }
 
     /** @brief Divides this function by a scalar. */
-    Function& operator/=(float scalar)
-        requires(!IsScalar<Output>)
+    Function &operator/=(float scalar) requires(!IsScalar<Output>)
     {
         return *this = *this / scalar;
     }
 
-private:
+  private:
     std::function<Output(Input)> Func;
 };
 } // namespace N::M

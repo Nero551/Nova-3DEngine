@@ -1,8 +1,10 @@
 #pragma once
 
-namespace N {
+namespace N
+{
 /** @brief Specifies how the mouse cursor is handled by the window. */
-enum class MouseMode {
+enum class MouseMode
+{
     /** @brief The cursor is visible and unrestricted. */
     Normal = GLFW_CURSOR_NORMAL,
 

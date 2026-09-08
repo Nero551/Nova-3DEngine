@@ -6,8 +6,10 @@
 #include "Enums/MouseMode.hpp"
 #include "Math/Vector/Vector2.hpp"
 
-namespace N {
-struct Input : Module {
+namespace N
+{
+struct Input : Module
+{
     bool IsKeyHeld(Key key);
 
     bool IsKeyPressed(Key key);
@@ -32,7 +34,7 @@ struct Input : Module {
 
     void SetMouseMode(MouseMode mode);
 
-private:
+  private:
     MouseMode MouseMode = MouseMode::Normal;
     M::Vector2 MousePosition = M::Vector2::Zero;
     M::Vector2 PreviousMousePosition = M::Vector2::Zero;
@@ -53,7 +55,7 @@ private:
     std::array<bool, MouseButtonCount> CurrentMouseButtons{};
     std::array<bool, MouseButtonCount> PreviousMouseButtons{};
 
-protected:
+  protected:
     void Start() override;
 
     void BeginFrame(double dt) override;

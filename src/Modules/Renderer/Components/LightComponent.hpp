@@ -5,13 +5,15 @@
 #include "Math/Common/Trigonometry.hpp"
 #include "Math/Vector/Vector3.hpp"
 
-namespace N {
-struct LightComponent : Component {
+namespace N
+{
+struct LightComponent : Component
+{
     LightType Type = LightType::Directional;
-    M::Vector3 Color = M::Vector3{ 1 };
-    M::Vector3 Ambient = M::Vector3{ 0.8 };
-    M::Vector3 Diffuse = M::Vector3{ 1 };
-    M::Vector3 Specular = M::Vector3{ 1 };
+    M::Vector3 Color = M::Vector3{1};
+    M::Vector3 Ambient = M::Vector3{0.8};
+    M::Vector3 Diffuse = M::Vector3{1};
+    M::Vector3 Specular = M::Vector3{1};
 
     float Intensity = 1;
     float Constant = 1.0f;

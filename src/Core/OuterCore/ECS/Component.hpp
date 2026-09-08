@@ -1,14 +1,16 @@
 #pragma once
 
-namespace N {
-struct Component {
+namespace N
+{
+struct Component
+{
     Component() = default;
     virtual ~Component() = default;
 
-    Component(const Component&) = delete;
-    Component& operator=(const Component&) = delete;
+    Component(const Component &) = delete;
+    Component &operator=(const Component &) = delete;
 
-    Component(Component&&) noexcept = default;
-    Component& operator=(Component&&) noexcept = default;
+    Component(Component &&) noexcept = default;
+    Component &operator=(Component &&) noexcept = default;
 };
 } // namespace N

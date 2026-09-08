@@ -3,7 +3,7 @@ set -e
 
 ROOT="$(git rev-parse --show-toplevel)"
 
-python3 $ROOT/scripts/format-code.py
+"$ROOT/scripts/format-code.sh"
 
 git add .
 

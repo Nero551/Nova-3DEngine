@@ -1,6 +1,7 @@
 #pragma once
 
-namespace N {
+namespace N
+{
 /**
  * @brief Format of pixel data supplied to OpenGL.
  *
@@ -10,7 +11,8 @@ namespace N {
  * This describes the format of the source data, not the internal storage
  * format used by the GPU.
  */
-enum class TextureFormat {
+enum class TextureFormat
+{
     // -------------------------------------------------------------------------
     // Color
     // -------------------------------------------------------------------------
@@ -33,7 +35,6 @@ enum class TextureFormat {
     /** Blue, green, red, and alpha channels. */
     BGRA = GL_BGRA,
 
-
     // -------------------------------------------------------------------------
     // Integer Color
     // -------------------------------------------------------------------------
@@ -55,7 +56,6 @@ enum class TextureFormat {
 
     /** Blue, green, red, and alpha channels containing integer data. */
     BGRAInteger = GL_BGRA_INTEGER,
-
 
     // -------------------------------------------------------------------------
     // Depth / Stencil

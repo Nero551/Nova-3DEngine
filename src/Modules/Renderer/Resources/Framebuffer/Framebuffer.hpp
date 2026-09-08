@@ -8,7 +8,8 @@
 #include "Renderbuffer/Renderbuffer.hpp"
 #include "Utilities/CheckedPtr.hpp"
 
-namespace N {
+namespace N
+{
 /**
  * @brief Represents an OpenGL framebuffer object.
  *
@@ -20,7 +21,8 @@ namespace N {
  * with Regenerate(). A framebuffer must be complete before it can be used
  * as a rendering target.
  */
-struct Framebuffer : Resource {
+struct Framebuffer : Resource
+{
     /**
      * @brief Specifies which framebuffer target is affected by operations.
      *
@@ -49,7 +51,7 @@ struct Framebuffer : Resource {
      * @brief Creates a framebuffer resource.
      * @param name Resource name.
      */
-    Framebuffer(const std::string& name);
+    Framebuffer(const std::string &name);
 
     /// Releases the underlying OpenGL framebuffer object.
     ~Framebuffer() override;
@@ -71,7 +73,8 @@ struct Framebuffer : Resource {
      */
     void Bind();
 
-    /** @brief Unbinds this framebuffer from the configured target. sets the bound to default framebuffer */
+    /** @brief Unbinds this framebuffer from the configured target. sets the bound to
+     * default framebuffer */
     void Unbind();
 
     /**
@@ -96,7 +99,7 @@ struct Framebuffer : Resource {
      * @param textureAttachment Attachment point to use.
      * @param texture Texture to attach.
      */
-    void AttachTexture(FramebufferAttachment textureAttachment, Texture& texture);
+    void AttachTexture(FramebufferAttachment textureAttachment, Texture &texture);
 
     /**
      * @brief Copies selected framebuffer buffers to another framebuffer.
@@ -112,7 +115,7 @@ struct Framebuffer : Resource {
      * @param buffer Buffers to copy.
      * @param filter Filter used when scaling the copied buffers.
      */
-    void Blit(Framebuffer& dst, int srcW, int srcH, int dstW, int dstH, BufferBit buffer,
+    void Blit(Framebuffer &dst, int srcW, int srcH, int dstW, int dstH, BufferBit buffer,
         TextureFilter filter = TextureFilter::Nearest);
     /**
      * @brief Attaches a renderbuffer to a framebuffer attachment point.
@@ -120,7 +123,7 @@ struct Framebuffer : Resource {
      * @param attachment Attachment point to use.
      * @param renderbuffer Renderbuffer to attach.
      */
-    void AttachRenderBuffer(FramebufferAttachment attachment, Renderbuffer& renderbuffer);
+    void AttachRenderBuffer(FramebufferAttachment attachment, Renderbuffer &renderbuffer);
 
     /**
      * @brief Resizes all attachments of the framebuffer.
@@ -140,7 +143,7 @@ struct Framebuffer : Resource {
      */
     unsigned int GetId() const;
 
-private:
+  private:
     /// OpenGL framebuffer object ID. Zero indicates that no framebuffer exists.
     unsigned int Id = 0;
 };

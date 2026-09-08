@@ -5,9 +5,9 @@
 #include "Uniforms/FloatUniform.hpp"
 #include "Utilities/Logger.hpp"
 
-namespace N {
-Shader::Shader(const std::string& name) : Resource(name)
-{}
+namespace N
+{
+Shader::Shader(const std::string &name) : Resource(name) {}
 
 Shader::~Shader()
 {
@@ -31,9 +31,9 @@ bool Shader::IsProgramCreated() const
     return Id != 0;
 }
 
-void Shader::AssignSource(ShaderSource& source)
+void Shader::AssignSource(ShaderSource &source)
 {
-    for (auto& existing : Sources)
+    for (auto &existing : Sources)
     {
         if (existing->GetStage() == source.GetStage())
         {
@@ -47,7 +47,7 @@ void Shader::AssignSource(ShaderSource& source)
 
 void Shader::Reload()
 {
-    for (auto& source : Sources)
+    for (auto &source : Sources)
     {
         source->Reload();
     }
@@ -57,7 +57,7 @@ void Shader::Reload()
     Id = 0;
 }
 
-std::vector<U::CheckedPtr<ShaderSource>>& Shader::GetSources()
+std::vector<U::CheckedPtr<ShaderSource>> &Shader::GetSources()
 {
     return Sources;
 }
@@ -69,11 +69,11 @@ void Shader::CreateProgram()
         return;
     }
 
-    // TODO- add preprocessing to shader program, ex: a ShowNormals option that when true, automatically adds a geometry shader
+    // TODO- add preprocessing to shader program, ex: a ShowNormals option that when true,
+    // automatically adds a geometry shader
     //  for that.
-    //  gotta figure out how to "Merge" multiple sources too, like if there is 2 vertex shaders attached both with void main().
-    //  Preprocess();
-
+    //  gotta figure out how to "Merge" multiple sources too, like if there is 2 vertex
+    //  shaders attached both with void main(). Preprocess();
 
     if (Sources.empty())
     {
@@ -83,7 +83,7 @@ void Shader::CreateProgram()
 
     Id = glCreateProgram();
 
-    for (const auto& source : Sources)
+    for (const auto &source : Sources)
     {
         if (!source->IsCompiled())
         {
@@ -103,7 +103,7 @@ void Shader::CreateProgram()
     }
 }
 
-int Shader::GetUniformLocation(const std::string& name)
+int Shader::GetUniformLocation(const std::string &name)
 {
     int location;
 
@@ -128,7 +128,7 @@ int Shader::GetUniformLocation(const std::string& name)
 
 void Shader::UploadUniforms()
 {
-    for (auto& [uniformName, uniform] : PendingUniforms)
+    for (auto &[uniformName, uniform] : PendingUniforms)
     {
         int location = GetUniformLocation(uniformName);
         if (location != -1)

@@ -4,7 +4,8 @@
 #include "BlendFactor.hpp"
 #include "Math/Vector/Vector4.hpp"
 
-namespace N {
+namespace N
+{
 /**
  * @brief Controls color blending for rendered fragments.
  *
@@ -12,7 +13,8 @@ namespace N {
  * stored in the color buffer using configurable source and destination
  * factors and blend equations.
  */
-struct Blend {
+struct Blend
+{
     /** @brief Whether blending is enabled. */
     bool Enabled;
 
@@ -35,10 +37,9 @@ struct Blend {
     BlendEquation EquationAlpha = BlendEquation::Add;
 
     /** @brief Constant color used by blend factors that reference a constant color. */
-    M::Vector4 ConstantColor = { 0, 0, 0, 0 };
+    M::Vector4 ConstantColor = {0, 0, 0, 0};
 
-    Blend(bool enabled) : Enabled(enabled)
-    {}
+    Blend(bool enabled) : Enabled(enabled) {}
 
     /** @brief Applies the configured blending state to the OpenGL context. */
     void Apply();

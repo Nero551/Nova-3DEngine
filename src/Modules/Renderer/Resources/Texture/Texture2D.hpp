@@ -7,14 +7,16 @@
 #include "TextureWrap.hpp"
 #include "Utilities/Image/Image.hpp"
 
-namespace N {
+namespace N
+{
 /**
  * @brief Represents a two-dimensional OpenGL texture resource.
  *
  * Extends the generic Texture resource with CPU-side pixel data and
  * image loading support for 2D textures.
  */
-struct Texture2D : Texture {
+struct Texture2D : Texture
+{
     /** CPU-side pixel data uploaded to the GPU when the texture is generated. */
     std::vector<unsigned char> Data{};
 
@@ -46,8 +48,7 @@ struct Texture2D : Texture {
      *
      * @param name Resource name.
      */
-    Texture2D(const std::string& name) : Texture(name, TextureTarget::Texture2D)
-    {}
+    Texture2D(const std::string &name) : Texture(name, TextureTarget::Texture2D) {}
 
     /**
      * @brief Generates the OpenGL 2D texture object.
@@ -71,9 +72,9 @@ struct Texture2D : Texture {
      * @remark The image should be vertically flipped when loaded to account
      * for the difference between image and OpenGL texture coordinates.
      */
-    void UseImage(const U::Image& image);
+    void UseImage(const U::Image &image);
 
-private:
+  private:
     /** @brief Configures the texture's wrapping and filtering parameters. */
     void SetParameters() const;
 };

@@ -1,15 +1,11 @@
 #pragma once
-
-// A Float-based math library for the Nova game engine. everything uses floats
-// here
-
 #include "Common/Logarithms.hpp"
-#include "Complex/Logarithms.hpp"
-#include "Quaternion/Logarithms.hpp"
+#include "Complex/ComplexLogarithms.hpp"
+#include "Quaternion/QuaternionLogarithms.hpp"
 
-#include "Common/ComplexExponentials.hpp"
+#include "Common/Exponentials.hpp"
 #include "Complex/ComplexExponentials.hpp"
-#include "Quaternion/Exponentials.hpp"
+#include "Quaternion/QuaternionExponentials.hpp"
 
 #include "Common/Comparison.hpp"
 #include "Common/Constants.hpp"
@@ -43,6 +39,14 @@
 
 /**
  * @namespace N::M
- * @brief Mathematical types and utilities used throughout Nova.
+ * @brief A Float-based math library for the Nova game engine. everything uses floats
+ * here. Mainly contains:
+ *  - Vectors
+ *  - Matrices
+ *  - Complex numbers
+ *  - Quaternions
+ *  - Multi-variable/valued functions
  */
-namespace N::M {}
+namespace N::M
+{
+}

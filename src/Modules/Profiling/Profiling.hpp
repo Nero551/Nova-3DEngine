@@ -4,17 +4,19 @@
 
 #include "Core/InnerCore/Module.hpp"
 
-namespace N {
-struct Profiling : Module {
+namespace N
+{
+struct Profiling : Module
+{
     double FrameMs;
     int FrameCount;
 
-protected:
+  protected:
     void Start() override;
 
     void Update(double dt) override;
 
-private:
+  private:
     std::deque<double> FrameTimes;
 };
 } // namespace N

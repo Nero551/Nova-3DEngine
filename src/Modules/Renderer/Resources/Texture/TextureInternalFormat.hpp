@@ -1,7 +1,8 @@
 #pragma once
 #include "OpenGL.hpp"
 
-namespace N {
+namespace N
+{
 /**
  * @brief Sized internal format used to store texture data on the GPU.
  *
@@ -12,7 +13,8 @@ namespace N {
  * signed integers, or unsigned integers. Depth and stencil formats are
  * intended primarily for depth and stencil attachments.
  */
-enum class TextureInternalFormat {
+enum class TextureInternalFormat
+{
     // -------------------------------------------------------------------------
     // Red
     // -------------------------------------------------------------------------
@@ -53,7 +55,6 @@ enum class TextureInternalFormat {
     /** 32-bit unsigned integer red channel. */
     R32UI = GL_R32UI,
 
-
     // -------------------------------------------------------------------------
     // Red / Green
     // -------------------------------------------------------------------------
@@ -93,7 +94,6 @@ enum class TextureInternalFormat {
 
     /** 32-bit unsigned integer red and green channels. */
     RG32UI = GL_RG32UI,
-
 
     // -------------------------------------------------------------------------
     // RGB
@@ -153,12 +153,12 @@ enum class TextureInternalFormat {
     /** Shared-exponent RGB format with 9-bit mantissas and a shared 5-bit exponent. */
     RGB9E5 = GL_RGB9_E5,
 
-    /** 11-bit floating-point red, 11-bit floating-point green, and 10-bit floating-point blue. */
+    /** 11-bit floating-point red, 11-bit floating-point green, and 10-bit floating-point
+     * blue. */
     R11FG11FB10F = GL_R11F_G11F_B10F,
 
     /** 5-bit red, 6-bit green, and 5-bit blue packed format. */
     RGB565 = GL_RGB565,
-
 
     // -------------------------------------------------------------------------
     // RGBA
@@ -182,7 +182,8 @@ enum class TextureInternalFormat {
     /** 10-bit red, green, and blue channels with a 2-bit alpha channel. */
     RGB10A2 = GL_RGB10_A2,
 
-    /** 10-bit unsigned integer red, green, and blue channels with a 2-bit alpha channel. */
+    /** 10-bit unsigned integer red, green, and blue channels with a 2-bit alpha channel.
+     */
     RGB10A2UI = GL_RGB10_A2UI,
 
     /** 12-bit normalized RGBA channels. */
@@ -218,7 +219,6 @@ enum class TextureInternalFormat {
     /** 32-bit unsigned integer RGBA channels. */
     RGBA32UI = GL_RGBA32UI,
 
-
     // -------------------------------------------------------------------------
     // sRGB
     // -------------------------------------------------------------------------
@@ -228,7 +228,6 @@ enum class TextureInternalFormat {
 
     /** 8-bit sRGB RGB channels with an 8-bit alpha channel. */
     SRGBA8 = GL_SRGB8_ALPHA8,
-
 
     // -------------------------------------------------------------------------
     // Depth
@@ -246,7 +245,6 @@ enum class TextureInternalFormat {
     /** 32-bit floating-point depth component. */
     Depth32F = GL_DEPTH_COMPONENT32F,
 
-
     // -------------------------------------------------------------------------
     // Depth / Stencil
     // -------------------------------------------------------------------------
@@ -254,9 +252,9 @@ enum class TextureInternalFormat {
     /** 24-bit depth component with an 8-bit unsigned integer stencil component. */
     Depth24Stencil8 = GL_DEPTH24_STENCIL8,
 
-    /** 32-bit floating-point depth component with an 8-bit unsigned integer stencil component. */
+    /** 32-bit floating-point depth component with an 8-bit unsigned integer stencil
+     * component. */
     Depth32FStencil8 = GL_DEPTH32F_STENCIL8,
-
 
     // -------------------------------------------------------------------------
     // Stencil

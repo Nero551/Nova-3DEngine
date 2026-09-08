@@ -9,9 +9,11 @@
 #include "Utilities/FileSystem/FileSystem.hpp"
 #include "Utilities/Logger.hpp"
 
-namespace N {
-ShaderSource::ShaderSource(const std::string& name, const std::string& path, const ShaderStage stage, std::string version) :
-    Resource(name), Path(path), Version(std::move(version)), Stage(stage)
+namespace N
+{
+ShaderSource::ShaderSource(
+    const std::string &name, const std::string &path, const ShaderStage stage, std::string version)
+    : Resource(name), Path(path), Version(std::move(version)), Stage(stage)
 {
     SourceCode = U::FileSystem::ReadFile(path);
 }
@@ -58,7 +60,7 @@ void ShaderSource::Compile()
         }
     }
 
-    const char* string = GeneratedCode.c_str();
+    const char *string = GeneratedCode.c_str();
 
     Id = glCreateShader(static_cast<GLenum>(Stage));
     glShaderSource(Id, 1, &string, nullptr);
@@ -109,7 +111,7 @@ void ShaderSource::Preprocess()
 
 // TODO- replace with line by line parsing
 void ShaderSource::PreprocessIncludes(
-    const std::string& path, std::string& code, std::unordered_set<std::string>& includesProcessing)
+    const std::string &path, std::string &code, std::unordered_set<std::string> &includesProcessing)
 {
     const std::string include = "#include \"";
     auto pos = code.find(include);
@@ -133,7 +135,8 @@ void ShaderSource::PreprocessIncludes(
                 // Check Circular Include
                 if (!includesProcessing.insert(includePath).second)
                 {
-                    U::Logger::Fatal("Circular Include: " + includePath.string() + " | In Shader: " + path);
+                    U::Logger::Fatal(
+                        "Circular Include: " + includePath.string() + " | In Shader: " + path);
                 }
 
                 // Recursively Include

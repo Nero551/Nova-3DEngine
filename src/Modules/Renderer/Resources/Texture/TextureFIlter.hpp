@@ -1,10 +1,12 @@
 #pragma once
 
-namespace N {
+namespace N
+{
 /**
  * @brief Defines how texture samples are filtered when being minified or magnified.
  */
-enum class TextureFilter {
+enum class TextureFilter
+{
     /** Selects the nearest texel without interpolation. */
     Nearest = GL_NEAREST,
 
@@ -17,10 +19,12 @@ enum class TextureFilter {
     /** Uses linear filtering within the nearest mipmap level. */
     LinearMipmapNearest = GL_LINEAR_MIPMAP_NEAREST,
 
-    /** Uses nearest filtering within two mipmap levels and linearly blends between them. */
+    /** Uses nearest filtering within two mipmap levels and linearly blends between them.
+     */
     NearestMipmapLinear = GL_NEAREST_MIPMAP_LINEAR,
 
-    /** Uses linear filtering within two mipmap levels and linearly blends between them. */
+    /** Uses linear filtering within two mipmap levels and linearly blends between them.
+     */
     LinearMipmapLinear = GL_LINEAR_MIPMAP_LINEAR
 };
 } // namespace N

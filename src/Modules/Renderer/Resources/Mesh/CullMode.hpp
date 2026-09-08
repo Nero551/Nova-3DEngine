@@ -1,13 +1,15 @@
 #pragma once
 #include "OpenGL.hpp"
 
-namespace N {
+namespace N
+{
 /**
  * @brief Defines which faces of a mesh are culled during rendering.
  * Face culling prevents selected faces from being rasterized based on their
  * orientation relative to the camera.
  */
-enum class CullMode {
+enum class CullMode
+{
     /** @brief Disables face culling. */
     None,
 

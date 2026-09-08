@@ -2,8 +2,10 @@
 #include "Core/Services/ResourceManager.hpp"
 #include "Math/Color/Color.hpp"
 
-namespace N {
-Mesh& Primitives::CreateUVSphere(const std::string& name, const float radius, const int sectors, const int stacks)
+namespace N
+{
+Mesh &Primitives::CreateUVSphere(
+    const std::string &name, const float radius, const int sectors, const int stacks)
 {
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
@@ -22,8 +24,12 @@ Mesh& Primitives::CreateUVSphere(const std::string& name, const float radius, co
             float x = r * std::cos(theta);
             float z = r * std::sin(theta);
 
-            vertices.emplace_back(Vertex{ { radius * x, radius * y, radius * z, 1.0f }, M::Color::White,
-                { sector / static_cast<float>(sectors), stack / static_cast<float>(stacks) }, { x, y, z } });
+            vertices.emplace_back(Vertex{
+                {radius * x, radius * y, radius * z, 1.0f},
+                M::Color::White,
+                {sector / static_cast<float>(sectors), stack / static_cast<float>(stacks)},
+                {x, y, z}
+            });
         }
     }
 
@@ -36,14 +42,16 @@ Mesh& Primitives::CreateUVSphere(const std::string& name, const float radius, co
         {
             if (stack != 0)
             {
-                indices.insert(
-                    indices.end(), { static_cast<unsigned>(k1), static_cast<unsigned>(k2), static_cast<unsigned>(k1 + 1) });
+                indices.insert(indices.end(),
+                    {static_cast<unsigned>(k1), static_cast<unsigned>(k2),
+                        static_cast<unsigned>(k1 + 1)});
             }
 
             if (stack != stacks - 1)
             {
-                indices.insert(
-                    indices.end(), { static_cast<unsigned>(k1 + 1), static_cast<unsigned>(k2), static_cast<unsigned>(k2 + 1) });
+                indices.insert(indices.end(),
+                    {static_cast<unsigned>(k1 + 1), static_cast<unsigned>(k2),
+                        static_cast<unsigned>(k2 + 1)});
             }
 
             k1++;
@@ -51,7 +59,9 @@ Mesh& Primitives::CreateUVSphere(const std::string& name, const float radius, co
         }
     }
 
-    auto& mesh = Service::Get<ResourceManager>().Load<Mesh>(name, vertices, indices);
+    auto &mesh = Service::Get<ResourceManager>().Load<Mesh>(name);
+    mesh.Vertices = vertices;
+    mesh.Indices = indices;
     return mesh;
 }
 } // namespace N

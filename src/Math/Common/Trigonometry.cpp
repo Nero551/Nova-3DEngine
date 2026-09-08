@@ -2,7 +2,8 @@
 
 #include "Constants.hpp"
 
-namespace N::M {
+namespace N::M
+{
 float Rad(const float deg)
 {
     return deg * PI / 180;

@@ -2,7 +2,8 @@
 #include "Utilities/CheckedPtr.hpp"
 #include "Utilities/Logger.hpp"
 
-namespace N {
+namespace N
+{
 struct Service;
 template <typename T>
 concept ServiceType = std::derived_from<T, Service>;
@@ -12,25 +13,26 @@ concept ServiceType = std::derived_from<T, Service>;
  * Services aren't owned by the Engine, primarily to avoid cyclic dependencies.
  * services do get destroyed ,created & updated in the engine loop though.
  */
-struct Service {
+struct Service
+{
     Service() = default;
     virtual ~Service() = default;
-    Service(const Service&) = delete;
-    Service& operator=(const Service&) = delete;
+    Service(const Service &) = delete;
+    Service &operator=(const Service &) = delete;
 
     /**
      * @brief Retrieves a registered service by type.
      * @tparam T Type of the service to retrieve.
      * @return Reference to the registered service.
      */
-    template <ServiceType T> static T& Get()
+    template <ServiceType T> static T &Get()
     {
         auto service = Services.find(typeid(T));
         if (service == Services.end())
         {
             U::Logger::Fatal(std::format("Service Not Found: {}", typeid(T).name()));
         }
-        return static_cast<T&>(*service->second);
+        return static_cast<T &>(*service->second);
     }
 
     /**
@@ -41,29 +43,22 @@ struct Service {
     {
         std::vector<U::CheckedPtr<Service>> services;
 
-        for (auto& service : Services | std::views::values)
+        for (auto &service : Services | std::views::values)
         {
             services.emplace_back(&*service);
         }
         return services;
     }
 
-protected:
+  protected:
     friend struct Engine;
-    virtual void Start()
-    {}
-    virtual void Update(double dt)
-    {}
-    virtual void FixedUpdate(double fdt)
-    {}
-    virtual void Render()
-    {}
-    virtual void BeginFrame(double dt)
-    {}
-    virtual void EndFrame()
-    {}
-    virtual void Stop()
-    {}
+    virtual void Start() {}
+    virtual void Update(double dt) {}
+    virtual void FixedUpdate(double fdt) {}
+    virtual void Render() {}
+    virtual void BeginFrame(double dt) {}
+    virtual void EndFrame() {}
+    virtual void Stop() {}
 
     /**
      * @brief Registers a new service of the specified type.
@@ -72,12 +67,12 @@ protected:
      * @tparam T Type of the service to register.
      * @return Reference to the registered service.
      */
-    template <ServiceType T> static T& Add()
+    template <ServiceType T> static T &Add()
     {
         if (Services.contains(typeid(T)))
         {
             U::Logger::Error(std::format(" Service {} Already Added", typeid(T).name()));
-            return static_cast<T&>(*Services.at(typeid(T)));
+            return static_cast<T &>(*Services.at(typeid(T)));
         }
 
         auto service = std::make_unique<T>();
@@ -86,7 +81,7 @@ protected:
         return Get<T>();
     }
 
-private:
+  private:
     /** @brief Destroys all services */
     static void DestroyServices()
     {

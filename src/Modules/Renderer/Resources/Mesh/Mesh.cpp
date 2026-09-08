@@ -2,12 +2,11 @@
 
 #include <OpenGL.hpp>
 
-namespace N {
-Mesh::Mesh(const std::string& name) : Resource(name)
-{}
+namespace N
+{
+Mesh::Mesh(const std::string &name) : Resource(name) {}
 
-Mesh::~Mesh()
-{}
+Mesh::~Mesh() {}
 
 unsigned int Mesh::GetId() const
 {
@@ -57,7 +56,8 @@ void Mesh::Draw()
 
     else if (RenderMode == RenderMode::SolidWireframe)
     {
-        // TODO- apparently there is a better way to do this using geometry shaders (search SolidWireframe opengl on yt).
+        // TODO- apparently there is a better way to do this using geometry shaders
+        // (search SolidWireframe opengl on yt).
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         DrawElements();
 
@@ -77,8 +77,8 @@ void Mesh::DrawInstanced(int instanceCount)
 
     ApplyCulling();
     VAO.Bind();
-    glDrawElementsInstanced(static_cast<GLenum>(Topology), static_cast<GLsizei>(Indices.size()), GL_UNSIGNED_INT, nullptr,
-        static_cast<GLsizei>(instanceCount));
+    glDrawElementsInstanced(static_cast<GLenum>(Topology), static_cast<GLsizei>(Indices.size()),
+        GL_UNSIGNED_INT, nullptr, static_cast<GLsizei>(instanceCount));
 
     VAO.Unbind();
 }
@@ -92,7 +92,8 @@ void Mesh::Regenerate()
 
 void Mesh::DrawElements() const
 {
-    glDrawElements(static_cast<GLenum>(Topology), static_cast<GLsizei>(Indices.size()), GL_UNSIGNED_INT, nullptr);
+    glDrawElements(static_cast<GLenum>(Topology), static_cast<GLsizei>(Indices.size()),
+        GL_UNSIGNED_INT, nullptr);
 }
 
 void Mesh::ApplyCulling() const

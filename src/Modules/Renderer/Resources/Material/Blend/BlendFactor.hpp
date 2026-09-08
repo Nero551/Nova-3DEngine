@@ -1,10 +1,12 @@
 #pragma once
 
-namespace N {
+namespace N
+{
 /**
  * @brief Defines how source and destination colors are factored during blending.
  */
-enum class BlendFactor {
+enum class BlendFactor
+{
     /** Uses a factor of zero. */
     Zero = GL_ZERO,
 

@@ -3,9 +3,12 @@
 #include "../Enums/DataType.hpp"
 #include "IndexBuffer.hpp"
 
-namespace N {
-/** @brief OpenGL vertex array object that stores vertex buffer and attribute configuration. */
-struct VertexArray {
+namespace N
+{
+/** @brief OpenGL vertex array object that stores vertex buffer and attribute
+ * configuration. */
+struct VertexArray
+{
     /** @brief Constructs an ungenerated vertex array object. */
     VertexArray();
 
@@ -35,12 +38,12 @@ struct VertexArray {
      * @param stride Byte distance between consecutive vertices.
      * @param offset Byte offset into the VBO where vertex data begins.
      */
-    void SetVertexBuffer(const ArrayBuffer& vbo, int bindingIndex, int stride, int offset = 0);
+    void SetVertexBuffer(const ArrayBuffer &vbo, int bindingIndex, int stride, int offset = 0);
 
     /** @brief Associates an EBO with the VAO.
      * automatically generates array if not generated. does NOT generate the EBO.
      */
-    void SetIndexBuffer(const IndexBuffer& ebo);
+    void SetIndexBuffer(const IndexBuffer &ebo);
 
     /**
      * @brief Enables and describes a vertex attribute.
@@ -48,10 +51,12 @@ struct VertexArray {
      * @param size Size in bytes.
      * @param type  Data type.
      * @param bindingIndex Vertex buffer binding supplying the attribute data.
-     * @param offset Byte offset of the attribute within each vertex relative to the specified vertex's buffer initial offset.
+     * @param offset Byte offset of the attribute within each vertex relative to the
+     * specified vertex's buffer initial offset.
      * @param normalized Whether integer values are converted to normalized floats.
      */
-    void SetAttribPointer(int index, int size, DataType type, int bindingIndex, size_t offset, bool normalized = false);
+    void SetAttribPointer(int index, int size, DataType type, int bindingIndex, size_t offset,
+        bool normalized = false);
 
     /**
      * @brief Maps a Matrix3 to three consecutive vertex attributes.
@@ -79,7 +84,7 @@ struct VertexArray {
     /** @brief Returns the underlying OpenGL VAO ID, or zero if ungenerated. */
     unsigned int GetId() const;
 
-private:
+  private:
     unsigned int Id = 0;
 };
 } // namespace N

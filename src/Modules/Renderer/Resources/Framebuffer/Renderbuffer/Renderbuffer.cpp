@@ -1,8 +1,8 @@
 #include "Renderbuffer.hpp"
 
-namespace N {
-Renderbuffer::Renderbuffer(const std::string& name) : Resource(name)
-{}
+namespace N
+{
+Renderbuffer::Renderbuffer(const std::string &name) : Resource(name) {}
 
 Renderbuffer::~Renderbuffer()
 {
@@ -28,7 +28,8 @@ void Renderbuffer::Generate()
     }
     else
     {
-        glNamedRenderbufferStorageMultisample(Id, Samples, static_cast<GLenum>(InternalFormat), Width, Height);
+        glNamedRenderbufferStorageMultisample(
+            Id, Samples, static_cast<GLenum>(InternalFormat), Width, Height);
     }
 }
 

@@ -4,10 +4,11 @@
 #include "Math/Common/Comparison.hpp"
 #include "Utilities/Logger.hpp"
 
-namespace N::M {
+namespace N::M
+{
 Matrix3::Matrix3(const float mAll)
 {
-    for (auto& row : m)
+    for (auto &row : m)
     {
         for (int col = 0; col < 3; col++)
         {
@@ -16,8 +17,8 @@ Matrix3::Matrix3(const float mAll)
     }
 }
 
-Matrix3::Matrix3(const float m00, const float m01, const float m02, const float m10, const float m11, const float m12,
-    const float m20, const float m21, const float m22)
+Matrix3::Matrix3(const float m00, const float m01, const float m02, const float m10,
+    const float m11, const float m12, const float m20, const float m21, const float m22)
 {
     m[0][0] = m00;
     m[0][1] = m01;
@@ -35,7 +36,7 @@ Matrix3::Matrix3(const float m00, const float m01, const float m02, const float 
 //? Operations
 
 //? Methods
-Matrix3 Matrix3::Scale(const Vector3& scale) const
+Matrix3 Matrix3::Scale(const Vector3 &scale) const
 {
     Matrix3 scaleMatrix = Identity;
     scaleMatrix.m[0][0] = scale.x;
@@ -78,7 +79,7 @@ Matrix3 Matrix3::RotateZ(const float radian) const
     return *this * rotationMatrix;
 }
 
-Matrix3 Matrix3::Rotate(const Vector3& eulerRotation) const
+Matrix3 Matrix3::Rotate(const Vector3 &eulerRotation) const
 {
     Matrix3 rotationMatrix = Identity;
     rotationMatrix = rotationMatrix.RotateZ(eulerRotation.z);
@@ -88,7 +89,7 @@ Matrix3 Matrix3::Rotate(const Vector3& eulerRotation) const
     return *this * rotationMatrix;
 }
 
-Matrix3 Matrix3::RotateAroundAxis(const Vector3& axis, const float radian) const
+Matrix3 Matrix3::RotateAroundAxis(const Vector3 &axis, const float radian) const
 {
     Matrix3 rotationMatrix = Identity;
     rotationMatrix = rotationMatrix.RotateZ(radian);
@@ -107,7 +108,7 @@ Matrix3 Matrix3::RotateAroundAxis(const Vector3& axis, const float radian) const
     return *this * finalMatrix;
 }
 
-Matrix3 Matrix3::Translate(const Vector2& trans) const
+Matrix3 Matrix3::Translate(const Vector2 &trans) const
 {
     Matrix3 transMatrix = Identity;
 
@@ -119,7 +120,8 @@ Matrix3 Matrix3::Translate(const Vector2& trans) const
 
 float Matrix3::Determinant() const
 {
-    return m[0][0] * Minor(0, 0).Determinant() - m[0][1] * Minor(0, 1).Determinant() + m[0][2] * Minor(0, 2).Determinant();
+    return m[0][0] * Minor(0, 0).Determinant() - m[0][1] * Minor(0, 1).Determinant() +
+        m[0][2] * Minor(0, 2).Determinant();
 }
 
 Matrix3 Matrix3::Transpose() const
@@ -195,7 +197,7 @@ Matrix2 Matrix3::Minor(const int row, const int col) const
     return minor;
 }
 
-bool Matrix3::NearlyEquals(const Matrix3& mat3, const float epsilon) const
+bool Matrix3::NearlyEquals(const Matrix3 &mat3, const float epsilon) const
 {
     for (int row = 0; row < 3; row++)
     {
@@ -230,7 +232,7 @@ Matrix4 Matrix3::ToMatrix4() const
 }
 
 //* Matrices
-Matrix3 Matrix3::operator+(const Matrix3& mat3) const
+Matrix3 Matrix3::operator+(const Matrix3 &mat3) const
 {
     Matrix3 result = Zero;
     for (int row = 0; row < 3; row++)
@@ -243,7 +245,7 @@ Matrix3 Matrix3::operator+(const Matrix3& mat3) const
     return result;
 }
 
-Matrix3 Matrix3::operator-(const Matrix3& mat3) const
+Matrix3 Matrix3::operator-(const Matrix3 &mat3) const
 {
     Matrix3 result = Zero;
     for (int row = 0; row < 3; row++)
@@ -256,7 +258,7 @@ Matrix3 Matrix3::operator-(const Matrix3& mat3) const
     return result;
 }
 
-Matrix3 Matrix3::operator*(const Matrix3& mat3) const
+Matrix3 Matrix3::operator*(const Matrix3 &mat3) const
 {
     Matrix3 result(0);
 
@@ -274,26 +276,27 @@ Matrix3 Matrix3::operator*(const Matrix3& mat3) const
     return result;
 }
 
-Matrix3& Matrix3::operator+=(const Matrix3& mat3)
+Matrix3 &Matrix3::operator+=(const Matrix3 &mat3)
 {
     return *this = *this + mat3;
 }
 
-Matrix3& Matrix3::operator-=(const Matrix3& mat3)
+Matrix3 &Matrix3::operator-=(const Matrix3 &mat3)
 {
     return *this = *this - mat3;
 }
 
-Matrix3& Matrix3::operator*=(const Matrix3& mat3)
+Matrix3 &Matrix3::operator*=(const Matrix3 &mat3)
 {
     return *this = *this * mat3;
 }
 
 //* Vectors
-Vector3 Matrix3::operator*(const Vector3& vec3) const
+Vector3 Matrix3::operator*(const Vector3 &vec3) const
 {
-    return { m[0][0] * vec3.x + m[0][1] * vec3.y + m[0][2] * vec3.z, m[1][0] * vec3.x + m[1][1] * vec3.y + m[1][2] * vec3.z,
-        m[2][0] * vec3.x + m[2][1] * vec3.y + m[2][2] * vec3.z };
+    return {m[0][0] * vec3.x + m[0][1] * vec3.y + m[0][2] * vec3.z,
+        m[1][0] * vec3.x + m[1][1] * vec3.y + m[1][2] * vec3.z,
+        m[2][0] * vec3.x + m[2][1] * vec3.y + m[2][2] * vec3.z};
 }
 
 //* Scalars
@@ -323,12 +326,12 @@ Matrix3 Matrix3::operator/(const float scalar) const
     return result;
 }
 
-Matrix3& Matrix3::operator*=(const float scalar)
+Matrix3 &Matrix3::operator*=(const float scalar)
 {
     return *this = *this * scalar;
 }
 
-Matrix3& Matrix3::operator/=(const float scalar)
+Matrix3 &Matrix3::operator/=(const float scalar)
 {
     return *this = *this / scalar;
 }
@@ -339,7 +342,7 @@ Matrix3 Matrix3::operator-() const
 }
 
 //* Equality
-bool Matrix3::operator==(const Matrix3& mat3) const
+bool Matrix3::operator==(const Matrix3 &mat3) const
 {
     for (int row = 0; row < 3; row++)
     {
@@ -352,7 +355,7 @@ bool Matrix3::operator==(const Matrix3& mat3) const
     return true;
 }
 
-bool Matrix3::operator!=(const Matrix3& mat3) const
+bool Matrix3::operator!=(const Matrix3 &mat3) const
 {
     return !(*this == mat3);
 }
@@ -363,12 +366,12 @@ Matrix3 const Matrix3::Zero = Matrix3(0);
 Matrix3 const Matrix3::Identity = Matrix3(1, 0, 0, 0, 1, 0, 0, 0, 1);
 
 //* Others
-Matrix3 operator*(const float scalar, const Matrix3& mat3)
+Matrix3 operator*(const float scalar, const Matrix3 &mat3)
 {
     return mat3 * scalar;
 }
 
-std::ostream& operator<<(std::ostream& os, const Matrix3& mat3)
+std::ostream &operator<<(std::ostream &os, const Matrix3 &mat3)
 {
     os << "[ " << mat3.m[0][0] << "  " << mat3.m[0][1] << "  " << mat3.m[0][2] << " ]\n";
     os << "[ " << mat3.m[1][0] << "  " << mat3.m[1][1] << "  " << mat3.m[1][2] << " ]\n";

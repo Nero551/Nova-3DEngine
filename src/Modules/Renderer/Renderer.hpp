@@ -10,19 +10,21 @@
 #include "Resources/Uniformbuffer/Uniformbuffer.hpp"
 #include "World/Components/Transform3DComponent.hpp"
 
-namespace N {
-struct Renderer : Module {
-    U::CheckedPtr<Framebuffer> Framebuffer{ "Renderer has no Framebuffer to use" };
-    U::CheckedPtr<struct Framebuffer> MSAAFramebuffer{ "Renderer has no MSAA Framebuffer to use" };
+namespace N
+{
+struct Renderer : Module
+{
+    U::CheckedPtr<Framebuffer> Framebuffer{"Renderer has no Framebuffer to use"};
+    U::CheckedPtr<struct Framebuffer> MSAAFramebuffer{"Renderer has no MSAA Framebuffer to use"};
     const int MSAASamples = 8;
 
-    U::CheckedPtr<Material> ScreenMaterial{ "Renderer has no Screen Material to render on" };
-    U::CheckedPtr<Mesh> ScreenMesh{ "Renderer has no Screen Mesh to render on" };
-    U::CheckedPtr<Uniformbuffer> GUniformbuffer{ "Renderer has no Uniform buffer to use" };
+    U::CheckedPtr<Material> ScreenMaterial{"Renderer has no Screen Material to render on"};
+    U::CheckedPtr<Mesh> ScreenMesh{"Renderer has no Screen Mesh to render on"};
+    U::CheckedPtr<Uniformbuffer> GUniformbuffer{"Renderer has no Uniform buffer to use"};
 
     std::unordered_map<std::string, RenderBatch> Batches;
 
-protected:
+  protected:
     void SetupFramebuffer();
     void SetupMSAAFrameBuffer();
     void PresentFramebuffer();
@@ -31,8 +33,8 @@ protected:
     void BeginFrame(double dt) override;
 
     void RenderWorld();
-    void FillBatches(
-        Transform3DComponent& transformComponent, MaterialComponent& materialComponent, MeshComponent& meshComponent);
+    void FillBatches(Transform3DComponent &transformComponent, MaterialComponent &materialComponent,
+        MeshComponent &meshComponent);
 
     void Render() override;
     void Update(double dt) override;

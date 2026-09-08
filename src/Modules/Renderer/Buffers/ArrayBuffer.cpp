@@ -1,8 +1,8 @@
 #include "ArrayBuffer.hpp"
 
-namespace N {
-ArrayBuffer::ArrayBuffer()
-{}
+namespace N
+{
+ArrayBuffer::ArrayBuffer() {}
 
 void ArrayBuffer::Generate()
 {

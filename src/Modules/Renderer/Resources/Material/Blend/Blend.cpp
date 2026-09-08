@@ -1,6 +1,7 @@
 #include "Blend.hpp"
 
-namespace N {
+namespace N
+{
 void Blend::Apply()
 {
     if (!Enabled)
@@ -18,7 +19,7 @@ void Blend::Apply()
 
     glBlendColor(ConstantColor.x, ConstantColor.y, ConstantColor.z, ConstantColor.w);
 
-    glBlendFuncSeparate(static_cast<GLenum>(SourceRGB), static_cast<GLenum>(DestinationRGB), static_cast<GLenum>(SourceAlpha),
-        static_cast<GLenum>(DestinationAlpha));
+    glBlendFuncSeparate(static_cast<GLenum>(SourceRGB), static_cast<GLenum>(DestinationRGB),
+        static_cast<GLenum>(SourceAlpha), static_cast<GLenum>(DestinationAlpha));
 }
 } // namespace N

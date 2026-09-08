@@ -1,13 +1,14 @@
 #pragma once
 #include "OpenGL.hpp"
 
-namespace N {
-struct Uniform {
+namespace N
+{
+struct Uniform
+{
     std::string Name;
 
-    Uniform(const std::string& name) : Name(name) {};
-    virtual ~Uniform()
-    {}
+    Uniform(const std::string &name) : Name(name) {};
+    virtual ~Uniform() {}
 
     virtual void Upload(int location) {};
 };

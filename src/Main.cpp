@@ -1,8 +1,6 @@
 #include "Core/InnerCore/Engine.hpp"
 
-
-static void Testing()
-{}
+static void Testing() {}
 
 int main()
 {

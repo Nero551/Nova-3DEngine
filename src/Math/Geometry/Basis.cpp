@@ -1,6 +1,7 @@
 #include "Basis.hpp"
 
-namespace N::M {
+namespace N::M
+{
 Matrix4 Basis::GetInverseMatrix() const
 {
     return GetMatrix().Transpose();

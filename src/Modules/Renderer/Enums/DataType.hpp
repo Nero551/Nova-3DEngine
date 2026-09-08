@@ -1,14 +1,16 @@
 #pragma once
 #include "OpenGL.hpp"
 
-namespace N {
+namespace N
+{
 /**
  * @brief Specifies the data type of texture pixel components.
  *
  * Determines how the individual components of source pixel data
  * are represented in memory when transferred to OpenGL.
  */
-enum class DataType {
+enum class DataType
+{
     /** Unsigned 8-bit integer. */
     UnsignedByte = GL_UNSIGNED_BYTE,
 

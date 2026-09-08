@@ -1,9 +1,9 @@
 #include "Texture.hpp"
 #include "OpenGL.hpp"
 
-namespace N {
-Texture::Texture(const std::string& name, TextureTarget target) : Resource(name), Target(target)
-{}
+namespace N
+{
+Texture::Texture(const std::string &name, TextureTarget target) : Resource(name), Target(target) {}
 
 Texture::~Texture()
 {
@@ -31,8 +31,7 @@ bool Texture::IsGenerated() const
     return Id != 0;
 }
 
-void Texture::Generate()
-{}
+void Texture::Generate() {}
 
 void Texture::Bind(const unsigned int unit)
 {

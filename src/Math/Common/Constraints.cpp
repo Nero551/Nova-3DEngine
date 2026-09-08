@@ -1,6 +1,7 @@
 #include "Constraints.hpp"
 
-namespace N::M {
+namespace N::M
+{
 float Clamp(const float value, const float min, const float max)
 {
     return std::clamp(value, min, max);

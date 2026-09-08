@@ -8,7 +8,8 @@
 #include "TextureWrap.hpp"
 #include "Utilities/Image/Image.hpp"
 
-namespace N {
+namespace N
+{
 /**
  * @brief Represents an OpenGL cubemap texture resource.
  *
@@ -17,7 +18,8 @@ namespace N {
  * single OpenGL texture object and can be sampled using a three-dimensional
  * direction vector.
  */
-struct Cubemap : Texture {
+struct Cubemap : Texture
+{
     /** Image representing the negative Z face of the cubemap. */
     U::Image Front{};
 
@@ -64,8 +66,7 @@ struct Cubemap : Texture {
      * @brief Creates a cubemap texture resource.
      * @param name Resource name.
      */
-    Cubemap(const std::string& name) : Texture(name, TextureTarget::Cubemap)
-    {}
+    Cubemap(const std::string &name) : Texture(name, TextureTarget::Cubemap) {}
 
     /**
      * @brief Generates the OpenGL cubemap texture.
@@ -77,7 +78,7 @@ struct Cubemap : Texture {
      */
     void Generate() override;
 
-private:
+  private:
     /** @brief Configures the cubemap's wrapping and filtering parameters. */
     void SetParameters() const;
 };

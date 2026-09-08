@@ -1,9 +1,12 @@
 #pragma once
 #include "ArrayBuffer.hpp"
 
-namespace N {
-/** @brief OpenGL element buffer containing unsigned integer indices for indexed drawing. */
-struct IndexBuffer {
+namespace N
+{
+/** @brief OpenGL element buffer containing unsigned integer indices for indexed drawing.
+ */
+struct IndexBuffer
+{
     /** @brief Controls the OpenGL usage hint applied when index data is uploaded. */
     BufferUsage Usage = BufferUsage::StaticDraw;
 
@@ -18,7 +21,7 @@ struct IndexBuffer {
      * automatically generates buffer if not generated.
      * @param indices Unsigned integer indices used by indexed drawing.
      */
-    void SetData(const std::vector<unsigned int>& indices);
+    void SetData(const std::vector<unsigned int> &indices);
 
     /** @brief Returns true when a valid OpenGL buffer ID has been generated. */
     bool IsGenerated();
@@ -38,7 +41,7 @@ struct IndexBuffer {
     /** @brief Returns the underlying OpenGL buffer ID, or zero if ungenerated. */
     unsigned int GetId() const;
 
-private:
+  private:
     unsigned int Id = 0;
 };
 } // namespace N

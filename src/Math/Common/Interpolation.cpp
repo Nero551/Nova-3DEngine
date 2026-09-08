@@ -2,7 +2,8 @@
 
 #include "Exponentials.hpp"
 
-namespace N::M {
+namespace N::M
+{
 float Lerp(const float a, const float b, const float t)
 {
     return a + (b - a) * t;

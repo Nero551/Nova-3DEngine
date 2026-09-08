@@ -10,7 +10,8 @@
 #include "Stencil/Stencil.hpp"
 #include "Utilities/CheckedPtr.hpp"
 
-namespace N {
+namespace N
+{
 /**
  * @brief Represents the rendering properties and textures of a surface.
  *
@@ -21,29 +22,30 @@ namespace N {
  * A default white texture is assigned to the standard material maps when
  * the material is created.
  */
-struct Material : Resource {
+struct Material : Resource
+{
     // TODO- combine this custom textures thing with the maps , somehow.
 
     /** Maximum number of custom textures that can be assigned to a material. */
     static constexpr int MaxCustomTextures = 8;
 
     /** Shader used to render the material. */
-    U::CheckedPtr<Shader> Shader{ "Material Has No Shader Assigned" };
+    U::CheckedPtr<Shader> Shader{"Material Has No Shader Assigned"};
 
     /** Base material color. */
-    M::Vector4 Color = { 0.5 };
+    M::Vector4 Color = {0.5};
 
     /** Ambient lighting color. */
-    M::Vector3 Ambient = M::Vector3{ 0.7 };
+    M::Vector3 Ambient = M::Vector3{0.7};
 
     /** Diffuse lighting color. */
-    M::Vector3 Diffuse = M::Vector3{ 0.3 };
+    M::Vector3 Diffuse = M::Vector3{0.3};
 
     /** Specular lighting color. */
-    M::Vector3 Specular = M::Vector3{ 0.7 };
+    M::Vector3 Specular = M::Vector3{0.7};
 
     /** Emissive color of the material. */
-    M::Vector3 Emission = M::Vector3{ 0 };
+    M::Vector3 Emission = M::Vector3{0};
 
     /** Stencil testing and stencil buffer operations used by the material. */
     Stencil Stencil = true;
@@ -73,7 +75,7 @@ struct Material : Resource {
      *
      * @param name Resource name.
      */
-    Material(const std::string& name);
+    Material(const std::string &name);
 
     /**
      * @brief Assigns a custom texture to a texture slot.
@@ -82,7 +84,7 @@ struct Material : Resource {
      * @note Valid custom texture slots range from 0 to MaxCustomTextures - 1.
      *       An out-of-bounds slot is rejected and logged as an error.
      */
-    void AssignTexture(Texture& texture, unsigned int slot);
+    void AssignTexture(Texture &texture, unsigned int slot);
 
     /**
      * @brief Activates the material and uploads its properties.
@@ -91,7 +93,7 @@ struct Material : Resource {
      */
     void Use();
 
-protected:
+  protected:
     /** Textures assigned to the material's custom texture slots. */
     std::array<U::CheckedPtr<Texture>, MaxCustomTextures> CustomTextures = {};
 

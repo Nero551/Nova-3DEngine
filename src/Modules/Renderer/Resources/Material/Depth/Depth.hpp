@@ -1,11 +1,13 @@
 #pragma once
 #include "DepthFunction.hpp"
 
-namespace N {
+namespace N
+{
 /**
  * @brief Controls depth testing and depth buffer writes.
  */
-struct Depth {
+struct Depth
+{
     /** @brief Whether depth testing is enabled. */
     bool Enabled;
 
@@ -15,8 +17,7 @@ struct Depth {
     /** @brief Comparison function used by the depth test. */
     DepthFunction Function = DepthFunction::Less;
 
-    Depth(bool enabled) : Enabled(enabled)
-    {}
+    Depth(bool enabled) : Enabled(enabled) {}
 
     /** @brief Applies the configured depth state to the OpenGL context. */
     void Apply();

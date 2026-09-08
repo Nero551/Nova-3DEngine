@@ -2,9 +2,11 @@
 #include "BufferUsage.hpp"
 #include "OpenGL.hpp"
 
-namespace N {
+namespace N
+{
 /** @brief OpenGL buffer for storing vertex and other array data. */
-struct ArrayBuffer {
+struct ArrayBuffer
+{
     /** @brief Controls the OpenGL usage hint applied when data is uploaded. */
     BufferUsage Usage = BufferUsage::StaticDraw;
 
@@ -19,7 +21,7 @@ struct ArrayBuffer {
      * automatically generates buffer if not generated.
      * @param data Elements to copy into the buffer.
      */
-    template <typename T> void SetData(const std::vector<T>& data)
+    template <typename T> void SetData(const std::vector<T> &data)
     {
         Generate();
         glNamedBufferData(Id, data.size() * sizeof(T), data.data(), static_cast<GLenum>(Usage));
@@ -43,7 +45,7 @@ struct ArrayBuffer {
     /** @brief Returns the underlying OpenGL buffer ID, or zero if ungenerated. */
     unsigned int GetId() const;
 
-private:
+  private:
     unsigned int Id = 0;
 };
 } // namespace N

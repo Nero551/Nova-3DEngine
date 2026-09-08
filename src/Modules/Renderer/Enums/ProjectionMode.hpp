@@ -1,2 +1,6 @@
 #pragma once
-enum class ProjectionMode { Perspective, Orthographic };
+enum class ProjectionMode
+{
+    Perspective,
+    Orthographic
+};

@@ -1,14 +1,16 @@
 #pragma once
 #include "OpenGL.hpp"
 
-namespace N {
+namespace N
+{
 /**
  * @brief Operation performed on the stencil buffer.
  *
  * Determines how the stencil value is modified when a stencil operation
  * is performed.
  */
-enum class StencilAction : GLenum {
+enum class StencilAction : GLenum
+{
     /** Keep the current stencil value unchanged. */
     Keep = GL_KEEP,
 

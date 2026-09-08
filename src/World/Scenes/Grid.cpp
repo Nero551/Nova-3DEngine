@@ -11,7 +11,8 @@
 #include "World/Novas/MeshInstance3D.hpp"
 #include "World/Novas/Nova.hpp"
 
-namespace N {
+namespace N
+{
 Grid::Grid()
 {
     SetRoot(World::Get().CreateEntity<Nova>());
@@ -25,28 +26,32 @@ Grid::Grid()
     // }
     // float r = 3;
     // CreateGridLine({M::Rad(theta), 0, 0}, 0);
-    // CreateGridLine(M::Quaternion::FromEulerXYZ({M::Rad(theta), M::Rad(theta), M::Rad(theta)}), 0);
+    // CreateGridLine(M::Quaternion::FromEulerXYZ({M::Rad(theta), M::Rad(theta),
+    // M::Rad(theta)}), 0);
 }
 
 void Grid::CreateGridLine(const M::Quaternion rotation, const M::Vector3 position)
 {
-    auto& resourceManager = Service::Get<ResourceManager>();
-    auto& shader = Service::Get<ResourceManager>().Load<Shader>("AxisShader");
-    shader.AssignSource(resourceManager.Load<ShaderSource>("axisFrag", "Assets/Shaders/axisShader.frag", ShaderStage::Fragment));
-    shader.AssignSource(resourceManager.Load<ShaderSource>("axisVert", "Assets/Shaders/axisShader.vert", ShaderStage::Vertex));
-    auto& line = Primitives::CreateLine("Line");
+    auto &resourceManager = Service::Get<ResourceManager>();
+    auto &shader = Service::Get<ResourceManager>().Load<Shader>("AxisShader");
+    shader.AssignSource(resourceManager.Load<ShaderSource>(
+        "axisFrag", "Assets/Shaders/axisShader.frag", ShaderStage::Fragment));
+    shader.AssignSource(resourceManager.Load<ShaderSource>(
+        "axisVert", "Assets/Shaders/axisShader.vert", ShaderStage::Vertex));
+    auto &line = Primitives::CreateLine("Line");
 
-    auto& l = World::Get().CreateEntity<MeshInstance3D>();
-    auto& materialComponent = World::Get().Query.Pool<MaterialComponent>().GetComponentById(l.Id);
-    auto& meshComponent = World::Get().Query.Pool<MeshComponent>().GetComponentById(l.Id);
-    auto& transformComponent = World::Get().Query.Pool<Transform3DComponent>().GetComponentById(l.Id);
+    auto &l = World::Get().CreateEntity<MeshInstance3D>();
+    auto &materialComponent = World::Get().Query.Pool<MaterialComponent>().GetComponentById(l.Id);
+    auto &meshComponent = World::Get().Query.Pool<MeshComponent>().GetComponentById(l.Id);
+    auto &transformComponent =
+        World::Get().Query.Pool<Transform3DComponent>().GetComponentById(l.Id);
     meshComponent.Mesh = &line;
     materialComponent.Material = &resourceManager.Load<Material>("GridLine Material");
     materialComponent.Material->Shader = &shader;
 
     transformComponent.Rotation = rotation;
     transformComponent.Position = position;
-    transformComponent.Scale = { 1, 1, 40 };
+    transformComponent.Scale = {1, 1, 40};
     materialComponent.Material->Color = M::Color::Gray;
     GetRoot().AttachChild(l);
 }
@@ -57,7 +62,7 @@ void Grid::CreateXY()
     {
         if (x != 0)
         {
-            CreateGridLine(M::Quaternion::FromEulerXYZ({ M::Rad(90), 0, 0 }), { x, 0, 0 });
+            CreateGridLine(M::Quaternion::FromEulerXYZ({M::Rad(90), 0, 0}), {x, 0, 0});
         }
     }
 
@@ -65,7 +70,7 @@ void Grid::CreateXY()
     {
         if (y != 0)
         {
-            CreateGridLine(M::Quaternion::FromEulerXYZ({ 0, M::Rad(90), 0 }), { 0, y, 0 });
+            CreateGridLine(M::Quaternion::FromEulerXYZ({0, M::Rad(90), 0}), {0, y, 0});
         }
     }
 }
@@ -76,7 +81,7 @@ void Grid::CreateXZ()
     {
         if (x != 0)
         {
-            CreateGridLine(M::Quaternion::FromEulerXYZ({ 0, 0, M::Rad(90) }), { x, 0, 0 });
+            CreateGridLine(M::Quaternion::FromEulerXYZ({0, 0, M::Rad(90)}), {x, 0, 0});
         }
     }
 
@@ -84,7 +89,7 @@ void Grid::CreateXZ()
     {
         if (z != 0)
         {
-            CreateGridLine(M::Quaternion::FromEulerXYZ({ M::Rad(90), 0, M::Rad(90) }), { 0, 0, z });
+            CreateGridLine(M::Quaternion::FromEulerXYZ({M::Rad(90), 0, M::Rad(90)}), {0, 0, z});
         }
     }
 }
@@ -95,7 +100,7 @@ void Grid::CreateYZ()
     {
         if (y != 0)
         {
-            CreateGridLine(M::Quaternion::FromEulerXYZ({ 0, 0, 0 }), { 0, y, 0 });
+            CreateGridLine(M::Quaternion::FromEulerXYZ({0, 0, 0}), {0, y, 0});
         }
     }
 
@@ -103,7 +108,7 @@ void Grid::CreateYZ()
     {
         if (z != 0)
         {
-            CreateGridLine(M::Quaternion::FromEulerXYZ({ M::Rad(90), 0, 0 }), { 0, 0, z });
+            CreateGridLine(M::Quaternion::FromEulerXYZ({M::Rad(90), 0, 0}), {0, 0, z});
         }
     }
 }

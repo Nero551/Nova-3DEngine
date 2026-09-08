@@ -1,13 +1,15 @@
 #pragma once
 
-namespace N {
+namespace N
+{
 /**
  * @brief Specifies the target type of a texture.
  *
  * Determines the dimensionality and layout used when creating
  * and accessing a texture.
  */
-enum class TextureTarget {
+enum class TextureTarget
+{
     /** Two-dimensional texture. */
     Texture2D = GL_TEXTURE_2D,
 

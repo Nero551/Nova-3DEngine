@@ -4,8 +4,9 @@
 #include "Math/Common/Logarithms.hpp"
 #include "Math/Quaternion/QuaternionLogarithms.hpp"
 
-namespace N::M {
-Quaternion M::QExp(const Quaternion& q)
+namespace N::M
+{
+Quaternion M::QExp(const Quaternion &q)
 {
     float r = q.Magnitude();
     float theta = q.Angle();
@@ -23,12 +24,12 @@ Quaternion M::QExp(const Quaternion& q)
     return result;
 }
 
-Quaternion QPow(const float x, const Quaternion& q)
+Quaternion QPow(const float x, const Quaternion &q)
 {
     return QExp(Ln(x) * q);
 }
 
-Quaternion QPow(const Quaternion& q, float power)
+Quaternion QPow(const Quaternion &q, float power)
 {
     float magnitude = Pow(q.Magnitude(), power);
     float theta = q.Angle();
@@ -44,12 +45,12 @@ Quaternion QPow(const Quaternion& q, float power)
     return result;
 }
 
-Quaternion QPow(const Quaternion& q, const Quaternion& p)
+Quaternion QPow(const Quaternion &q, const Quaternion &p)
 {
     return QExp(p * QLn(q));
 }
 
-Quaternion QSqrt(const Quaternion& q)
+Quaternion QSqrt(const Quaternion &q)
 {
     return QPow(q, 1.0f / 2.0f);
 }

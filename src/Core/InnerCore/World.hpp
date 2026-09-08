@@ -7,7 +7,8 @@
 #include "Utilities/Logger.hpp"
 #include "World/Events/EntityCreated.hpp"
 
-namespace N {
+namespace N
+{
 template <typename T>
 concept EntityType = std::derived_from<T, Entity>;
 
@@ -16,14 +17,15 @@ concept EntityType = std::derived_from<T, Entity>;
  * The World owns all entities. It is responsible for managing the lifecycle of
  * entities, including entity creation and destruction & system execution.
  */
-struct World : SystemOwner {
-    U::CheckedPtr<Entity> Root{ "World Has No Root Entity" };
-    U::CheckedPtr<Entity> ActiveCamera{ "World Has No Active Camera" };
+struct World : SystemOwner
+{
+    U::CheckedPtr<Entity> Root{"World Has No Root Entity"};
+    U::CheckedPtr<Entity> ActiveCamera{"World Has No Active Camera"};
     ComponentPoolQuery Query;
     int MaxLights = 24;
 
     /** @brief Gets the global World instance. */
-    static World& Get();
+    static World &Get();
 
     /**
      * @brief Removes an entity from the world.
@@ -43,7 +45,7 @@ struct World : SystemOwner {
      * @tparam T Entity type to create.
      * @return Reference to the newly created entity.
      */
-    template <EntityType T> T& CreateEntity()
+    template <EntityType T> T &CreateEntity()
     {
         const unsigned int id = ++currentEntityId;
         auto entity = std::make_unique<T>();
@@ -51,7 +53,7 @@ struct World : SystemOwner {
         entity->Initialize();
 
         auto [it, inserted] = Entities.emplace(id, std::move(entity));
-        T& createdEntity = static_cast<T&>(*it->second);
+        T &createdEntity = static_cast<T &>(*it->second);
         Service::Get<EventBus>().Fire<EntityCreated>(createdEntity);
 
         return createdEntity;
@@ -62,7 +64,7 @@ struct World : SystemOwner {
      * @param id ID of the entity to find.
      * @return Reference to the requested entity.
      */
-    Entity& FindEntity(unsigned int id);
+    Entity &FindEntity(unsigned int id);
 
     /**
      * @brief Attempts to find an entity by its ID.
@@ -71,7 +73,7 @@ struct World : SystemOwner {
      */
     U::CheckedPtr<Entity> TryFindEntity(unsigned int id);
 
-protected:
+  protected:
     void Start();
 
     void Update(double dt);
@@ -88,7 +90,7 @@ protected:
 
     friend struct Engine;
 
-private:
+  private:
     std::unordered_map<unsigned int, std::unique_ptr<Entity>> Entities;
 
     /** @brief ID assigned to the most recently created entity. */
