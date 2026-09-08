@@ -12,7 +12,7 @@
 
 namespace N
 {
-World &World::Get()
+World& World::Get()
 {
     return Engine::Get().World;
 }
@@ -39,14 +39,14 @@ void World::RemoveEntity(const unsigned int id)
     Service::Get<EventBus>().Fire<EntityDestroyed>(*entity);
     Entities.erase(id);
 
-    for (auto &descendant : descendants)
+    for (auto& descendant : descendants)
     {
         Service::Get<EventBus>().Fire<EntityDestroyed>(*descendant);
         Entities.erase(descendant->Id);
     }
 }
 
-Entity &World::FindEntity(unsigned int id)
+Entity& World::FindEntity(unsigned int id)
 {
     auto entity = Entities.find(id);
     if (entity == Entities.end())
@@ -78,7 +78,7 @@ void World::Start()
 
     Root = &CreateEntity<Nova>();
 
-    auto &camera = CreateEntity<Camera>();
+    auto& camera = CreateEntity<Camera>();
     Query.Pool<Transform3DComponent>().GetComponentById(camera.Id).Position = {0, 0, 10};
     Root->AttachChild(camera);
     ActiveCamera = &camera;
@@ -89,7 +89,7 @@ void World::Start()
     FirstScene firstScene;
     coordinateAxes.GetRoot().AttachChild(firstScene.GetRoot());
 
-    for (auto &system : Systems | std::views::values)
+    for (auto& system : Systems | std::views::values)
     {
         system->Start();
     }
@@ -114,7 +114,7 @@ void World::Update(const double dt)
         }
     }
 
-    for (auto &system : Systems | std::views::values)
+    for (auto& system : Systems | std::views::values)
     {
         system->Update(dt);
     }
@@ -122,7 +122,7 @@ void World::Update(const double dt)
 
 void World::FixedUpdate(const double fdt)
 {
-    for (auto &system : Systems | std::views::values)
+    for (auto& system : Systems | std::views::values)
     {
         system->FixedUpdate(fdt);
     }
@@ -130,7 +130,7 @@ void World::FixedUpdate(const double fdt)
 
 void World::Stop()
 {
-    for (auto &system : Systems | std::views::values)
+    for (auto& system : Systems | std::views::values)
     {
         system->Stop();
     }
@@ -138,7 +138,7 @@ void World::Stop()
 
 void World::BeginFrame(const double dt)
 {
-    for (auto &system : Systems | std::views::values)
+    for (auto& system : Systems | std::views::values)
     {
         system->BeginFrame(dt);
     }
@@ -146,7 +146,7 @@ void World::BeginFrame(const double dt)
 
 void World::EndFrame(const double dt)
 {
-    for (auto &system : Systems | std::views::values)
+    for (auto& system : Systems | std::views::values)
     {
         system->EndFrame(dt);
     }
@@ -154,7 +154,7 @@ void World::EndFrame(const double dt)
 
 void World::Render()
 {
-    for (auto &system : Systems | std::views::values)
+    for (auto& system : Systems | std::views::values)
     {
         system->Render();
     }

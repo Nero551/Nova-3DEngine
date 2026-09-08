@@ -21,7 +21,7 @@ struct ArrayBuffer
      * automatically generates buffer if not generated.
      * @param data Elements to copy into the buffer.
      */
-    template <typename T> void SetData(const std::vector<T> &data)
+    template <typename T> void SetData(const std::vector<T>& data)
     {
         Generate();
         glNamedBufferData(Id, data.size() * sizeof(T), data.data(), static_cast<GLenum>(Usage));

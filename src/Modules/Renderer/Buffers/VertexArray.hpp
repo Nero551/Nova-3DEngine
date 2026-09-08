@@ -38,12 +38,12 @@ struct VertexArray
      * @param stride Byte distance between consecutive vertices.
      * @param offset Byte offset into the VBO where vertex data begins.
      */
-    void SetVertexBuffer(const ArrayBuffer &vbo, int bindingIndex, int stride, int offset = 0);
+    void SetVertexBuffer(const ArrayBuffer& vbo, int bindingIndex, int stride, int offset = 0);
 
     /** @brief Associates an EBO with the VAO.
      * automatically generates array if not generated. does NOT generate the EBO.
      */
-    void SetIndexBuffer(const IndexBuffer &ebo);
+    void SetIndexBuffer(const IndexBuffer& ebo);
 
     /**
      * @brief Enables and describes a vertex attribute.

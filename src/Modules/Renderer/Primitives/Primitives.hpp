@@ -4,16 +4,16 @@
 
 namespace N::Primitives
 {
-Mesh &CreateCube(const std::string &name);
+Mesh& CreateCube(const std::string& name);
 
-Mesh &CreateUVSphere(
-    const std::string &name, float radius = 0.5, int sectors = 32, int stacks = 16);
+Mesh& CreateUVSphere(
+    const std::string& name, float radius = 0.5, int sectors = 32, int stacks = 16);
 
-Mesh &CreateQuad(const std::string &name);
+Mesh& CreateQuad(const std::string& name);
 
-Mesh &CreateLine(const std::string &name);
+Mesh& CreateLine(const std::string& name);
 
-Texture &CreateWhiteTexture();
+Texture& CreateWhiteTexture();
 
-Texture &CreateBlackTexture();
+Texture& CreateBlackTexture();
 } // namespace N::Primitives

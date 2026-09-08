@@ -18,21 +18,21 @@ template <ComponentType T> struct ComponentPool : IComponentPool
 {
     struct Iterator
     {
-        ComponentPool &Pool;
+        ComponentPool& Pool;
         size_t Index;
 
-        std::pair<unsigned int, T &> operator*() const
+        std::pair<unsigned int, T&> operator*() const
         {
             return {Pool.EntityIds[Index], Pool.Components[Index]};
         }
 
-        Iterator &operator++()
+        Iterator& operator++()
         {
             ++Index;
             return *this;
         }
 
-        bool operator!=(const Iterator &other) const
+        bool operator!=(const Iterator& other) const
         {
             return Index != other.Index;
         }
@@ -51,7 +51,7 @@ template <ComponentType T> struct ComponentPool : IComponentPool
     ComponentPool()
     {
         Service::Get<EventBus>().Sub<EntityDestroyed>(
-            [this](const EntityDestroyed &event)
+            [this](const EntityDestroyed& event)
             {
                 if (HasId(event.entity.Id))
                 {
@@ -60,7 +60,7 @@ template <ComponentType T> struct ComponentPool : IComponentPool
             });
     }
 
-    T &Add(unsigned int entityId)
+    T& Add(unsigned int entityId)
     {
         EntityIds.push_back(entityId);
         Indices.emplace(entityId, EntityIds.size() - 1);
@@ -79,12 +79,12 @@ template <ComponentType T> struct ComponentPool : IComponentPool
         return EntityIds.at(index);
     }
 
-    T &GetComponentByIndex(size_t index)
+    T& GetComponentByIndex(size_t index)
     {
         return Components.at(index);
     }
 
-    T &GetComponentById(unsigned int entityId)
+    T& GetComponentById(unsigned int entityId)
     {
         auto it = Indices.find(entityId);
 

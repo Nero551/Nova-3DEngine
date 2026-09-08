@@ -12,7 +12,7 @@ namespace N
 {
 static Assimp::Importer importer;
 
-static void ProcessVertices(std::vector<Vertex> &vertices, const aiMesh *mesh)
+static void ProcessVertices(std::vector<Vertex>& vertices, const aiMesh* mesh)
 {
     for (unsigned int v = 0; v < mesh->mNumVertices; v++)
     {
@@ -29,7 +29,7 @@ static void ProcessVertices(std::vector<Vertex> &vertices, const aiMesh *mesh)
     }
 }
 
-static void ProcessFaces(std::vector<unsigned int> &indices, const aiMesh *mesh)
+static void ProcessFaces(std::vector<unsigned int>& indices, const aiMesh* mesh)
 {
     for (unsigned int f = 0; f < mesh->mNumFaces; f++)
     {
@@ -42,12 +42,12 @@ static void ProcessFaces(std::vector<unsigned int> &indices, const aiMesh *mesh)
     }
 }
 
-static Material &ProcessMaterial(
-    const aiScene *scene, const aiMesh *mesh, const std::string &directory)
+static Material& ProcessMaterial(
+    const aiScene* scene, const aiMesh* mesh, const std::string& directory)
 {
-    auto &resourceManager = Service::Get<ResourceManager>();
+    auto& resourceManager = Service::Get<ResourceManager>();
 
-    auto &material =
+    auto& material =
         resourceManager.Load<Material>("material_" + std::to_string(mesh->mMaterialIndex));
 
     material.Shader = &resourceManager.Load<Shader>("s");
@@ -58,14 +58,14 @@ static Material &ProcessMaterial(
     material.Shader->AssignSource(
         resourceManager.Load<ShaderSource>("s", "Assets/Shaders/shader.vert", ShaderStage::Vertex));
 
-    aiMaterial *aiMat = scene->mMaterials[mesh->mMaterialIndex];
+    aiMaterial* aiMat = scene->mMaterials[mesh->mMaterialIndex];
 
     for (unsigned int t = 0; t < aiMat->GetTextureCount(aiTextureType_DIFFUSE); t++)
     {
         aiString str;
         aiMat->GetTexture(aiTextureType_DIFFUSE, t, &str);
 
-        auto &diffuseMap = resourceManager.Load<Texture>(
+        auto& diffuseMap = resourceManager.Load<Texture>(
             "diffuse" + std::to_string(t), std::filesystem::path(directory) / str.C_Str());
 
         material.DiffuseMap = &diffuseMap;
@@ -76,7 +76,7 @@ static Material &ProcessMaterial(
         aiString str;
         aiMat->GetTexture(aiTextureType_SPECULAR, t, &str);
 
-        auto &specularMap = resourceManager.Load<Texture>(
+        auto& specularMap = resourceManager.Load<Texture>(
             "specular" + std::to_string(t), std::filesystem::path(directory) / str.C_Str());
 
         material.SpecularMap = &specularMap;
@@ -86,30 +86,30 @@ static Material &ProcessMaterial(
 }
 
 static void ProcessNode(
-    const aiNode *node, const aiScene *scene, const std::string &directory, Entity &parent)
+    const aiNode* node, const aiScene* scene, const std::string& directory, Entity& parent)
 {
-    auto &world = World::Get();
-    auto &query = world.Query;
-    auto &resourceManager = Service::Get<ResourceManager>();
+    auto& world = World::Get();
+    auto& query = world.Query;
+    auto& resourceManager = Service::Get<ResourceManager>();
 
-    auto &entity = world.CreateEntity<Nova3D>();
+    auto& entity = world.CreateEntity<Nova3D>();
 
-    auto &meshPool = query.Pool<MeshComponent>();
-    auto &materialPool = query.Pool<MaterialComponent>();
+    auto& meshPool = query.Pool<MeshComponent>();
+    auto& materialPool = query.Pool<MaterialComponent>();
 
     for (unsigned int m = 0; m < node->mNumMeshes; m++)
     {
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
 
-        aiMesh *mesh = scene->mMeshes[node->mMeshes[m]];
+        aiMesh* mesh = scene->mMeshes[node->mMeshes[m]];
 
         ProcessVertices(vertices, mesh);
         ProcessFaces(indices, mesh);
 
-        auto &material = ProcessMaterial(scene, mesh, directory);
+        auto& material = ProcessMaterial(scene, mesh, directory);
 
-        auto &meshResource = resourceManager.Load<Mesh>(
+        auto& meshResource = resourceManager.Load<Mesh>(
             "mesh_" + std::to_string(node->mMeshes[m]), vertices, indices);
 
         meshPool.Add(entity.Id).Mesh = &meshResource;
@@ -124,11 +124,11 @@ static void ProcessNode(
     }
 }
 
-AssimpScene::AssimpScene(const std::string &filepath)
+AssimpScene::AssimpScene(const std::string& filepath)
 {
     SetRoot(World::Get().CreateEntity<Nova3D>());
 
-    const aiScene *scene = importer.ReadFile(filepath, aiProcess_Triangulate | aiProcess_FlipUVs);
+    const aiScene* scene = importer.ReadFile(filepath, aiProcess_Triangulate | aiProcess_FlipUVs);
 
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {

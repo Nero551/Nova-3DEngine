@@ -66,7 +66,7 @@ struct Cubemap : Texture
      * @brief Creates a cubemap texture resource.
      * @param name Resource name.
      */
-    Cubemap(const std::string &name) : Texture(name, TextureTarget::Cubemap) {}
+    Cubemap(const std::string& name) : Texture(name, TextureTarget::Cubemap) {}
 
     /**
      * @brief Generates the OpenGL cubemap texture.

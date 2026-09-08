@@ -31,7 +31,7 @@ struct Spherical
     {
     }
 
-    friend std::ostream &operator<<(std::ostream &os, const Spherical &spherical)
+    friend std::ostream& operator<<(std::ostream& os, const Spherical& spherical)
     {
         os << "(" << spherical.Magnitude << ", " << Deg(spherical.Elevation) << "°, "
            << Deg(spherical.Azimuth) << "°"

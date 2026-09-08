@@ -3,7 +3,7 @@
 
 namespace N::M
 {
-Complex CLn(const Complex &z)
+Complex CLn(const Complex& z)
 {
     Complex result;
     result.Real = Ln(z.Magnitude());
@@ -12,7 +12,7 @@ Complex CLn(const Complex &z)
     return result;
 }
 
-Complex CLog(const Complex &base, const Complex &z)
+Complex CLog(const Complex& base, const Complex& z)
 {
     return CLn(z) / CLn(base);
 }

@@ -51,7 +51,7 @@ struct Framebuffer : Resource
      * @brief Creates a framebuffer resource.
      * @param name Resource name.
      */
-    Framebuffer(const std::string &name);
+    Framebuffer(const std::string& name);
 
     /// Releases the underlying OpenGL framebuffer object.
     ~Framebuffer() override;
@@ -99,7 +99,7 @@ struct Framebuffer : Resource
      * @param textureAttachment Attachment point to use.
      * @param texture Texture to attach.
      */
-    void AttachTexture(FramebufferAttachment textureAttachment, Texture &texture);
+    void AttachTexture(FramebufferAttachment textureAttachment, Texture& texture);
 
     /**
      * @brief Copies selected framebuffer buffers to another framebuffer.
@@ -115,7 +115,7 @@ struct Framebuffer : Resource
      * @param buffer Buffers to copy.
      * @param filter Filter used when scaling the copied buffers.
      */
-    void Blit(Framebuffer &dst, int srcW, int srcH, int dstW, int dstH, BufferBit buffer,
+    void Blit(Framebuffer& dst, int srcW, int srcH, int dstW, int dstH, BufferBit buffer,
         TextureFilter filter = TextureFilter::Nearest);
     /**
      * @brief Attaches a renderbuffer to a framebuffer attachment point.
@@ -123,7 +123,7 @@ struct Framebuffer : Resource
      * @param attachment Attachment point to use.
      * @param renderbuffer Renderbuffer to attach.
      */
-    void AttachRenderBuffer(FramebufferAttachment attachment, Renderbuffer &renderbuffer);
+    void AttachRenderBuffer(FramebufferAttachment attachment, Renderbuffer& renderbuffer);
 
     /**
      * @brief Resizes all attachments of the framebuffer.

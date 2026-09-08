@@ -48,18 +48,18 @@ Polar Complex::ToPolar() const
     return {Argument(), Magnitude()};
 }
 
-bool Complex::NearlyEquals(const Complex &b, float epsilon) const
+bool Complex::NearlyEquals(const Complex& b, float epsilon) const
 {
     return M::NearlyEquals(Real, b.Real, epsilon) &&
         M::NearlyEquals(Imaginary, b.Imaginary, epsilon);
 }
 
-bool Complex::operator==(const Complex &b) const
+bool Complex::operator==(const Complex& b) const
 {
     return Real == b.Real && Imaginary == b.Imaginary;
 }
 
-bool Complex::operator!=(const Complex &b) const
+bool Complex::operator!=(const Complex& b) const
 {
     return !(*this == b);
 }
@@ -69,7 +69,7 @@ Complex Complex::operator-() const
     return -1 * *this;
 }
 
-Complex Complex::operator*(const Complex &b) const
+Complex Complex::operator*(const Complex& b) const
 {
     Complex result;
     result.Real = Real * b.Real - Imaginary * b.Imaginary;
@@ -78,37 +78,37 @@ Complex Complex::operator*(const Complex &b) const
     return result;
 }
 
-Complex Complex::operator/(const Complex &b) const
+Complex Complex::operator/(const Complex& b) const
 {
     return *this * b.Inverse();
 }
 
-Complex Complex::operator+(const Complex &b) const
+Complex Complex::operator+(const Complex& b) const
 {
     return {Real + b.Real, Imaginary + b.Imaginary};
 }
 
-Complex Complex::operator-(const Complex &b) const
+Complex Complex::operator-(const Complex& b) const
 {
     return {Real - b.Real, Imaginary - b.Imaginary};
 }
 
-Complex &Complex::operator*=(const Complex &b)
+Complex& Complex::operator*=(const Complex& b)
 {
     return *this = *this * b;
 }
 
-Complex &Complex::operator/=(const Complex &b)
+Complex& Complex::operator/=(const Complex& b)
 {
     return *this = *this / b;
 }
 
-Complex &Complex::operator+=(const Complex &b)
+Complex& Complex::operator+=(const Complex& b)
 {
     return *this = *this + b;
 }
 
-Complex &Complex::operator-=(const Complex &b)
+Complex& Complex::operator-=(const Complex& b)
 {
     return *this = *this - b;
 }
@@ -133,47 +133,47 @@ Complex Complex::operator-(float scalar) const
     return {Real - scalar, Imaginary};
 }
 
-Complex &Complex::operator*=(float scalar)
+Complex& Complex::operator*=(float scalar)
 {
     return *this = *this * scalar;
 }
 
-Complex &Complex::operator/=(float scalar)
+Complex& Complex::operator/=(float scalar)
 {
     return *this = *this / scalar;
 }
 
-Complex &Complex::operator+=(float scalar)
+Complex& Complex::operator+=(float scalar)
 {
     return *this = *this + scalar;
 }
 
-Complex &Complex::operator-=(float scalar)
+Complex& Complex::operator-=(float scalar)
 {
     return *this = *this - scalar;
 }
 
-Complex operator*(float scalar, const Complex &a)
+Complex operator*(float scalar, const Complex& a)
 {
     return a * scalar;
 }
 
-Complex operator/(float scalar, const Complex &a)
+Complex operator/(float scalar, const Complex& a)
 {
     return scalar * a.Inverse();
 }
 
-Complex operator+(float scalar, const Complex &a)
+Complex operator+(float scalar, const Complex& a)
 {
     return a + scalar;
 }
 
-Complex operator-(float scalar, const Complex &a)
+Complex operator-(float scalar, const Complex& a)
 {
     return {scalar - a.Real, -a.Imaginary};
 }
 
-std::ostream &operator<<(std::ostream &os, const Complex &complex)
+std::ostream& operator<<(std::ostream& os, const Complex& complex)
 {
     os << complex.Real;
     if (complex.Imaginary < 0)

@@ -33,8 +33,8 @@ struct Renderer : Module
     void BeginFrame(double dt) override;
 
     void RenderWorld();
-    void FillBatches(Transform3DComponent &transformComponent, MaterialComponent &materialComponent,
-        MeshComponent &meshComponent);
+    void FillBatches(Transform3DComponent& transformComponent, MaterialComponent& materialComponent,
+        MeshComponent& meshComponent);
 
     void Render() override;
     void Update(double dt) override;

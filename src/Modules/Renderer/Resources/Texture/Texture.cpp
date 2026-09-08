@@ -3,7 +3,7 @@
 
 namespace N
 {
-Texture::Texture(const std::string &name, TextureTarget target) : Resource(name), Target(target) {}
+Texture::Texture(const std::string& name, TextureTarget target) : Resource(name), Target(target) {}
 
 Texture::~Texture()
 {

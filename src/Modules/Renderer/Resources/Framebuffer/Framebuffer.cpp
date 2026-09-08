@@ -4,7 +4,7 @@
 
 namespace N
 {
-Framebuffer::Framebuffer(const std::string &name) : Resource(name) {}
+Framebuffer::Framebuffer(const std::string& name) : Resource(name) {}
 
 Framebuffer::~Framebuffer()
 {
@@ -55,7 +55,7 @@ bool Framebuffer::IsComplete() const
     return true;
 }
 
-void Framebuffer::AttachTexture(FramebufferAttachment textureAttachment, Texture &texture)
+void Framebuffer::AttachTexture(FramebufferAttachment textureAttachment, Texture& texture)
 {
     Generate();
     texture.Generate();
@@ -63,7 +63,7 @@ void Framebuffer::AttachTexture(FramebufferAttachment textureAttachment, Texture
     glNamedFramebufferTexture(Id, static_cast<GLenum>(textureAttachment), texture.GetId(), 0);
 }
 
-void Framebuffer::Blit(Framebuffer &dst, int srcW, int srcH, int dstW, int dstH, BufferBit buffer,
+void Framebuffer::Blit(Framebuffer& dst, int srcW, int srcH, int dstW, int dstH, BufferBit buffer,
     TextureFilter filter)
 {
     if (!IsGenerated())
@@ -79,7 +79,7 @@ void Framebuffer::Blit(Framebuffer &dst, int srcW, int srcH, int dstW, int dstH,
         static_cast<GLbitfield>(buffer), static_cast<GLenum>(filter));
 }
 
-void Framebuffer::AttachRenderBuffer(FramebufferAttachment attachment, Renderbuffer &renderbuffer)
+void Framebuffer::AttachRenderBuffer(FramebufferAttachment attachment, Renderbuffer& renderbuffer)
 {
     Generate();
     renderbuffer.Generate();
@@ -90,7 +90,7 @@ void Framebuffer::AttachRenderBuffer(FramebufferAttachment attachment, Renderbuf
 
 void Framebuffer::Resize(int width, int height)
 {
-    for (auto &[attachment, texture] : TextureAttachments)
+    for (auto& [attachment, texture] : TextureAttachments)
     {
         texture->Regenerate();
         texture->Width = width;
@@ -100,7 +100,7 @@ void Framebuffer::Resize(int width, int height)
         glNamedFramebufferTexture(Id, static_cast<GLenum>(attachment), texture->GetId(), 0);
     }
 
-    for (auto &[attachment, buffer] : RenderBuffers)
+    for (auto& [attachment, buffer] : RenderBuffers)
     {
         buffer->Regenerate();
         buffer->Width = width;

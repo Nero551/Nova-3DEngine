@@ -8,17 +8,17 @@ namespace N
 {
 void Transform3DSystem::Update(double fdt)
 {
-    auto &query = World::Get().Query;
+    auto& query = World::Get().Query;
     for (auto [entityId, transform] : query.With<Transform3DComponent>())
     {
-        auto &entity = World::Get().FindEntity(entityId);
+        auto& entity = World::Get().FindEntity(entityId);
 
         if (entity.HasParent() && transform.InheritTransform)
         {
-            auto &parent = entity.GetParent();
+            auto& parent = entity.GetParent();
             if (query.Pool<Transform3DComponent>().HasId(parent.Id))
             {
-                auto &parentTransform =
+                auto& parentTransform =
                     query.Pool<Transform3DComponent>().GetComponentById(parent.Id);
 
                 transform.GlobalPosition = parentTransform.GlobalPosition + transform.Position;

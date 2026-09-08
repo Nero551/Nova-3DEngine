@@ -61,7 +61,7 @@ struct Matrix3
      *
      * @param scale X, Y, and Z scale factors.
      */
-    [[nodiscard]] Matrix3 Scale(const Vector3 &scale) const;
+    [[nodiscard]] Matrix3 Scale(const Vector3& scale) const;
 
     /**
      * @brief Applies a rotation around the X axis.
@@ -92,7 +92,7 @@ struct Matrix3
      *
      * @param eulerRotation Rotation angles around X, Y, and Z in radians.
      */
-    [[nodiscard]] Matrix3 Rotate(const Vector3 &eulerRotation) const;
+    [[nodiscard]] Matrix3 Rotate(const Vector3& eulerRotation) const;
 
     /**
      * @brief Applies a rotation around an arbitrary axis.
@@ -100,14 +100,14 @@ struct Matrix3
      * @param axis Axis of rotation.
      * @param radian Rotation angle in radians.
      */
-    [[nodiscard]] Matrix3 RotateAroundAxis(const Vector3 &axis, float radian) const;
+    [[nodiscard]] Matrix3 RotateAroundAxis(const Vector3& axis, float radian) const;
 
     /**
      * @brief Applies a 2D translation using homogeneous coordinates.
      *
      * @param trans X and Y translation.
      */
-    [[nodiscard]] Matrix3 Translate(const Vector2 &trans) const;
+    [[nodiscard]] Matrix3 Translate(const Vector2& trans) const;
 
     /**
      * @brief Calculates the determinant of this matrix.
@@ -141,38 +141,38 @@ struct Matrix3
      * @param mat3 Matrix to compare against.
      * @param epsilon Maximum allowed difference between corresponding elements.
      */
-    [[nodiscard]] bool NearlyEquals(const Matrix3 &mat3, float epsilon = EPSILON) const;
+    [[nodiscard]] bool NearlyEquals(const Matrix3& mat3, float epsilon = EPSILON) const;
 
     /** @brief returns a matrix 4 version of this matrix 3. with all the extra values = 0
      */
     [[nodiscard]] Matrix4 ToMatrix4() const;
 
-    Matrix3 operator+(const Matrix3 &mat3) const;
-    Matrix3 operator-(const Matrix3 &mat3) const;
-    Matrix3 operator*(const Matrix3 &mat3) const;
+    Matrix3 operator+(const Matrix3& mat3) const;
+    Matrix3 operator-(const Matrix3& mat3) const;
+    Matrix3 operator*(const Matrix3& mat3) const;
 
-    Matrix3 &operator+=(const Matrix3 &mat3);
-    Matrix3 &operator-=(const Matrix3 &mat3);
-    Matrix3 &operator*=(const Matrix3 &mat3);
+    Matrix3& operator+=(const Matrix3& mat3);
+    Matrix3& operator-=(const Matrix3& mat3);
+    Matrix3& operator*=(const Matrix3& mat3);
 
     /**
      * @brief Multiplies this matrix by a column vector.
      */
-    Vector3 operator*(const Vector3 &vec3) const;
+    Vector3 operator*(const Vector3& vec3) const;
 
     Matrix3 operator*(float scalar) const;
     Matrix3 operator/(float scalar) const;
 
-    Matrix3 &operator*=(float scalar);
-    Matrix3 &operator/=(float scalar);
+    Matrix3& operator*=(float scalar);
+    Matrix3& operator/=(float scalar);
 
     /**
      * @brief Returns the additive inverse of this matrix.
      */
     Matrix3 operator-() const;
 
-    bool operator==(const Matrix3 &mat3) const;
-    bool operator!=(const Matrix3 &mat3) const;
+    bool operator==(const Matrix3& mat3) const;
+    bool operator!=(const Matrix3& mat3) const;
 
     /**
      * @brief Matrix containing only zeros.
@@ -184,7 +184,7 @@ struct Matrix3
      */
     static const Matrix3 Identity;
 
-    friend Matrix3 operator*(float scalar, const Matrix3 &mat3);
-    friend std::ostream &operator<<(std::ostream &os, const Matrix3 &mat3);
+    friend Matrix3 operator*(float scalar, const Matrix3& mat3);
+    friend std::ostream& operator<<(std::ostream& os, const Matrix3& mat3);
 };
 } // namespace N::M

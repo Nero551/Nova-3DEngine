@@ -18,13 +18,13 @@ struct Module : SystemOwner
 {
     Module() = default;
 
-    Module(const Module &) = delete;
+    Module(const Module&) = delete;
 
-    Module &operator=(const Module &) = delete;
+    Module& operator=(const Module&) = delete;
 
-    Module(Module &&) = default;
+    Module(Module&&) = default;
 
-    Module &operator=(Module &&) = default;
+    Module& operator=(Module&&) = default;
 
   protected:
     /**

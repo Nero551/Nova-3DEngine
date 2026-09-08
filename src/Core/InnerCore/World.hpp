@@ -25,7 +25,7 @@ struct World : SystemOwner
     int MaxLights = 24;
 
     /** @brief Gets the global World instance. */
-    static World &Get();
+    static World& Get();
 
     /**
      * @brief Removes an entity from the world.
@@ -45,7 +45,7 @@ struct World : SystemOwner
      * @tparam T Entity type to create.
      * @return Reference to the newly created entity.
      */
-    template <EntityType T> T &CreateEntity()
+    template <EntityType T> T& CreateEntity()
     {
         const unsigned int id = ++currentEntityId;
         auto entity = std::make_unique<T>();
@@ -53,7 +53,7 @@ struct World : SystemOwner
         entity->Initialize();
 
         auto [it, inserted] = Entities.emplace(id, std::move(entity));
-        T &createdEntity = static_cast<T &>(*it->second);
+        T& createdEntity = static_cast<T&>(*it->second);
         Service::Get<EventBus>().Fire<EntityCreated>(createdEntity);
 
         return createdEntity;
@@ -64,7 +64,7 @@ struct World : SystemOwner
      * @param id ID of the entity to find.
      * @return Reference to the requested entity.
      */
-    Entity &FindEntity(unsigned int id);
+    Entity& FindEntity(unsigned int id);
 
     /**
      * @brief Attempts to find an entity by its ID.

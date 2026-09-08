@@ -13,7 +13,7 @@ void IndexBuffer::Generate()
     glCreateBuffers(1, &Id);
 }
 
-void IndexBuffer::SetData(const std::vector<unsigned int> &indices)
+void IndexBuffer::SetData(const std::vector<unsigned int>& indices)
 {
     Generate();
     glNamedBufferData(

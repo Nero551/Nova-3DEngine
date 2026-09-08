@@ -4,7 +4,7 @@
 
 namespace N
 {
-EShLanguage ShaderSourceValidator::ToEShLanguage(const ShaderStage &stage)
+EShLanguage ShaderSourceValidator::ToEShLanguage(const ShaderStage& stage)
 {
     switch (stage)
     {
@@ -21,14 +21,14 @@ EShLanguage ShaderSourceValidator::ToEShLanguage(const ShaderStage &stage)
     return EShLangVertex;
 }
 
-ShaderValidationResult ShaderSourceValidator::Validate(const ShaderSource &source)
+ShaderValidationResult ShaderSourceValidator::Validate(const ShaderSource& source)
 {
     const int version = std::stoi(source.Version.substr(8));
     const EShLanguage language = ToEShLanguage(source.GetStage());
 
     glslang::TShader shader(language);
 
-    const char *sourceString = source.GeneratedCode.c_str();
+    const char* sourceString = source.GeneratedCode.c_str();
     shader.setStrings(&sourceString, 1);
 
     const bool success = shader.parse(GetDefaultResources(), version, true, EShMsgDefault);
@@ -39,7 +39,7 @@ ShaderValidationResult ShaderSourceValidator::Validate(const ShaderSource &sourc
     {
         result.Log = shader.getInfoLog();
 
-        if (const char *debugLog = shader.getInfoDebugLog(); debugLog && *debugLog)
+        if (const char* debugLog = shader.getInfoDebugLog(); debugLog && *debugLog)
         {
             result.Log += '\n';
             result.Log += debugLog;

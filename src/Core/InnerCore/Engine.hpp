@@ -24,16 +24,16 @@ struct Engine
     Window Window;
     World World;
 
-    Engine(const Engine &) = delete;
-    Engine &operator=(const Engine &) = delete;
-    Engine(Engine &&) = delete;
-    Engine &operator=(Engine &&) = delete;
+    Engine(const Engine&) = delete;
+    Engine& operator=(const Engine&) = delete;
+    Engine(Engine&&) = delete;
+    Engine& operator=(Engine&&) = delete;
 
     /** @brief Constructs the engine and registers it as the global instance. */
     Engine();
 
     /** @brief Returns the global engine instance. */
-    static Engine &Get();
+    static Engine& Get();
 
     /**
      * @brief Runs the engine's main loop.
@@ -49,14 +49,14 @@ struct Engine
     double GetTime() const;
 
     /** @brief Returns a registered module by type. */
-    template <ModuleType T> T &GetModule()
+    template <ModuleType T> T& GetModule()
     {
         auto module = Modules.find(typeid(T));
         if (module == Modules.end())
         {
             U::Logger::Fatal(std::format("Module {} not found", typeid(T).name()));
         }
-        return static_cast<T &>(*module->second);
+        return static_cast<T&>(*module->second);
     }
 
   private:
@@ -84,11 +84,11 @@ struct Engine
     void Configure();
 
     /** @brief Creates and registers a module. */
-    template <ModuleType T> T &AddModule()
+    template <ModuleType T> T& AddModule()
     {
         auto module = std::make_unique<T>();
         Modules.emplace(typeid(T), std::move(module));
-        return static_cast<T &>(*Modules.find(typeid(T))->second);
+        return static_cast<T&>(*Modules.find(typeid(T))->second);
     }
 
     /** @brief Starts the engine and its systems. */

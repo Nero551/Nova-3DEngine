@@ -54,7 +54,7 @@ struct Matrix2
      * @param scale X and Y scale factors.
      * @return The matrix multiplied by the scale matrix.
      */
-    [[nodiscard]] Matrix2 Scale(const Vector2 &scale) const;
+    [[nodiscard]] Matrix2 Scale(const Vector2& scale) const;
 
     /**
      * @brief Applies a counter-clockwise rotation.
@@ -87,34 +87,34 @@ struct Matrix2
      * @param mat2 Matrix to compare against.
      * @param epsilon Maximum allowed difference between corresponding elements.
      */
-    [[nodiscard]] bool NearlyEquals(const Matrix2 &mat2, float epsilon = EPSILON) const;
+    [[nodiscard]] bool NearlyEquals(const Matrix2& mat2, float epsilon = EPSILON) const;
 
-    Matrix2 operator+(const Matrix2 &mat2) const;
-    Matrix2 operator-(const Matrix2 &mat2) const;
-    Matrix2 operator*(const Matrix2 &mat2) const;
+    Matrix2 operator+(const Matrix2& mat2) const;
+    Matrix2 operator-(const Matrix2& mat2) const;
+    Matrix2 operator*(const Matrix2& mat2) const;
 
-    Matrix2 &operator+=(const Matrix2 &mat2);
-    Matrix2 &operator-=(const Matrix2 &mat2);
-    Matrix2 &operator*=(const Matrix2 &mat2);
+    Matrix2& operator+=(const Matrix2& mat2);
+    Matrix2& operator-=(const Matrix2& mat2);
+    Matrix2& operator*=(const Matrix2& mat2);
 
     /**
      * @brief Multiplies this matrix by a column vector.
      */
-    Vector2 operator*(const Vector2 &vec2) const;
+    Vector2 operator*(const Vector2& vec2) const;
 
     Matrix2 operator*(float scalar) const;
     Matrix2 operator/(float scalar) const;
 
-    Matrix2 &operator*=(float scalar);
-    Matrix2 &operator/=(float scalar);
+    Matrix2& operator*=(float scalar);
+    Matrix2& operator/=(float scalar);
 
     /**
      * @brief Returns the additive inverse of this matrix.
      */
     Matrix2 operator-() const;
 
-    bool operator==(const Matrix2 &mat2) const;
-    bool operator!=(const Matrix2 &mat2) const;
+    bool operator==(const Matrix2& mat2) const;
+    bool operator!=(const Matrix2& mat2) const;
 
     /**
      * @brief Matrix containing only zeros.
@@ -129,7 +129,7 @@ struct Matrix2
      */
     static const Matrix2 Identity;
 
-    friend Matrix2 operator*(float scalar, const Matrix2 &mat2);
-    friend std::ostream &operator<<(std::ostream &os, const Matrix2 &mat2);
+    friend Matrix2 operator*(float scalar, const Matrix2& mat2);
+    friend std::ostream& operator<<(std::ostream& os, const Matrix2& mat2);
 };
 } // namespace N::M

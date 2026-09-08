@@ -26,16 +26,16 @@ struct ResourceManager : Service
      * @param args Arguments passed to T's constructor after the resource name.
      * @return Reference to the loaded resource.
      */
-    template <ResourceType T, typename... Args> T &Load(const std::string &name, Args &&...args)
+    template <ResourceType T, typename... Args> T& Load(const std::string& name, Args&&... args)
     {
         std::string typeName = typeid(T).name();
         if (Resources.contains(typeName + name))
         {
             // N::U::Logger::Warning("Resource: " + name + " Already Loaded.");
-            return static_cast<T &>(*Resources.at(typeName + name));
+            return static_cast<T&>(*Resources.at(typeName + name));
         }
 
-        if constexpr (!std::constructible_from<T, const std::string &, Args...>)
+        if constexpr (!std::constructible_from<T, const std::string&, Args...>)
         {
             U::Logger::Fatal("Resource: " + name + " ,Of Type: " + typeid(T).name() +
                 " Can't Be Constructed From the Given Arguments.");
@@ -45,7 +45,7 @@ struct ResourceManager : Service
             auto resource = std::make_unique<T>(name, std::forward<Args>(args)...);
             Resources.emplace(typeName + name, std::move(resource));
 
-            return static_cast<T &>(*Resources.at(typeName + name));
+            return static_cast<T&>(*Resources.at(typeName + name));
         }
     }
 
@@ -54,7 +54,7 @@ struct ResourceManager : Service
      *
      * @param name Name of the resource to unload.
      */
-    void Unload(const std::string &name);
+    void Unload(const std::string& name);
 
   private:
     std::unordered_map<std::string, std::unique_ptr<Resource>> Resources;

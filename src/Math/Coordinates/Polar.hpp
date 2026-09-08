@@ -28,7 +28,7 @@ struct Polar
      */
     Polar(float angle, float magnitude = 1) : Angle(angle), Magnitude(magnitude) {}
 
-    friend std::ostream &operator<<(std::ostream &os, const Polar &polar)
+    friend std::ostream& operator<<(std::ostream& os, const Polar& polar)
     {
         os << "(" << polar.Magnitude << ", " << Deg(polar.Angle) << "°)";
         return os;

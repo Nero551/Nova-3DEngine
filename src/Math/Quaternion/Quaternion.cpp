@@ -5,7 +5,7 @@
 
 namespace N::M
 {
-Quaternion Quaternion::FromQPolar(const QPolar &qPolar)
+Quaternion Quaternion::FromQPolar(const QPolar& qPolar)
 {
     Quaternion result;
     float m = qPolar.Magnitude;
@@ -18,7 +18,7 @@ Quaternion Quaternion::FromQPolar(const QPolar &qPolar)
     return result;
 }
 
-Quaternion Quaternion::FromMatrix3(const Matrix3 &mat3)
+Quaternion Quaternion::FromMatrix3(const Matrix3& mat3)
 {
     float trace = mat3.m[0][0] + mat3.m[1][1] + mat3.m[2][2];
 
@@ -66,7 +66,7 @@ Quaternion Quaternion::FromMatrix3(const Matrix3 &mat3)
     return rotation * rotation;
 }
 
-Quaternion Quaternion::FromEulerXYZ(const Vector3 &euler)
+Quaternion Quaternion::FromEulerXYZ(const Vector3& euler)
 {
     Matrix3 rotation = Matrix3::Identity;
     rotation = rotation.Rotate(euler);
@@ -107,12 +107,12 @@ Quaternion Quaternion::Normalized() const
     return *this / Magnitude();
 }
 
-float Quaternion::Dot(const Quaternion &p) const
+float Quaternion::Dot(const Quaternion& p) const
 {
     return w * p.w + x * p.x + y * p.y + z * p.z;
 }
 
-Vector3 Quaternion::Transform(const Vector3 &vec3) const
+Vector3 Quaternion::Transform(const Vector3& vec3) const
 {
     Quaternion p = {0, vec3.x, vec3.y, vec3.z};
     Quaternion q = FromQPolar({Axis(), Angle() / 2, Magnitude()});
@@ -172,18 +172,18 @@ Vector3 Quaternion::ToEulerXYZ() const
     return result;
 }
 
-bool Quaternion::NearlyEquals(const Quaternion &p, const float epsilon) const
+bool Quaternion::NearlyEquals(const Quaternion& p, const float epsilon) const
 {
     return M::NearlyEquals(w, p.w, epsilon) && M::NearlyEquals(x, p.x, epsilon) &&
         M::NearlyEquals(y, p.y, epsilon) && M::NearlyEquals(z, p.z, epsilon);
 }
 
-bool Quaternion::operator==(const Quaternion &p) const
+bool Quaternion::operator==(const Quaternion& p) const
 {
     return w == p.w && x == p.x && y == p.y && z == p.z;
 }
 
-bool Quaternion::operator!=(const Quaternion &p) const
+bool Quaternion::operator!=(const Quaternion& p) const
 {
     return !(*this == p);
 }
@@ -193,7 +193,7 @@ Quaternion Quaternion::operator-() const
     return {-w, -x, -y, -z};
 }
 
-Quaternion Quaternion::operator*(const Quaternion &p) const
+Quaternion Quaternion::operator*(const Quaternion& p) const
 {
     Quaternion result;
     result.w = (w * p.w) - (x * p.x) - (y * p.y) - (z * p.z);
@@ -204,12 +204,12 @@ Quaternion Quaternion::operator*(const Quaternion &p) const
     return result;
 }
 
-Quaternion Quaternion::operator/(const Quaternion &p) const
+Quaternion Quaternion::operator/(const Quaternion& p) const
 {
     return *this * p.Inverse();
 }
 
-Quaternion Quaternion::operator+(const Quaternion &p) const
+Quaternion Quaternion::operator+(const Quaternion& p) const
 {
     Quaternion result;
     result.w = w + p.w;
@@ -219,27 +219,27 @@ Quaternion Quaternion::operator+(const Quaternion &p) const
     return result;
 }
 
-Quaternion Quaternion::operator-(const Quaternion &p) const
+Quaternion Quaternion::operator-(const Quaternion& p) const
 {
     return *this + (-p);
 }
 
-Quaternion &Quaternion::operator*=(const Quaternion &p)
+Quaternion& Quaternion::operator*=(const Quaternion& p)
 {
     return *this = *this * p;
 }
 
-Quaternion &Quaternion::operator/=(const Quaternion &p)
+Quaternion& Quaternion::operator/=(const Quaternion& p)
 {
     return *this = *this / p;
 }
 
-Quaternion &Quaternion::operator+=(const Quaternion &p)
+Quaternion& Quaternion::operator+=(const Quaternion& p)
 {
     return *this = *this + p;
 }
 
-Quaternion &Quaternion::operator-=(const Quaternion &p)
+Quaternion& Quaternion::operator-=(const Quaternion& p)
 {
     return *this = *this - p;
 }
@@ -264,47 +264,47 @@ Quaternion Quaternion::operator-(float scalar) const
     return {w - scalar, x, y, z};
 }
 
-Quaternion &Quaternion::operator*=(float scalar)
+Quaternion& Quaternion::operator*=(float scalar)
 {
     return *this = *this * scalar;
 }
 
-Quaternion &Quaternion::operator/=(float scalar)
+Quaternion& Quaternion::operator/=(float scalar)
 {
     return *this = *this / scalar;
 }
 
-Quaternion &Quaternion::operator+=(float scalar)
+Quaternion& Quaternion::operator+=(float scalar)
 {
     return *this = *this + scalar;
 }
 
-Quaternion &Quaternion::operator-=(float scalar)
+Quaternion& Quaternion::operator-=(float scalar)
 {
     return *this = *this - scalar;
 }
 
-Quaternion operator*(float scalar, const Quaternion &q)
+Quaternion operator*(float scalar, const Quaternion& q)
 {
     return q * scalar;
 }
 
-Quaternion operator/(float scalar, const Quaternion &q)
+Quaternion operator/(float scalar, const Quaternion& q)
 {
     return scalar * q.Inverse();
 }
 
-Quaternion operator+(float scalar, const Quaternion &q)
+Quaternion operator+(float scalar, const Quaternion& q)
 {
     return q + scalar;
 }
 
-Quaternion operator-(float scalar, const Quaternion &q)
+Quaternion operator-(float scalar, const Quaternion& q)
 {
     return {scalar - q.w, -q.x, -q.y, -q.z};
 }
 
-std::ostream &operator<<(std::ostream &os, const Quaternion &q)
+std::ostream& operator<<(std::ostream& os, const Quaternion& q)
 {
     os << q.w;
 

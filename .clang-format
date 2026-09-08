@@ -10,3 +10,4 @@ IndentWidth: 4
 RequiresClausePosition: WithPreceding
 AlignOperands: DontAlign
 ReflowComments: Never
+PointerAlignment: Left

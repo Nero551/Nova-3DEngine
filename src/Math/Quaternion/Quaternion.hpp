@@ -41,7 +41,7 @@ struct Quaternion
      * @param qPolar Quaternion polar representation.
      * @return The corresponding quaternion.
      */
-    static Quaternion FromQPolar(const QPolar &qPolar);
+    static Quaternion FromQPolar(const QPolar& qPolar);
 
     /**
      * @brief Constructs a quaternion from a 3x3 rotation matrix.
@@ -53,7 +53,7 @@ struct Quaternion
      * @param mat3 Rotation matrix.
      * @return Quaternion representing the same rotation.
      */
-    static Quaternion FromMatrix3(const Matrix3 &mat3);
+    static Quaternion FromMatrix3(const Matrix3& mat3);
 
     /**
      * @brief Constructs a quaternion from XYZ Euler angles.
@@ -64,7 +64,7 @@ struct Quaternion
      * @param euler Euler angles `(x, y, z)`.
      * @return Quaternion representing the composed rotation.
      */
-    static Quaternion FromEulerXYZ(const Vector3 &euler);
+    static Quaternion FromEulerXYZ(const Vector3& euler);
 
     /** @brief Constructs the zero quaternion. */
     Quaternion();
@@ -100,7 +100,7 @@ struct Quaternion
     Quaternion Normalized() const;
 
     /** @brief Dot product of 2 quaternions */
-    float Dot(const Quaternion &p) const;
+    float Dot(const Quaternion& p) const;
 
     /**
      * @brief Transforms a vector using the quaternion as a rotation.
@@ -111,7 +111,7 @@ struct Quaternion
      * @param vec3 Vector to transform.
      * @return Transformed vector.
      */
-    Vector3 Transform(const Vector3 &vec3) const;
+    Vector3 Transform(const Vector3& vec3) const;
 
     /** @brief Returns the quaternion polar angle `θ` from `q = cos(θ) + u sin(θ)`. */
     float Angle() const;
@@ -152,13 +152,13 @@ struct Quaternion
      * @param epsilon Maximum allowed component-wise difference.
      * @return True if the quaternions are approximately equal.
      */
-    bool NearlyEquals(const Quaternion &p, float epsilon = EPSILON) const;
+    bool NearlyEquals(const Quaternion& p, float epsilon = EPSILON) const;
 
     /** @brief Tests exact component-wise equality. */
-    bool operator==(const Quaternion &p) const;
+    bool operator==(const Quaternion& p) const;
 
     /** @brief Tests exact component-wise inequality. */
-    bool operator!=(const Quaternion &p) const;
+    bool operator!=(const Quaternion& p) const;
 
     /** @brief Returns the additive inverse: `-q = -w - xi - yj - zk`. */
     Quaternion operator-() const;
@@ -167,28 +167,28 @@ struct Quaternion
      * @brief Multiplies two quaternions.
      * Quaternion multiplication is non-commutative; in general, `pq != qp`.
      */
-    Quaternion operator*(const Quaternion &p) const;
+    Quaternion operator*(const Quaternion& p) const;
 
     /** @brief Divides this quaternion by another: `q / p = q * p⁻¹`. */
-    Quaternion operator/(const Quaternion &p) const;
+    Quaternion operator/(const Quaternion& p) const;
 
     /** @brief Adds two quaternions component-wise. */
-    Quaternion operator+(const Quaternion &p) const;
+    Quaternion operator+(const Quaternion& p) const;
 
     /** @brief Subtracts two quaternions component-wise. */
-    Quaternion operator-(const Quaternion &p) const;
+    Quaternion operator-(const Quaternion& p) const;
 
     /** @brief Multiplies this quaternion by another quaternion in-place. */
-    Quaternion &operator*=(const Quaternion &p);
+    Quaternion& operator*=(const Quaternion& p);
 
     /** @brief Divides this quaternion by another quaternion in-place. */
-    Quaternion &operator/=(const Quaternion &p);
+    Quaternion& operator/=(const Quaternion& p);
 
     /** @brief Adds another quaternion to this quaternion in-place. */
-    Quaternion &operator+=(const Quaternion &p);
+    Quaternion& operator+=(const Quaternion& p);
 
     /** @brief Subtracts another quaternion from this quaternion in-place. */
-    Quaternion &operator-=(const Quaternion &p);
+    Quaternion& operator-=(const Quaternion& p);
 
     /**
      * @brief Multiplies every component by a scalar.
@@ -212,35 +212,35 @@ struct Quaternion
     Quaternion operator-(float scalar) const;
 
     /** @brief Multiplies this quaternion by a scalar in-place. */
-    Quaternion &operator*=(float scalar);
+    Quaternion& operator*=(float scalar);
 
     /** @brief Divides this quaternion by a scalar in-place. */
-    Quaternion &operator/=(float scalar);
+    Quaternion& operator/=(float scalar);
 
     /** @brief Adds a scalar to the real component in-place. */
-    Quaternion &operator+=(float scalar);
+    Quaternion& operator+=(float scalar);
 
     /** @brief Subtracts a scalar from the real component in-place. */
-    Quaternion &operator-=(float scalar);
+    Quaternion& operator-=(float scalar);
 
     /** @brief Multiplies a quaternion by a scalar. */
-    friend Quaternion operator*(float scalar, const Quaternion &q);
+    friend Quaternion operator*(float scalar, const Quaternion& q);
 
     /** @brief Divides a scalar by a quaternion. */
-    friend Quaternion operator/(float scalar, const Quaternion &q);
+    friend Quaternion operator/(float scalar, const Quaternion& q);
 
     /** @brief Adds a scalar to a quaternion's real component. */
-    friend Quaternion operator+(float scalar, const Quaternion &q);
+    friend Quaternion operator+(float scalar, const Quaternion& q);
 
     /** @brief Subtracts a quaternion from a scalar. */
-    friend Quaternion operator-(float scalar, const Quaternion &q);
+    friend Quaternion operator-(float scalar, const Quaternion& q);
 
     /**
      * @brief Writes a quaternion in algebraic form to a stream.
      *
      * For example: `1 + 2i - 3j + 4k`.
      */
-    friend std::ostream &operator<<(std::ostream &os, const Quaternion &q);
+    friend std::ostream& operator<<(std::ostream& os, const Quaternion& q);
 
     /** @brief Multiplicative identity quaternion: `1 + 0i + 0j + 0k`. */
     static const Quaternion Identity;

@@ -48,7 +48,7 @@ struct Texture2D : Texture
      *
      * @param name Resource name.
      */
-    Texture2D(const std::string &name) : Texture(name, TextureTarget::Texture2D) {}
+    Texture2D(const std::string& name) : Texture(name, TextureTarget::Texture2D) {}
 
     /**
      * @brief Generates the OpenGL 2D texture object.
@@ -72,7 +72,7 @@ struct Texture2D : Texture
      * @remark The image should be vertically flipped when loaded to account
      * for the difference between image and OpenGL texture coordinates.
      */
-    void UseImage(const U::Image &image);
+    void UseImage(const U::Image& image);
 
   private:
     /** @brief Configures the texture's wrapping and filtering parameters. */

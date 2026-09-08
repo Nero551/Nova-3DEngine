@@ -14,7 +14,7 @@ struct GraphicsContext
 {
     GraphicsContext()
     {
-        glfwSetErrorCallback([](const int error, const char *description)
+        glfwSetErrorCallback([](const int error, const char* description)
             { U::Logger::Error("[GLFW]", error, ": ", description); });
         if (!glfwInit())
         {

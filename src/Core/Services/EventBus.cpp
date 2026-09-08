@@ -4,7 +4,7 @@ namespace N
 {
 void EventBus::EmptyFireQueue()
 {
-    for (auto &event : FireQueue)
+    for (auto& event : FireQueue)
     {
         auto listeners = Listeners.find(typeid(*event));
         if (listeners == Listeners.end())
@@ -12,7 +12,7 @@ void EventBus::EmptyFireQueue()
             continue;
         }
 
-        for (auto &listener : listeners->second)
+        for (auto& listener : listeners->second)
         {
             listener.Callback(*event);
         }

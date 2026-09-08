@@ -32,7 +32,7 @@ void Texture2D::Generate()
     }
 }
 
-void Texture2D::UseImage(const U::Image &image)
+void Texture2D::UseImage(const U::Image& image)
 {
     Width = image.Width;
     Height = image.Height;

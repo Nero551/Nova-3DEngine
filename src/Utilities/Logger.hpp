@@ -6,14 +6,14 @@ namespace N::U
 struct Logger
 {
     /** @brief Prints a message to the console. */
-    template <typename... Args> static void Print(const Args &...args)
+    template <typename... Args> static void Print(const Args&... args)
     {
         (..., (std::cout << args));
         std::cout << '\n';
     }
 
     /** @brief Logs an informational message. */
-    template <typename... Args> static void Info(const Args &...args)
+    template <typename... Args> static void Info(const Args&... args)
     {
         std::cout << Green << "ℹ️ [INFO] " << Reset;
         (..., (std::cout << args));
@@ -21,7 +21,7 @@ struct Logger
     }
 
     /** @brief Logs a warning message. */
-    template <typename... Args> static void Warning(const Args &...args)
+    template <typename... Args> static void Warning(const Args&... args)
     {
         std::cout << Yellow << "⚠️ [WARNING] " << Reset;
         (..., (std::cout << args));
@@ -29,7 +29,7 @@ struct Logger
     }
 
     /** @brief Logs an error message. */
-    template <typename... Args> static void Error(const Args &...args)
+    template <typename... Args> static void Error(const Args&... args)
     {
         std::cout << Red << "❌ [ERROR] " << Reset;
         (..., (std::cout << args));
@@ -37,7 +37,7 @@ struct Logger
     }
 
     /** @brief Logs a fatal error and throws an exception. */
-    template <typename... Args> [[noreturn]] static void Fatal(const Args &...args)
+    template <typename... Args> [[noreturn]] static void Fatal(const Args&... args)
     {
         std::cout << Red << "💀 [FATAL] " << Reset;
         (..., (std::cout << args));
@@ -46,7 +46,7 @@ struct Logger
     }
 
     /** @brief Validates a raw pointer and returns the referenced object. */
-    template <typename T> static T &Require(T *rawPtr, const std::string &message)
+    template <typename T> static T& Require(T* rawPtr, const std::string& message)
     {
         if (!rawPtr)
         {

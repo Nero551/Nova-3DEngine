@@ -26,7 +26,7 @@ struct QPolar
     {
     }
 
-    friend std::ostream &operator<<(std::ostream &os, const QPolar &polar)
+    friend std::ostream& operator<<(std::ostream& os, const QPolar& polar)
     {
         os << "(" << polar.Magnitude << ", " << polar.Axis << ", " << Deg(polar.Angle) << "°"
            << ")";

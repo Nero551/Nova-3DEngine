@@ -34,7 +34,7 @@ struct Renderbuffer : Resource
      *
      * @param name Resource name.
      */
-    Renderbuffer(const std::string &name);
+    Renderbuffer(const std::string& name);
 
     /**
      * @brief Releases the underlying OpenGL renderbuffer object.

@@ -80,16 +80,16 @@ constexpr unsigned int Input::ToIndex(MouseButton button)
 
 void Input::Start()
 {
-    Window &window = Engine::Get().Window;
+    Window& window = Engine::Get().Window;
     glfwSetCursorPosCallback(window.GetGlfwWindow(),
-        [](GLFWwindow *, const double xPos, const double yPos)
+        [](GLFWwindow*, const double xPos, const double yPos)
         {
             Engine::Get().GetModule<Input>().MousePosition = {
                 static_cast<float>(xPos), static_cast<float>(yPos)};
         });
 
     glfwSetScrollCallback(window.GetGlfwWindow(),
-        [](GLFWwindow *, const double xOffset, const double yOffset)
+        [](GLFWwindow*, const double xOffset, const double yOffset)
         {
             Engine::Get().GetModule<Input>().ScrollOffset = {
                 static_cast<float>(xOffset), static_cast<float>(yOffset)};
@@ -104,7 +104,7 @@ void Input::BeginFrame(double dt)
         FirstMouse = false;
     }
 
-    GLFWwindow *window = Engine::Get().Window.GetGlfwWindow();
+    GLFWwindow* window = Engine::Get().Window.GetGlfwWindow();
     for (int key = GLFW_KEY_SPACE; key <= GLFW_KEY_LAST; ++key)
     {
         CurrentKeys[key] = glfwGetKey(window, key) == GLFW_PRESS;

@@ -14,13 +14,13 @@ struct Scene
     Scene() = default;
     virtual ~Scene() = default;
 
-    Scene(const Scene &) = delete;
-    Scene &operator=(const Scene &) = delete;
+    Scene(const Scene&) = delete;
+    Scene& operator=(const Scene&) = delete;
 
-    Scene(Scene &&) = default;
+    Scene(Scene&&) = default;
 
-    Entity &GetRoot();
-    void SetRoot(const Entity &entity);
+    Entity& GetRoot();
+    void SetRoot(const Entity& entity);
     void SetRoot(unsigned int entityId);
 
   private:

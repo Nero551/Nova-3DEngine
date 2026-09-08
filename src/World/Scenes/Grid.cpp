@@ -32,18 +32,18 @@ Grid::Grid()
 
 void Grid::CreateGridLine(const M::Quaternion rotation, const M::Vector3 position)
 {
-    auto &resourceManager = Service::Get<ResourceManager>();
-    auto &shader = Service::Get<ResourceManager>().Load<Shader>("AxisShader");
+    auto& resourceManager = Service::Get<ResourceManager>();
+    auto& shader = Service::Get<ResourceManager>().Load<Shader>("AxisShader");
     shader.AssignSource(resourceManager.Load<ShaderSource>(
         "axisFrag", "Assets/Shaders/axisShader.frag", ShaderStage::Fragment));
     shader.AssignSource(resourceManager.Load<ShaderSource>(
         "axisVert", "Assets/Shaders/axisShader.vert", ShaderStage::Vertex));
-    auto &line = Primitives::CreateLine("Line");
+    auto& line = Primitives::CreateLine("Line");
 
-    auto &l = World::Get().CreateEntity<MeshInstance3D>();
-    auto &materialComponent = World::Get().Query.Pool<MaterialComponent>().GetComponentById(l.Id);
-    auto &meshComponent = World::Get().Query.Pool<MeshComponent>().GetComponentById(l.Id);
-    auto &transformComponent =
+    auto& l = World::Get().CreateEntity<MeshInstance3D>();
+    auto& materialComponent = World::Get().Query.Pool<MaterialComponent>().GetComponentById(l.Id);
+    auto& meshComponent = World::Get().Query.Pool<MeshComponent>().GetComponentById(l.Id);
+    auto& transformComponent =
         World::Get().Query.Pool<Transform3DComponent>().GetComponentById(l.Id);
     meshComponent.Mesh = &line;
     materialComponent.Material = &resourceManager.Load<Material>("GridLine Material");

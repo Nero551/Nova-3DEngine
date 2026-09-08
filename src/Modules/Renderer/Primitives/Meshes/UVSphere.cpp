@@ -4,8 +4,8 @@
 
 namespace N
 {
-Mesh &Primitives::CreateUVSphere(
-    const std::string &name, const float radius, const int sectors, const int stacks)
+Mesh& Primitives::CreateUVSphere(
+    const std::string& name, const float radius, const int sectors, const int stacks)
 {
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
@@ -59,7 +59,7 @@ Mesh &Primitives::CreateUVSphere(
         }
     }
 
-    auto &mesh = Service::Get<ResourceManager>().Load<Mesh>(name);
+    auto& mesh = Service::Get<ResourceManager>().Load<Mesh>(name);
     mesh.Vertices = vertices;
     mesh.Indices = indices;
     return mesh;

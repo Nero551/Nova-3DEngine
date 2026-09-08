@@ -29,7 +29,7 @@ struct Shader : Resource
      * @brief Creates a shader resource.
      * @param name Name used to identify the shader resource.
      */
-    Shader(const std::string &name);
+    Shader(const std::string& name);
 
     /** @brief Destroys the shader and releases its OpenGL program. */
     ~Shader() override;
@@ -56,18 +56,18 @@ struct Shader : Resource
      *
      * @note The uniform is uploaded the next time the shader is used.
      */
-    template <UniformType T> void SetUniform(const T &uniform)
+    template <UniformType T> void SetUniform(const T& uniform)
     {
         PendingUniforms[uniform.Name] = std::make_unique<T>(uniform);
     }
 
-    void AssignSource(ShaderSource &source);
+    void AssignSource(ShaderSource& source);
 
     /** @brief deletes the current shader program and uniform locations , which
      * causes them to be recreated on Use() */
     void Reload();
 
-    std::vector<U::CheckedPtr<ShaderSource>> &GetSources();
+    std::vector<U::CheckedPtr<ShaderSource>>& GetSources();
 
   private:
     /** @brief OpenGL handle for the shader program. */
@@ -91,7 +91,7 @@ struct Shader : Resource
      * @param name Name of the shader uniform.
      * @return OpenGL uniform location.
      */
-    int GetUniformLocation(const std::string &name);
+    int GetUniformLocation(const std::string& name);
 
     void UploadUniforms();
 };

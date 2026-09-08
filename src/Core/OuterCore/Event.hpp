@@ -17,18 +17,18 @@ template <typename T> struct Event : IEvent
     /** @brief Dispatches the event to all registered listeners. */
     void Fire()
     {
-        for (const auto &listener : Listeners)
+        for (const auto& listener : Listeners)
         {
-            listener.Callback(static_cast<T &>(*this));
+            listener.Callback(static_cast<T&>(*this));
         }
     }
 
     /** @brief Registers a listener and returns its unique subscription ID. */
-    template <typename F> requires std::invocable<F, const T &>
-    std::size_t Sub(F &&callback)
+    template <typename F> requires std::invocable<F, const T&>
+    std::size_t Sub(F&& callback)
     {
         const auto subscription = ++NextSubscription;
-        auto method = [callback = std::forward<F>(callback)](T &e) mutable { callback(e); };
+        auto method = [callback = std::forward<F>(callback)](T& e) mutable { callback(e); };
         Listeners.push_back({.Subscription = subscription, .Callback = method});
         return subscription;
     }
@@ -52,7 +52,7 @@ template <typename T> struct Event : IEvent
     struct Entry
     {
         std::size_t Subscription;
-        std::function<void(T &)> Callback;
+        std::function<void(T&)> Callback;
     };
 
     std::vector<Entry> Listeners;

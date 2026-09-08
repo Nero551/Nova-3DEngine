@@ -8,7 +8,7 @@ struct BoolUniform : Uniform
 {
     bool Value;
 
-    BoolUniform(const std::string &name, bool value) : Uniform(name), Value(value) {}
+    BoolUniform(const std::string& name, bool value) : Uniform(name), Value(value) {}
 
     void Upload(int location) override
     {

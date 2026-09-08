@@ -9,16 +9,16 @@
 
 namespace N
 {
-Material::Material(const std::string &name) : Resource(name)
+Material::Material(const std::string& name) : Resource(name)
 {
-    auto &whiteTexture = Primitives::CreateWhiteTexture();
+    auto& whiteTexture = Primitives::CreateWhiteTexture();
 
     DiffuseMap = &whiteTexture;
     SpecularMap = &whiteTexture;
     EmissionMap = &whiteTexture;
 }
 
-void Material::AssignTexture(Texture &texture, const unsigned int slot)
+void Material::AssignTexture(Texture& texture, const unsigned int slot)
 {
     if (slot >= MaxCustomTextures)
     {

@@ -6,31 +6,31 @@ namespace N
 template <ComponentType... Args> struct ComponentPoolQueryResult
 {
     std::vector<unsigned int> EntityIds{};
-    std::tuple<std::vector<Args *>...> Components;
+    std::tuple<std::vector<Args*>...> Components;
 
     struct Iterator
     {
-        ComponentPoolQueryResult &Result;
+        ComponentPoolQueryResult& Result;
         size_t Index;
 
-        std::tuple<unsigned int, Args &...> operator*() const
+        std::tuple<unsigned int, Args&...> operator*() const
         {
             return std::apply(
-                [&](std::vector<Args *>... components)
+                [&](std::vector<Args*>... components)
                 {
-                    return std::tuple<unsigned int, Args &...>{
+                    return std::tuple<unsigned int, Args&...>{
                         Result.EntityIds[Index], *components[Index]...};
                 },
                 Result.Components);
         }
 
-        Iterator &operator++()
+        Iterator& operator++()
         {
             ++Index;
             return *this;
         }
 
-        bool operator!=(const Iterator &other) const
+        bool operator!=(const Iterator& other) const
         {
             return Index != other.Index;
         }

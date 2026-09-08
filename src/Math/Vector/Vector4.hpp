@@ -57,7 +57,7 @@ struct Vector4
     /**
      * @brief Returns the dot product between two vectors.
      */
-    [[nodiscard]] float Dot(const Vector4 &vec4) const;
+    [[nodiscard]] float Dot(const Vector4& vec4) const;
 
     /**
      * @brief Linearly interpolates between this vector and another vector.
@@ -70,12 +70,12 @@ struct Vector4
      * @param vec4 Target vector.
      * @param t Interpolation amount.
      */
-    [[nodiscard]] Vector4 Lerp(const Vector4 &vec4, float t) const;
+    [[nodiscard]] Vector4 Lerp(const Vector4& vec4, float t) const;
 
     /**
      * @brief Returns the Euclidean distance between two vectors.
      */
-    [[nodiscard]] float Distance(const Vector4 &vec4) const;
+    [[nodiscard]] float Distance(const Vector4& vec4) const;
 
     [[nodiscard]] Vector3 StereoProject() const;
 
@@ -93,19 +93,19 @@ struct Vector4
      * @param vec4 Vector to compare against.
      * @param epsilon Maximum allowed component difference.
      */
-    [[nodiscard]] bool NearlyEquals(const Vector4 &vec4, float epsilon = EPSILON) const;
+    [[nodiscard]] bool NearlyEquals(const Vector4& vec4, float epsilon = EPSILON) const;
 
-    Vector4 operator+(const Vector4 &vec4) const;
+    Vector4 operator+(const Vector4& vec4) const;
 
-    Vector4 operator-(const Vector4 &vec4) const;
+    Vector4 operator-(const Vector4& vec4) const;
 
-    Vector4 operator*(const Vector4 &vec4) const;
+    Vector4 operator*(const Vector4& vec4) const;
 
-    Vector4 &operator+=(const Vector4 &vec4);
+    Vector4& operator+=(const Vector4& vec4);
 
-    Vector4 &operator-=(const Vector4 &vec4);
+    Vector4& operator-=(const Vector4& vec4);
 
-    Vector4 &operator*=(const Vector4 &vec4);
+    Vector4& operator*=(const Vector4& vec4);
 
     Vector4 operator+(float scalar) const;
 
@@ -115,29 +115,29 @@ struct Vector4
 
     Vector4 operator/(float scalar) const;
 
-    Vector4 &operator+=(float scalar);
+    Vector4& operator+=(float scalar);
 
-    Vector4 &operator-=(float scalar);
+    Vector4& operator-=(float scalar);
 
-    Vector4 &operator*=(float scalar);
+    Vector4& operator*=(float scalar);
 
-    Vector4 &operator/=(float scalar);
+    Vector4& operator/=(float scalar);
 
     Vector4 operator-() const;
 
-    bool operator==(const Vector4 &vec4) const;
+    bool operator==(const Vector4& vec4) const;
 
-    bool operator!=(const Vector4 &vec4) const;
+    bool operator!=(const Vector4& vec4) const;
 
-    friend Vector4 operator+(float scalar, const Vector4 &vec4);
+    friend Vector4 operator+(float scalar, const Vector4& vec4);
 
-    friend Vector4 operator-(float scalar, const Vector4 &vec4);
+    friend Vector4 operator-(float scalar, const Vector4& vec4);
 
-    friend Vector4 operator*(float scalar, const Vector4 &vec4);
+    friend Vector4 operator*(float scalar, const Vector4& vec4);
 
-    friend Vector4 operator/(float scalar, const Vector4 &vec4);
+    friend Vector4 operator/(float scalar, const Vector4& vec4);
 
-    friend std::ostream &operator<<(std::ostream &os, const Vector4 &vec4);
+    friend std::ostream& operator<<(std::ostream& os, const Vector4& vec4);
 
     static const Vector4 Zero;
 };

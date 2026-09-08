@@ -10,13 +10,13 @@ namespace N
 {
 void CameraSystem::Update(const double dt)
 {
-    auto &world = World::Get();
-    auto &query = world.Query;
-    auto &input = Engine::Get().GetModule<Input>();
-    auto &camera = world.ActiveCamera;
+    auto& world = World::Get();
+    auto& query = world.Query;
+    auto& input = Engine::Get().GetModule<Input>();
+    auto& camera = world.ActiveCamera;
 
-    auto &transform = query.Pool<Transform3DComponent>().GetComponentById(camera->Id);
-    auto &cameraComponent = query.Pool<CameraComponent>().GetComponentById(camera->Id);
+    auto& transform = query.Pool<Transform3DComponent>().GetComponentById(camera->Id);
+    auto& cameraComponent = query.Pool<CameraComponent>().GetComponentById(camera->Id);
 
     cameraComponent.AspectRatio = Engine::Get().Window.GetAspectRatio();
 
@@ -73,9 +73,9 @@ void CameraSystem::Update(const double dt)
 
 M::Matrix4 CameraSystem::GetViewMatrix()
 {
-    auto &world = World::Get();
-    auto &camera = world.ActiveCamera;
-    auto &transform = world.Query.Pool<Transform3DComponent>().GetComponentById(camera->Id);
+    auto& world = World::Get();
+    auto& camera = world.ActiveCamera;
+    auto& transform = world.Query.Pool<Transform3DComponent>().GetComponentById(camera->Id);
 
     const M::Vector3 pos = transform.Position;
     const M::Vector3 forward = transform.GetForward();

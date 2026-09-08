@@ -8,9 +8,9 @@ namespace N::M
 {
 Matrix4::Matrix4(const float mAll)
 {
-    for (auto &row : m)
+    for (auto& row : m)
     {
-        for (float &col : row)
+        for (float& col : row)
         {
             col = mAll;
         }
@@ -45,7 +45,7 @@ Matrix4::Matrix4(const float m00, const float m01, const float m02, const float 
 
 //? Operations
 
-Matrix4 Matrix4::Translate(const Vector3 &translation) const
+Matrix4 Matrix4::Translate(const Vector3& translation) const
 {
     Matrix4 transMatrix = Identity;
     transMatrix.m[0][3] = translation.x;
@@ -56,7 +56,7 @@ Matrix4 Matrix4::Translate(const Vector3 &translation) const
 }
 
 //? Methods
-Matrix4 Matrix4::Scale(const Vector3 &scale) const
+Matrix4 Matrix4::Scale(const Vector3& scale) const
 {
     Matrix4 scaleMatrix = Identity;
     scaleMatrix.m[0][0] = scale.x;
@@ -99,7 +99,7 @@ Matrix4 Matrix4::RotateZ(const float radian) const
     return *this * rotationMatrix;
 }
 
-Matrix4 Matrix4::Rotate(const Vector3 &eulerRotation) const
+Matrix4 Matrix4::Rotate(const Vector3& eulerRotation) const
 {
     Matrix4 rotationMatrix = Identity;
     rotationMatrix = rotationMatrix.RotateZ(eulerRotation.z);
@@ -109,7 +109,7 @@ Matrix4 Matrix4::Rotate(const Vector3 &eulerRotation) const
     return *this * rotationMatrix;
 }
 
-Matrix4 Matrix4::RotateAroundAxis(const Vector3 &axis, const float radian) const
+Matrix4 Matrix4::RotateAroundAxis(const Vector3& axis, const float radian) const
 {
     Matrix4 rotationMatrix = Identity;
     rotationMatrix = rotationMatrix.RotateZ(radian);
@@ -210,7 +210,7 @@ Matrix3 Matrix4::Minor(const int row, const int col) const
     return minor;
 }
 
-bool Matrix4::NearlyEquals(const Matrix4 &mat4, const float epsilon) const
+bool Matrix4::NearlyEquals(const Matrix4& mat4, const float epsilon) const
 {
     for (int row = 0; row < 4; row++)
     {
@@ -226,7 +226,7 @@ bool Matrix4::NearlyEquals(const Matrix4 &mat4, const float epsilon) const
 }
 
 //* Matrices
-Matrix4 Matrix4::operator+(const Matrix4 &mat4) const
+Matrix4 Matrix4::operator+(const Matrix4& mat4) const
 {
     Matrix4 result = Zero;
 
@@ -240,7 +240,7 @@ Matrix4 Matrix4::operator+(const Matrix4 &mat4) const
     return result;
 }
 
-Matrix4 Matrix4::operator-(const Matrix4 &mat4) const
+Matrix4 Matrix4::operator-(const Matrix4& mat4) const
 {
     Matrix4 result = Zero;
 
@@ -254,7 +254,7 @@ Matrix4 Matrix4::operator-(const Matrix4 &mat4) const
     return result;
 }
 
-Matrix4 Matrix4::operator*(const Matrix4 &mat4) const
+Matrix4 Matrix4::operator*(const Matrix4& mat4) const
 {
     Matrix4 result = Zero;
 
@@ -272,23 +272,23 @@ Matrix4 Matrix4::operator*(const Matrix4 &mat4) const
     return result;
 }
 
-Matrix4 &Matrix4::operator+=(const Matrix4 &mat4)
+Matrix4& Matrix4::operator+=(const Matrix4& mat4)
 {
     return *this = *this + mat4;
 }
 
-Matrix4 &Matrix4::operator-=(const Matrix4 &mat4)
+Matrix4& Matrix4::operator-=(const Matrix4& mat4)
 {
     return *this = *this - mat4;
 }
 
-Matrix4 &Matrix4::operator*=(const Matrix4 &mat4)
+Matrix4& Matrix4::operator*=(const Matrix4& mat4)
 {
     return *this = *this * mat4;
 }
 
 //* Vectors
-Vector4 Matrix4::operator*(const Vector4 &vec4) const
+Vector4 Matrix4::operator*(const Vector4& vec4) const
 {
     return {m[0][0] * vec4.x + m[0][1] * vec4.y + m[0][2] * vec4.z + m[0][3] * vec4.w,
         m[1][0] * vec4.x + m[1][1] * vec4.y + m[1][2] * vec4.z + m[1][3] * vec4.w,
@@ -327,12 +327,12 @@ Matrix4 Matrix4::operator/(const float scalar) const
     return result;
 }
 
-Matrix4 &Matrix4::operator*=(const float scalar)
+Matrix4& Matrix4::operator*=(const float scalar)
 {
     return *this = *this * scalar;
 }
 
-Matrix4 &Matrix4::operator/=(const float scalar)
+Matrix4& Matrix4::operator/=(const float scalar)
 {
     return *this = *this / scalar;
 }
@@ -343,7 +343,7 @@ Matrix4 Matrix4::operator-() const
 }
 
 //* Equality
-bool Matrix4::operator==(const Matrix4 &mat4) const
+bool Matrix4::operator==(const Matrix4& mat4) const
 {
     for (int row = 0; row < 4; row++)
     {
@@ -357,7 +357,7 @@ bool Matrix4::operator==(const Matrix4 &mat4) const
     return true;
 }
 
-bool Matrix4::operator!=(const Matrix4 &mat4) const
+bool Matrix4::operator!=(const Matrix4& mat4) const
 {
     return !(*this == mat4);
 }
@@ -396,7 +396,7 @@ Matrix4 Matrix4::Perspective(
     return m;
 }
 
-Matrix4 Matrix4::LookAt(const Vector3 &pos, const Vector3 &target, const Vector3 &up)
+Matrix4 Matrix4::LookAt(const Vector3& pos, const Vector3& target, const Vector3& up)
 {
     Matrix4 trans = Identity;
     trans = trans.Translate(-pos);
@@ -415,12 +415,12 @@ Matrix4 const Matrix4::Zero = Matrix4(0);
 Matrix4 const Matrix4::Identity = Matrix4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 
 //* Others
-Matrix4 operator*(const float scalar, const Matrix4 &mat4)
+Matrix4 operator*(const float scalar, const Matrix4& mat4)
 {
     return mat4 * scalar;
 }
 
-std::ostream &operator<<(std::ostream &os, const Matrix4 &mat4)
+std::ostream& operator<<(std::ostream& os, const Matrix4& mat4)
 {
     os << "[ " << mat4.m[0][0] << "  " << mat4.m[0][1] << "  " << mat4.m[0][2] << "  "
        << mat4.m[0][3] << " ]\n";

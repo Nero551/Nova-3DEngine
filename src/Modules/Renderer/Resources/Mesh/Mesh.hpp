@@ -52,7 +52,7 @@ struct Mesh : Resource
      * @brief Creates a mesh resource.
      * @param name Resource name.
      */
-    Mesh(const std::string &name);
+    Mesh(const std::string& name);
 
     /** Releases the OpenGL resources owned by the mesh. */
     ~Mesh() override;

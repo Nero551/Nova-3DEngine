@@ -11,7 +11,7 @@ namespace N
 {
 void LightingSystem::Start()
 {
-    auto &resources = Service::Get<ResourceManager>();
+    auto& resources = Service::Get<ResourceManager>();
 
     LightingBuffer = &resources.Load<Uniformbuffer>("[Renderer] Lighting Buffer");
     LightingBuffer->Binding = 1;
@@ -24,7 +24,7 @@ void LightingSystem::Start()
 
 void LightingSystem::Render()
 {
-    auto &world = World::Get();
+    auto& world = World::Get();
 
     LightingBuffer->Set(
         static_cast<int>(world.Query.With<LightComponent, Transform3DComponent>().EntityIds.size()),

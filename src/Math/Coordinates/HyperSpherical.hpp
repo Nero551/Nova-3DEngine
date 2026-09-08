@@ -36,7 +36,7 @@ struct HyperSpherical
     {
     }
 
-    friend std::ostream &operator<<(std::ostream &os, const HyperSpherical &hyperSpherical)
+    friend std::ostream& operator<<(std::ostream& os, const HyperSpherical& hyperSpherical)
     {
         os << "(" << hyperSpherical.Magnitude << ", " << Deg(hyperSpherical.Elevation) << "°, "
            << Deg(hyperSpherical.Azimuth) << "°, " << Deg(hyperSpherical.HyperAngle) << "°"

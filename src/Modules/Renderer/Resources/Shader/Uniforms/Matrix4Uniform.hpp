@@ -9,7 +9,7 @@ struct Matrix4Uniform : Uniform
 {
     M::Matrix4 Value;
 
-    Matrix4Uniform(const std::string &name, const M::Matrix4 &value) : Uniform(name), Value(value)
+    Matrix4Uniform(const std::string& name, const M::Matrix4& value) : Uniform(name), Value(value)
     {
     }
 

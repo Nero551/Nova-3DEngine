@@ -13,7 +13,7 @@ concept EventType = std::derived_from<T, IEvent>;
 struct EventBus : Service
 {
     /** @brief Constructs and immediately dispatches a global event. */
-    template <EventType T, typename... Args> void InstantFire(Args &&...args)
+    template <EventType T, typename... Args> void InstantFire(Args&&... args)
     {
         if constexpr (!std::constructible_from<T, Args...>)
         {
@@ -28,14 +28,14 @@ struct EventBus : Service
         }
 
         T event{std::forward<Args>(args)...};
-        for (auto &callback : listeners->second)
+        for (auto& callback : listeners->second)
         {
             callback(event);
         }
     }
 
     /** @brief Queues a global event for deferred dispatch at the end of the frame. */
-    template <EventType T, typename... Args> void Fire(Args &&...args)
+    template <EventType T, typename... Args> void Fire(Args&&... args)
     {
         if constexpr (!std::constructible_from<T, Args...>)
         {
@@ -52,11 +52,11 @@ struct EventBus : Service
 
     /** @brief Subscribes a callback to a global event type and returns its subscription
      * ID. */
-    template <EventType T, typename F> requires std::invocable<F, const T &>
-    std::size_t Sub(F &&callback)
+    template <EventType T, typename F> requires std::invocable<F, const T&>
+    std::size_t Sub(F&& callback)
     {
-        auto method = [callback = std::forward<F>(callback)](IEvent &e) mutable
-        { callback(static_cast<T &>(e)); };
+        auto method = [callback = std::forward<F>(callback)](IEvent& e) mutable
+        { callback(static_cast<T&>(e)); };
 
         const auto subscription = ++NextSubscription;
         Listeners[typeid(T)].push_back({.Subscription = subscription, .Callback = method});
@@ -92,7 +92,7 @@ struct EventBus : Service
     struct Entry
     {
         std::size_t Subscription;
-        std::function<void(IEvent &)> Callback;
+        std::function<void(IEvent&)> Callback;
     };
 
     /** @brief Global event listeners grouped by event type. */

@@ -21,7 +21,7 @@ struct IndexBuffer
      * automatically generates buffer if not generated.
      * @param indices Unsigned integer indices used by indexed drawing.
      */
-    void SetData(const std::vector<unsigned int> &indices);
+    void SetData(const std::vector<unsigned int>& indices);
 
     /** @brief Returns true when a valid OpenGL buffer ID has been generated. */
     bool IsGenerated();

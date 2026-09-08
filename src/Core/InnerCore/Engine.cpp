@@ -22,7 +22,7 @@ Engine::Engine() : Window(800, 600, "Nova")
     Instance = this;
 }
 
-Engine &Engine::Get()
+Engine& Engine::Get()
 {
     return *Instance;
 }
@@ -88,12 +88,12 @@ void Engine::Start()
 
     World.Start();
 
-    for (auto &module : Modules | std::views::values)
+    for (auto& module : Modules | std::views::values)
     {
         module->Start();
     }
 
-    for (auto &service : Service::GetAll())
+    for (auto& service : Service::GetAll())
     {
         service->Start();
     }
@@ -106,12 +106,12 @@ void Engine::Stop()
 
     World.Stop();
 
-    for (auto &module : Modules | std::views::values)
+    for (auto& module : Modules | std::views::values)
     {
         module->Stop();
     }
 
-    for (auto &service : Service::GetAll())
+    for (auto& service : Service::GetAll())
     {
         service->Stop();
     }
@@ -137,10 +137,10 @@ void Engine::BeginFrame()
     Window.PollEvents();
 
     World.BeginFrame(DeltaTime);
-    for (auto &module : Modules | std::views::values)
+    for (auto& module : Modules | std::views::values)
         module->BeginFrame(DeltaTime);
 
-    for (auto &service : Service::GetAll())
+    for (auto& service : Service::GetAll())
         service->BeginFrame(DeltaTime);
 }
 
@@ -152,12 +152,12 @@ void Engine::EndFrame()
     Window.SwapBuffers();
     World.EndFrame(DeltaTime);
 
-    for (auto &module : Modules | std::views::values)
+    for (auto& module : Modules | std::views::values)
     {
         module->EndFrame(DeltaTime);
     }
 
-    for (auto &service : Service::GetAll())
+    for (auto& service : Service::GetAll())
     {
         service->EndFrame();
     }
@@ -173,12 +173,12 @@ void Engine::Update()
 
     World.Update(DeltaTime);
 
-    for (auto &module : Modules | std::views::values)
+    for (auto& module : Modules | std::views::values)
     {
         module->Update(DeltaTime);
     }
 
-    for (auto &service : Service::GetAll())
+    for (auto& service : Service::GetAll())
     {
         service->Update(DeltaTime);
     }
@@ -190,12 +190,12 @@ void Engine::FixedUpdate()
     TracyGpuZone("Fixed Update");
 
     World.FixedUpdate(FixedDeltaTime);
-    for (auto &module : Modules | std::views::values)
+    for (auto& module : Modules | std::views::values)
     {
         module->FixedUpdate(FixedDeltaTime);
     }
 
-    for (auto &service : Service::GetAll())
+    for (auto& service : Service::GetAll())
     {
         service->FixedUpdate(FixedDeltaTime);
     }
@@ -207,12 +207,12 @@ void Engine::Render()
     TracyGpuZone("Render");
 
     World.Render();
-    for (auto &module : Modules | std::views::values)
+    for (auto& module : Modules | std::views::values)
     {
         module->Render();
     }
 
-    for (auto &service : Service::GetAll())
+    for (auto& service : Service::GetAll())
     {
         service->Render();
     }

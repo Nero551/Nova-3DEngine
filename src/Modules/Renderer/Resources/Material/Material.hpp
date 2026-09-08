@@ -75,7 +75,7 @@ struct Material : Resource
      *
      * @param name Resource name.
      */
-    Material(const std::string &name);
+    Material(const std::string& name);
 
     /**
      * @brief Assigns a custom texture to a texture slot.
@@ -84,7 +84,7 @@ struct Material : Resource
      * @note Valid custom texture slots range from 0 to MaxCustomTextures - 1.
      *       An out-of-bounds slot is rejected and logged as an error.
      */
-    void AssignTexture(Texture &texture, unsigned int slot);
+    void AssignTexture(Texture& texture, unsigned int slot);
 
     /**
      * @brief Activates the material and uploads its properties.

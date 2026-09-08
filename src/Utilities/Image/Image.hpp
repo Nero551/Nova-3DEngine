@@ -36,7 +36,7 @@ struct Image
      * @param filePath Path to the image file.
      * @param flip Whether to vertically flip the image when loading.
      */
-    Image(const std::string &filePath, bool flip = false);
+    Image(const std::string& filePath, bool flip = false);
 
     /**
      * @brief Creates an image from raw pixel data.
@@ -46,7 +46,7 @@ struct Image
      * @param channels Number of color channels per pixel.
      * @param pixels Raw pixel data.
      */
-    Image(int width, int height, ColorChannels channels, const std::vector<unsigned char> &pixels);
+    Image(int width, int height, ColorChannels channels, const std::vector<unsigned char>& pixels);
 
     /**
      * @brief Saves the image to disk as a PNG file.
@@ -54,7 +54,7 @@ struct Image
      * @param filepath Destination path for the PNG file.
      * @param flip Whether to vertically flip the image when writing.
      */
-    void SaveToDiskPNG(const std::string &filepath, bool flip = false);
+    void SaveToDiskPNG(const std::string& filepath, bool flip = false);
 
     /**
      * @brief Vertically flips the image in place.

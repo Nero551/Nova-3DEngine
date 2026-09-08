@@ -2,7 +2,7 @@
 
 namespace N
 {
-Renderbuffer::Renderbuffer(const std::string &name) : Resource(name) {}
+Renderbuffer::Renderbuffer(const std::string& name) : Resource(name) {}
 
 Renderbuffer::~Renderbuffer()
 {
