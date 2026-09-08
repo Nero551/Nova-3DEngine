@@ -68,7 +68,7 @@ void Engine::Configure()
 {
     Window.SetIcon({"Assets/icon.png"});
     // Window.SetSize(1980, 1200);
-    glfwSwapInterval(1);
+    glfwSwapInterval(0);
     TracyGpuContext;
 
     Service::Add<ResourceManager>();

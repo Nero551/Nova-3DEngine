@@ -4,6 +4,7 @@
 #include "Core/InnerCore/Engine.hpp"
 #include "Core/InnerCore/World.hpp"
 #include "Core/Services/ResourceManager.hpp"
+#include "Math/Color/Color.hpp"
 #include "Math/Complex/Complex.hpp"
 #include "Math/Functions/Function.hpp"
 #include "Modules/Input/Input.hpp"
@@ -77,8 +78,19 @@ void Physics::Start()
     cubeId = cube.Id;
     World::Get().Root->AttachChild(cube);
 
-    M::Function<float, float> f = [](const float t) { return t * t; };
-    U::Logger::Info(f(2));
+    float t;
+    M::Vector2 vi;
+    M::Vector2 a;
+    M::Vector2 vf;
+    M::Vector2 pi;
+    M::Vector2 pf;
+
+    //if vf.y == 0
+    vf.y = vi.y + a.y * t;
+    t = vi.y / a.y;
+
+    pf.y = pi.y + vi.y * (vi.y / a.y) - 1 / 2 * a.y * M::Pow(vi.y / a.y, 2);
+    pf.y = pi.y + (M::Pow(vi.y, 2) / 2 * a.y);
 }
 
 static float time = 0;
@@ -88,37 +100,58 @@ void Physics::FixedUpdate(double fdt)
 {
     time += fdt;
 
+    M::Vector2 a = {0, -9.8};
+    M::Vector2 vi = {5, 5};
+    M::Vector2 pi = {0, 0};
+
+    M::Function<float, M::Vector2> v = [vi, a](const auto t)
+    {
+        M::Vector2 vf = vi + a * t;
+        return vf;
+    };
+
+    M::Function<float, M::Vector2> p = v.Integrate(0);
+
+    Plot({p(time).x, p(time).y, 0}, M::Color::Blue);
+    Plot({v(time).x, v(time).y, 0}, M::Color::Red);
+    Plot({v.Derivative(time).x, v.Derivative(time).y, 0}, M::Color::Green);
+
+    if (M::NearlyEquals(v(time).Angle(), v.Derivative(time).Angle()))
+    {
+        U::Logger::Info(v(time).Angle(), " ", v.Derivative(time).Angle());
+    }
+
     auto& resourceManager = Service::Get<ResourceManager>();
     auto& input = Engine::Get().GetModule<Input>();
     auto& query = World::Get().Query;
     auto& transform = query.Pool<Transform3DComponent>().GetComponentById(cubeId);
     auto& body = query.Pool<BodyComponent>().GetComponentById(cubeId);
 
-    ExternalForces = M::Vector3{0};
-    M::Vector3 friction = {-body.Velocity.x * M::PHI, 0, -body.Velocity.z * M::PHI};
-
-    if (input.IsKeyPressed(Key::E))
-    {
-        body.Velocity = {15, 10, 0};
-    }
-
-    if (input.IsKeyHeld(Key::Up))
-        ExternalForces.y += 50;
-
-    if (input.IsKeyHeld(Key::Down))
-        ExternalForces.y -= 50;
-
-    if (input.IsKeyHeld(Key::Left))
-        ExternalForces.x -= 50;
-
-    if (input.IsKeyHeld(Key::Right))
-        ExternalForces.x += 50;
-
-    body.Force = M::Vector3{0, -9.8, 0} + ExternalForces + friction;
-
-    M::Vector3 acceleration = body.Force / body.Mass;
-    body.Velocity += acceleration * fdt;
-    transform.Position += body.Velocity * fdt;
-    transform.Position.y = std::max(transform.Position.y, 0.0f);
+    // ExternalForces = M::Vector3{0};
+    // M::Vector3 friction = {-body.Velocity.x * M::PHI, 0, -body.Velocity.z * M::PHI};
+    //
+    // if (input.IsKeyPressed(Key::E))
+    // {
+    //     body.Velocity = {15, 10, 0};
+    // }
+    //
+    // if (input.IsKeyHeld(Key::Up))
+    //     ExternalForces.y += 50;
+    //
+    // if (input.IsKeyHeld(Key::Down))
+    //     ExternalForces.y -= 50;
+    //
+    // if (input.IsKeyHeld(Key::Left))
+    //     ExternalForces.x -= 50;
+    //
+    // if (input.IsKeyHeld(Key::Right))
+    //     ExternalForces.x += 50;
+    //
+    // body.Force = M::Vector3{0, -9.8, 0} + ExternalForces + friction;
+    //
+    // M::Vector3 acceleration = body.Force / body.Mass;
+    // body.Velocity += acceleration * fdt;
+    // transform.Position += body.Velocity * fdt;
+    // transform.Position.y = std::max(transform.Position.y, 0.0f);
 }
 } // namespace N

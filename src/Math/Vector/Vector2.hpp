@@ -91,6 +91,22 @@ struct Vector2
      */
     [[nodiscard]] float Distance(const Vector2& vec2) const;
 
+    /**
+    * @brief Determines whether two non-zero vectors are parallel.
+    *
+    * Parallel vectors may point in the same or opposite direction.
+    *
+    * Zero vectors are never considered parallel.
+    */
+    [[nodiscard]] bool IsParallelTo(const Vector2& vec2) const;
+
+    /**
+     * @brief Determines whether two non-zero vectors are perpendicular.
+     *
+     * Zero vectors are never considered perpendicular.
+     */
+    [[nodiscard]] bool IsPerpendicularTo(const Vector2& vec2) const;
+
     /** @brief uses stereographic projection to project a 2d vector onto a 1d plane (line)
      */
     [[nodiscard]] float StereoProject() const;

@@ -60,6 +60,25 @@ float Vector2::Distance(const Vector2& vec2) const
 {
     return (*this - vec2).Length();
 }
+bool Vector2::IsParallelTo(const Vector2& vec2) const
+{
+    if (NearlyEquals(Zero) || vec2.NearlyEquals(Zero))
+    {
+        return false;
+    }
+
+    return M::NearlyEquals(std::abs(Dot(vec2)), Length() * vec2.Length());
+}
+
+bool Vector2::IsPerpendicularTo(const Vector2& vec2) const
+{
+    if (NearlyEquals(Zero) || vec2.NearlyEquals(Zero))
+    {
+        return false;
+    }
+
+    return M::NearlyEquals(std::abs(Dot(vec2)), 0);
+}
 
 float Vector2::StereoProject() const
 {

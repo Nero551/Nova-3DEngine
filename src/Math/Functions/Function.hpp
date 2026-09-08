@@ -2,6 +2,7 @@
 #include "DifferentiationMethod.hpp"
 #include "IntegrationMethod.hpp"
 #include "Math/Common/Comparison.hpp"
+#include "Math/Common/Exponentials.hpp"
 #include "Utilities/Logger.hpp"
 
 namespace N::M
@@ -78,45 +79,6 @@ template <typename Input, typename Output> struct Function
     }
 
     /**
-     * @brief Numerically finds the input x such that f(x) approximately equals y using binary search.
-     * @param y Function value whose corresponding input is sought.
-     * @param domainMin Lower bound of the search domain.
-     * @param domainMax Upper bound of the search domain.
-     * @return An input value whose function value approximately equals y.
-     * @note Requires a scalar-to-scalar function that is monotonic over the
-     * given domain.
-     */
-    float InverseEvaluate(float y, float domainMin, float domainMax) const
-        requires IsScalar<Input> && IsScalar<Output>
-    {
-        float x = 0.0f;
-        while (!NearlyEquals(domainMax, domainMin))
-        {
-            x = (domainMin + domainMax) / 2.0f;
-            const float value = Evaluate(x);
-            if (value < y)
-                domainMin = x;
-            else
-                domainMax = x;
-        }
-        return x;
-    }
-
-    /**
-     * @brief Creates the numerical inverse of a scalar-to-scalar function over the given domain.
-     * @param domainMin Lower bound of the function's domain.
-     * @param domainMax Upper bound of the function's domain.
-     * @return A function representing the numerical inverse.
-     * @note The function must be monotonic over the given domain.
-     */
-    Function<float, float> Inverse(float domainMin, float domainMax) const
-        requires IsScalar<Input> && IsScalar<Output>
-    {
-        return [f = *this, domainMin, domainMax](const float y) -> float
-        { return f.InverseEvaluate(y, domainMin, domainMax); };
-    }
-
-    /**
      * @brief Evaluates the numerical derivative at x.
      * @param x Input value at which to evaluate the derivative.
      * @param dx Step size used for numerical differentiation.
@@ -145,39 +107,6 @@ template <typename Input, typename Output> struct Function
         IntegrationMethod method = IntegrationMethod::Midpoint) const requires IsScalar<Input>
     {
         return Integrate(lowerBound, dx, method)(upperBound);
-    }
-
-    /**
-     * @brief Creates a Taylor polynomial approximation about the point a.
-     * @param terms Number of terms in the Taylor polynomial.
-     * @param a Point about which the polynomial is expanded.
-     * @return A function representing the Taylor polynomial approximation.
-     * @note Only available for functions with a scalar Input type.
-     */
-    Function<float, Output> Taylor(unsigned int terms, float a) const requires IsScalar<Input>
-    {
-        return [terms, a, f = *this](const float x)
-        {
-            Output result{};
-            Function currentFunc = f;
-            for (int n = 0; n < terms; ++n)
-            {
-                result += currentFunc(a) * std::pow(x - a, n) / Factorial(n);
-                currentFunc = currentFunc.Differentiate();
-            }
-            return result;
-        };
-    }
-
-    /**
-     * @brief Creates a Taylor polynomial approximation centered at zero.
-     * @param terms Number of terms in the Taylor polynomial.
-     * @return A function representing the Maclaurin polynomial approximation.
-     * @note Only available for functions with a scalar Input type.
-     */
-    Function<float, Output> Maclaurin(unsigned int terms) const requires IsScalar<Input>
-    {
-        return Taylor(terms, 0.0f);
     }
 
     /**
@@ -217,6 +146,79 @@ template <typename Input, typename Output> struct Function
             }
             return result;
         };
+    }
+
+    /**
+     * @brief Creates a Taylor polynomial approximation about the point a.
+     * @param terms Number of terms in the Taylor polynomial.
+     * @param a Point about which the polynomial is expanded.
+     * @return A function representing the Taylor polynomial approximation.
+     * @note Only available for functions with a scalar Input type.
+     */
+    Function<float, Output> Taylor(unsigned int terms, float a) const requires IsScalar<Input>
+    {
+        return [terms, a, f = *this](const float x)
+        {
+            Output result{};
+            Function currentFunc = f;
+            for (int n = 0; n < terms; ++n)
+            {
+                result += currentFunc(a) * std::pow(x - a, n) / Factorial(n);
+                currentFunc = currentFunc.Differentiate();
+            }
+            return result;
+        };
+    }
+
+    /**
+     * @brief Creates a Taylor polynomial approximation centered at zero.
+     * @param terms Number of terms in the Taylor polynomial.
+     * @return A function representing the Maclaurin polynomial approximation.
+     * @note Only available for functions with a scalar Input type.
+     */
+    Function<float, Output> Maclaurin(unsigned int terms) const requires IsScalar<Input>
+    {
+        return Taylor(terms, 0.0f);
+    }
+
+    /**
+     * @brief Numerically finds the input x such that f(x) approximately equals y using binary search.
+     * @param y Function value whose corresponding input is sought.
+     * @param domainMin Lower bound of the search domain.
+     * @param domainMax Upper bound of the search domain.
+     * @return An input value whose function value approximately equals y.
+     * @note Requires a scalar-to-scalar function that is monotonic over the
+     * given domain.
+     */
+    float InverseEvaluate(float y, float domainMin, float domainMax) const
+        requires IsScalar<Input> && IsScalar<Output>
+    {
+        float x = 0.0f;
+        //Binary search, i need a better way to calculate this. am too stupid though.
+        while (!NearlyEquals(domainMax, domainMin))
+        {
+            x = (domainMin + domainMax) / 2.0f;
+            const float value = Evaluate(x);
+            if (value < y)
+                domainMin = x;
+            else
+                domainMax = x;
+        }
+        return x;
+    }
+
+    /**
+     * @brief Creates the numerical inverse of a scalar-to-scalar function over the given domain.
+     * @param domainMin Lower bound of the function's domain.
+     * @param domainMax Upper bound of the function's domain.
+     * @return A function representing the numerical inverse.
+     * @note The function must be monotonic over the given domain.
+     */
+    Function<float, float> Inverse(float domainMin, float domainMax) const
+        requires IsScalar<Input> && IsScalar<Output>
+    {
+        return [f = *this, domainMin, domainMax](const float y) -> float
+        { return f.InverseEvaluate(y, domainMin, domainMax); };
     }
 
     /** @brief Composes this function with another function, producing f(g(x)). */

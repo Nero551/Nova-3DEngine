@@ -91,7 +91,7 @@ bool Vector3::NearlyEquals(const Vector3& vec3, const float epsilon) const
 
 bool Vector3::IsParallelTo(const Vector3& vec3) const
 {
-    if (*this == Zero || vec3 == Zero)
+    if (NearlyEquals(Zero) || vec3.NearlyEquals(Zero))
     {
         return false;
     }
@@ -101,12 +101,12 @@ bool Vector3::IsParallelTo(const Vector3& vec3) const
 
 bool Vector3::IsPerpendicularTo(const Vector3& vec3) const
 {
-    if (*this == Zero || vec3 == Zero)
+    if (NearlyEquals(Zero) || vec3.NearlyEquals(Zero))
     {
         return false;
     }
 
-    return std::abs(Dot(vec3)) < EPSILON;
+    return M::NearlyEquals(std::abs(Dot(vec3)), 0);
 }
 
 Vector3 Vector3::Lerp(const Vector3& vec3, const float t) const
