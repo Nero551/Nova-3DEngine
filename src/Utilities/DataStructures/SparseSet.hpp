@@ -111,6 +111,12 @@ template <typename D> struct SparseSet
         Sparse[s] = InvalidIndex;
     }
 
+    /** @brief Removes the value at the specified dense index. */
+    void DeleteByIndex(DenseIndex index)
+    {
+        Delete(Indices[index]);
+    }
+
     /** @brief Removes all values while retaining allocated memory. */
     void Clear()
     {
