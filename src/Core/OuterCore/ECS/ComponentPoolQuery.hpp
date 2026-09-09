@@ -20,11 +20,29 @@ struct ComponentPoolQuery
 
     //TODO- this is doing allocations every frame , super expensive stuf. fix (EMERGENCY)
     //TODO- fix? probably store results and modify them instead of per frame allocations.
-    template <ComponentType... Args> ComponentPoolQueryResult<Args...> With()
+    //TODO- plan for storing? make a hash key using the component pools included in the result.
+    //TODO- use hashkey with unordered_map with the values being unique pointers to IComponentPoolQueryResult.
+    template <ComponentType... Args> ComponentPoolQueryResult<Args...>& With()
     {
         std::tuple<ComponentPool<Args>&...> Pools = GetPools<Args...>();
         auto& firstPool = std::get<0>(Pools);
-        ComponentPoolQueryResult<Args...> result;
+
+        const std::type_index key = typeid(ComponentPoolQueryResult<Args...>);
+
+        auto it = QueryResults.find(key);
+
+        if (it == QueryResults.end())
+        {
+            it = QueryResults.emplace(key, std::make_unique<ComponentPoolQueryResult<Args...>>())
+                     .first;
+        }
+        else
+        {
+            static_cast<ComponentPoolQueryResult<Args...>&>(*it->second).Clear();
+        }
+
+        auto& result = static_cast<ComponentPoolQueryResult<Args...>&>(*it->second);
+
         std::apply(
             [&](auto&... pools)
             {
@@ -48,6 +66,7 @@ struct ComponentPoolQuery
 
   private:
     std::unordered_map<std::type_index, std::unique_ptr<IComponentPool>> ComponentPools{};
+    std::unordered_map<std::type_index, std::unique_ptr<IComponentPoolQueryResult>> QueryResults{};
 
     template <ComponentType... Args, size_t... I>
     void AddComponentsToQueryResult(ComponentPoolQueryResult<Args...>& result, unsigned int id,

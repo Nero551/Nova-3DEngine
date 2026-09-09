@@ -3,7 +3,13 @@
 
 namespace N
 {
-template <ComponentType... Args> struct ComponentPoolQueryResult
+
+struct IComponentPoolQueryResult
+{
+    virtual ~IComponentPoolQueryResult() = default;
+};
+
+template <ComponentType... Args> struct ComponentPoolQueryResult : IComponentPoolQueryResult
 {
     std::vector<unsigned int> EntityIds{};
     std::tuple<std::vector<Args*>...> Components;
@@ -44,6 +50,12 @@ template <ComponentType... Args> struct ComponentPoolQueryResult
     Iterator end()
     {
         return {.Result = *this, .Index = EntityIds.size()};
+    }
+
+    void Clear()
+    {
+        EntityIds.clear();
+        std::apply([&](auto&... components) { (components.clear(), ...); }, Components);
     }
 };
 } // namespace N
