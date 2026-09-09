@@ -78,19 +78,18 @@ void Physics::Start()
     cubeId = cube.Id;
     World::Get().Root->AttachChild(cube);
 
-    float t;
-    M::Vector2 vi;
-    M::Vector2 a;
-    M::Vector2 vf;
-    M::Vector2 pi;
-    M::Vector2 pf;
+    M::Function<M::Vector2, M::Vector2> ProjectilePosition = [](const M::Vector2 vi)
+    {
+        M::Vector2 a = {0, -9.8};
+        float t = -vi.y / a.y;
+        M::Vector2 vf = {vi.x + a.x * t, 0};
+        M::Vector2 p = (vf + vi) * t / 2.0;
+        p.x *= 2;
+        return p;
+    };
 
-    //if vf.y == 0
-    vf.y = vi.y + a.y * t;
-    t = vi.y / a.y;
-
-    pf.y = pi.y + vi.y * (vi.y / a.y) - 1 / 2 * a.y * M::Pow(vi.y / a.y, 2);
-    pf.y = pi.y + (M::Pow(vi.y, 2) / 2 * a.y);
+    M::Vector2 vi = M::Vector2::FromPolar({M::Rad(20), 11});
+    U::Logger::Info(ProjectilePosition(vi));
 }
 
 static float time = 0;

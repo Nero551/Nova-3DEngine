@@ -13,8 +13,9 @@
 
 namespace N
 {
-Engine::Engine() : Window(800, 600, "Nova")
+Engine::Engine()
 {
+    Window.Generate(800, 600, "Nova");
     if (Instance)
     {
         U::Logger::Fatal("Only one Engine may exist.");
@@ -77,7 +78,7 @@ void Engine::Configure()
     AddModule<Input>();
     AddModule<Renderer>();
     AddModule<Profiling>();
-    AddModule<Physics>();
+    // AddModule<Physics>();
 }
 
 void Engine::Start()
@@ -88,14 +89,14 @@ void Engine::Start()
 
     World.Start();
 
-    for (auto& module : Modules | std::views::values)
-    {
-        module->Start();
-    }
-
     for (auto& service : Service::GetAll())
     {
         service->Start();
+    }
+
+    for (auto& module : Modules | std::views::values)
+    {
+        module->Start();
     }
 }
 

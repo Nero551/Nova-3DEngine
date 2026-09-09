@@ -19,16 +19,16 @@ template <typename T> struct CheckedPtr
     }
 
     /** @brief Constructs a null CheckedPtr with a custom error message. */
-    CheckedPtr(const std::string& nullMessage)
+    CheckedPtr(const std::string_view nullMessage)
     {
-        this->nullMessage += nullMessage;
+        this->nullMessage = nullMessage;
     }
 
     /** @brief Constructs a CheckedPtr from a pointer with a custom error message. */
-    CheckedPtr(T* objectPtr, const std::string& nullMessage)
+    CheckedPtr(T* objectPtr, const std::string_view nullMessage)
     {
         ptr = objectPtr;
-        this->nullMessage += nullMessage;
+        this->nullMessage = nullMessage;
     }
 
     /** @brief Assigns a raw pointer to the CheckedPtr. */
@@ -41,7 +41,7 @@ template <typename T> struct CheckedPtr
     /** @brief Accesses a member through the pointer, checking for null. */
     T* operator->() const
     {
-        return &Logger::Require(ptr, nullMessage);
+        return ptr;
     }
 
     /** @brief Compares the stored pointer with a raw pointer. */
@@ -51,7 +51,7 @@ template <typename T> struct CheckedPtr
     }
 
     /** @brief Compares the stored pointer with another checked pointer. */
-    bool operator==(const CheckedPtr<T>& otherCheckedPtr) const
+    bool operator==(const CheckedPtr& otherCheckedPtr) const
     {
         return ptr == otherCheckedPtr.ptr;
     }
@@ -59,7 +59,7 @@ template <typename T> struct CheckedPtr
     /** @brief Dereferences the pointer, checking for null. */
     T& operator*() const
     {
-        return Logger::Require(ptr, nullMessage);
+        return *ptr;
     }
 
     /** @brief Checks whether the pointer is non-null. */
@@ -88,6 +88,6 @@ template <typename T> struct CheckedPtr
 
   private:
     T* ptr = nullptr;
-    std::string nullMessage = "[NULL PTR] ";
+    std::string_view nullMessage = "[NULL PTR] ";
 };
 } // namespace N::U

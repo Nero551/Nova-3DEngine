@@ -46,7 +46,7 @@ struct Logger
     }
 
     /** @brief Validates a raw pointer and returns the referenced object. */
-    template <typename T> static T& Require(T* rawPtr, const std::string& message)
+    template <typename T> static T& Require(T* rawPtr, const std::string_view message)
     {
         if (!rawPtr)
         {

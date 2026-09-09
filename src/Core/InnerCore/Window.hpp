@@ -12,13 +12,15 @@ namespace N
  */
 struct Window
 {
+    Window() = default;
+
     /**
-     * @brief Creates a window.
-     * @param width Window width in pixels.
-     * @param height Window height in pixels.
-     * @param title Window title.
-     */
-    Window(int width, int height, const std::string& title);
+    * @brief Generates a window.
+    * @param width Window width in pixels.
+    * @param height Window height in pixels.
+    * @param title Window title.
+    */
+    void Generate(int width, int height, const std::string& title);
 
     /** @brief Destroys the underlying GLFW window. */
     ~Window();

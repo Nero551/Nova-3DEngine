@@ -15,11 +15,7 @@ concept ServiceType = std::derived_from<T, Service>;
  */
 struct Service
 {
-    Service() = default;
     virtual ~Service() = default;
-    Service(const Service&) = delete;
-    Service& operator=(const Service&) = delete;
-
     /**
      * @brief Retrieves a registered service by type.
      * @tparam T Type of the service to retrieve.
@@ -53,10 +49,10 @@ struct Service
   protected:
     friend struct Engine;
     virtual void Start() {}
-    virtual void Update(double dt) {}
-    virtual void FixedUpdate(double fdt) {}
-    virtual void Render() {}
     virtual void BeginFrame(double dt) {}
+    virtual void FixedUpdate(double fdt) {}
+    virtual void Update(double dt) {}
+    virtual void Render() {}
     virtual void EndFrame() {}
     virtual void Stop() {}
 

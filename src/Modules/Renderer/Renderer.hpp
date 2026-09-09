@@ -22,7 +22,7 @@ struct Renderer : Module
     U::CheckedPtr<Mesh> ScreenMesh{"Renderer has no Screen Mesh to render on"};
     U::CheckedPtr<Uniformbuffer> GUniformbuffer{"Renderer has no Uniform buffer to use"};
 
-    std::unordered_map<std::string, RenderBatch> Batches;
+    std::unordered_map<RenderBatch::BatchKey, RenderBatch, RenderBatch::BatchKeyHash> Batches;
 
   protected:
     void SetupFramebuffer();

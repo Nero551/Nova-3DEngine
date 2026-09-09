@@ -22,6 +22,7 @@ struct RenderBatch
     U::CheckedPtr<Mesh> Mesh;
     std::vector<InstanceData> Instances;
     ArrayBuffer Buffer;
+    VertexArray VAO;
 
     RenderBatch(const U::CheckedPtr<struct Mesh>& mesh, const U::CheckedPtr<struct Material>& mat)
         : Material(mat), Mesh(mesh)
@@ -46,5 +47,17 @@ struct RenderBatch
 
         Mesh->DrawInstanced(instanceCount);
     }
+
+    using BatchKey = std::pair<struct Material*, struct Mesh*>;
+    struct BatchKeyHash
+    {
+        std::size_t operator()(const BatchKey& key) const
+        {
+            const std::size_t h1 = std::hash<struct Material*>{}(key.first);
+            const std::size_t h2 = std::hash<struct Mesh*>{}(key.second);
+
+            return h1 ^ (h2 << 1);
+        }
+    };
 };
 } // namespace N

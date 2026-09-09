@@ -5,7 +5,7 @@
 
 namespace N
 {
-Window::Window(const int width, const int height, const std::string& title)
+void Window::Generate(const int width, const int height, const std::string& title)
 {
     SetHints();
 

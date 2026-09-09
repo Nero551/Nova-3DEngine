@@ -163,6 +163,7 @@ void Renderer::RenderWorld()
 
     const M::Matrix4 projection =
         query.Pool<CameraComponent>().GetComponentById(camera->Id).GetProjectionMatrix();
+
     const M::Matrix4 view = GetSystem<CameraSystem>().GetViewMatrix();
 
     GUniformbuffer->Set(view.Transpose(), 0);
@@ -196,13 +197,12 @@ void Renderer::RenderWorld()
 void Renderer::FillBatches(Transform3DComponent& transformComponent,
     MaterialComponent& materialComponent, MeshComponent& meshComponent)
 {
-    auto it = Batches.find(meshComponent.Mesh->Name + materialComponent.Material->Name);
+    RenderBatch::BatchKey key = {&*materialComponent.Material, &*meshComponent.Mesh};
+    auto it = Batches.find(key);
 
     if (it == Batches.end())
     {
-        const std::string name = meshComponent.Mesh->Name + materialComponent.Material->Name;
-
-        it = Batches.try_emplace(name, meshComponent.Mesh, materialComponent.Material).first;
+        it = Batches.try_emplace(key, meshComponent.Mesh, materialComponent.Material).first;
     }
     it->second.Instances.emplace_back(transformComponent.GetModelMatrix().Transpose(),
         transformComponent.GetNormalMatrix().Transpose());

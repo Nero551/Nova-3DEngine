@@ -16,7 +16,7 @@ template <ComponentType... Args> struct ComponentPoolQueryResult
         std::tuple<unsigned int, Args&...> operator*() const
         {
             return std::apply(
-                [&](std::vector<Args*>... components)
+                [&](std::vector<Args*>&... components)
                 {
                     return std::tuple<unsigned int, Args&...>{
                         Result.EntityIds[Index], *components[Index]...};
