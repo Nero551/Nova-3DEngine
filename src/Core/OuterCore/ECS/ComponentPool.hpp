@@ -2,6 +2,7 @@
 #include "Component.hpp"
 
 #include "Core/Services/EventBus.hpp"
+#include "Utilities/SparseSet.hpp"
 #include "World/Events/EntityDestroyed.hpp"
 
 namespace N
@@ -23,7 +24,7 @@ template <ComponentType T> struct ComponentPool : IComponentPool
 
         std::pair<unsigned int, T&> operator*() const
         {
-            return {Pool.EntityIds[Index], Pool.Components[Index]};
+            return {Pool.Components.Indices[Index], Pool.Components.Dense[Index]};
         }
 
         Iterator& operator++()
@@ -40,12 +41,12 @@ template <ComponentType T> struct ComponentPool : IComponentPool
 
     Iterator begin()
     {
-        return {*this, 0};
+        return {.Pool = *this, .Index = 0};
     }
 
     Iterator end()
     {
-        return {*this, Components.size()};
+        return {.Pool = *this, .Index = Components.Size()};
     }
 
     ComponentPool()
@@ -59,83 +60,43 @@ template <ComponentType T> struct ComponentPool : IComponentPool
                 }
             });
     }
-    static constexpr size_t InvalidIndex = std::numeric_limits<size_t>::max();
 
     T& Add(unsigned int entityId)
     {
-        if (entityId >= Indices.size())
-        {
-            Indices.resize(entityId + 1, InvalidIndex);
-        }
-
-        const size_t index = Components.size();
-
-        EntityIds.push_back(entityId);
-        Components.emplace_back();
-        Indices[entityId] = index;
-
-        return Components.back();
+        return Components.Emplace(entityId);
     }
 
     bool HasId(unsigned int entityId) const
     {
-        return entityId < Indices.size() && Indices[entityId] != InvalidIndex;
+        return Components.Contains(entityId);
     }
 
     T& GetComponentById(unsigned int entityId)
     {
-        return Components[Indices[entityId]];
-    }
-
-    T& GetComponentByIndex(size_t index)
-    {
-        return Components[index];
+        return Components.Get(entityId);
     }
 
     unsigned int GetIdByIndex(size_t index) const
     {
-        return EntityIds[index];
+        return Components.Indices[index];
+    }
+
+    T& GetComponentByIndex(size_t index)
+    {
+        return Components.Dense[index];
     }
 
     void RemoveById(unsigned int entityId)
     {
-        if (!HasId(entityId))
-        {
-            return;
-        }
-
-        RemoveByIndex(Indices[entityId]);
-    }
-
-    void RemoveByIndex(size_t index)
-    {
-        const size_t last = Components.size() - 1;
-        const unsigned int removedId = EntityIds[index];
-
-        if (index != last)
-        {
-            const unsigned int movedId = EntityIds[last];
-
-            Components[index] = std::move(Components[last]);
-            EntityIds[index] = movedId;
-            Indices[movedId] = index;
-        }
-
-        Components.pop_back();
-        EntityIds.pop_back();
-        Indices[removedId] = InvalidIndex;
+        Components.Delete(entityId);
     }
 
     size_t Size() const
     {
-        return Components.size();
+        return Components.Size();
     }
 
-    //TODO- learn sparse sets and make a sparse set data structure struct
-
   private:
-    std::vector<T> Components;
-    std::vector<unsigned int> EntityIds;
-    std::vector<size_t> Indices;
+    SparseSet<T> Components{};
 };
 } // namespace N

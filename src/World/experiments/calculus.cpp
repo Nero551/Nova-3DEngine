@@ -55,7 +55,7 @@ static float x = -10;
 
 void calculus::Start()
 {
-    FourDimensionalProjection(10);
+    ThreeDimensionalProjection(3);
 }
 
 static float multiplier = 1;
@@ -64,27 +64,30 @@ void calculus::Update(double dt)
 {
     auto& resourceManager = Service::Get<ResourceManager>();
     auto& input = Engine::Get().GetModule<Input>();
+    //
+    // x += step;
+    // if (x >= xRange)
+    // {
+    //     return;
+    // }
 
-    x += step;
-    if (x >= xRange)
+    if (input.IsKeyHeld(Key::Left))
     {
-        return;
+        multiplier -= 5 * dt;
+    }
+    if (input.IsKeyHeld(Key::Right))
+    {
+        multiplier += 5 * dt;
     }
 
-    // if (input.IsKeyHeld(Key::Left)) {
-    //     multiplier -= 5 * dt;
-    // }
-    // if (input.IsKeyHeld(Key::Right)) {
-    //     multiplier += 5 * dt;
-    // }
-    //
-    // for (auto& point : points) {
-    //     auto& transform =
-    //     World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point->Id);
-    //     transform.Position *= multiplier;
-    // }
-    //
-    // multiplier = 1;
+    for (auto& point : points)
+    {
+        auto& transform =
+            World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point->Id);
+        transform.Position *= multiplier;
+    }
+
+    multiplier = 1;
 
     // M::Function sin = [](const float x) { return std::sin(x); };
     //
