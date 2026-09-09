@@ -51,7 +51,7 @@ Entity& World::FindEntity(unsigned int id)
     auto entity = Entities.find(id);
     if (entity == Entities.end())
     {
-        U::Logger::Fatal(std::format("Entity Not Found: {}", id));
+        U::Logger::Fatal("Entity Not Found: ", id);
     }
     return *entity->second;
 }

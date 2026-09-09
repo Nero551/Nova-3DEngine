@@ -20,7 +20,7 @@ struct ComponentPoolQuery
 
     template <ComponentType... Args> ComponentPoolQueryResult<Args...> With()
     {
-        auto Pools = GetPools<Args...>();
+        std::tuple<ComponentPool<Args>&...> Pools = GetPools<Args...>();
         auto& firstPool = std::get<0>(Pools);
         ComponentPoolQueryResult<Args...> result;
 
@@ -35,7 +35,8 @@ struct ComponentPoolQuery
                     {
                         result.EntityIds.push_back(id);
 
-                        AddComponents(result, id, Pools, std::index_sequence_for<Args...>{});
+                        AddComponentsToQueryResult(
+                            result, id, Pools, std::index_sequence_for<Args...>{});
                     }
                 }
             },
@@ -48,19 +49,15 @@ struct ComponentPoolQuery
     std::unordered_map<std::type_index, std::unique_ptr<IComponentPool>> ComponentPools{};
 
     template <ComponentType... Args, size_t... I>
-    void AddComponents(N::ComponentPoolQueryResult<Args...>& result, unsigned int id,
-        std::tuple<ComponentPool<Args>&...>& pools, std::index_sequence<I...>)
+    void AddComponentsToQueryResult(ComponentPoolQueryResult<Args...>& result, unsigned int id,
+        std::tuple<ComponentPool<Args>&...>& pools, const std::index_sequence<I...>&)
     {
         (std::get<I>(result.Components).push_back(&std::get<I>(pools).GetComponentById(id)), ...);
     }
 
-    template <ComponentType... Args>
-    std::tuple<ComponentPool<Args>&
-
-        ...>
-    GetPools()
+    template <ComponentType... Args> std::tuple<ComponentPool<Args>&...> GetPools()
     {
-        return std::tuple<ComponentPool<Args>&...>{Pool<Args>()...};
+        return {Pool<Args>()...};
     }
 };
 } // namespace N

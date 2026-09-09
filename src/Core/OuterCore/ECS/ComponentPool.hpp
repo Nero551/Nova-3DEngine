@@ -59,67 +59,83 @@ template <ComponentType T> struct ComponentPool : IComponentPool
                 }
             });
     }
+    static constexpr size_t InvalidIndex = std::numeric_limits<size_t>::max();
 
     T& Add(unsigned int entityId)
     {
+        if (entityId >= Indices.size())
+        {
+            Indices.resize(entityId + 1, InvalidIndex);
+        }
+
+        const size_t index = Components.size();
+
         EntityIds.push_back(entityId);
-        Indices.emplace(entityId, EntityIds.size() - 1);
         Components.emplace_back();
+        Indices[entityId] = index;
 
         return Components.back();
     }
 
     bool HasId(unsigned int entityId) const
     {
-        return Indices.contains(entityId);
-    }
-
-    unsigned int GetIdByIndex(size_t index) const
-    {
-        return EntityIds.at(index);
-    }
-
-    T& GetComponentByIndex(size_t index)
-    {
-        return Components.at(index);
+        return entityId < Indices.size() && Indices[entityId] != InvalidIndex;
     }
 
     T& GetComponentById(unsigned int entityId)
     {
-        auto it = Indices.find(entityId);
-
-        if (it != Indices.end())
-        {
-            return Components[it->second];
-        }
-        U::Logger::Fatal("Component not found");
+        return Components[Indices[entityId]];
     }
 
-    void RemoveByIndex(size_t index)
+    T& GetComponentByIndex(size_t index)
     {
-        Components.erase(Components.begin() + index);
-        Indices.erase(EntityIds[index]);
-        EntityIds.erase(EntityIds.begin() + index);
+        return Components[index];
+    }
+
+    unsigned int GetIdByIndex(size_t index) const
+    {
+        return EntityIds[index];
     }
 
     void RemoveById(unsigned int entityId)
     {
-        auto it = Indices.find(entityId);
-
-        if (it != Indices.end())
+        if (!HasId(entityId))
         {
-            RemoveByIndex(it->second);
+            return;
         }
+
+        RemoveByIndex(Indices[entityId]);
+    }
+
+    void RemoveByIndex(size_t index)
+    {
+        const size_t last = Components.size() - 1;
+        const unsigned int removedId = EntityIds[index];
+
+        if (index != last)
+        {
+            const unsigned int movedId = EntityIds[last];
+
+            Components[index] = std::move(Components[last]);
+            EntityIds[index] = movedId;
+            Indices[movedId] = index;
+        }
+
+        Components.pop_back();
+        EntityIds.pop_back();
+        Indices[removedId] = InvalidIndex;
     }
 
     size_t Size() const
     {
-        return EntityIds.size();
+        return Components.size();
     }
 
+    //TODO- learn sparse sets and make a sparse set data structure struct
+
   private:
-    std::vector<T> Components{};
-    std::vector<unsigned int> EntityIds{};
-    std::unordered_map<unsigned int, size_t> Indices{};
+    std::vector<T> Components;
+    std::vector<unsigned int> EntityIds;
+    std::vector<size_t> Indices;
 };
 } // namespace N

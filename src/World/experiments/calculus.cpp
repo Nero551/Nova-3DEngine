@@ -55,7 +55,7 @@ static float x = -10;
 
 void calculus::Start()
 {
-    FourDimensionalProjection(13);
+    FourDimensionalProjection(10);
 }
 
 static float multiplier = 1;

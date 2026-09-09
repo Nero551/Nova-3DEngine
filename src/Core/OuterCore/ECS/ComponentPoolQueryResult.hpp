@@ -38,12 +38,12 @@ template <ComponentType... Args> struct ComponentPoolQueryResult
 
     Iterator begin()
     {
-        return {*this, 0};
+        return {.Result = *this, .Index = 0};
     }
 
     Iterator end()
     {
-        return {*this, EntityIds.size()};
+        return {.Result = *this, .Index = EntityIds.size()};
     }
 };
 } // namespace N
