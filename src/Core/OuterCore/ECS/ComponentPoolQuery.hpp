@@ -1,12 +1,78 @@
 #pragma once
 #include "ComponentPool.hpp"
-#include "ComponentPoolQueryResult.hpp"
 
 namespace N
 {
 struct ComponentPoolQuery
 {
     //TODO- clean componentPool, Query & QueryResult up , this shit is unreadable. also DOCUMENT.
+
+    struct IQueryResult
+    {
+        virtual ~IQueryResult() = default;
+    };
+
+    template <ComponentType... Args> struct QueryResult : IQueryResult
+    {
+        std::vector<unsigned int> EntityIds{};
+        std::tuple<std::vector<Args*>...> Components;
+
+        struct Iterator
+        {
+            QueryResult& Result;
+            size_t Index;
+
+            std::tuple<unsigned int, Args&...> operator*() const
+            {
+                return std::apply(
+                    [&](std::vector<Args*>&... components)
+                    {
+                        return std::tuple<unsigned int, Args&...>{
+                            Result.EntityIds[Index], *components[Index]...};
+                    },
+                    Result.Components);
+            }
+
+            Iterator& operator++()
+            {
+                ++Index;
+                return *this;
+            }
+
+            bool operator!=(const Iterator& other) const
+            {
+                return Index != other.Index;
+            }
+        };
+
+        Iterator begin()
+        {
+            return {.Result = *this, .Index = 0};
+        }
+
+        Iterator end()
+        {
+            return {.Result = *this, .Index = EntityIds.size()};
+        }
+
+        /** @brief Removes all query results while retaining allocated capacity. */
+        void Clear()
+        {
+            EntityIds.clear();
+            std::apply([](auto&... components) { (components.clear(), ...); }, Components);
+        }
+
+        /** @brief Ensures enough storage for the specified number of results. */
+        void Reserve(size_t size)
+        {
+            if (EntityIds.capacity() < size)
+                EntityIds.reserve(size);
+
+            std::apply([&](auto&... components)
+                { ((components.capacity() < size ? components.reserve(size) : void()), ...); },
+                Components);
+        }
+    };
 
     template <ComponentType T> ComponentPool<T>& Pool()
     {
@@ -19,26 +85,25 @@ struct ComponentPoolQuery
         }
         return static_cast<ComponentPool<T>&>(*it->second);
     }
-    template <ComponentType... Args> ComponentPoolQueryResult<Args...>& With()
+    template <ComponentType... Args> QueryResult<Args...>& With()
     {
         std::tuple<ComponentPool<Args>&...> Pools = GetPools<Args...>();
         auto& firstPool = std::get<0>(Pools);
 
-        const std::type_index key = typeid(ComponentPoolQueryResult<Args...>);
+        const std::type_index key = typeid(QueryResult<Args...>);
 
         auto it = QueryResults.find(key);
 
         if (it == QueryResults.end())
         {
-            it = QueryResults.emplace(key, std::make_unique<ComponentPoolQueryResult<Args...>>())
-                     .first;
+            it = QueryResults.emplace(key, std::make_unique<QueryResult<Args...>>()).first;
         }
         else
         {
-            static_cast<ComponentPoolQueryResult<Args...>&>(*it->second).Clear();
+            static_cast<QueryResult<Args...>&>(*it->second).Clear();
         }
 
-        auto& result = static_cast<ComponentPoolQueryResult<Args...>&>(*it->second);
+        auto& result = static_cast<QueryResult<Args...>&>(*it->second);
         result.Reserve(firstPool.Size());
 
         std::apply(
@@ -64,10 +129,10 @@ struct ComponentPoolQuery
 
   private:
     std::unordered_map<std::type_index, std::unique_ptr<IComponentPool>> ComponentPools{};
-    std::unordered_map<std::type_index, std::unique_ptr<IComponentPoolQueryResult>> QueryResults{};
+    std::unordered_map<std::type_index, std::unique_ptr<IQueryResult>> QueryResults{};
 
     template <ComponentType... Args, size_t... I>
-    void AddComponentsToQueryResult(ComponentPoolQueryResult<Args...>& result, unsigned int id,
+    void AddComponentsToQueryResult(QueryResult<Args...>& result, unsigned int id,
         std::tuple<ComponentPool<Args>&...>& pools, const std::index_sequence<I...>&)
     {
         (std::get<I>(result.Components).push_back(&std::get<I>(pools).GetComponentById(id)), ...);

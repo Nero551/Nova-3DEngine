@@ -1,4 +1,5 @@
 #pragma once
+
 #include <vector>
 
 namespace N
@@ -7,59 +8,61 @@ namespace N
 /**
  * @brief Dense storage with sparse index lookup.
  *
- * Provides O(1) insertion, lookup, and deletion while keeping
- * stored values densely packed.
+ * Provides O(1) insertion, lookup, and deletion while keeping values densely packed.
  *
- * @tparam D The stored data type.
+ * @tparam D Stored data type.
  */
 template <typename D> struct SparseSet
 {
-    /** @brief Represents an invalid dense or sparse index. */
-    static constexpr size_t InvalidIndex = std::numeric_limits<size_t>::max();
-
-    /** @brief Index into the dense storage. */
     using DenseIndex = size_t;
-
-    /** @brief Index into the sparse storage. */
     using SparseIndex = size_t;
 
-    /** @brief Contains the actual values. */
-    std::vector<D> Dense{};
+    /** @brief Represents an invalid index. */
+    static constexpr size_t InvalidIndex = std::numeric_limits<size_t>::max();
 
-    /** @brief Maps dense indices to their corresponding sparse indices. */
-    std::vector<SparseIndex> Indices{};
-
-    /** @brief Maps sparse indices to their corresponding dense indices. */
-    std::vector<DenseIndex> Sparse{};
-
-    /**
-     * @brief Checks whether a sparse index is present.
-     *
-     * @param s Sparse index to check.
-     * @return True if the sparse index exists, otherwise false.
-     */
-    bool Contains(const size_t s) const
+    /** @brief Returns whether the specified sparse index exists. */
+    bool Contains(const SparseIndex s) const
     {
         return s < Sparse.size() && Sparse[s] != InvalidIndex;
     }
 
-    /**
-     * @brief Inserts a value at a sparse index.
-     *
-     * Does nothing if the sparse index already exists.
-     *
-     * @param s Sparse index of the value.
-     * @param d Value to insert.
-     * @return Reference to the stored value.
-     */
-    D& Push(const size_t s, const D& d)
+    /** @brief Returns the value associated with the specified sparse index. */
+    D& Get(const SparseIndex s)
+    {
+        if (!Contains(s))
+            U::Logger::Fatal("SparseSet does not contain the specified sparse index.");
+
+        return Dense[Sparse[s]];
+    }
+
+    /** @brief Returns the value associated with the specified dense index. */
+    D& GetByIndex(const DenseIndex index)
+    {
+        if (index >= Dense.size())
+            U::Logger::Fatal("SparseSet dense index out of bounds.");
+
+        return Dense[index];
+    }
+
+    /** @brief Returns the sparse index associated with a dense index. */
+    SparseIndex GetSparseIndex(const DenseIndex index) const
+    {
+        return Indices[index];
+    }
+
+    /** @brief Returns the dense index associated with a sparse index. */
+    DenseIndex GetDenseIndex(const SparseIndex index) const
+    {
+        return Sparse[index];
+    }
+
+    /** @brief Inserts a value at the specified sparse index. */
+    D& Push(const SparseIndex s, const D& d)
     {
         if (!Contains(s))
         {
             if (s >= Sparse.size())
-            {
                 Sparse.resize(s + 1, InvalidIndex);
-            }
 
             Sparse[s] = Dense.size();
             Indices.push_back(s);
@@ -69,24 +72,13 @@ template <typename D> struct SparseSet
         return Dense[Sparse[s]];
     }
 
-    /**
-     * @brief Constructs and inserts a value at a sparse index.
-     *
-     * Does nothing if the sparse index already exists.
-     *
-     * @tparam Args Constructor argument types.
-     * @param s Sparse index of the value.
-     * @param args Arguments forwarded to the value constructor.
-     * @return Reference to the stored value.
-     */
-    template <typename... Args> D& Emplace(const size_t s, Args&&... args)
+    /** @brief Constructs a value at the specified sparse index. */
+    template <typename... Args> D& Emplace(const SparseIndex s, Args&&... args)
     {
         if (!Contains(s))
         {
             if (s >= Sparse.size())
-            {
                 Sparse.resize(s + 1, InvalidIndex);
-            }
 
             Sparse[s] = Dense.size();
             Indices.push_back(s);
@@ -96,37 +88,13 @@ template <typename D> struct SparseSet
         return Dense[Sparse[s]];
     }
 
-    /**
-     * @brief Retrieves the value at a sparse index.
-     *
-     * @param s Sparse index of the value.
-     * @return Reference to the stored value.
-     *
-     * @note Logs a fatal error if the sparse index does not exist.
-     */
-    D& Get(const size_t s)
-    {
-        if (!Contains(s))
-        {
-            U::Logger::Fatal("SparseSet does not contain the specified sparse index.");
-        }
-
-        return Dense[Sparse[s]];
-    }
-
-    /**
-     * @brief Removes the value at a sparse index.
-     *
-     * Uses swap-and-pop to keep the dense storage packed.
-     *
-     * @param s Sparse index of the value to remove.
-     */
-    void Delete(const size_t s)
+    /** @brief Removes the value at the specified sparse index. */
+    void Delete(const SparseIndex s)
     {
         if (!Contains(s))
             return;
 
-        DenseIndex index = Sparse[s];
+        const DenseIndex index = Sparse[s];
 
         if (index != Dense.size() - 1)
         {
@@ -140,8 +108,22 @@ template <typename D> struct SparseSet
 
         Dense.pop_back();
         Indices.pop_back();
-
         Sparse[s] = InvalidIndex;
+    }
+
+    /** @brief Removes all values while retaining allocated memory. */
+    void Clear()
+    {
+        Dense.clear();
+        Indices.clear();
+        Sparse.clear();
+    }
+
+    /** @brief Reserves dense storage for the specified number of elements. */
+    void Reserve(const size_t size)
+    {
+        Dense.reserve(size);
+        Indices.reserve(size);
     }
 
     /** @brief Returns the number of stored values. */
@@ -150,20 +132,12 @@ template <typename D> struct SparseSet
         return Dense.size();
     }
 
-    /** @brief Removes all stored values while retaining allocated memory. */
-    void Clear()
+    /** @brief Returns whether the set contains no values. */
+    bool Empty() const
     {
-        Dense.clear();
-        Indices.clear();
-        Sparse.clear();
+        return Dense.empty();
     }
 
-    /**
-     * @brief Iterator over the dense storage.
-     *
-     * Dereferencing the iterator returns the sparse index and
-     * corresponding dense value.
-     */
     struct Iterator
     {
         SparseSet& Set;
@@ -177,7 +151,7 @@ template <typename D> struct SparseSet
         }
 
         /** @brief Returns the sparse index and corresponding value. */
-        std::pair<size_t, D&> operator*() const
+        std::pair<SparseIndex, D&> operator*() const
         {
             return {Set.Indices[Index], Set.Dense[Index]};
         }
@@ -200,6 +174,16 @@ template <typename D> struct SparseSet
     {
         return {*this, Size()};
     }
+
+  private:
+    /** @brief Contains the actual values. */
+    std::vector<D> Dense{};
+
+    /** @brief Maps dense indices to their sparse indices. */
+    std::vector<SparseIndex> Indices{};
+
+    /** @brief Maps sparse indices to their dense indices. */
+    std::vector<DenseIndex> Sparse{};
 };
 
 } // namespace N

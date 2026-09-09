@@ -24,7 +24,7 @@ template <ComponentType T> struct ComponentPool : IComponentPool
 
         std::pair<unsigned int, T&> operator*() const
         {
-            return {Pool.Components.Indices[Index], Pool.Components.Dense[Index]};
+            return {Pool.Components.GetSparseIndex()[Index], Pool.Components.GetByIndex(Index)};
         }
 
         Iterator& operator++()
@@ -78,12 +78,12 @@ template <ComponentType T> struct ComponentPool : IComponentPool
 
     unsigned int GetIdByIndex(size_t index) const
     {
-        return Components.Indices[index];
+        return Components.GetSparseIndex(index);
     }
 
     T& GetComponentByIndex(size_t index)
     {
-        return Components.Dense[index];
+        return Components.Components.GetByIndex(index);
     }
 
     void RemoveById(unsigned int entityId)
