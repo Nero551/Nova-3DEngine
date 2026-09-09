@@ -58,5 +58,16 @@ template <ComponentType... Args> struct ComponentPoolQueryResult : IComponentPoo
         EntityIds.clear();
         std::apply([](auto&... components) { (components.clear(), ...); }, Components);
     }
+
+    /** @brief Ensures enough storage for the specified number of results. */
+    void Reserve(size_t size)
+    {
+        if (EntityIds.capacity() < size)
+            EntityIds.reserve(size);
+
+        std::apply([&](auto&... components)
+            { ((components.capacity() < size ? components.reserve(size) : void()), ...); },
+            Components);
+    }
 };
 } // namespace N

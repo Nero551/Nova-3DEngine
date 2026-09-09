@@ -58,7 +58,16 @@ struct Shader : Resource
      */
     template <UniformType T> void SetUniform(const T& uniform)
     {
-        PendingUniforms[uniform.Name] = std::make_unique<T>(uniform);
+        auto it = PendingUniforms.find(uniform.Name);
+
+        if (it == PendingUniforms.end())
+        {
+            PendingUniforms.emplace(uniform.Name, std::make_unique<T>(uniform));
+        }
+        else
+        {
+            *static_cast<T*>(it->second.get()) = uniform;
+        }
     }
 
     void AssignSource(ShaderSource& source);

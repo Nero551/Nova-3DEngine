@@ -35,15 +35,9 @@ struct Service
      * @brief Returns all currently registered services.
      * @return A vector of pointers to the registered services.
      */
-    static std::vector<U::CheckedPtr<Service>> GetAll()
+    static const std::unordered_map<std::type_index, std::unique_ptr<Service>>& GetAll()
     {
-        std::vector<U::CheckedPtr<Service>> services;
-
-        for (auto& service : Services | std::views::values)
-        {
-            services.emplace_back(&*service);
-        }
-        return services;
+        return Services;
     }
 
   protected:

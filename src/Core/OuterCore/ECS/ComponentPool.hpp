@@ -2,7 +2,7 @@
 #include "Component.hpp"
 
 #include "Core/Services/EventBus.hpp"
-#include "Utilities/SparseSet.hpp"
+#include "Utilities/DataStructures/SparseSet.hpp"
 #include "World/Events/EntityDestroyed.hpp"
 
 namespace N

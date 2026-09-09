@@ -55,7 +55,7 @@ static float x = -10;
 
 void calculus::Start()
 {
-    // ThreeDimensionalProjection(2);
+    ThreeDimensionalProjection(2);
 }
 
 static float multiplier = 1;
@@ -80,11 +80,14 @@ void calculus::Update(double dt)
         multiplier += 5 * dt;
     }
 
-    for (auto& point : points)
+    if (multiplier != 1)
     {
-        auto& transform =
-            World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point->Id);
-        transform.Position *= multiplier;
+        for (auto& point : points)
+        {
+            auto& transform =
+                World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point->Id);
+            transform.Position *= multiplier;
+        }
     }
 
     multiplier = 1;

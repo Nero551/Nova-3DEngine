@@ -89,7 +89,7 @@ void Engine::Start()
 
     World.Start();
 
-    for (auto& service : Service::GetAll())
+    for (auto& service : Service::GetAll() | std::views::values)
     {
         service->Start();
     }
@@ -112,7 +112,7 @@ void Engine::Stop()
         module->Stop();
     }
 
-    for (auto& service : Service::GetAll())
+    for (auto& service : Service::GetAll() | std::views::values)
     {
         service->Stop();
     }
@@ -141,8 +141,10 @@ void Engine::BeginFrame()
     for (auto& module : Modules | std::views::values)
         module->BeginFrame(DeltaTime);
 
-    for (auto& service : Service::GetAll())
+    for (auto& service : Service::GetAll() | std::views::values)
+    {
         service->BeginFrame(DeltaTime);
+    }
 }
 
 void Engine::EndFrame()
@@ -158,7 +160,7 @@ void Engine::EndFrame()
         module->EndFrame(DeltaTime);
     }
 
-    for (auto& service : Service::GetAll())
+    for (auto& service : Service::GetAll() | std::views::values)
     {
         service->EndFrame();
     }
@@ -179,7 +181,7 @@ void Engine::Update()
         module->Update(DeltaTime);
     }
 
-    for (auto& service : Service::GetAll())
+    for (auto& service : Service::GetAll() | std::views::values)
     {
         service->Update(DeltaTime);
     }
@@ -196,7 +198,7 @@ void Engine::FixedUpdate()
         module->FixedUpdate(FixedDeltaTime);
     }
 
-    for (auto& service : Service::GetAll())
+    for (auto& service : Service::GetAll() | std::views::values)
     {
         service->FixedUpdate(FixedDeltaTime);
     }
@@ -213,7 +215,7 @@ void Engine::Render()
         module->Render();
     }
 
-    for (auto& service : Service::GetAll())
+    for (auto& service : Service::GetAll() | std::views::values)
     {
         service->Render();
     }

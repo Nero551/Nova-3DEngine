@@ -6,6 +6,8 @@ namespace N
 {
 struct ComponentPoolQuery
 {
+    //TODO- clean componentPool, Query & QueryResult up , this shit is unreadable. also DOCUMENT.
+
     template <ComponentType T> ComponentPool<T>& Pool()
     {
         const auto type = std::type_index(typeid(T));
@@ -37,7 +39,7 @@ struct ComponentPoolQuery
         }
 
         auto& result = static_cast<ComponentPoolQueryResult<Args...>&>(*it->second);
-        result.EntityIds.reserve(firstPool.Size());
+        result.Reserve(firstPool.Size());
 
         std::apply(
             [&](auto&... pools)
