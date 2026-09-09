@@ -150,6 +150,14 @@ template <typename D> struct SparseSet
         return Dense.size();
     }
 
+    /** @brief Removes all stored values while retaining allocated memory. */
+    void Clear()
+    {
+        Dense.clear();
+        Indices.clear();
+        Sparse.clear();
+    }
+
     /**
      * @brief Iterator over the dense storage.
      *

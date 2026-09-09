@@ -18,12 +18,13 @@ struct ComponentPoolQuery
         return static_cast<ComponentPool<T>&>(*it->second);
     }
 
+    //TODO- this is doing allocations every frame , super expensive stuf. fix (EMERGENCY)
+    //TODO- fix? probably store results and modify them instead of per frame allocations.
     template <ComponentType... Args> ComponentPoolQueryResult<Args...> With()
     {
         std::tuple<ComponentPool<Args>&...> Pools = GetPools<Args...>();
         auto& firstPool = std::get<0>(Pools);
         ComponentPoolQueryResult<Args...> result;
-
         std::apply(
             [&](auto&... pools)
             {
