@@ -8,7 +8,8 @@ struct Vector4Uniform : Uniform
 {
     M::Vector4 Value;
 
-    Vector4Uniform(const std::string& name, const M::Vector4& value) : Uniform(name), Value(value)
+    Vector4Uniform(const std::string_view name, const M::Vector4& value)
+        : Uniform(name), Value(value)
     {
     }
 

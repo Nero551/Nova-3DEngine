@@ -1,6 +1,6 @@
 #pragma once
-#include "../Uniform.hpp"
-#include "Core/Engine.hpp"
+#include "Math/Vector/Vector2.hpp"
+#include "Uniform.hpp"
 
 namespace N
 {
@@ -8,7 +8,7 @@ struct Vector2Uniform : Uniform
 {
     N::M::Vector2 Value;
 
-    Vector2Uniform(const std::string& name, const N::M::Vector2& value)
+    Vector2Uniform(const std::string_view name, const N::M::Vector2& value)
         : Uniform(name), Value(value)
     {
     }

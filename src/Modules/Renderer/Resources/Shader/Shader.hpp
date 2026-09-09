@@ -73,14 +73,14 @@ struct Shader : Resource
     /** @brief OpenGL handle for the shader program. */
     unsigned int Id = 0;
 
-    std::unordered_map<std::string, int> UniformLocations;
+    std::unordered_map<std::string_view, int> UniformLocations;
 
     /**
      * @brief Uniform values waiting to be uploaded to the GPU.
      * Uniforms are stored by name and resolved to OpenGL locations
      * when they are uploaded.
      */
-    std::unordered_map<std::string, std::unique_ptr<Uniform>> PendingUniforms;
+    std::unordered_map<std::string_view, std::unique_ptr<Uniform>> PendingUniforms;
 
     std::vector<U::CheckedPtr<ShaderSource>> Sources;
 
@@ -91,7 +91,7 @@ struct Shader : Resource
      * @param name Name of the shader uniform.
      * @return OpenGL uniform location.
      */
-    int GetUniformLocation(const std::string& name);
+    int GetUniformLocation(const std::string_view name);
 
     void UploadUniforms();
 };
