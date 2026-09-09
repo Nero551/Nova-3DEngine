@@ -52,10 +52,11 @@ template <ComponentType... Args> struct ComponentPoolQueryResult : IComponentPoo
         return {.Result = *this, .Index = EntityIds.size()};
     }
 
+    /** @brief Removes all query results while retaining allocated capacity. */
     void Clear()
     {
         EntityIds.clear();
-        std::apply([&](auto&... components) { (components.clear(), ...); }, Components);
+        std::apply([](auto&... components) { (components.clear(), ...); }, Components);
     }
 };
 } // namespace N

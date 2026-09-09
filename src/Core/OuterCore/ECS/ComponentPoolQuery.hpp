@@ -17,11 +17,6 @@ struct ComponentPoolQuery
         }
         return static_cast<ComponentPool<T>&>(*it->second);
     }
-
-    //TODO- this is doing allocations every frame , super expensive stuf. fix (EMERGENCY)
-    //TODO- fix? probably store results and modify them instead of per frame allocations.
-    //TODO- plan for storing? make a hash key using the component pools included in the result.
-    //TODO- use hashkey with unordered_map with the values being unique pointers to IComponentPoolQueryResult.
     template <ComponentType... Args> ComponentPoolQueryResult<Args...>& With()
     {
         std::tuple<ComponentPool<Args>&...> Pools = GetPools<Args...>();
@@ -42,6 +37,7 @@ struct ComponentPoolQuery
         }
 
         auto& result = static_cast<ComponentPoolQueryResult<Args...>&>(*it->second);
+        result.EntityIds.reserve(firstPool.Size());
 
         std::apply(
             [&](auto&... pools)
