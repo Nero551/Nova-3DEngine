@@ -17,23 +17,36 @@ static MeshInstance3D& CreatePoint(M::Vector4 col)
 {
     auto& resourceManager = Service::Get<ResourceManager>();
     auto& mesh = Primitives::CreateUVSphere("point");
-    auto& material = resourceManager.Load<Material>(std::format("m{}{}{}", col.z, col.x, col.y));
-    material.Color = col;
-    auto& shader = resourceManager.Load<Shader>("pointShader");
-
-    shader.AssignSource(resourceManager.Load<ShaderSource>(
-        "pointVert", "Assets/Shaders/shader.vert", ShaderStage::Vertex));
-    shader.AssignSource(resourceManager.Load<ShaderSource>(
-        "pointFrag", "Assets/Shaders/shader.frag", ShaderStage::Fragment));
-    material.Shader = &shader;
 
     auto& point = World::Get().CreateEntity<MeshInstance3D>();
     World::Get().Query.Pool<MeshComponent>().GetComponentById(point.Id).Mesh = &mesh;
-    World::Get().Query.Pool<MaterialComponent>().GetComponentById(point.Id).Material = &material;
     World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.Id).Scale =
         M::Vector3{0.2};
-    World::Get().Root->AttachChild(point);
 
+    if (resourceManager.Exists<Material>(std::format("m{}{}{}", col.z, col.x, col.y)))
+    {
+        auto& material =
+            resourceManager.Load<Material>(std::format("m{}{}{}", col.z, col.x, col.y));
+        World::Get().Query.Pool<MaterialComponent>().GetComponentById(point.Id).Material =
+            &material;
+    }
+    else
+    {
+        auto& material =
+            resourceManager.Load<Material>(std::format("m{}{}{}", col.z, col.x, col.y));
+        material.Color = col;
+        auto& shader = resourceManager.Load<Shader>("pointShader");
+
+        shader.AssignSource(resourceManager.Load<ShaderSource>(
+            "pointVert", "Assets/Shaders/shader.vert", ShaderStage::Vertex));
+        shader.AssignSource(resourceManager.Load<ShaderSource>(
+            "pointFrag", "Assets/Shaders/shader.frag", ShaderStage::Fragment));
+        material.Shader = &shader;
+        World::Get().Query.Pool<MaterialComponent>().GetComponentById(point.Id).Material =
+            &material;
+    }
+
+    World::Get().Root->AttachChild(point);
     return point;
 }
 
@@ -56,7 +69,7 @@ static float x = -10;
 
 void calculus::Start()
 {
-    ThreeDimensionalProjection(2);
+    // ThreeDimensionalProjection(1);
 }
 
 static float multiplier = 1;
@@ -108,10 +121,11 @@ void calculus::Update(double dt)
 
 void calculus::TwoDimensionalProjection(int increase)
 {
+    points.reserve(M::Pow(360 / increase, 1));
     U::Logger::Info(M::Pow(360 / increase, 1));
     for (int theta = -180; theta < 180; theta += increase)
     {
-        M::Vector2 v2 = M::Vector2::FromPolar(M::Polar(theta));
+        M::Vector2 v2 = M::Vector2::FromPolar(M::Polar(M::Rad(theta)));
         float proj = v2.StereoProject();
         // auto& d2point = Plot({v2.x, v2.y, 0});
         auto& point = Plot({proj, 0, 0});
@@ -122,13 +136,14 @@ void calculus::TwoDimensionalProjection(int increase)
 
 void calculus::ThreeDimensionalProjection(int increase)
 {
+    points.reserve(M::Pow(360 / increase, 2));
     U::Logger::Info(M::Pow(360 / increase, 2));
 
     for (int theta = -180; theta < 180; theta += increase)
     {
         for (int phi = -180; phi < 180; phi += increase)
         {
-            M::Vector3 v3 = M::Vector3::FromSpherical(M::Spherical(theta, phi));
+            M::Vector3 v3 = M::Vector3::FromSpherical(M::Spherical(M::Rad(theta), M::Rad(phi)));
             // auto& d3point = Plot(v3);
             M::Vector2 proj = v3.StereoProject();
             auto& point = Plot({proj.x, proj.y, 0});
@@ -140,6 +155,7 @@ void calculus::ThreeDimensionalProjection(int increase)
 
 void calculus::FourDimensionalProjection(int increase)
 {
+    points.reserve(M::Pow(360 / increase, 3));
     U::Logger::Info(M::Pow(360 / increase, 3));
     for (int theta = -180; theta < 180; theta += increase)
     {
@@ -147,7 +163,8 @@ void calculus::FourDimensionalProjection(int increase)
         {
             for (int h = -180; h < 180; h += increase)
             {
-                M::Vector4 v4 = M::Vector4::FromHyperSpherical(M::HyperSpherical(theta, phi, h));
+                M::Vector4 v4 = M::Vector4::FromHyperSpherical(
+                    M::HyperSpherical(M::Rad(theta), M::Rad(phi), M::Rad(h)));
                 M::Vector3 proj = v4.StereoProject();
                 auto& point = Plot(proj);
                 points.emplace_back(&point);

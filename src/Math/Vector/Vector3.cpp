@@ -7,7 +7,7 @@
 
 namespace N::M
 {
-Vector3 Vector3::FromSpherical(Spherical spherical)
+Vector3 Vector3::FromSpherical(const Spherical& spherical)
 {
     Vector3 result;
     result.x = spherical.Magnitude * std::cos(spherical.Elevation) * std::cos(spherical.Azimuth);

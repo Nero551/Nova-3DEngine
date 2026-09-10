@@ -25,7 +25,7 @@ struct Vector3
     float z;
 
     /** @brief constructs a vector3 from spherical coords (elevation , azimuth) */
-    [[nodiscard]] static Vector3 FromSpherical(Spherical spherical);
+    [[nodiscard]] static Vector3 FromSpherical(const Spherical& spherical);
 
     /**
      * @brief Creates a zero vector.

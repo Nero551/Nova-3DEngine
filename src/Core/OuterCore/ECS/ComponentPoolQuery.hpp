@@ -165,6 +165,8 @@ struct ComponentPoolQuery
     {
         QueryResult<Args...>& result = GetQueryResult<Args...>();
 
+        //TODO- a more efficient method is giving each component pool a version.
+        // and just comparing the result's version with the component pools it needs.
         if (result.Version != QueryVersion)
         {
             std::tuple<ComponentPool<Args>&...> pools = GetPools<Args...>();

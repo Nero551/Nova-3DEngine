@@ -7,7 +7,7 @@
 
 namespace N::M
 {
-Vector4 Vector4::FromHyperSpherical(HyperSpherical hyperSpherical)
+Vector4 Vector4::FromHyperSpherical(const HyperSpherical& hyperSpherical)
 {
     const float m = hyperSpherical.Magnitude;
     Vector4 result;

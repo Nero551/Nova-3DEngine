@@ -22,7 +22,7 @@ struct Vector4
     float z;
     float w;
 
-    static Vector4 FromHyperSpherical(HyperSpherical hyperSpherical);
+    static Vector4 FromHyperSpherical(const HyperSpherical& hyperSpherical);
 
     Vector4();
 
