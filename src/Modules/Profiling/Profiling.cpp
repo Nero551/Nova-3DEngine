@@ -13,7 +13,7 @@ void Profiling::Update(const double dt)
     elapsed += dt;
 
     FrameMs = dt * 1000.0;
-    FrameCount++;
+    ++FrameCount;
 
     if (FrameTimes.size() > 60)
     {

@@ -47,7 +47,7 @@ struct World : SystemOwner
      */
     template <EntityType T> T& CreateEntity()
     {
-        const unsigned int id = ++currentEntityId;
+        const unsigned int id = currentEntityId++;
         auto entity = std::make_unique<T>();
         entity->Id = id;
         entity->Initialize();

@@ -14,7 +14,7 @@ static Assimp::Importer importer;
 
 static void ProcessVertices(std::vector<Vertex>& vertices, const aiMesh* mesh)
 {
-    for (unsigned int v = 0; v < mesh->mNumVertices; v++)
+    for (unsigned int v = 0; v < mesh->mNumVertices; ++v)
     {
         M::Vector4 pos = {mesh->mVertices[v].x, mesh->mVertices[v].y, mesh->mVertices[v].z, 1};
         M::Vector3 normal = {mesh->mNormals[v].x, mesh->mNormals[v].y, mesh->mNormals[v].z};
@@ -31,11 +31,11 @@ static void ProcessVertices(std::vector<Vertex>& vertices, const aiMesh* mesh)
 
 static void ProcessFaces(std::vector<unsigned int>& indices, const aiMesh* mesh)
 {
-    for (unsigned int f = 0; f < mesh->mNumFaces; f++)
+    for (unsigned int f = 0; f < mesh->mNumFaces; ++f)
     {
         aiFace face = mesh->mFaces[f];
 
-        for (unsigned int i = 0; i < face.mNumIndices; i++)
+        for (unsigned int i = 0; i < face.mNumIndices; ++i)
         {
             indices.push_back(face.mIndices[i]);
         }
@@ -60,7 +60,7 @@ static Material& ProcessMaterial(
 
     aiMaterial* aiMat = scene->mMaterials[mesh->mMaterialIndex];
 
-    for (unsigned int t = 0; t < aiMat->GetTextureCount(aiTextureType_DIFFUSE); t++)
+    for (unsigned int t = 0; t < aiMat->GetTextureCount(aiTextureType_DIFFUSE); ++t)
     {
         aiString str;
         aiMat->GetTexture(aiTextureType_DIFFUSE, t, &str);
@@ -71,7 +71,7 @@ static Material& ProcessMaterial(
         material.DiffuseMap = &diffuseMap;
     }
 
-    for (unsigned int t = 0; t < aiMat->GetTextureCount(aiTextureType_SPECULAR); t++)
+    for (unsigned int t = 0; t < aiMat->GetTextureCount(aiTextureType_SPECULAR); ++t)
     {
         aiString str;
         aiMat->GetTexture(aiTextureType_SPECULAR, t, &str);
@@ -97,7 +97,7 @@ static void ProcessNode(
     auto& meshPool = query.Pool<MeshComponent>();
     auto& materialPool = query.Pool<MaterialComponent>();
 
-    for (unsigned int m = 0; m < node->mNumMeshes; m++)
+    for (unsigned int m = 0; m < node->mNumMeshes; ++m)
     {
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
@@ -118,7 +118,7 @@ static void ProcessNode(
 
     parent.AttachChild(entity);
 
-    for (unsigned int i = 0; i < node->mNumChildren; i++)
+    for (unsigned int i = 0; i < node->mNumChildren; ++i)
     {
         ProcessNode(node->mChildren[i], scene, directory, entity);
     }

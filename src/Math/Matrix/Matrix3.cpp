@@ -8,9 +8,9 @@ namespace N::M
 {
 Matrix3::Matrix3(const float mAll)
 {
-    for (int row = 0; row < 3; row++)
+    for (int row = 0; row < 3; ++row)
     {
-        for (int col = 0; col < 3; col++)
+        for (int col = 0; col < 3; ++col)
         {
             (*this)(row, col) = mAll;
         }
@@ -128,9 +128,9 @@ Matrix3 Matrix3::Transpose() const
 {
     Matrix3 result;
 
-    for (int row = 0; row < 3; row++)
+    for (int row = 0; row < 3; ++row)
     {
-        for (int col = 0; col < 3; col++)
+        for (int col = 0; col < 3; ++col)
         {
             result(row, col) = (*this)(col, row);
         }
@@ -143,9 +143,9 @@ Matrix3 Matrix3::Inverse() const
 {
     Matrix3 cofactorMatrix;
 
-    for (int row = 0; row < 3; row++)
+    for (int row = 0; row < 3; ++row)
     {
-        for (int col = 0; col < 3; col++)
+        for (int col = 0; col < 3; ++col)
         {
             Matrix2 minor = Minor(row, col);
 
@@ -176,22 +176,22 @@ Matrix2 Matrix3::Minor(const int row, const int col) const
     Matrix2 minor;
     int minorRow = 0;
 
-    for (int r = 0; r < 3; r++)
+    for (int r = 0; r < 3; ++r)
     {
         if (r != row)
         {
             int minorCol = 0;
 
-            for (int c = 0; c < 3; c++)
+            for (int c = 0; c < 3; ++c)
             {
                 if (c != col)
                 {
                     minor(minorRow, minorCol) = (*this)(r, c);
-                    minorCol++;
+                    ++minorCol;
                 }
             }
 
-            minorRow++;
+            ++minorRow;
         }
     }
 
@@ -200,9 +200,9 @@ Matrix2 Matrix3::Minor(const int row, const int col) const
 
 bool Matrix3::NearlyEquals(const Matrix3& mat3, const float epsilon) const
 {
-    for (int row = 0; row < 3; row++)
+    for (int row = 0; row < 3; ++row)
     {
-        for (int col = 0; col < 3; col++)
+        for (int col = 0; col < 3; ++col)
         {
             if (!M::NearlyEquals((*this)(row, col), mat3(row, col), epsilon))
             {
@@ -248,9 +248,9 @@ Matrix3 Matrix3::operator+(const Matrix3& mat3) const
 {
     Matrix3 result = Zero;
 
-    for (int row = 0; row < 3; row++)
+    for (int row = 0; row < 3; ++row)
     {
-        for (int col = 0; col < 3; col++)
+        for (int col = 0; col < 3; ++col)
         {
             result(row, col) = (*this)(row, col) + mat3(row, col);
         }
@@ -263,9 +263,9 @@ Matrix3 Matrix3::operator-(const Matrix3& mat3) const
 {
     Matrix3 result = Zero;
 
-    for (int row = 0; row < 3; row++)
+    for (int row = 0; row < 3; ++row)
     {
-        for (int col = 0; col < 3; col++)
+        for (int col = 0; col < 3; ++col)
         {
             result(row, col) = (*this)(row, col) - mat3(row, col);
         }
@@ -278,11 +278,11 @@ Matrix3 Matrix3::operator*(const Matrix3& mat3) const
 {
     Matrix3 result(0);
 
-    for (int row = 0; row < 3; row++)
+    for (int row = 0; row < 3; ++row)
     {
-        for (int col = 0; col < 3; col++)
+        for (int col = 0; col < 3; ++col)
         {
-            for (int k = 0; k < 3; k++)
+            for (int k = 0; k < 3; ++k)
             {
                 result(row, col) += (*this)(row, k) * mat3(k, col);
             }
@@ -320,9 +320,9 @@ Matrix3 Matrix3::operator*(const float scalar) const
 {
     Matrix3 result = Zero;
 
-    for (int row = 0; row < 3; row++)
+    for (int row = 0; row < 3; ++row)
     {
-        for (int col = 0; col < 3; col++)
+        for (int col = 0; col < 3; ++col)
         {
             result(row, col) = (*this)(row, col) * scalar;
         }
@@ -335,9 +335,9 @@ Matrix3 Matrix3::operator/(const float scalar) const
 {
     Matrix3 result = Zero;
 
-    for (int row = 0; row < 3; row++)
+    for (int row = 0; row < 3; ++row)
     {
-        for (int col = 0; col < 3; col++)
+        for (int col = 0; col < 3; ++col)
         {
             result(row, col) = (*this)(row, col) / scalar;
         }
@@ -364,9 +364,9 @@ Matrix3 Matrix3::operator-() const
 //* Equality
 bool Matrix3::operator==(const Matrix3& mat3) const
 {
-    for (int row = 0; row < 3; row++)
+    for (int row = 0; row < 3; ++row)
     {
-        for (int col = 0; col < 3; col++)
+        for (int col = 0; col < 3; ++col)
         {
             if ((*this)(row, col) != mat3(row, col))
             {

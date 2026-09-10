@@ -115,7 +115,7 @@ void Renderer::PresentFramebuffer()
     for (auto& texture : Framebuffer->TextureAttachments | std::views::values)
     {
         ScreenMaterial->AssignTexture(*texture, i);
-        i++;
+        ++i;
     }
 
     ScreenMaterial->Use();

@@ -10,14 +10,14 @@ Mesh& Primitives::CreateUVSphere(
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
 
-    for (int stack = 0; stack <= stacks; stack++)
+    for (int stack = 0; stack <= stacks; ++stack)
     {
         float phi = std::numbers::pi * stack / stacks;
 
         float y = cos(phi);
         float r = sin(phi);
 
-        for (int sector = 0; sector <= sectors; sector++)
+        for (int sector = 0; sector <= sectors; ++sector)
         {
             float theta = 2.0f * std::numbers::pi * sector / sectors;
 
@@ -33,12 +33,12 @@ Mesh& Primitives::CreateUVSphere(
         }
     }
 
-    for (int stack = 0; stack < stacks; stack++)
+    for (int stack = 0; stack < stacks; ++stack)
     {
         int k1 = stack * (sectors + 1);
         int k2 = k1 + sectors + 1;
 
-        for (int sector = 0; sector < sectors; sector++)
+        for (int sector = 0; sector < sectors; ++sector)
         {
             if (stack != 0)
             {
@@ -54,8 +54,8 @@ Mesh& Primitives::CreateUVSphere(
                         static_cast<unsigned>(k2 + 1)});
             }
 
-            k1++;
-            k2++;
+            ++k1;
+            ++k2;
         }
     }
 

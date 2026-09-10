@@ -32,7 +32,7 @@ void Material::Use()
 {
     SetProperties();
 
-    for (int slot = 0; slot < MaxCustomTextures; slot++)
+    for (int slot = 0; slot < MaxCustomTextures; ++slot)
     {
         if (CustomTextures[slot])
         {

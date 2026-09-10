@@ -7,9 +7,9 @@ namespace N::M
 {
 Matrix2::Matrix2(const float mAll)
 {
-    for (int row = 0; row < 2; row++)
+    for (int row = 0; row < 2; ++row)
     {
-        for (int col = 0; col < 2; col++)
+        for (int col = 0; col < 2; ++col)
         {
             (*this)(row, col) = mAll;
         }
@@ -70,9 +70,9 @@ Matrix2 Matrix2::Transpose() const
 {
     Matrix2 result = Zero;
 
-    for (int row = 0; row < 2; row++)
+    for (int row = 0; row < 2; ++row)
     {
-        for (int col = 0; col < 2; col++)
+        for (int col = 0; col < 2; ++col)
         {
             result(row, col) = (*this)(col, row);
         }
@@ -83,9 +83,9 @@ Matrix2 Matrix2::Transpose() const
 
 bool Matrix2::NearlyEquals(const Matrix2& mat2, const float epsilon) const
 {
-    for (int row = 0; row < 2; row++)
+    for (int row = 0; row < 2; ++row)
     {
-        for (int col = 0; col < 2; col++)
+        for (int col = 0; col < 2; ++col)
         {
             if (!M::NearlyEquals((*this)(row, col), mat2(row, col), epsilon))
             {
@@ -112,9 +112,9 @@ Matrix2 Matrix2::operator+(const Matrix2& mat2) const
 {
     Matrix2 result = Zero;
 
-    for (int row = 0; row < 2; row++)
+    for (int row = 0; row < 2; ++row)
     {
-        for (int col = 0; col < 2; col++)
+        for (int col = 0; col < 2; ++col)
         {
             result(row, col) = (*this)(row, col) + mat2(row, col);
         }
@@ -127,9 +127,9 @@ Matrix2 Matrix2::operator-(const Matrix2& mat2) const
 {
     Matrix2 result = Zero;
 
-    for (int row = 0; row < 2; row++)
+    for (int row = 0; row < 2; ++row)
     {
-        for (int col = 0; col < 2; col++)
+        for (int col = 0; col < 2; ++col)
         {
             result(row, col) = (*this)(row, col) - mat2(row, col);
         }
@@ -142,11 +142,11 @@ Matrix2 Matrix2::operator*(const Matrix2& mat2) const
 {
     Matrix2 result = Zero;
 
-    for (int row = 0; row < 2; row++)
+    for (int row = 0; row < 2; ++row)
     {
-        for (int col = 0; col < 2; col++)
+        for (int col = 0; col < 2; ++col)
         {
-            for (int k = 0; k < 2; k++)
+            for (int k = 0; k < 2; ++k)
             {
                 result(row, col) += (*this)(row, k) * mat2(k, col);
             }
@@ -183,9 +183,9 @@ Matrix2 Matrix2::operator*(const float scalar) const
 {
     Matrix2 result = Zero;
 
-    for (int row = 0; row < 2; row++)
+    for (int row = 0; row < 2; ++row)
     {
-        for (int col = 0; col < 2; col++)
+        for (int col = 0; col < 2; ++col)
         {
             result(row, col) = (*this)(row, col) * scalar;
         }
@@ -198,9 +198,9 @@ Matrix2 Matrix2::operator/(const float scalar) const
 {
     Matrix2 result = Zero;
 
-    for (int row = 0; row < 2; row++)
+    for (int row = 0; row < 2; ++row)
     {
-        for (int col = 0; col < 2; col++)
+        for (int col = 0; col < 2; ++col)
         {
             result(row, col) = (*this)(row, col) / scalar;
         }
@@ -227,9 +227,9 @@ Matrix2 Matrix2::operator-() const
 //* Equality
 bool Matrix2::operator==(const Matrix2& mat2) const
 {
-    for (int row = 0; row < 2; row++)
+    for (int row = 0; row < 2; ++row)
     {
-        for (int col = 0; col < 2; col++)
+        for (int col = 0; col < 2; ++col)
         {
             if ((*this)(row, col) != mat2(row, col))
             {

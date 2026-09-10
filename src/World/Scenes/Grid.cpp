@@ -21,8 +21,8 @@ Grid::Grid()
     // CreateXZ();
     // CreateYZ();
 
-    // for (int theta = 0; theta <= 360; theta++) {
-    // for (int phi = 0; phi <= 360; phi++) {
+    // for (int theta = 0; theta <= 360; ++theta) {
+    // for (int phi = 0; phi <= 360; ++phi) {
     // }
     // float r = 3;
     // CreateGridLine({M::Rad(theta), 0, 0}, 0);
@@ -58,7 +58,7 @@ void Grid::CreateGridLine(const M::Quaternion rotation, const M::Vector3 positio
 
 void Grid::CreateXY()
 {
-    for (float x = -20; x < 20; x++)
+    for (float x = -20; x < 20; ++x)
     {
         if (x != 0)
         {
@@ -66,7 +66,7 @@ void Grid::CreateXY()
         }
     }
 
-    for (float y = -20; y < 20; y++)
+    for (float y = -20; y < 20; ++y)
     {
         if (y != 0)
         {
@@ -77,7 +77,7 @@ void Grid::CreateXY()
 
 void Grid::CreateXZ()
 {
-    for (float x = -20; x < 20; x++)
+    for (float x = -20; x < 20; ++x)
     {
         if (x != 0)
         {
@@ -85,7 +85,7 @@ void Grid::CreateXZ()
         }
     }
 
-    for (float z = -20; z < 20; z++)
+    for (float z = -20; z < 20; ++z)
     {
         if (z != 0)
         {
@@ -96,7 +96,7 @@ void Grid::CreateXZ()
 
 void Grid::CreateYZ()
 {
-    for (float y = -20; y < 20; y++)
+    for (float y = -20; y < 20; ++y)
     {
         if (y != 0)
         {
@@ -104,7 +104,7 @@ void Grid::CreateYZ()
         }
     }
 
-    for (float z = -20; z < 20; z++)
+    for (float z = -20; z < 20; ++z)
     {
         if (z != 0)
         {

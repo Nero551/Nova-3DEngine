@@ -8,9 +8,9 @@ namespace N::M
 {
 Matrix4::Matrix4(const float mAll)
 {
-    for (int row = 0; row < 4; row++)
+    for (int row = 0; row < 4; ++row)
     {
-        for (int col = 0; col < 4; col++)
+        for (int col = 0; col < 4; ++col)
         {
             (*this)(row, col) = mAll;
         }
@@ -190,9 +190,9 @@ Matrix4 Matrix4::Transpose() const
 {
     Matrix4 result;
 
-    for (int row = 0; row < 4; row++)
+    for (int row = 0; row < 4; ++row)
     {
-        for (int col = 0; col < 4; col++)
+        for (int col = 0; col < 4; ++col)
         {
             result(row, col) = (*this)(col, row);
         }
@@ -205,9 +205,9 @@ Matrix4 Matrix4::Inverse() const
 {
     Matrix4 cofactorMatrix;
 
-    for (int row = 0; row < 4; row++)
+    for (int row = 0; row < 4; ++row)
     {
-        for (int col = 0; col < 4; col++)
+        for (int col = 0; col < 4; ++col)
         {
             Matrix3 minor = Minor(row, col);
 
@@ -238,22 +238,22 @@ Matrix3 Matrix4::Minor(const int row, const int col) const
     Matrix3 minor;
     int minorRow = 0;
 
-    for (int r = 0; r < 4; r++)
+    for (int r = 0; r < 4; ++r)
     {
         if (r != row)
         {
             int minorCol = 0;
 
-            for (int c = 0; c < 4; c++)
+            for (int c = 0; c < 4; ++c)
             {
                 if (c != col)
                 {
                     minor(minorRow, minorCol) = (*this)(r, c);
-                    minorCol++;
+                    ++minorCol;
                 }
             }
 
-            minorRow++;
+            ++minorRow;
         }
     }
 
@@ -262,9 +262,9 @@ Matrix3 Matrix4::Minor(const int row, const int col) const
 
 bool Matrix4::NearlyEquals(const Matrix4& mat4, const float epsilon) const
 {
-    for (int row = 0; row < 4; row++)
+    for (int row = 0; row < 4; ++row)
     {
-        for (int col = 0; col < 4; col++)
+        for (int col = 0; col < 4; ++col)
         {
             if (!M::NearlyEquals((*this)(row, col), mat4(row, col), epsilon))
             {
@@ -291,9 +291,9 @@ Matrix4 Matrix4::operator+(const Matrix4& mat4) const
 {
     Matrix4 result = Zero;
 
-    for (int row = 0; row < 4; row++)
+    for (int row = 0; row < 4; ++row)
     {
-        for (int col = 0; col < 4; col++)
+        for (int col = 0; col < 4; ++col)
         {
             result(row, col) = (*this)(row, col) + mat4(row, col);
         }
@@ -306,9 +306,9 @@ Matrix4 Matrix4::operator-(const Matrix4& mat4) const
 {
     Matrix4 result = Zero;
 
-    for (int row = 0; row < 4; row++)
+    for (int row = 0; row < 4; ++row)
     {
-        for (int col = 0; col < 4; col++)
+        for (int col = 0; col < 4; ++col)
         {
             result(row, col) = (*this)(row, col) - mat4(row, col);
         }
@@ -321,11 +321,11 @@ Matrix4 Matrix4::operator*(const Matrix4& mat4) const
 {
     Matrix4 result = Zero;
 
-    for (int row = 0; row < 4; row++)
+    for (int row = 0; row < 4; ++row)
     {
-        for (int col = 0; col < 4; col++)
+        for (int col = 0; col < 4; ++col)
         {
-            for (int k = 0; k < 4; k++)
+            for (int k = 0; k < 4; ++k)
             {
                 result(row, col) += (*this)(row, k) * mat4(k, col);
             }
@@ -371,9 +371,9 @@ Matrix4 Matrix4::operator*(const float scalar) const
 {
     Matrix4 result = Zero;
 
-    for (int row = 0; row < 4; row++)
+    for (int row = 0; row < 4; ++row)
     {
-        for (int col = 0; col < 4; col++)
+        for (int col = 0; col < 4; ++col)
         {
             result(row, col) = (*this)(row, col) * scalar;
         }
@@ -386,9 +386,9 @@ Matrix4 Matrix4::operator/(const float scalar) const
 {
     Matrix4 result = Zero;
 
-    for (int row = 0; row < 4; row++)
+    for (int row = 0; row < 4; ++row)
     {
-        for (int col = 0; col < 4; col++)
+        for (int col = 0; col < 4; ++col)
         {
             result(row, col) = (*this)(row, col) / scalar;
         }
@@ -415,9 +415,9 @@ Matrix4 Matrix4::operator-() const
 //* Equality
 bool Matrix4::operator==(const Matrix4& mat4) const
 {
-    for (int row = 0; row < 4; row++)
+    for (int row = 0; row < 4; ++row)
     {
-        for (int col = 0; col < 4; col++)
+        for (int col = 0; col < 4; ++col)
         {
             if ((*this)(row, col) != mat4(row, col))
             {

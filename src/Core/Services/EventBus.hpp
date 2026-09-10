@@ -72,7 +72,7 @@ struct EventBus : Service
             size_t i = 0;
             while (i < it->second.size() && it->second.at(i).Subscription != subscription)
             {
-                i++;
+                ++i;
             }
 
             if (i < it->second.size())

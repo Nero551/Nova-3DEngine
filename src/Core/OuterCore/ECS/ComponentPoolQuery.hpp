@@ -321,13 +321,13 @@ struct ComponentPoolQuery
     void SubscribeToEvents()
     {
         Service::Get<EventBus>().Sub<EntityDestroyed>(
-            [this](const EntityDestroyed&) { QueryVersion++; });
+            [this](const EntityDestroyed&) { ++QueryVersion; });
 
         Service::Get<EventBus>().Sub<EntityCreated>(
-            [this](const EntityCreated&) { QueryVersion++; });
+            [this](const EntityCreated&) { ++QueryVersion; });
 
         Service::Get<EventBus>().Sub<ComponentAdded>(
-            [this](const ComponentAdded&) { QueryVersion++; });
+            [this](const ComponentAdded&) { ++QueryVersion; });
     }
 
     friend struct World;

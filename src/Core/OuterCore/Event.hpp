@@ -39,7 +39,7 @@ template <typename T> struct Event : IEvent
         int i = 0;
         while (i < Listeners.size() && Listeners.at(i).Subscription != subscription)
         {
-            i++;
+            ++i;
         }
         if (i < Listeners.size())
         {
