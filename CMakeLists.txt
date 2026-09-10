@@ -4,6 +4,7 @@ project(Nova)
 
 add_executable(Nova
         src/Main.cpp
+        src/TracyMemory.cpp
 )
 
 set_target_properties(Nova PROPERTIES UNITY_BUILD ON)
