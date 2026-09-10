@@ -15,7 +15,7 @@ namespace N
 static MeshInstance3D& CreatePoint(M::Vector4 col)
 {
     auto& resourceManager = Service::Get<ResourceManager>();
-    auto& mesh = Primitives::CreateCube("point");
+    auto& mesh = Primitives::CreateUVSphere("point");
     auto& material = resourceManager.Load<Material>(std::format("m{}{}{}", col.z, col.x, col.y));
     material.Color = col;
     auto& shader = resourceManager.Load<Shader>("pointShader");
@@ -55,7 +55,7 @@ static float x = -10;
 
 void calculus::Start()
 {
-    ThreeDimensionalProjection(2);
+    ThreeDimensionalProjection(1);
 }
 
 static float multiplier = 1;

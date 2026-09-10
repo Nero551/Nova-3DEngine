@@ -116,4 +116,4 @@
 
 ### Week 11 — September 5–11
 
-- Optimizations(CPU can now handle ~32k entities)
+- Optimizations (CPU can now handle ~32k entities 40fps)

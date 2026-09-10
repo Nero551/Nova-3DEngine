@@ -115,6 +115,11 @@ void World::Update(const double dt)
         }
     }
 
+    if (Engine::Get().GetModule<Input>().IsKeyPressed(Key::T))
+    {
+        U::Logger::Info(Entities.Size());
+    }
+
     for (auto& system : Systems | std::views::values)
     {
         system->Update(dt);
