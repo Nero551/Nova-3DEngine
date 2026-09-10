@@ -52,8 +52,8 @@ struct World : SystemOwner
         entity->Id = id;
         entity->Initialize();
 
-        auto [it, inserted] = Entities.emplace(id, std::move(entity));
-        T& createdEntity = static_cast<T&>(*it->second);
+        auto& it = Entities.Emplace(id, std::move(entity));
+        T& createdEntity = static_cast<T&>(*it);
         Service::Get<EventBus>().Fire<EntityCreated>(createdEntity);
 
         return createdEntity;
@@ -91,7 +91,7 @@ struct World : SystemOwner
     friend struct Engine;
 
   private:
-    std::unordered_map<unsigned int, std::unique_ptr<Entity>> Entities;
+    SparseSet<std::unique_ptr<Entity>> Entities;
 
     /** @brief ID assigned to the most recently created entity. */
     unsigned int currentEntityId = 0;

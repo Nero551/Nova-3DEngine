@@ -87,12 +87,12 @@ void Engine::Start()
     ZoneScopedN("Start");
     TracyGpuZone("Start");
 
-    World.Start();
-
     for (auto& service : Service::GetAll() | std::views::values)
     {
         service->Start();
     }
+
+    World.Start();
 
     for (auto& module : Modules | std::views::values)
     {

@@ -37,40 +37,41 @@ void World::RemoveEntity(const unsigned int id)
     }
 
     Service::Get<EventBus>().Fire<EntityDestroyed>(*entity);
-    Entities.erase(id);
+    Entities.Delete(id);
 
     for (auto& descendant : descendants)
     {
         Service::Get<EventBus>().Fire<EntityDestroyed>(*descendant);
-        Entities.erase(descendant->Id);
+        Entities.Delete(descendant->Id);
     }
 }
 
 Entity& World::FindEntity(unsigned int id)
 {
-    auto entity = Entities.find(id);
+    auto entity = Entities.Find(id);
     if (entity == Entities.end())
     {
         U::Logger::Fatal("Entity Not Found: ", id);
     }
-    return *entity->second;
+    return *(*entity).DenseValue;
 }
 
 U::CheckedPtr<Entity> World::TryFindEntity(const unsigned int id)
 {
-    auto entity = Entities.find(id);
+    auto entity = Entities.Find(id);
 
     if (entity == Entities.end())
     {
         return nullptr;
     }
 
-    return entity->second.get();
+    return &*(*entity).DenseValue;
 }
 
 // TODO- quick flicker happens at the start of the run, its input mouse rapidly changing when changing MouseMode.
 void World::Start()
 {
+    Query.SubscribeToEvents();
     AddSystem<Transform3DSystem>();
     AddSystem<calculus>();
 

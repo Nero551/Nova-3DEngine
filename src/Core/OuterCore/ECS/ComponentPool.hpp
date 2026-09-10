@@ -4,6 +4,7 @@
 
 #include "Core/Services/EventBus.hpp"
 #include "Utilities/DataStructures/SparseSet.hpp"
+#include "World/Events/ComponentAdded.hpp"
 #include "World/Events/EntityDestroyed.hpp"
 
 namespace N
@@ -77,6 +78,18 @@ template <ComponentType T> struct ComponentPool : IComponentPool
         return {.Pool = *this, .Index = Components.Size()};
     }
 
+    ComponentPool()
+    {
+        Service::Get<EventBus>().Sub<EntityDestroyed>(
+            [this](const EntityDestroyed& event)
+            {
+                if (HasId(event.entity.Id))
+                {
+                    RemoveById(event.entity.Id);
+                }
+            });
+    }
+
     /**
      * @brief Constructs and adds a component for an entity.
      *
@@ -85,7 +98,9 @@ template <ComponentType T> struct ComponentPool : IComponentPool
      */
     T& Add(const unsigned int entityId)
     {
-        return Components.Emplace(entityId);
+        auto& component = Components.Emplace(entityId);
+        Service::Get<EventBus>().Fire<ComponentAdded>(entityId);
+        return component;
     }
 
     /** @brief Returns whether the specified entity has this component. */

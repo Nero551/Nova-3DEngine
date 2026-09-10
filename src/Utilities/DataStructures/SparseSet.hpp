@@ -37,6 +37,54 @@ template <typename D> struct SparseSet
     std::vector<DenseIndex> Sparse{};
 
   public:
+    struct Iterator
+    {
+        SparseSet& Set;
+        DenseIndex Index;
+
+        /** @brief Advances the iterator to the next value. */
+        Iterator& operator++()
+        {
+            ++Index;
+            return *this;
+        }
+
+        struct DereferencedIterator
+        {
+            SparseIndex SparseValue;
+            D& DenseValue;
+        };
+
+        /** @brief Returns the sparse index and corresponding value. */
+        DereferencedIterator operator*() const
+        {
+            return {.SparseValue = Set.Indices[Index], .DenseValue = Set.Dense[Index]};
+        }
+
+        /** @brief Compares two iterators for inequality. */
+        bool operator!=(const Iterator& other) const
+        {
+            return Index != other.Index;
+        }
+
+        bool operator==(const Iterator& other) const
+        {
+            return Index == other.Index;
+        }
+    };
+
+    /** @brief Returns an iterator to the first value. */
+    Iterator begin()
+    {
+        return {*this, 0};
+    }
+
+    /** @brief Returns an iterator past the last value. */
+    Iterator end()
+    {
+        return {*this, Size()};
+    }
+
     /** @brief Returns whether the specified sparse index exists. */
     bool Contains(const SparseIndex s) const
     {
@@ -50,6 +98,15 @@ template <typename D> struct SparseSet
             U::Logger::Fatal("SparseSet does not contain the specified sparse index.");
 
         return Dense[Sparse[s]];
+    }
+
+    /** @brief Finds the value associated with the specified sparse index. */
+    Iterator Find(const SparseIndex index)
+    {
+        if (!Contains(index))
+            return end();
+
+        return {*this, Sparse[index]};
     }
 
     /** @brief Get but without the Contains check. if doesn't exist, it will just blow up */
@@ -165,43 +222,6 @@ template <typename D> struct SparseSet
     bool Empty() const
     {
         return Dense.empty();
-    }
-
-    struct Iterator
-    {
-        SparseSet& Set;
-        DenseIndex Index;
-
-        /** @brief Advances the iterator to the next value. */
-        Iterator& operator++()
-        {
-            ++Index;
-            return *this;
-        }
-
-        /** @brief Returns the sparse index and corresponding value. */
-        std::pair<SparseIndex, D&> operator*() const
-        {
-            return {Set.Indices[Index], Set.Dense[Index]};
-        }
-
-        /** @brief Compares two iterators for inequality. */
-        bool operator!=(const Iterator& other) const
-        {
-            return Index != other.Index;
-        }
-    };
-
-    /** @brief Returns an iterator to the first value. */
-    Iterator begin()
-    {
-        return {*this, 0};
-    }
-
-    /** @brief Returns an iterator past the last value. */
-    Iterator end()
-    {
-        return {*this, Size()};
     }
 };
 

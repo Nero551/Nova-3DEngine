@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ComponentPool.hpp"
+#include "World/Events/EntityCreated.hpp"
 
 namespace N
 {
@@ -33,6 +34,8 @@ struct ComponentPoolQuery
 
         /** @brief Component pointers corresponding to each entity. */
         std::tuple<std::vector<Args*>...> Components{};
+
+        unsigned Version = 0;
 
         struct Iterator
         {
@@ -126,18 +129,26 @@ struct ComponentPoolQuery
      */
     template <ComponentType... Args> QueryResult<Args...>& With()
     {
-        std::tuple<ComponentPool<Args>&...> pools = GetPools<Args...>();
-        auto& pool = std::get<0>(pools);
         QueryResult<Args...>& result = GetQueryResult<Args...>();
 
-        result.Clear();
-        result.Reserve(pool.Size());
-        PopulateResult(result, pools);
+        //TODO- check if result was invalidated
+        if (result.Version != QueryVersion)
+        {
+            std::tuple<ComponentPool<Args>&...> pools = GetPools<Args...>();
+            auto& pool = std::get<0>(pools);
+
+            result.Clear();
+            result.Reserve(pool.Size());
+            PopulateResult(result, pools);
+            result.Version = QueryVersion;
+        }
 
         return result;
     }
 
   private:
+    unsigned int QueryVersion = 1;
+
     /** @brief Stores heterogeneous component pools by component type. */
     std::unordered_map<std::type_index, std::unique_ptr<IComponentPool>> ComponentPools{};
 
@@ -207,20 +218,20 @@ struct ComponentPoolQuery
      * @tparam Args Component types contained in the query.
      * @param result Query result to populate.
      * @param id Entity ID to add.
-     * @param pools Component pools used by the query.
+     * @param Pools Component pools used by the query.
      */
     template <ComponentType... Args>
     void AddComponents(QueryResult<Args...>& result, const unsigned int id,
-        std::tuple<ComponentPool<Args>&...>& pools)
+        std::tuple<ComponentPool<Args>&...>& Pools)
     {
         std::apply(
-            [&](auto&... pool)
+            [&](auto&... pools)
             {
                 (std::get<std::vector<Args*>>(result.Components)
-                        .push_back(&pool.GetComponentByIdUnChecked(id)),
+                        .emplace_back(&pools.GetComponentByIdUnChecked(id)),
                     ...);
             },
-            pools);
+            Pools);
     }
 
     /**
@@ -233,6 +244,18 @@ struct ComponentPoolQuery
     {
         return {Pool<Args>()...};
     }
+
+    void SubscribeToEvents()
+    {
+        Service::Get<EventBus>().Sub<EntityDestroyed>(
+            [this](const EntityDestroyed& event) { QueryVersion++; });
+        Service::Get<EventBus>().Sub<EntityCreated>(
+            [this](const EntityCreated& event) { QueryVersion++; });
+        Service::Get<EventBus>().Sub<ComponentAdded>(
+            [this](const ComponentAdded& event) { QueryVersion++; });
+    }
+
+    friend struct World;
 };
 
 } // namespace N
