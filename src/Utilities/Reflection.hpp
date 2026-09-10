@@ -5,6 +5,8 @@
 namespace N::Reflection
 {
 
+//TODO- understanding macros is the key to making reflection.
+
 using TypeId = unsigned long;
 
 template <typename T> consteval std::string_view GetTypeName()
@@ -59,31 +61,59 @@ template <typename T> consteval TypeInfo GetTypeInfo()
     return {.Name = GetTypeName<T>(), .Size = sizeof(T), .Align = alignof(T), .Id = GetTypeId<T>()};
 }
 
+class TypeRegistry final
+{
+  public:
+    static void Register(const TypeInfo& Type)
+    {
+        Types.emplace(Type.Id, Type);
+    }
+
+    static const TypeInfo* Get(const TypeId Id)
+    {
+        const auto It = Types.find(Id);
+
+        if (It == Types.end())
+            return nullptr;
+
+        return &It->second;
+    }
+
+  private:
+    inline static std::unordered_map<TypeId, TypeInfo> Types{};
+};
+
 struct AttributeInfo final
 {
     std::string_view Name{};
     unsigned int Offset = 0;
-    TypeInfo Type;
+    TypeId TypeID = 0;
 
-    friend std::ostream& operator<<(std::ostream& Os, const AttributeInfo& AttributeInfo)
+    friend std::ostream& operator<<(std::ostream& os, const AttributeInfo& attributeInfo)
     {
-        Os << "AttributeInfo {\n"
-           << "    Name:   " << AttributeInfo.Name << '\n'
-           << "    Offset: " << AttributeInfo.Offset << '\n'
-           << "    Type:   " << AttributeInfo.Type << '\n'
+        os << "AttributeInfo {\n"
+           << "    Name:   " << attributeInfo.Name << '\n'
+           << "    Offset: " << attributeInfo.Offset << '\n'
+           << "    Type:   " << std::hex << attributeInfo.TypeID << std::dec << '\n'
            << '}';
 
-        return Os;
+        return os;
+    }
+
+    const TypeInfo* GetType() const
+    {
+        return TypeRegistry::Get(TypeID);
     }
 };
 
+template <typename T>
+AttributeInfo RegisterAttribute(const std::string_view name, const unsigned int offset)
+{
+    TypeRegistry::Register(GetTypeInfo<T>());
+    return {.Name = name, .Offset = offset, .TypeID = GetTypeId<T>()};
+}
+
 #define REGISTER_ATTRIBUTE(Type, Member)                                                           \
     N::Reflection::RegisterAttribute<decltype(Type::Member)>(#Member, offsetof(Type, Member))
-
-template <typename A>
-consteval AttributeInfo RegisterAttribute(const std::string_view name, unsigned int offset)
-{
-    return {.Name = name, .Offset = offset, .Type = GetTypeInfo<A>()};
-}
 
 } // namespace N::Reflection
