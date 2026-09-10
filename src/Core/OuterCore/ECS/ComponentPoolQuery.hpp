@@ -176,11 +176,11 @@ struct ComponentPoolQuery
     template <ComponentType... Args>
     void PopulateResult(QueryResult<Args...>& result, std::tuple<ComponentPool<Args>&...>& pools)
     {
-        auto& firstPool = std::get<0>(pools);
+        auto& driverPool = GetSmallestPool(pools);
 
-        for (size_t i = 0; i < firstPool.Size(); ++i)
+        for (size_t i = 0; i < driverPool.Size(); ++i)
         {
-            const unsigned int id = firstPool.GetIdByIndex(i);
+            const unsigned int id = driverPool.GetIdByIndex(i);
 
             if ((std::get<ComponentPool<Args>&>(pools).HasId(id) && ...))
             {
@@ -188,6 +188,17 @@ struct ComponentPoolQuery
                 AddComponents(result, id, pools);
             }
         }
+    }
+
+    template <ComponentType... Args>
+    IComponentPool& GetSmallestPool(std::tuple<ComponentPool<Args>&...>& pools)
+    {
+        IComponentPool* smallest = &std::get<0>(pools);
+
+        std::apply([&smallest](auto&... pool)
+            { (..., (smallest = pool.Size() < smallest->Size() ? &pool : smallest)); }, pools);
+
+        return *smallest;
     }
 
     /**
@@ -206,7 +217,7 @@ struct ComponentPoolQuery
             [&](auto&... pool)
             {
                 (std::get<std::vector<Args*>>(result.Components)
-                        .push_back(&pool.GetComponentById(id)),
+                        .push_back(&pool.GetComponentByIdUnChecked(id)),
                     ...);
             },
             pools);

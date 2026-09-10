@@ -52,6 +52,12 @@ template <typename D> struct SparseSet
         return Dense[Sparse[s]];
     }
 
+    /** @brief Get but without the Contains check. if doesn't exist, it will just blow up */
+    D& GetUnchecked(const SparseIndex index)
+    {
+        return Dense[Sparse[index]];
+    }
+
     /** @brief Returns the value associated with the specified dense index. */
     D& GetByIndex(const DenseIndex index)
     {

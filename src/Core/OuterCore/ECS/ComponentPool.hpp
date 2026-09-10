@@ -15,6 +15,8 @@ namespace N
 struct IComponentPool
 {
     virtual ~IComponentPool() = default;
+    virtual size_t Size() const = 0;
+    virtual unsigned int GetIdByIndex(const size_t index) const = 0;
 };
 
 /** @brief Defines a valid component type. */
@@ -103,13 +105,18 @@ template <ComponentType T> struct ComponentPool : IComponentPool
         return Components.Get(entityId);
     }
 
+    T& GetComponentByIdUnChecked(const unsigned int entityId)
+    {
+        return Components.GetUnchecked(entityId);
+    }
+
     /**
      * @brief Returns the entity ID at a dense storage index.
      *
      * @param index Dense index of the component.
      * @return Entity ID associated with the component.
      */
-    unsigned int GetIdByIndex(const size_t index) const
+    unsigned int GetIdByIndex(const size_t index) const override
     {
         return Components.GetSparseIndex(index);
     }
@@ -136,7 +143,7 @@ template <ComponentType T> struct ComponentPool : IComponentPool
     }
 
     /** @brief Returns the number of stored components. */
-    size_t Size() const
+    size_t Size() const override
     {
         return Components.Size();
     }
