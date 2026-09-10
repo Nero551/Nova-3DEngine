@@ -31,7 +31,7 @@ struct Matrix4;
 struct Matrix3
 {
   private:
-    float m[3][3] = {};
+    std::array<std::array<float, 3>, 3> m = {};
 
   public:
     /**
@@ -57,6 +57,11 @@ struct Matrix3
      */
     Matrix3(float m00, float m01, float m02, float m10, float m11, float m12, float m20, float m21,
         float m22);
+
+    const std::array<std::array<float, 3>, 3>& Data() const
+    {
+        return m;
+    };
 
     /**
      * @brief Applies a scale transformation.

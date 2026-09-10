@@ -5,9 +5,9 @@ namespace N
 {
 struct Uniform
 {
-    std::string_view Name;
+    std::string Name;
 
-    Uniform(const std::string_view name) : Name(name) {};
+    Uniform(const std::string& name) : Name(name) {};
     virtual ~Uniform() {}
 
     virtual void Upload(int location) {};

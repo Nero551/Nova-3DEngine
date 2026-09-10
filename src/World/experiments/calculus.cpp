@@ -3,6 +3,7 @@
 #include "Core/InnerCore/Engine.hpp"
 #include "Core/InnerCore/World.hpp"
 #include "Core/Services/ResourceManager.hpp"
+#include "Math/Common/Exponentials.hpp"
 #include "Math/Quaternion/Quaternion.hpp"
 #include "Math/Vector/Vector4.hpp"
 #include "Modules/Input/Input.hpp"
@@ -105,8 +106,9 @@ void calculus::Update(double dt)
     // Plot({ x, sin(x), 0 }, M::Color::Red);
 }
 
-void calculus::TwoDimensionalProjection(float increase)
+void calculus::TwoDimensionalProjection(int increase)
 {
+    U::Logger::Info(M::Pow(360 / increase, 1));
     for (int theta = -180; theta < 180; theta += increase)
     {
         M::Vector2 v2 = M::Vector2::FromPolar(M::Polar(theta));
@@ -118,8 +120,10 @@ void calculus::TwoDimensionalProjection(float increase)
     }
 }
 
-void calculus::ThreeDimensionalProjection(float increase)
+void calculus::ThreeDimensionalProjection(int increase)
 {
+    U::Logger::Info(M::Pow(360 / increase, 2));
+
     for (int theta = -180; theta < 180; theta += increase)
     {
         for (int phi = -180; phi < 180; phi += increase)
@@ -134,8 +138,9 @@ void calculus::ThreeDimensionalProjection(float increase)
     }
 }
 
-void calculus::FourDimensionalProjection(float increase)
+void calculus::FourDimensionalProjection(int increase)
 {
+    U::Logger::Info(M::Pow(360 / increase, 3));
     for (int theta = -180; theta < 180; theta += increase)
     {
         for (int phi = -180; phi < 180; phi += increase)

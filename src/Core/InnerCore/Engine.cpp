@@ -104,7 +104,7 @@ void Engine::Stop()
 {
     ZoneScopedN("Stop");
     TracyGpuZone("Stop");
-
+    auto& services = Service::GetAll();
     World.Stop();
 
     for (auto& module : Modules | std::views::values)

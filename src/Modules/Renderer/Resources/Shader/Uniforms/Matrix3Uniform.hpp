@@ -9,14 +9,13 @@ struct Matrix3Uniform : Uniform
 {
     M::Matrix3 Value;
 
-    Matrix3Uniform(const std::string_view name, const M::Matrix3& value)
-        : Uniform(name), Value(value)
+    Matrix3Uniform(const std::string& name, const M::Matrix3& value) : Uniform(name), Value(value)
     {
     }
 
     void Upload(const int location) override
     {
-        glUniformMatrix3fv(location, 1, GL_TRUE, *Value.m);
+        glUniformMatrix3fv(location, 1, GL_FALSE, *Value.Data());
     }
 };
 } // namespace N

@@ -13,7 +13,7 @@ concept EventType = std::derived_from<T, IEvent>;
 struct EventBus : Service
 {
     /** @brief Constructs and immediately dispatches a global event. */
-    template <EventType T, typename... Args> void InstantFire(Args&&... args)
+    template <EventType T, typename... Args> void Fire(Args&&... args)
     {
         if constexpr (!std::constructible_from<T, Args...>)
         {
@@ -30,12 +30,12 @@ struct EventBus : Service
         T event{std::forward<Args>(args)...};
         for (auto& callback : listeners->second)
         {
-            callback(event);
+            callback.Callback(event);
         }
     }
 
     /** @brief Queues a global event for deferred dispatch at the end of the frame. */
-    template <EventType T, typename... Args> void Fire(Args&&... args)
+    template <EventType T, typename... Args> void Queue(Args&&... args)
     {
         if constexpr (!std::constructible_from<T, Args...>)
         {

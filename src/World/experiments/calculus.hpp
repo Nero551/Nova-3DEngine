@@ -11,8 +11,8 @@ struct calculus : System
     void Update(double dt) override;
 
   private:
-    void TwoDimensionalProjection(float increase);
-    void ThreeDimensionalProjection(float increase);
-    void FourDimensionalProjection(float increase);
+    void TwoDimensionalProjection(int increase);
+    void ThreeDimensionalProjection(int increase);
+    void FourDimensionalProjection(int increase);
 };
 } // namespace N

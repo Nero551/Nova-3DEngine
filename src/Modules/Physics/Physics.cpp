@@ -103,22 +103,22 @@ void Physics::FixedUpdate(double fdt)
     M::Vector2 vi = {5, 5};
     M::Vector2 pi = {0, 0};
 
-    M::Function<float, M::Vector2> v = [vi, a](const auto t)
-    {
-        M::Vector2 vf = vi + a * t;
-        return vf;
-    };
+    // M::Function<float, M::Vector2> v = [vi, a](const auto t)
+    // {
+    // M::Vector2 vf = vi + a * t;
+    // return vf;
+    // };
 
-    M::Function<float, M::Vector2> p = v.Integrate(0);
+    // M::Function<float, M::Vector2> p = v.Integrate(0);
 
-    Plot({p(time).x, p(time).y, 0}, M::Color::Blue);
-    Plot({v(time).x, v(time).y, 0}, M::Color::Red);
-    Plot({v.Derivative(time).x, v.Derivative(time).y, 0}, M::Color::Green);
+    // Plot({p(time).x, p(time).y, 0}, M::Color::Blue);
+    // Plot({v(time).x, v(time).y, 0}, M::Color::Red);
+    // Plot({v.Derivative(time).x, v.Derivative(time).y, 0}, M::Color::Green);
 
-    if (M::NearlyEquals(v(time).Angle(), v.Derivative(time).Angle()))
-    {
-        U::Logger::Info(v(time).Angle(), " ", v.Derivative(time).Angle());
-    }
+    // if (M::NearlyEquals(v(time).Angle(), v.Derivative(time).Angle()))
+    // {
+    // U::Logger::Info(v(time).Angle(), " ", v.Derivative(time).Angle());
+    // }
 
     auto& resourceManager = Service::Get<ResourceManager>();
     auto& input = Engine::Get().GetModule<Input>();

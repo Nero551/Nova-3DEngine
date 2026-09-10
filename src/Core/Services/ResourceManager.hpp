@@ -28,11 +28,11 @@ struct ResourceManager : Service
      */
     template <ResourceType T, typename... Args> T& Load(const std::string& name, Args&&... args)
     {
-        std::string typeName = typeid(T).name();
-        if (Resources.contains(typeName + name))
+        std::string key = typeid(T).name() + name;
+        if (Resources.contains(key))
         {
             // N::U::Logger::Warning("Resource: " + name + " Already Loaded.");
-            return static_cast<T&>(*Resources.at(typeName + name));
+            return static_cast<T&>(*Resources.at(key));
         }
 
         if constexpr (!std::constructible_from<T, const std::string&, Args...>)
@@ -43,18 +43,11 @@ struct ResourceManager : Service
         else
         {
             auto resource = std::make_unique<T>(name, std::forward<Args>(args)...);
-            Resources.emplace(typeName + name, std::move(resource));
+            Resources.emplace(key, std::move(resource));
 
-            return static_cast<T&>(*Resources.at(typeName + name));
+            return static_cast<T&>(*Resources.at(key));
         }
     }
-
-    /**
-     * @brief Unloads a resource by name.
-     *
-     * @param name Name of the resource to unload.
-     */
-    void Unload(const std::string& name);
 
   private:
     std::unordered_map<std::string, std::unique_ptr<Resource>> Resources;

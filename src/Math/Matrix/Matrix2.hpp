@@ -25,7 +25,7 @@ namespace N::M
 struct Matrix2
 {
   private:
-    float m[2][2] = {};
+    std::array<std::array<float, 2>, 2> m = {};
 
   public:
     /**
@@ -49,6 +49,11 @@ struct Matrix2
      *     [ m10 m11 ]
      */
     Matrix2(float m00, float m01, float m10, float m11);
+
+    const std::array<std::array<float, 2>, 2>& Data() const
+    {
+        return m;
+    };
 
     /**
      * @brief Applies a scale transformation.

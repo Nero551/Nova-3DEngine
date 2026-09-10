@@ -1,6 +1,6 @@
 #pragma once
-#include "../Uniform.hpp"
 #include "OpenGL.hpp"
+#include "Uniform.hpp"
 
 namespace N
 {
@@ -8,7 +8,7 @@ struct BoolUniform : Uniform
 {
     bool Value;
 
-    BoolUniform(const std::string_view name, bool value) : Uniform(name), Value(value) {}
+    BoolUniform(const std::string& name, bool value) : Uniform(name), Value(value) {}
 
     void Upload(int location) override
     {
