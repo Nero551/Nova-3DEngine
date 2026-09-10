@@ -7,22 +7,31 @@ namespace N
 Mesh& Primitives::CreateUVSphere(
     const std::string& name, const float radius, const int sectors, const int stacks)
 {
+
+    if (Service::Get<ResourceManager>().Exists<Mesh>(name))
+    {
+        return Service::Get<ResourceManager>().Load<Mesh>(name);
+    }
+
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
 
+    vertices.reserve((stacks + 1) * (sectors + 1));
+    indices.reserve(stacks * sectors * 6);
+
     for (int stack = 0; stack <= stacks; ++stack)
     {
-        float phi = std::numbers::pi * stack / stacks;
+        const float phi = std::numbers::pi * stack / stacks;
 
-        float y = cos(phi);
-        float r = sin(phi);
+        const float y = std::cos(phi);
+        const float r = std::sin(phi);
 
         for (int sector = 0; sector <= sectors; ++sector)
         {
-            float theta = 2.0f * std::numbers::pi * sector / sectors;
+            const float theta = 2.0f * std::numbers::pi * sector / sectors;
 
-            float x = r * std::cos(theta);
-            float z = r * std::sin(theta);
+            const float x = r * std::cos(theta);
+            const float z = r * std::sin(theta);
 
             vertices.emplace_back(Vertex{
                 {radius * x, radius * y, radius * z, 1.0f},
@@ -60,8 +69,10 @@ Mesh& Primitives::CreateUVSphere(
     }
 
     auto& mesh = Service::Get<ResourceManager>().Load<Mesh>(name);
-    mesh.Vertices = vertices;
-    mesh.Indices = indices;
+
+    mesh.Vertices = std::move(vertices);
+    mesh.Indices = std::move(indices);
+
     return mesh;
 }
 } // namespace N

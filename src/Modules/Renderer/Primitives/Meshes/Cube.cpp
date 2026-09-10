@@ -6,6 +6,11 @@ namespace N
 {
 Mesh& Primitives::CreateCube(const std::string& name)
 {
+    if (Service::Get<ResourceManager>().Exists<Mesh>(name))
+    {
+        return Service::Get<ResourceManager>().Load<Mesh>(name);
+    }
+
     std::vector vertices = {// Front (+Z)
         Vertex({-0.5f, -0.5f, 0.5f, 1}, {1, 0, 0, 1}, {0, 0}, {0, 0, 1}),
         Vertex({0.5f, -0.5f, 0.5f, 1}, {1, 0, 1, 1}, {1, 0}, {0, 0, 1}),
@@ -46,8 +51,8 @@ Mesh& Primitives::CreateCube(const std::string& name)
         12, 13, 14, 14, 15, 12, 16, 17, 18, 18, 19, 16, 20, 21, 22, 22, 23, 20};
 
     auto& mesh = Service::Get<ResourceManager>().Load<Mesh>(name);
-    mesh.Vertices = vertices;
-    mesh.Indices = indices;
+    mesh.Vertices = std::move(vertices);
+    mesh.Indices = std::move(indices);
 
     return mesh;
 }

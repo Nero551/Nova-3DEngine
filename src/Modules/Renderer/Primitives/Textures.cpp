@@ -7,9 +7,17 @@ namespace N
 {
 Texture& Primitives::CreateWhiteTexture()
 {
+    auto& resourceManager = Service::Get<ResourceManager>();
+
+    if (resourceManager.Exists<Texture2D>("WhiteTexture"))
+    {
+        return resourceManager.Load<Texture2D>("WhiteTexture");
+    }
+
     std::vector<unsigned char> white = {255, 255, 255, 255};
     U::Image image = {1, 1, U::Image::ColorChannels::RGBA, white};
-    auto& whiteTexture = Service::Get<ResourceManager>().Load<Texture2D>("WhiteTexture");
+
+    auto& whiteTexture = resourceManager.Load<Texture2D>("WhiteTexture");
     whiteTexture.UseImage(image);
 
     return whiteTexture;
@@ -17,10 +25,19 @@ Texture& Primitives::CreateWhiteTexture()
 
 Texture& Primitives::CreateBlackTexture()
 {
+    auto& resourceManager = Service::Get<ResourceManager>();
+
+    if (resourceManager.Exists<Texture2D>("BlackTexture"))
+    {
+        return resourceManager.Load<Texture2D>("BlackTexture");
+    }
+
     std::vector<unsigned char> black = {0, 0, 0, 255};
     U::Image image = {1, 1, U::Image::ColorChannels::RGBA, black};
-    auto& blackTexture = Service::Get<ResourceManager>().Load<Texture2D>("BlackTexture");
+
+    auto& blackTexture = resourceManager.Load<Texture2D>("BlackTexture");
     blackTexture.UseImage(image);
+
     return blackTexture;
 }
 } // namespace N

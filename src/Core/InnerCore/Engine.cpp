@@ -70,7 +70,6 @@ void Engine::Configure()
     Window.SetIcon({"Assets/icon.png"});
     // Window.SetSize(1980, 1200);
     glfwSwapInterval(0);
-    TracyGpuContext;
 
     Service::Add<ResourceManager>();
     Service::Add<EventBus>();
@@ -83,9 +82,10 @@ void Engine::Configure()
 
 void Engine::Start()
 {
-    Configure();
+    TracyGpuContext;
     ZoneScopedN("Start");
     TracyGpuZone("Start");
+    Configure();
 
     for (auto& service : Service::GetAll() | std::views::values)
     {
