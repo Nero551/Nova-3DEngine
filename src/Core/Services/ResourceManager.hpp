@@ -31,7 +31,7 @@ struct ResourceManager : Service
         std::string key = typeid(T).name() + name;
         if (Resources.contains(key))
         {
-            N::U::Logger::Warning("Resource: " + name + " Already Loaded.");
+            // N::U::Logger::Warning("Resource: " + name + " Already Loaded.");
             return static_cast<T&>(*Resources.at(key));
         }
 
