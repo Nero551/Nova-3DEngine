@@ -20,20 +20,11 @@ template <typename D> struct SparseSet
     // the pool can determine what is the next entity id to use, the usual map contains the actual entities.
     // since pools whole gimmick is the ability to reuse empty slots in a vector
 
-    //TODO- nevermind,  a way better fix for this is Pagination. implement that first thing.
-    // basically, sparse vector contains pages instead of ids.
-    // each page contains a fixed amount of ids. so an allocation of id 1 and id 1 million is just 2 pages,
-    // so an allocation of 2 * PAGE_SIZE.
-
     using DenseIndex = size_t;
     using SparseIndex = size_t;
 
     /** @brief Represents an invalid index. */
     static constexpr size_t InvalidIndex = std::numeric_limits<size_t>::max();
-
-    /** @brief Max page size  */
-    static constexpr size_t PageSize = 1024;
-    using Page = std::array<DenseIndex, PageSize>;
 
   private:
     /** @brief Contains the actual values. */
