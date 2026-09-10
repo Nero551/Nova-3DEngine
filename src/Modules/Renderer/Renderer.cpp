@@ -166,8 +166,8 @@ void Renderer::RenderWorld()
 
     const M::Matrix4 view = GetSystem<CameraSystem>().GetViewMatrix();
 
-    GUniformbuffer->Set(view.Transpose(), 0);
-    GUniformbuffer->Set(projection.Transpose(), 64);
+    GUniformbuffer->Set(view, 0);
+    GUniformbuffer->Set(projection, 64);
     GUniformbuffer->Set(Engine::Get().GetTime(), 128);
     GUniformbuffer->Set(
         query.Pool<Transform3DComponent>().GetComponentById(camera->Id).GlobalPosition, 144);
@@ -204,8 +204,8 @@ void Renderer::FillBatches(Transform3DComponent& transformComponent,
     {
         it = Batches.try_emplace(key, meshComponent.Mesh, materialComponent.Material).first;
     }
-    it->second.Instances.emplace_back(transformComponent.GetModelMatrix().Transpose(),
-        transformComponent.GetNormalMatrix().Transpose());
+    it->second.Instances.emplace_back(
+        transformComponent.GetModelMatrix(), transformComponent.GetNormalMatrix());
 }
 
 // TODO- if there is multiple semi-transparent objects behind each other , depth testing

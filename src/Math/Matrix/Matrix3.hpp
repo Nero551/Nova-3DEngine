@@ -11,7 +11,7 @@ struct Matrix4;
  * @brief 3x3 floating-point matrix.
  *
  * Matrix convention:
- * - Storage: row-major.
+ * - Storage: column-major.
  * - Vectors: column vectors.
  * - Vector multiplication: M * v.
  * - The rightmost transformation is applied first.
@@ -30,8 +30,10 @@ struct Matrix4;
  */
 struct Matrix3
 {
+  private:
     float m[3][3] = {};
 
+  public:
     /**
      * @brief Creates a zero matrix.
      */
@@ -146,6 +148,8 @@ struct Matrix3
     /** @brief returns a matrix 4 version of this matrix 3. with all the extra values = 0
      */
     [[nodiscard]] Matrix4 ToMatrix4() const;
+    float& operator()(int row, int col);
+    const float& operator()(int row, int col) const;
 
     Matrix3 operator+(const Matrix3& mat3) const;
     Matrix3 operator-(const Matrix3& mat3) const;

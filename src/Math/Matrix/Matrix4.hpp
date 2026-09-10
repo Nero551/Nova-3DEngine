@@ -9,7 +9,7 @@ namespace N::M
  * @brief 4x4 floating-point matrix.
  *
  * Matrix convention:
- * - Storage: row-major.
+ * - Storage: column-major.
  * - Vectors: column vectors.
  * - Vector multiplication: M * v.
  * - The rightmost transformation is applied first.
@@ -33,8 +33,10 @@ namespace N::M
  */
 struct Matrix4
 {
+  private:
     float m[4][4] = {};
 
+  public:
     /**
      * @brief Creates a zero matrix.
      */
@@ -119,6 +121,38 @@ struct Matrix4
     [[nodiscard]] Matrix3 ToMatrix3() const;
 
     /**
+ * @brief Creates an orthographic projection matrix.
+ *
+ * @param left Left clipping plane.
+ * @param right Right clipping plane.
+ * @param bottom Bottom clipping plane.
+ * @param top Top clipping plane.
+ * @param near Near clipping plane.
+ * @param far Far clipping plane.
+ */
+    static Matrix4 Orthographic(
+        float left, float right, float bottom, float top, float near, float far);
+
+    /**
+     * @brief Creates a perspective projection matrix.
+     *
+     * @param fovRad field of view in radians.
+     * @param aspectRatio Viewport width divided by height.
+     * @param near Near clipping plane.
+     * @param far Far clipping plane.
+     */
+    static Matrix4 Perspective(float fovRad, float aspectRatio, float near, float far);
+
+    /**
+     * @brief Creates a view matrix looking from one position toward another.
+     *
+     * @param pos Camera position.
+     * @param target Point the camera is looking toward.
+     * @param up Approximate world-up direction.
+     */
+    static Matrix4 LookAt(const Vector3& pos, const Vector3& target, const Vector3& up);
+
+    /**
      * @brief Calculates the determinant of this matrix.
      */
     [[nodiscard]] float Determinant() const;
@@ -151,6 +185,9 @@ struct Matrix4
      */
     [[nodiscard]] bool NearlyEquals(const Matrix4& mat4, float epsilon = EPSILON) const;
 
+    float& operator()(int row, int col);
+    const float& operator()(int row, int col) const;
+
     Matrix4 operator+(const Matrix4& mat4) const;
     Matrix4 operator-(const Matrix4& mat4) const;
     Matrix4 operator*(const Matrix4& mat4) const;
@@ -173,38 +210,6 @@ struct Matrix4
 
     bool operator==(const Matrix4& mat4) const;
     bool operator!=(const Matrix4& mat4) const;
-
-    /**
-     * @brief Creates an orthographic projection matrix.
-     *
-     * @param left Left clipping plane.
-     * @param right Right clipping plane.
-     * @param bottom Bottom clipping plane.
-     * @param top Top clipping plane.
-     * @param near Near clipping plane.
-     * @param far Far clipping plane.
-     */
-    static Matrix4 Orthographic(
-        float left, float right, float bottom, float top, float near, float far);
-
-    /**
-     * @brief Creates a perspective projection matrix.
-     *
-     * @param fovRad field of view in radians.
-     * @param aspectRatio Viewport width divided by height.
-     * @param near Near clipping plane.
-     * @param far Far clipping plane.
-     */
-    static Matrix4 Perspective(float fovRad, float aspectRatio, float near, float far);
-
-    /**
-     * @brief Creates a view matrix looking from one position toward another.
-     *
-     * @param pos Camera position.
-     * @param target Point the camera is looking toward.
-     * @param up Approximate world-up direction.
-     */
-    static Matrix4 LookAt(const Vector3& pos, const Vector3& target, const Vector3& up);
 
     /** @brief Matrix containing only zeros. */
     static const Matrix4 Zero;

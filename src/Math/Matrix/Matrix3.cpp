@@ -8,11 +8,11 @@ namespace N::M
 {
 Matrix3::Matrix3(const float mAll)
 {
-    for (auto& row : m)
+    for (int row = 0; row < 3; row++)
     {
         for (int col = 0; col < 3; col++)
         {
-            row[col] = mAll;
+            (*this)(row, col) = mAll;
         }
     }
 }
@@ -20,17 +20,17 @@ Matrix3::Matrix3(const float mAll)
 Matrix3::Matrix3(const float m00, const float m01, const float m02, const float m10,
     const float m11, const float m12, const float m20, const float m21, const float m22)
 {
-    m[0][0] = m00;
-    m[0][1] = m01;
-    m[0][2] = m02;
+    (*this)(0, 0) = m00;
+    (*this)(0, 1) = m01;
+    (*this)(0, 2) = m02;
 
-    m[1][0] = m10;
-    m[1][1] = m11;
-    m[1][2] = m12;
+    (*this)(1, 0) = m10;
+    (*this)(1, 1) = m11;
+    (*this)(1, 2) = m12;
 
-    m[2][0] = m20;
-    m[2][1] = m21;
-    m[2][2] = m22;
+    (*this)(2, 0) = m20;
+    (*this)(2, 1) = m21;
+    (*this)(2, 2) = m22;
 }
 
 //? Operations
@@ -39,9 +39,9 @@ Matrix3::Matrix3(const float m00, const float m01, const float m02, const float 
 Matrix3 Matrix3::Scale(const Vector3& scale) const
 {
     Matrix3 scaleMatrix = Identity;
-    scaleMatrix.m[0][0] = scale.x;
-    scaleMatrix.m[1][1] = scale.y;
-    scaleMatrix.m[2][2] = scale.z;
+    scaleMatrix(0, 0) = scale.x;
+    scaleMatrix(1, 1) = scale.y;
+    scaleMatrix(2, 2) = scale.z;
 
     return *this * scaleMatrix;
 }
@@ -49,10 +49,10 @@ Matrix3 Matrix3::Scale(const Vector3& scale) const
 Matrix3 Matrix3::RotateX(const float radian) const
 {
     Matrix3 rotationMatrix = Identity;
-    rotationMatrix.m[1][1] = std::cos(radian);
-    rotationMatrix.m[2][1] = std::sin(radian);
-    rotationMatrix.m[1][2] = -std::sin(radian);
-    rotationMatrix.m[2][2] = std::cos(radian);
+    rotationMatrix(1, 1) = std::cos(radian);
+    rotationMatrix(2, 1) = std::sin(radian);
+    rotationMatrix(1, 2) = -std::sin(radian);
+    rotationMatrix(2, 2) = std::cos(radian);
 
     return *this * rotationMatrix;
 }
@@ -60,10 +60,10 @@ Matrix3 Matrix3::RotateX(const float radian) const
 Matrix3 Matrix3::RotateY(const float radian) const
 {
     Matrix3 rotationMatrix = Identity;
-    rotationMatrix.m[0][0] = std::cos(radian);
-    rotationMatrix.m[0][2] = std::sin(radian);
-    rotationMatrix.m[2][0] = -std::sin(radian);
-    rotationMatrix.m[2][2] = std::cos(radian);
+    rotationMatrix(0, 0) = std::cos(radian);
+    rotationMatrix(0, 2) = std::sin(radian);
+    rotationMatrix(2, 0) = -std::sin(radian);
+    rotationMatrix(2, 2) = std::cos(radian);
 
     return *this * rotationMatrix;
 }
@@ -71,10 +71,10 @@ Matrix3 Matrix3::RotateY(const float radian) const
 Matrix3 Matrix3::RotateZ(const float radian) const
 {
     Matrix3 rotationMatrix = Identity;
-    rotationMatrix.m[0][0] = std::cos(radian);
-    rotationMatrix.m[1][0] = std::sin(radian);
-    rotationMatrix.m[0][1] = -std::sin(radian);
-    rotationMatrix.m[1][1] = std::cos(radian);
+    rotationMatrix(0, 0) = std::cos(radian);
+    rotationMatrix(1, 0) = std::sin(radian);
+    rotationMatrix(0, 1) = -std::sin(radian);
+    rotationMatrix(1, 1) = std::cos(radian);
 
     return *this * rotationMatrix;
 }
@@ -112,16 +112,16 @@ Matrix3 Matrix3::Translate(const Vector2& trans) const
 {
     Matrix3 transMatrix = Identity;
 
-    transMatrix.m[0][2] = trans.x;
-    transMatrix.m[1][2] = trans.y;
+    transMatrix(0, 2) = trans.x;
+    transMatrix(1, 2) = trans.y;
 
     return *this * transMatrix;
 }
 
 float Matrix3::Determinant() const
 {
-    return m[0][0] * Minor(0, 0).Determinant() - m[0][1] * Minor(0, 1).Determinant() +
-        m[0][2] * Minor(0, 2).Determinant();
+    return (*this)(0, 0) * Minor(0, 0).Determinant() - (*this)(0, 1) * Minor(0, 1).Determinant() +
+        (*this)(0, 2) * Minor(0, 2).Determinant();
 }
 
 Matrix3 Matrix3::Transpose() const
@@ -132,7 +132,7 @@ Matrix3 Matrix3::Transpose() const
     {
         for (int col = 0; col < 3; col++)
         {
-            result.m[row][col] = m[col][row];
+            result(row, col) = (*this)(col, row);
         }
     }
 
@@ -156,7 +156,7 @@ Matrix3 Matrix3::Inverse() const
                 det = -det;
             }
 
-            cofactorMatrix.m[row][col] = det;
+            cofactorMatrix(row, col) = det;
         }
     }
 
@@ -186,10 +186,11 @@ Matrix2 Matrix3::Minor(const int row, const int col) const
             {
                 if (c != col)
                 {
-                    minor.m[minorRow][minorCol] = m[r][c];
+                    minor(minorRow, minorCol) = (*this)(r, c);
                     minorCol++;
                 }
             }
+
             minorRow++;
         }
     }
@@ -203,12 +204,13 @@ bool Matrix3::NearlyEquals(const Matrix3& mat3, const float epsilon) const
     {
         for (int col = 0; col < 3; col++)
         {
-            if (!M::NearlyEquals(m[row][col], mat3.m[row][col], epsilon))
+            if (!M::NearlyEquals((*this)(row, col), mat3(row, col), epsilon))
             {
                 return false;
             }
         }
     }
+
     return true;
 }
 
@@ -216,45 +218,59 @@ Matrix4 Matrix3::ToMatrix4() const
 {
     Matrix4 result{};
 
-    result.m[0][0] = m[0][0];
-    result.m[0][1] = m[0][1];
-    result.m[0][2] = m[0][2];
+    result(0, 0) = (*this)(0, 0);
+    result(0, 1) = (*this)(0, 1);
+    result(0, 2) = (*this)(0, 2);
 
-    result.m[1][0] = m[1][0];
-    result.m[1][1] = m[1][1];
-    result.m[1][2] = m[1][2];
+    result(1, 0) = (*this)(1, 0);
+    result(1, 1) = (*this)(1, 1);
+    result(1, 2) = (*this)(1, 2);
 
-    result.m[2][0] = m[2][0];
-    result.m[2][1] = m[2][1];
-    result.m[2][2] = m[2][2];
+    result(2, 0) = (*this)(2, 0);
+    result(2, 1) = (*this)(2, 1);
+    result(2, 2) = (*this)(2, 2);
 
     return result;
+}
+
+float& Matrix3::operator()(const int row, const int col)
+{
+    return m[col][row];
+}
+
+const float& Matrix3::operator()(const int row, const int col) const
+{
+    return m[col][row];
 }
 
 //* Matrices
 Matrix3 Matrix3::operator+(const Matrix3& mat3) const
 {
     Matrix3 result = Zero;
+
     for (int row = 0; row < 3; row++)
     {
         for (int col = 0; col < 3; col++)
         {
-            result.m[row][col] = m[row][col] + mat3.m[row][col];
+            result(row, col) = (*this)(row, col) + mat3(row, col);
         }
     }
+
     return result;
 }
 
 Matrix3 Matrix3::operator-(const Matrix3& mat3) const
 {
     Matrix3 result = Zero;
+
     for (int row = 0; row < 3; row++)
     {
         for (int col = 0; col < 3; col++)
         {
-            result.m[row][col] = m[row][col] - mat3.m[row][col];
+            result(row, col) = (*this)(row, col) - mat3(row, col);
         }
     }
+
     return result;
 }
 
@@ -268,7 +284,7 @@ Matrix3 Matrix3::operator*(const Matrix3& mat3) const
         {
             for (int k = 0; k < 3; k++)
             {
-                result.m[row][col] += m[row][k] * mat3.m[k][col];
+                result(row, col) += (*this)(row, k) * mat3(k, col);
             }
         }
     }
@@ -294,35 +310,39 @@ Matrix3& Matrix3::operator*=(const Matrix3& mat3)
 //* Vectors
 Vector3 Matrix3::operator*(const Vector3& vec3) const
 {
-    return {m[0][0] * vec3.x + m[0][1] * vec3.y + m[0][2] * vec3.z,
-        m[1][0] * vec3.x + m[1][1] * vec3.y + m[1][2] * vec3.z,
-        m[2][0] * vec3.x + m[2][1] * vec3.y + m[2][2] * vec3.z};
+    return {(*this)(0, 0) * vec3.x + (*this)(0, 1) * vec3.y + (*this)(0, 2) * vec3.z,
+        (*this)(1, 0) * vec3.x + (*this)(1, 1) * vec3.y + (*this)(1, 2) * vec3.z,
+        (*this)(2, 0) * vec3.x + (*this)(2, 1) * vec3.y + (*this)(2, 2) * vec3.z};
 }
 
 //* Scalars
 Matrix3 Matrix3::operator*(const float scalar) const
 {
     Matrix3 result = Zero;
+
     for (int row = 0; row < 3; row++)
     {
         for (int col = 0; col < 3; col++)
         {
-            result.m[row][col] = m[row][col] * scalar;
+            result(row, col) = (*this)(row, col) * scalar;
         }
     }
+
     return result;
 }
 
 Matrix3 Matrix3::operator/(const float scalar) const
 {
     Matrix3 result = Zero;
+
     for (int row = 0; row < 3; row++)
     {
         for (int col = 0; col < 3; col++)
         {
-            result.m[row][col] = m[row][col] / scalar;
+            result(row, col) = (*this)(row, col) / scalar;
         }
     }
+
     return result;
 }
 
@@ -348,10 +368,13 @@ bool Matrix3::operator==(const Matrix3& mat3) const
     {
         for (int col = 0; col < 3; col++)
         {
-            if (m[row][col] != mat3.m[row][col])
+            if ((*this)(row, col) != mat3(row, col))
+            {
                 return false;
+            }
         }
     }
+
     return true;
 }
 
@@ -373,9 +396,10 @@ Matrix3 operator*(const float scalar, const Matrix3& mat3)
 
 std::ostream& operator<<(std::ostream& os, const Matrix3& mat3)
 {
-    os << "[ " << mat3.m[0][0] << "  " << mat3.m[0][1] << "  " << mat3.m[0][2] << " ]\n";
-    os << "[ " << mat3.m[1][0] << "  " << mat3.m[1][1] << "  " << mat3.m[1][2] << " ]\n";
-    os << "[ " << mat3.m[2][0] << "  " << mat3.m[2][1] << "  " << mat3.m[2][2] << " ]";
+    os << "[ " << mat3(0, 0) << "  " << mat3(0, 1) << "  " << mat3(0, 2) << " ]\n";
+    os << "[ " << mat3(1, 0) << "  " << mat3(1, 1) << "  " << mat3(1, 2) << " ]\n";
+    os << "[ " << mat3(2, 0) << "  " << mat3(2, 1) << "  " << mat3(2, 2) << " ]";
+
     return os;
 }
 } // namespace N::M

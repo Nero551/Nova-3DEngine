@@ -14,6 +14,10 @@ namespace N
  */
 template <typename D> struct SparseSet
 {
+    //TODO- heard sparse set can get really massive if id is like 1 million or stuff.
+    // good idea is probably to introduce generations. a way to reuse ids.
+    // the fix for this. is a new data structure. the POOL!! / FreeList
+
     using DenseIndex = size_t;
     using SparseIndex = size_t;
 

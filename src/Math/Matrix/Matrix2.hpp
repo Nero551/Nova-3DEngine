@@ -9,7 +9,7 @@ namespace N::M
  * @brief 2x2 floating-point matrix.
  *
  * Matrix convention:
- * - Storage: row-major.
+ * - Storage: column-major.
  * - Vectors: column vectors.
  * - Vector multiplication: M * v.
  * - Transformations are composed through matrix multiplication.
@@ -24,8 +24,10 @@ namespace N::M
  */
 struct Matrix2
 {
+  private:
     float m[2][2] = {};
 
+  public:
     /**
      * @brief Creates a zero matrix.
      */
@@ -88,6 +90,9 @@ struct Matrix2
      * @param epsilon Maximum allowed difference between corresponding elements.
      */
     [[nodiscard]] bool NearlyEquals(const Matrix2& mat2, float epsilon = EPSILON) const;
+
+    float& operator()(int row, int col);
+    const float& operator()(int row, int col) const;
 
     Matrix2 operator+(const Matrix2& mat2) const;
     Matrix2 operator-(const Matrix2& mat2) const;

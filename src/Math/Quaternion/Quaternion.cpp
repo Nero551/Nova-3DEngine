@@ -20,44 +20,44 @@ Quaternion Quaternion::FromQPolar(const QPolar& qPolar)
 
 Quaternion Quaternion::FromMatrix3(const Matrix3& mat3)
 {
-    float trace = mat3.m[0][0] + mat3.m[1][1] + mat3.m[2][2];
+    const float trace = mat3(0, 0) + mat3(1, 1) + mat3(2, 2);
 
     Quaternion rotation;
 
     if (trace > 0)
     {
-        float s = Sqrt(trace + 1.0f) * 2.0f;
+        const float s = Sqrt(trace + 1.0f) * 2.0f;
 
         rotation.w = 0.25f * s;
-        rotation.x = (mat3.m[2][1] - mat3.m[1][2]) / s;
-        rotation.y = (mat3.m[0][2] - mat3.m[2][0]) / s;
-        rotation.z = (mat3.m[1][0] - mat3.m[0][1]) / s;
+        rotation.x = (mat3(2, 1) - mat3(1, 2)) / s;
+        rotation.y = (mat3(0, 2) - mat3(2, 0)) / s;
+        rotation.z = (mat3(1, 0) - mat3(0, 1)) / s;
     }
-    else if (mat3.m[0][0] > mat3.m[1][1] && mat3.m[0][0] > mat3.m[2][2])
+    else if (mat3(0, 0) > mat3(1, 1) && mat3(0, 0) > mat3(2, 2))
     {
-        float s = Sqrt(1.0f + mat3.m[0][0] - mat3.m[1][1] - mat3.m[2][2]) * 2.0f;
+        const float s = Sqrt(1.0f + mat3(0, 0) - mat3(1, 1) - mat3(2, 2)) * 2.0f;
 
-        rotation.w = (mat3.m[2][1] - mat3.m[1][2]) / s;
+        rotation.w = (mat3(2, 1) - mat3(1, 2)) / s;
         rotation.x = 0.25f * s;
-        rotation.y = (mat3.m[0][1] + mat3.m[1][0]) / s;
-        rotation.z = (mat3.m[0][2] + mat3.m[2][0]) / s;
+        rotation.y = (mat3(0, 1) + mat3(1, 0)) / s;
+        rotation.z = (mat3(0, 2) + mat3(2, 0)) / s;
     }
-    else if (mat3.m[1][1] > mat3.m[2][2])
+    else if (mat3(1, 1) > mat3(2, 2))
     {
-        float s = Sqrt(1.0f + mat3.m[1][1] - mat3.m[0][0] - mat3.m[2][2]) * 2.0f;
+        const float s = Sqrt(1.0f + mat3(1, 1) - mat3(0, 0) - mat3(2, 2)) * 2.0f;
 
-        rotation.w = (mat3.m[0][2] - mat3.m[2][0]) / s;
-        rotation.x = (mat3.m[0][1] + mat3.m[1][0]) / s;
+        rotation.w = (mat3(0, 2) - mat3(2, 0)) / s;
+        rotation.x = (mat3(0, 1) + mat3(1, 0)) / s;
         rotation.y = 0.25f * s;
-        rotation.z = (mat3.m[1][2] + mat3.m[2][1]) / s;
+        rotation.z = (mat3(1, 2) + mat3(2, 1)) / s;
     }
     else
     {
-        float s = Sqrt(1.0f + mat3.m[2][2] - mat3.m[0][0] - mat3.m[1][1]) * 2.0f;
+        const float s = Sqrt(1.0f + mat3(2, 2) - mat3(0, 0) - mat3(1, 1)) * 2.0f;
 
-        rotation.w = (mat3.m[1][0] - mat3.m[0][1]) / s;
-        rotation.x = (mat3.m[0][2] + mat3.m[2][0]) / s;
-        rotation.y = (mat3.m[1][2] + mat3.m[2][1]) / s;
+        rotation.w = (mat3(1, 0) - mat3(0, 1)) / s;
+        rotation.x = (mat3(0, 2) + mat3(2, 0)) / s;
+        rotation.y = (mat3(1, 2) + mat3(2, 1)) / s;
         rotation.z = 0.25f * s;
     }
 
@@ -65,7 +65,6 @@ Quaternion Quaternion::FromMatrix3(const Matrix3& mat3)
     // to the full-angle quaternion representation.
     return rotation * rotation;
 }
-
 Quaternion Quaternion::FromEulerXYZ(const Vector3& euler)
 {
     Matrix3 rotation = Matrix3::Identity;
@@ -166,9 +165,11 @@ Vector3 Quaternion::ToEulerXYZ() const
 {
     const Matrix4 matrix = ToMatrix4();
     Vector3 result;
-    result.x = std::atan2(matrix.m[2][1], matrix.m[2][2]);
-    result.y = std::asin(-matrix.m[2][0]);
-    result.z = std::atan2(matrix.m[1][0], matrix.m[0][0]);
+
+    result.x = std::atan2(matrix(2, 1), matrix(2, 2));
+    result.y = std::asin(-matrix(2, 0));
+    result.z = std::atan2(matrix(1, 0), matrix(0, 0));
+
     return result;
 }
 

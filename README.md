@@ -115,3 +115,5 @@
 ![4D Projection (10k entities)](Docs/Screenshots/4D%20Projection.png)
 
 ### Week 11 — September 5–11
+
+- Optimizations(CPU can now handle ~32k entities)

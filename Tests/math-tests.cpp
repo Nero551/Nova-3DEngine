@@ -13,9 +13,9 @@
 
 // Complex
 #include "Math/Complex/Complex.hpp"
-#include "Math/Complex/Constants.hpp"
 #include "Math/Complex/ComplexExponentials.hpp"
 #include "Math/Complex/ComplexLogarithms.hpp"
+#include "Math/Complex/Constants.hpp"
 
 // Coordinates
 #include "Math/Coordinates/HyperSpherical.hpp"
@@ -35,28 +35,26 @@
 #include "Math/Matrix/Matrix4.hpp"
 
 // Quaternion
+#include "Math/Quaternion/Quaternion.hpp"
 #include "Math/Quaternion/QuaternionExponentials.hpp"
 #include "Math/Quaternion/QuaternionLogarithms.hpp"
-#include "Math/Quaternion/Quaternion.hpp"
 
 // Vector
 #include "Math/Vector/Vector2.hpp"
 #include "Math/Vector/Vector3.hpp"
 #include "Math/Vector/Vector4.hpp"
 
-using Catch::Matchers::WithinRel;
-using Catch::Matchers::WithinAbs;
 using Catch::Approx;
-using namespace N::M; // Fixed namespace (was N::M but actual is E::M)
+using Catch::Matchers::WithinAbs;
+using Catch::Matchers::WithinRel;
+using namespace N::M;
 
 //==============================================================================
 // Common
 //==============================================================================
 TEST_CASE(
 
-
-    "Math::NearlyEquals"
-)
+    "Math::NearlyEquals")
 {
     constexpr float eps = EPSILON; // 1e-5f
 
@@ -80,9 +78,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "Math::Clamp"
-)
+    "Math::Clamp")
 {
     REQUIRE(Clamp(5.0f, 0.0f, 10.0f) == 5.0f);
     REQUIRE(Clamp(-1.0f, 0.0f, 10.0f) == 0.0f);
@@ -92,9 +88,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "Math::Pow, Sqrt, Exp, Factorial"
-)
+    "Math::Pow, Sqrt, Exp, Factorial")
 {
     REQUIRE(Pow(2.0f, 3.0f) == Approx(8.0f));
     REQUIRE(Pow(4.0f, 0.5f) == Approx(2.0f));
@@ -116,9 +110,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "Math::Lerp"
-)
+    "Math::Lerp")
 {
     REQUIRE(Lerp(0.0f, 10.0f, 0.0f) == 0.0f);
     REQUIRE(Lerp(0.0f, 10.0f, 1.0f) == 10.0f);
@@ -128,9 +120,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "Math::Ease functions"
-)
+    "Math::Ease functions")
 {
     // Quad
     REQUIRE(EaseInQuad(0.0f) == 0.0f);
@@ -157,9 +147,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "Math::Ln and Log"
-)
+    "Math::Ln and Log")
 {
     REQUIRE(Ln(1.0f) == Approx(0.0f));
     REQUIRE(Ln(E) == Approx(1.0f));
@@ -172,9 +160,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "Math::Random"
-)
+    "Math::Random")
 {
     for (int i = 0; i < 10; ++i)
     {
@@ -199,9 +185,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "Math::Trigonometry"
-)
+    "Math::Trigonometry")
 {
     REQUIRE(Rad(180.0f) == Approx(PI));
     REQUIRE(Deg(PI) == Approx(180.0f));
@@ -222,9 +206,7 @@ TEST_CASE(
 //==============================================================================
 TEST_CASE(
 
-
-    "Complex construction and constants"
-)
+    "Complex construction and constants")
 {
     Complex z;
     REQUIRE((z.Real == 0.0f && z.Imaginary == 0.0f)); // fixed chained comparison
@@ -237,9 +219,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "Complex arithmetic"
-)
+    "Complex arithmetic")
 {
     Complex a(1, 2), b(3, 4);
     REQUIRE(a + b == Complex(4, 6));
@@ -254,9 +234,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "Complex magnitude, conjugate, inverse"
-)
+    "Complex magnitude, conjugate, inverse")
 {
     Complex z(3, 4);
     REQUIRE(z.MagnitudeSquared() == 25.0f);
@@ -268,9 +246,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "Complex polar and argument"
-)
+    "Complex polar and argument")
 {
     Complex z(3, 4);
     float arg = z.Argument();
@@ -284,9 +260,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "Complex exponentials and logarithms"
-)
+    "Complex exponentials and logarithms")
 {
     Complex z(0, PI / 2);
     Complex e = CExp(z);
@@ -311,9 +285,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "Complex sqrt"
-)
+    "Complex sqrt")
 {
     Complex z(0, 1);
     Complex sqrt = CSqrt(z);
@@ -325,9 +297,7 @@ TEST_CASE(
 //==============================================================================
 TEST_CASE(
 
-
-    "Polar conversion"
-)
+    "Polar conversion")
 {
     Polar p(PI / 4, 2.0f);
     Vector2 v = Vector2::FromPolar(p);
@@ -340,9 +310,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "Spherical conversion"
-)
+    "Spherical conversion")
 {
     Spherical s(0.3f, 0.5f, 4.0f);
     Vector3 v = Vector3::FromSpherical(s);
@@ -354,9 +322,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "HyperSpherical conversion"
-)
+    "HyperSpherical conversion")
 {
     HyperSpherical h(0.2f, 0.4f, 0.6f, 3.0f);
     Vector4 v = Vector4::FromHyperSpherical(h);
@@ -369,9 +335,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "QPolar conversion"
-)
+    "QPolar conversion")
 {
     Vector3 axis = Vector3(1, 1, 0).Normalized();
     QPolar qp(axis, 1.2f, 2.0f);
@@ -390,30 +354,21 @@ TEST_CASE("Function construction and evaluation")
 {
     SECTION("Construct from lambda")
     {
-        auto f = Function<float, float>([](float x)
-        {
-            return x * x;
-        });
+        auto f = Function<float, float>([](float x) { return x * x; });
         REQUIRE(f(2.0f) == 4.0f);
         REQUIRE(f.Evaluate(3.0f) == 9.0f);
     }
 
     SECTION("Construct from std::function")
     {
-        std::function<float(float)> func = [](float x)
-        {
-            return 2.0f * x + 1.0f;
-        };
+        std::function<float(float)> func = [](float x) { return 2.0f * x + 1.0f; };
         Function<float, float> f(func);
         REQUIRE(f(1.5f) == 4.0f);
     }
 
     SECTION("Evaluate with const reference")
     {
-        Function<float, float> f = [](float x)
-        {
-            return x + 1.0f;
-        };
+        Function<float, float> f = [](float x) { return x + 1.0f; };
         const float input = 2.5f;
         REQUIRE(f.Evaluate(input) == 3.5f);
     }
@@ -421,14 +376,8 @@ TEST_CASE("Function construction and evaluation")
 
 TEST_CASE("Function composition")
 {
-    Function<float, float> f([](float x)
-    {
-        return x + 1.0f;
-    });
-    Function<float, float> g([](float x)
-    {
-        return x * 2.0f;
-    });
+    Function<float, float> f([](float x) { return x + 1.0f; });
+    Function<float, float> g([](float x) { return x * 2.0f; });
 
     SECTION("Compose member")
     {
@@ -444,24 +393,15 @@ TEST_CASE("Function composition")
 
     SECTION("Composition with non‑float type")
     {
-        Function<int, float> intToFloat = [](int x)
-        {
-            return static_cast<float>(x) + 0.5f;
-        };
-        Function<float, int> floatToInt = [](float x)
-        {
-            return static_cast<int>(x);
-        };
+        Function<int, float> intToFloat = [](int x) { return static_cast<float>(x) + 0.5f; };
+        Function<float, int> floatToInt = [](float x) { return static_cast<int>(x); };
         auto composed = intToFloat.Compose(floatToInt); // intToFloat(floatToInt(x))
     }
 }
 
 TEST_CASE("Function inverse (scalar‑to‑scalar)")
 {
-    auto f = Function<float, float>([](float x)
-    {
-        return 2.0f * x + 3.0f;
-    });
+    auto f = Function<float, float>([](float x) { return 2.0f * x + 3.0f; });
     SECTION("InverseEvaluate")
     {
         REQUIRE(f.InverseEvaluate(7.0f, -10.0f, 10.0f) == Approx(2.0f));
@@ -477,10 +417,7 @@ TEST_CASE("Function inverse (scalar‑to‑scalar)")
 
     SECTION("Non‑monotonic function throws? (not yet) but we test that it returns some value")
     {
-        auto g = Function<float, float>([](float x)
-        {
-            return x * x;
-        });
+        auto g = Function<float, float>([](float x) { return x * x; });
         // This is not monotonic over [-10,10], but binary search will still find something.
         // We just check it runs.
         auto invG = g.Inverse(0.0f, 10.0f); // restrict to positive domain
@@ -490,17 +427,16 @@ TEST_CASE("Function inverse (scalar‑to‑scalar)")
 
 TEST_CASE("Function numerical differentiation")
 {
-    auto f = Function<float, float>([](float x)
-    {
-        return x * x;
-    });
+    auto f = Function<float, float>([](float x) { return x * x; });
     const float dx = 0.001f;
 
     SECTION("Derivative method")
     {
         REQUIRE(f.Derivative(2.0f, dx) == Approx(4.0f).margin(0.01f));
-        REQUIRE(f.Derivative(2.0f, dx, DifferentiationMethod::Forward) == Approx(4.0f).margin(0.01f));
-        REQUIRE(f.Derivative(2.0f, dx, DifferentiationMethod::Backward) == Approx(4.0f).margin(0.01f));
+        REQUIRE(
+            f.Derivative(2.0f, dx, DifferentiationMethod::Forward) == Approx(4.0f).margin(0.01f));
+        REQUIRE(
+            f.Derivative(2.0f, dx, DifferentiationMethod::Backward) == Approx(4.0f).margin(0.01f));
     }
 
     SECTION("Differentiate returns a function")
@@ -514,28 +450,25 @@ TEST_CASE("Function numerical differentiation")
 
     SECTION("Derivative of constant is zero")
     {
-        auto c = Function<float, float>([](float)
-        {
-            return 5.0f;
-        });
+        auto c = Function<float, float>([](float) { return 5.0f; });
         REQUIRE(c.Derivative(1.0f, dx) == Approx(0.0f).margin(1e-6f));
     }
 }
 
 TEST_CASE("Function numerical integration")
 {
-    auto f = Function<float, float>([](float x)
-    {
-        return x * x;
-    });
+    auto f = Function<float, float>([](float x) { return x * x; });
     const float dx = 0.001f;
 
     SECTION("Integral method")
     {
         REQUIRE(f.Integral(0.0f, 2.0f, dx) == Approx(8.0f / 3.0f).margin(0.01f));
-        REQUIRE(f.Integral(0.0f, 2.0f, dx, IntegrationMethod::Left) == Approx(8.0f / 3.0f).margin(0.02f));
-        REQUIRE(f.Integral(0.0f, 2.0f, dx, IntegrationMethod::Right) == Approx(8.0f / 3.0f).margin(0.02f));
-        REQUIRE(f.Integral(0.0f, 2.0f, dx, IntegrationMethod::Trapezoid) == Approx(8.0f / 3.0f).margin(0.01f));
+        REQUIRE(f.Integral(0.0f, 2.0f, dx, IntegrationMethod::Left) ==
+            Approx(8.0f / 3.0f).margin(0.02f));
+        REQUIRE(f.Integral(0.0f, 2.0f, dx, IntegrationMethod::Right) ==
+            Approx(8.0f / 3.0f).margin(0.02f));
+        REQUIRE(f.Integral(0.0f, 2.0f, dx, IntegrationMethod::Trapezoid) ==
+            Approx(8.0f / 3.0f).margin(0.01f));
     }
 
     SECTION("Integrate returns cumulative function")
@@ -547,20 +480,14 @@ TEST_CASE("Function numerical integration")
 
     SECTION("Integral of constant")
     {
-        auto c = Function<float, float>([](float)
-        {
-            return 5.0f;
-        });
+        auto c = Function<float, float>([](float) { return 5.0f; });
         REQUIRE(c.Integral(0.0f, 2.0f, dx) == Approx(10.0f).margin(0.01f));
     }
 }
 
 TEST_CASE("Function Taylor and Maclaurin")
 {
-    Function<float, float> f = [](float x)
-    {
-        return std::exp(x);
-    };
+    Function<float, float> f = [](float x) { return std::exp(x); };
 
     SECTION("Taylor")
     {
@@ -582,10 +509,7 @@ TEST_CASE("Function Taylor and Maclaurin")
 
     SECTION("Taylor of polynomial")
     {
-        auto p = Function<float, float>([](float x)
-        {
-            return 2.0f * x * x + 3.0f * x + 1.0f;
-        });
+        auto p = Function<float, float>([](float x) { return 2.0f * x * x + 3.0f * x + 1.0f; });
         auto taylor = p.Taylor(4, 1.0f);
         // Should match exactly
         REQUIRE(taylor(1.0f) == Approx(p(1.0f)));
@@ -594,14 +518,8 @@ TEST_CASE("Function Taylor and Maclaurin")
 
 TEST_CASE("Function arithmetic operations")
 {
-    Function<float, float> f = [](float x)
-    {
-        return x + 1.0f;
-    };
-    Function<float, float> g = [](float x)
-    {
-        return 2.0f * x;
-    };
+    Function<float, float> f = [](float x) { return x + 1.0f; };
+    Function<float, float> g = [](float x) { return 2.0f * x; };
 
     SECTION("Binary operators between functions")
     {
@@ -658,14 +576,8 @@ TEST_CASE("Function arithmetic operations")
 
 TEST_CASE("Function compound assignment operators")
 {
-    auto f = Function<float, float>([](float x)
-    {
-        return x + 1.0f;
-    });
-    auto g = Function<float, float>([](float x)
-    {
-        return 2.0f * x;
-    });
+    auto f = Function<float, float>([](float x) { return x + 1.0f; });
+    auto g = Function<float, float>([](float x) { return 2.0f * x; });
 
     SECTION("Between functions")
     {
@@ -711,10 +623,7 @@ TEST_CASE("Function compound assignment operators")
 TEST_CASE("Function with non‑scalar types (Vector2)")
 {
     // Define a function that takes float and returns Vector2
-    auto f = Function<float, Vector2>([](float t)
-    {
-        return Vector2(t, t * t);
-    });
+    auto f = Function<float, Vector2>([](float t) { return Vector2(t, t * t); });
     SECTION("Evaluate")
     {
         auto res = f(2.0f);
@@ -723,10 +632,7 @@ TEST_CASE("Function with non‑scalar types (Vector2)")
 
     SECTION("Arithmetic with Output type (Vector2)")
     {
-        auto g = Function<float, Vector2>([](float t)
-        {
-            return Vector2(1.0f, 2.0f);
-        });
+        auto g = Function<float, Vector2>([](float t) { return Vector2(1.0f, 2.0f); });
         auto h = f + g;
         auto res = h(2.0f);
         REQUIRE(res == Vector2(3.0f, 6.0f));
@@ -781,10 +687,7 @@ TEST_CASE("Function with non‑scalar types (Vector2)")
 
 TEST_CASE("Function with Complex type")
 {
-    auto f = Function<float, Complex>([](float t)
-    {
-        return Complex(t, t * t);
-    });
+    auto f = Function<float, Complex>([](float t) { return Complex(t, t * t); });
     SECTION("Evaluate")
     {
         auto res = f(2.0f);
@@ -793,10 +696,7 @@ TEST_CASE("Function with Complex type")
 
     SECTION("Arithmetic")
     {
-        auto g = Function<float, Complex>([](float t)
-        {
-            return Complex(1.0f, 2.0f);
-        });
+        auto g = Function<float, Complex>([](float t) { return Complex(1.0f, 2.0f); });
         auto h = f + g;
         REQUIRE(h(2.0f) == Complex(3.0f, 6.0f));
         h = f * g;
@@ -810,10 +710,7 @@ TEST_CASE("Function with Complex type")
 
 TEST_CASE("Function friend operators (if implemented)")
 {
-    auto f = Function<float, float>([](float x)
-    {
-        return x + 1.0f;
-    });
+    auto f = Function<float, float>([](float x) { return x + 1.0f; });
     SECTION("With Output (float) – left-hand side")
     {
         auto h = 2.0f + f;
@@ -834,10 +731,7 @@ TEST_CASE("Function friend operators (if implemented)")
     }
 
     // For Vector2 left‑hand side (tested earlier)
-    Function<float, Vector2> fv = ([](float t)
-    {
-        return Vector2(t, t);
-    });
+    Function<float, Vector2> fv = ([](float t) { return Vector2(t, t); });
     auto hv = Vector2(1.0f, 2.0f) + fv;
     REQUIRE(hv(3.0f) == Vector2(4.0f, 5.0f));
 }
@@ -845,81 +739,95 @@ TEST_CASE("Function friend operators (if implemented)")
 //==============================================================================
 // Geometry::Basis
 //==============================================================================
-TEST_CASE(
-
-
-    "Basis matrix"
-)
+TEST_CASE("Basis matrix")
 {
     Basis basis;
     Matrix4 m = basis.GetMatrix();
+
     REQUIRE(m == Matrix4::Identity);
+
     Matrix4 inv = basis.GetInverseMatrix();
     REQUIRE(inv == Matrix4::Identity);
 
-    Vector3 right(0, 1, 0), up(0, 0, 1), forward(1, 0, 0);
+    Vector3 right(0, 1, 0);
+    Vector3 up(0, 0, 1);
+    Vector3 forward(1, 0, 0);
+
     Basis custom{right, up, forward};
     Matrix4 mat = custom.GetMatrix();
-    REQUIRE(mat.m[0][0] == right.x);
-    REQUIRE(mat.m[1][0] == right.y);
-    REQUIRE(mat.m[2][0] == right.z);
-    REQUIRE(mat.m[0][1] == up.x);
-    REQUIRE(mat.m[1][1] == up.y);
-    REQUIRE(mat.m[2][1] == up.z);
-    REQUIRE(mat.m[0][2] == forward.x);
-    REQUIRE(mat.m[1][2] == forward.y);
-    REQUIRE(mat.m[2][2] == forward.z);
+
+    REQUIRE(mat(0, 0) == right.x);
+    REQUIRE(mat(1, 0) == right.y);
+    REQUIRE(mat(2, 0) == right.z);
+
+    REQUIRE(mat(0, 1) == up.x);
+    REQUIRE(mat(1, 1) == up.y);
+    REQUIRE(mat(2, 1) == up.z);
+
+    REQUIRE(mat(0, 2) == forward.x);
+    REQUIRE(mat(1, 2) == forward.y);
+    REQUIRE(mat(2, 2) == forward.z);
+
     REQUIRE(custom.GetInverseMatrix() == mat.Transpose());
 }
 
 //==============================================================================
 // Matrices
 //==============================================================================
-TEST_CASE(
-
-
-    "Matrix2 construction and ops"
-)
+TEST_CASE("Matrix2 construction and ops")
 {
     Matrix2 m(1, 2, 3, 4);
-    REQUIRE(m.m[0][0] == 1);
-    REQUIRE(m.m[1][1] == 4);
+
+    REQUIRE(m(0, 0) == 1);
+    REQUIRE(m(1, 1) == 4);
+
     Matrix2 id = Matrix2::Identity;
-    REQUIRE((id.m[0][0] == 1 && id.m[1][1] == 1 && id.m[0][1] == 0 && id.m[1][0] == 0)); // fixed
+
+    REQUIRE(id(0, 0) == 1);
+    REQUIRE(id(1, 1) == 1);
+    REQUIRE(id(0, 1) == 0);
+    REQUIRE(id(1, 0) == 0);
 
     Matrix2 a(1, 2, 3, 4);
     Matrix2 b(5, 6, 7, 8);
+
     Matrix2 c = a + b;
-    REQUIRE(c.m[0][0] == 6);
-    REQUIRE(c.m[1][1] == 12);
+
+    REQUIRE(c(0, 0) == 6);
+    REQUIRE(c(1, 1) == 12);
+
     Matrix2 prod = a * b;
-    REQUIRE(prod.m[0][0] == 1 * 5 + 2 * 7);
-    REQUIRE(prod.m[0][1] == 1 * 6 + 2 * 8);
-    REQUIRE(prod.m[1][0] == 3 * 5 + 4 * 7);
-    REQUIRE(prod.m[1][1] == 3 * 6 + 4 * 8);
+
+    REQUIRE(prod(0, 0) == 1 * 5 + 2 * 7);
+    REQUIRE(prod(0, 1) == 1 * 6 + 2 * 8);
+    REQUIRE(prod(1, 0) == 3 * 5 + 4 * 7);
+    REQUIRE(prod(1, 1) == 3 * 6 + 4 * 8);
+
     Matrix2 s = a * 2;
-    REQUIRE(s.m[0][0] == 2);
+
+    REQUIRE(s(0, 0) == 2);
+
     Vector2 v(2, 3);
     Vector2 mv = a * v;
+
     REQUIRE(mv.x == 1 * 2 + 2 * 3);
     REQUIRE(mv.y == 3 * 2 + 4 * 3);
+
     REQUIRE(a.Determinant() == 1 * 4 - 2 * 3);
+
     Matrix2 inv = a.Inverse();
+
     REQUIRE((a * inv).NearlyEquals(Matrix2::Identity));
+
     Matrix2 at = a.Transpose();
-    REQUIRE(at.m[0][1] == 3);
-    REQUIRE(at.m[1][0] == 2);
+
+    REQUIRE(at(0, 1) == 3);
+    REQUIRE(at(1, 0) == 2);
 }
 
-TEST_CASE(
-
-
-    "Matrix2 identities"
-)
+TEST_CASE("Matrix2 identities")
 {
-    Matrix2 a(1, 2,
-        3, 5);
-
+    Matrix2 a(1, 2, 3, 5);
     Matrix2 id = Matrix2::Identity;
 
     REQUIRE(a + Matrix2::Zero == a);
@@ -937,45 +845,54 @@ TEST_CASE(
     REQUIRE(a.Transpose().Transpose() == a);
 }
 
-TEST_CASE(
-
-
-    "Matrix3 construction and ops"
-)
+TEST_CASE("Matrix3 construction and ops")
 {
     Matrix3 m(1, 2, 3, 4, 5, 6, 7, 8, 9);
-    REQUIRE(m.m[0][0] == 1);
-    REQUIRE(m.m[2][2] == 9);
-    Matrix3 id = Matrix3::Identity;
-    REQUIRE((id.m[0][0] == 1 && id.m[1][1] == 1 && id.m[2][2] == 1)); // fixed
 
+    REQUIRE(m(0, 0) == 1);
+    REQUIRE(m(0, 1) == 2);
+    REQUIRE(m(0, 2) == 3);
+    REQUIRE(m(1, 0) == 4);
+    REQUIRE(m(1, 1) == 5);
+    REQUIRE(m(1, 2) == 6);
+    REQUIRE(m(2, 0) == 7);
+    REQUIRE(m(2, 1) == 8);
+    REQUIRE(m(2, 2) == 9);
+
+    Matrix3 id = Matrix3::Identity;
+
+    REQUIRE(id(0, 0) == 1);
+    REQUIRE(id(1, 1) == 1);
+    REQUIRE(id(2, 2) == 1);
+    
     Matrix3 a(1, 2, 3, 4, 5, 6, 7, 8, 9);
     Matrix3 b(9, 8, 7, 6, 5, 4, 3, 2, 1);
+
     Matrix3 c = a + b;
-    REQUIRE(c.m[0][0] == 10);
-    REQUIRE(c.m[2][2] == 10);
+
+    REQUIRE(c(0, 0) == 10);
+    REQUIRE(c(2, 2) == 10);
+
     Matrix3 prod = a * b;
-    REQUIRE(prod.m[0][0] == 1 * 9 + 2 * 6 + 3 * 3);
-    REQUIRE(prod.m[1][1] == 4 * 8 + 5 * 5 + 6 * 2);
+
+    REQUIRE(prod(0, 0) == 1 * 9 + 2 * 6 + 3 * 3);
+    REQUIRE(prod(1, 1) == 4 * 8 + 5 * 5 + 6 * 2);
+
     REQUIRE(a.Determinant() == 0.0f);
+
     Matrix3 id2 = Matrix3::Identity;
+
     REQUIRE(id2.Determinant() == 1.0f);
+
     Matrix3 rot = Matrix3::Identity.RotateZ(PI / 4);
     Matrix3 inv = rot.Inverse();
+
     REQUIRE((rot * inv).NearlyEquals(Matrix3::Identity));
 }
 
-TEST_CASE(
-
-
-    "Matrix3 identities"
-)
+TEST_CASE("Matrix3 identities")
 {
-    Matrix3 a(
-        1, 2, 3,
-        0, 1, 4,
-        5, 6, 0
-    );
+    Matrix3 a(1, 2, 3, 0, 1, 4, 5, 6, 0);
 
     Matrix3 id = Matrix3::Identity;
 
@@ -994,75 +911,74 @@ TEST_CASE(
     REQUIRE(a.Transpose().Transpose() == a);
 }
 
-TEST_CASE(
-
-
-    "Matrix3 transformations"
-)
+TEST_CASE("Matrix3 transformations")
 {
     Matrix3 m = Matrix3::Identity;
+
     Vector3 v(1, 2, 3);
+
     Matrix3 scaled = m.Scale(Vector3(2, 3, 4));
     Vector3 v2 = scaled * v;
+
     REQUIRE(v2 == Vector3(2, 6, 12));
+
     m = m.RotateZ(PI / 2);
+
     Vector3 v3 = m * Vector3(1, 0, 0);
+
     REQUIRE(v3.NearlyEquals(Vector3(0, 1, 0)));
+
     m = Matrix3::Identity.Translate(Vector2(5, 6));
+
     Vector3 v4 = m * Vector3(1, 2, 1);
+
     REQUIRE(v4.x == 6);
     REQUIRE(v4.y == 8);
+
     m = Matrix3::Identity.Rotate(Vector3(PI / 2, 0, 0));
+
     Vector3 v5 = m * Vector3(0, 1, 0);
+
     REQUIRE(v5.NearlyEquals(Vector3(0, 0, 1)));
 }
 
-TEST_CASE(
-
-
-    "Matrix3 transformation identities"
-)
+TEST_CASE("Matrix3 transformation identities")
 {
     Vector3 v(1.2f, -3.4f, 5.6f);
-
     Matrix3 identity = Matrix3::Identity;
 
     REQUIRE(identity.Scale(Vector3::One) == identity);
     REQUIRE(identity.RotateZ(0.0f) == identity);
 
     Vector3 transformed = identity * v;
+
     REQUIRE(transformed == v);
 }
 
-TEST_CASE(
-
-
-    "Matrix4 construction and ops"
-)
+TEST_CASE("Matrix4 construction and ops")
 {
     Matrix4 id = Matrix4::Identity;
-    REQUIRE((id.m[0][0] == 1 && id.m[3][3] == 1)); // fixed
+
+    REQUIRE(id(0, 0) == 1);
+    REQUIRE(id(3, 3) == 1);
+
     Matrix4 a(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
+
     REQUIRE(a.Determinant() == Approx(0.0f));
+
     Matrix4 rot = Matrix4::Identity.RotateX(PI / 3);
     Matrix4 inv = rot.Inverse();
+
     REQUIRE((rot * inv).NearlyEquals(Matrix4::Identity));
+
     Matrix4 t = a.Transpose();
-    REQUIRE(t.m[0][1] == a.m[1][0]);
+
+    REQUIRE(t(0, 1) == a(1, 0));
 }
 
-TEST_CASE(
-
-
-    "Matrix4 identities"
-)
+TEST_CASE("Matrix4 identities")
 {
-    Matrix4 a(
-        1, 2, 3, 4,
-        0, 1, 4, 5,
-        5, 6, 0, 7,
-        1, 0, 2, 1
-    );
+    Matrix4 a(1, 2, 3, 4, 0, 1, 4, 5, 5, 6, 0, 7, 1, 0, 2, 1);
 
     Matrix4 id = Matrix4::Identity;
 
@@ -1081,43 +997,53 @@ TEST_CASE(
     REQUIRE(a.Transpose().Transpose() == a);
 }
 
-TEST_CASE(
-
-
-    "Matrix4 transformations"
-)
+TEST_CASE("Matrix4 transformations")
 {
     Matrix4 m = Matrix4::Identity;
+
     Vector4 v(1, 2, 3, 1);
+
     m = m.Translate(Vector3(5, 6, 7));
+
     Vector4 v2 = m * v;
+
     REQUIRE(v2 == Vector4(6, 8, 10, 1));
+
     m = Matrix4::Identity.Scale(Vector3(2, 3, 4));
+
     Vector4 v3 = m * v;
+
     REQUIRE(v3 == Vector4(2, 6, 12, 1));
+
     m = Matrix4::Identity.RotateZ(PI / 2);
+
     Vector4 v4 = m * Vector4(1, 0, 0, 1);
+
     REQUIRE(v4.NearlyEquals(Vector4(0, 1, 0, 1)));
+
     Matrix4 proj = Matrix4::Perspective(PI / 3, 1.5f, 0.1f, 100.0f);
-    REQUIRE(proj.m[3][2] == -1.0f);
+
+    REQUIRE(proj(3, 2) == -1.0f);
+
     Matrix4 ortho = Matrix4::Orthographic(-1, 1, -1, 1, 0.1f, 10);
-    REQUIRE(ortho.m[0][0] == Approx(1.0f));
+
+    REQUIRE(ortho(0, 0) == Approx(1.0f));
+
     Matrix4 view = Matrix4::LookAt(Vector3(0, 0, 5), Vector3::Zero, Vector3::Up);
+
     Vector4 pos = view * Vector4(0, 0, 5, 1);
+
     REQUIRE(pos.NearlyEquals(Vector4(0, 0, 0, 1)));
 
     Matrix4 a = Matrix4::Identity.Translate(Vector3(1, 2, 3));
     Matrix4 b = Matrix4::Identity.Scale(Vector3(2, 2, 2));
 
     Vector4 u(1, 1, 1, 1);
+
     REQUIRE((a * b * u).NearlyEquals(a * (b * u)));
 }
 
-TEST_CASE(
-
-
-    "Matrix-vector identities"
-)
+TEST_CASE("Matrix-vector identities")
 {
     Vector2 v2(1.2f, -3.4f);
     Vector3 v3(1.2f, -3.4f, 5.6f);
@@ -1127,15 +1053,12 @@ TEST_CASE(
     REQUIRE((Matrix3::Identity * v3) == v3);
     REQUIRE((Matrix4::Identity * v4) == v4);
 }
-
 //==============================================================================
 // Quaternion
 //==============================================================================
 TEST_CASE(
 
-
-    "Quaternion construction and constants"
-)
+    "Quaternion construction and constants")
 {
     Quaternion q;
     REQUIRE((q.w == 0 && q.x == 0 && q.y == 0 && q.z == 0)); // fixed
@@ -1150,9 +1073,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "Quaternion identities"
-)
+    "Quaternion identities")
 {
     Quaternion q(1.2f, 2.0f, -0.7f, 3.1f);
 
@@ -1167,9 +1088,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "Quaternion arithmetic"
-)
+    "Quaternion arithmetic")
 {
     Quaternion q1(1, 2, 3, 4);
     Quaternion q2(5, 6, 7, 8);
@@ -1195,9 +1114,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "Quaternion conjugate, magnitude, inverse"
-)
+    "Quaternion conjugate, magnitude, inverse")
 {
     Quaternion q(1, 2, 3, 4);
     REQUIRE(q.Conjugate() == Quaternion(1, -2, -3, -4));
@@ -1210,9 +1127,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "Quaternion dot product"
-)
+    "Quaternion dot product")
 {
     Quaternion a(1, 2, 3, 4);
     Quaternion b(5, 6, 7, 8);
@@ -1221,9 +1136,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "Quaternion polar and angle/axis"
-)
+    "Quaternion polar and angle/axis")
 {
     Quaternion q = Quaternion::Identity;
     REQUIRE(q.Angle() == Approx(0.0f));
@@ -1240,9 +1153,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "Quaternion from Euler and matrix"
-)
+    "Quaternion from Euler and matrix")
 {
     Vector3 euler(PI / 3, PI / 4, PI / 6);
     Quaternion q = Quaternion::FromEulerXYZ(euler);
@@ -1255,9 +1166,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "Quaternion transform vector"
-)
+    "Quaternion transform vector")
 {
     Quaternion q = Quaternion::FromEulerXYZ(Vector3(0, 0, PI / 2));
     Vector3 v(1, 0, 0);
@@ -1267,9 +1176,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "Quaternion exponentials and logarithms"
-)
+    "Quaternion exponentials and logarithms")
 {
     Quaternion q(1.2f, 0.5f, -0.7f, 0.8f);
 
@@ -1283,20 +1190,14 @@ TEST_CASE(
     Quaternion p = QPow(q, 2.0f);
     REQUIRE(p.NearlyEquals(q * q));
 
-    REQUIRE(QLn(QExp(Quaternion(0, 1, 0, 0))).NearlyEquals(
-        Quaternion(0, 1, 0, 0)
-    ));
+    REQUIRE(QLn(QExp(Quaternion(0, 1, 0, 0))).NearlyEquals(Quaternion(0, 1, 0, 0)));
 
-    REQUIRE(QLn(QExp(Quaternion(0, -1, 0, 0))).NearlyEquals(
-        Quaternion(0, -1, 0, 0)
-    ));
+    REQUIRE(QLn(QExp(Quaternion(0, -1, 0, 0))).NearlyEquals(Quaternion(0, -1, 0, 0)));
 }
 
 TEST_CASE(
 
-
-    "Quaternion Exp/Ln principal branch"
-)
+    "Quaternion Exp/Ln principal branch")
 {
     Quaternion q(1.2f, 0.5f, -0.7f, 0.8f);
 
@@ -1307,9 +1208,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "Quaternion Exp/Ln wraps outside principal branch"
-)
+    "Quaternion Exp/Ln wraps outside principal branch")
 {
     Quaternion q(1.2f, 2.0f, -0.7f, 3.1f);
 
@@ -1323,9 +1222,7 @@ TEST_CASE(
 //==============================================================================
 TEST_CASE(
 
-
-    "Vector2 construction and constants"
-)
+    "Vector2 construction and constants")
 {
     Vector2 v(1, 2);
     REQUIRE(v.x == 1);
@@ -1336,9 +1233,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "Vector2 identities"
-)
+    "Vector2 identities")
 {
     Vector2 v(1.2f, -2.3f);
 
@@ -1363,9 +1258,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "Vector2 operations"
-)
+    "Vector2 operations")
 {
     Vector2 a(1, 2), b(3, 4);
     REQUIRE(a + b == Vector2(4, 6));
@@ -1385,9 +1278,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "Vector2 polar"
-)
+    "Vector2 polar")
 {
     Vector2 v(1, 1);
     float ang = v.Angle();
@@ -1403,9 +1294,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "Vector3 construction and constants"
-)
+    "Vector3 construction and constants")
 {
     Vector3 v(1, 2, 3);
     REQUIRE(v.x == 1);
@@ -1420,9 +1309,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "Vector3 identities"
-)
+    "Vector3 identities")
 {
     Vector3 v(1.2f, -2.3f, 4.5f);
 
@@ -1454,9 +1341,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "Vector3 operations"
-)
+    "Vector3 operations")
 {
     Vector3 a(1, 2, 3), b(4, 5, 6);
     REQUIRE(a + b == Vector3(5, 7, 9));
@@ -1480,9 +1365,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "Vector3 spherical"
-)
+    "Vector3 spherical")
 {
     Vector3 v(1, 1, 0);
     float elev = v.Elevation();
@@ -1501,9 +1384,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "Vector4 construction and constants"
-)
+    "Vector4 construction and constants")
 {
     Vector4 v(1, 2, 3, 4);
     REQUIRE(v.x == 1);
@@ -1515,9 +1396,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "Vector4 identities"
-)
+    "Vector4 identities")
 {
     Vector4 v(1.2f, -2.3f, 4.5f, -0.8f);
 
@@ -1542,9 +1421,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "Vector4 operations"
-)
+    "Vector4 operations")
 {
     Vector4 a(1, 2, 3, 4), b(5, 6, 7, 8);
     REQUIRE(a + b == Vector4(6, 8, 10, 12));
@@ -1562,9 +1439,7 @@ TEST_CASE(
 
 TEST_CASE(
 
-
-    "Vector4 hyperspherical"
-)
+    "Vector4 hyperspherical")
 {
     Vector4 v(1, 1, 1, 1);
     float elev = v.Elevation();
