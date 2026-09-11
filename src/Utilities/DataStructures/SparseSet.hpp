@@ -8,13 +8,32 @@ namespace N
 /**
  * @brief Dense storage with sparse index lookup.
  *
- * Provides O(1) insertion, lookup, and deletion while keeping values densely packed.
+ * Maps sparse indices to densely packed values while maintaining a reverse
+ * mapping from dense indices to sparse indices. Deletion uses swap-and-pop,
+ * keeping the stored values contiguous.
+ *
+ * Lookup:
+ * - Sparse index lookup: O(1)
+ * - Dense index lookup: O(1)
+ *
+ * Insertion:
+ * - O(1) amortized
+ *
+ * Deletion:
+ * - O(1)
+ *
+ * Iteration:
+ * - O(N)
+ *
+ * Memory:
+ * - O(N + S), where N is the number of stored values and S is the highest
+ *   sparse index currently allocated.
  *
  * @tparam D Stored data type.
  */
 template <typename D> struct SparseSet
 {
-    //TODO- heard sparse set can get really massive if id is like 1 million or stuff.
+    //TODO- sparse sets can get really massive if id is like 1 million or stuff.
     // an idea is probably to introduce generations. a way to reuse ids.
     // another idea for this. is a new data structure. the POOL!! / FreeList
     // the pool can determine what is the next entity id to use, the usual map contains the actual entities.

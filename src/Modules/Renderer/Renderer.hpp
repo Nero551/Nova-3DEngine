@@ -24,7 +24,6 @@ struct Renderer : Module
     U::CheckedPtr<Uniformbuffer> GUniformbuffer{"Renderer has no Uniform buffer to use"};
 
     Indirect2DVector<RenderBatch> Batches;
-    // std::unordered_map<RenderBatch::BatchKey, RenderBatch, RenderBatch::BatchKeyHash> Batches;
 
   protected:
     void SetupFramebuffer();
