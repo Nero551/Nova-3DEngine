@@ -4,12 +4,6 @@
 namespace N
 {
 
-struct TrackChanged : Event<TrackChanged>
-{
-    TrackChanged() {}
-};
-
-//TODO- events dont work
 template <typename T> struct Track
 {
     Track() {};
@@ -33,18 +27,18 @@ template <typename T> struct Track
 
     void Set(const T& value)
     {
+        if (Value == value)
+        {
+            U::Logger::Info(Changed);
+            ClearChanged();
+            return;
+        }
         Value = value;
         MarkChanged();
     }
 
     operator const T&() const
     {
-        return Value;
-    }
-
-    operator T&()
-    {
-        MarkChanged();
         return Value;
     }
 
@@ -109,7 +103,10 @@ template <typename T> struct Track
 
     void MarkChanged()
     {
-        Changed = true;
+        if (!Changed)
+        {
+            Changed = true;
+        }
     }
 
   private:

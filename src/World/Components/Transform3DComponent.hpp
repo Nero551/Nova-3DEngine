@@ -33,6 +33,9 @@ struct Transform3DComponent : Component
             Position.ClearChanged();
             Rotation.ClearChanged();
             Scale.ClearChanged();
+            GlobalPosition.ClearChanged();
+            GlobalRotation.ClearChanged();
+            GlobalScale.ClearChanged();
         }
 
         return DirtyModelMatrix;

@@ -26,33 +26,33 @@ void LightingSystem::Render()
 {
     auto& world = World::Get();
 
-    LightingBuffer->Set(
-        static_cast<int>(world.Query.With<LightComponent, Transform3DComponent>().EntityIds.size()), 0);
+    LightingBuffer->Set(static_cast<int>(world.Query.Pool<LightComponent>().Size()), 0);
 
     int i = 0;
-    for (auto [entityId, lightComponent, transform] :
-        world.Query.With<LightComponent, Transform3DComponent>())
-    {
-        constexpr size_t LightStride = 144;
-        const size_t LightOffset = 16 + i * LightStride;
 
-        LightingBuffer->Set(static_cast<int>(lightComponent.Type), LightOffset + 0);
-        LightingBuffer->Set(transform.GetForward(), LightOffset + 16, 4);
-        LightingBuffer->Set(lightComponent.Color, LightOffset + 32, 4);
-        LightingBuffer->Set(transform.Position, LightOffset + 48, 4);
-        LightingBuffer->Set(lightComponent.Ambient, LightOffset + 64, 4);
-        LightingBuffer->Set(lightComponent.Diffuse, LightOffset + 80, 4);
-        LightingBuffer->Set(lightComponent.Specular, LightOffset + 96, 4);
+    world.Query.ForEach<LightComponent, Transform3DComponent>(
+        [&](unsigned int entityId, LightComponent& lightComponent, Transform3DComponent& transform)
+        {
+            constexpr size_t LightStride = 144;
+            const size_t LightOffset = 16 + i * LightStride;
 
-        LightingBuffer->Set(lightComponent.Intensity, LightOffset + 112);
-        LightingBuffer->Set(lightComponent.Constant, LightOffset + 116);
-        LightingBuffer->Set(lightComponent.Linear, LightOffset + 120);
-        LightingBuffer->Set(lightComponent.Quadratic, LightOffset + 124);
-        LightingBuffer->Set(lightComponent.InnerCutOff, LightOffset + 128);
-        LightingBuffer->Set(lightComponent.OuterCutOff, LightOffset + 132);
+            LightingBuffer->Set(static_cast<int>(lightComponent.Type), LightOffset + 0);
+            LightingBuffer->Set(transform.GetForward(), LightOffset + 16, 4);
+            LightingBuffer->Set(lightComponent.Color, LightOffset + 32, 4);
+            LightingBuffer->Set(transform.Position, LightOffset + 48, 4);
+            LightingBuffer->Set(lightComponent.Ambient, LightOffset + 64, 4);
+            LightingBuffer->Set(lightComponent.Diffuse, LightOffset + 80, 4);
+            LightingBuffer->Set(lightComponent.Specular, LightOffset + 96, 4);
 
-        ++i;
-    }
+            LightingBuffer->Set(lightComponent.Intensity, LightOffset + 112);
+            LightingBuffer->Set(lightComponent.Constant, LightOffset + 116);
+            LightingBuffer->Set(lightComponent.Linear, LightOffset + 120);
+            LightingBuffer->Set(lightComponent.Quadratic, LightOffset + 124);
+            LightingBuffer->Set(lightComponent.InnerCutOff, LightOffset + 128);
+            LightingBuffer->Set(lightComponent.OuterCutOff, LightOffset + 132);
+
+            ++i;
+        });
 
     LightingBuffer->Bind();
 }

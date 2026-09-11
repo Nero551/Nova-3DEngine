@@ -18,115 +18,6 @@ namespace N
 struct ComponentPoolQuery
 {
     /**
-     * @brief Type-erased base class for cached query results.
-     *
-     * Allows query results of different component types to be stored together
-     * in a single collection.
-     */
-    struct IQueryResult
-    {
-        virtual ~IQueryResult() = default;
-    };
-
-    /**
-     * @brief Stores the cached results of a component query.
-     *
-     * Each result contains the IDs of matching entities and pointers to their
-     * requested components. Component pointers are stored to avoid repeatedly
-     * looking up components while iterating over a query.
-     *
-     * @tparam Args Component types requested by the query.
-     */
-    template <ComponentType... Args> struct QueryResult : IQueryResult
-    {
-        /** @brief Entity IDs matching the query. */
-        std::vector<unsigned int> EntityIds{};
-
-        /** @brief Component pointers corresponding to each matching entity. */
-        std::tuple<std::vector<Args*>...> Components{};
-
-        /**
-         * @brief Version of the query structure used to build this result.
-         *
-         * The result is rebuilt when this version differs from the owning
-         * ComponentPoolQuery's current version.
-         */
-        unsigned Version = 0;
-
-        /**
-         * @brief Iterates over the entities and their requested components.
-         */
-        struct Iterator
-        {
-            QueryResult& Result;
-            size_t Index;
-
-            /**
-             * @brief Returns an entity ID and references to its components.
-             *
-             * @return Tuple containing the entity ID followed by references
-             * to all requested components.
-             */
-            std::tuple<unsigned int, Args&...> operator*() const
-            {
-                return {Result.EntityIds[Index], *std::get<std::vector<Args*>>(Result.Components)[Index]...};
-            }
-
-            /** @brief Advances the iterator to the next result. */
-            Iterator& operator++()
-            {
-                ++Index;
-                return *this;
-            }
-
-            /** @brief Compares two iterators for inequality. */
-            bool operator!=(const Iterator& other) const
-            {
-                return Index != other.Index;
-            }
-        };
-
-        /** @brief Returns an iterator to the first query result. */
-        Iterator begin()
-        {
-            return {*this, 0};
-        }
-
-        /** @brief Returns an iterator past the last query result. */
-        Iterator end()
-        {
-            return {*this, EntityIds.size()};
-        }
-
-        /**
-         * @brief Removes all query results while retaining allocated capacity.
-         *
-         * Component pointer storage and entity ID storage are cleared but
-         * their allocated memory is retained for subsequent query rebuilds.
-         */
-        void Clear()
-        {
-            EntityIds.clear();
-
-            std::apply([](auto&... components) { (components.clear(), ...); }, Components);
-        }
-
-        /**
-         * @brief Reserves storage for the specified number of results.
-         *
-         * Reserves capacity for entity IDs and every component pointer array.
-         *
-         * @param size Number of query results to reserve.
-         */
-        void Reserve(const size_t size)
-        {
-            EntityIds.reserve(size);
-
-            std::apply([size](auto&... components) { (components.reserve(size), ...); }, Components);
-        }
-    };
-
-    /**
      * @brief Returns the component pool for the specified type.
      *
      * Creates the pool if it does not already exist.
@@ -147,35 +38,24 @@ struct ComponentPoolQuery
         return static_cast<ComponentPool<T>&>(*ComponentPools[typeId]);
     }
 
-    /**
-     * @brief Queries for entities containing all specified component types.
-     *
-     * Results are cached and reused between calls. A query is only rebuilt
-     * when the component pool structure or entity collection has changed.
-     *
-     * The smallest component pool is used as the driver pool during a rebuild
-     * to minimize the number of entities that must be checked.
-     *
-     * @tparam Args Component types required by the query.
-     * @return Reference to the cached query result.
-     */
-    template <ComponentType... Args> QueryResult<Args...>& With()
+    template <ComponentType First, ComponentType... Rest, typename Function>
+    requires std::invocable<Function, unsigned int, First&, Rest&...>
+    void ForEach(Function&& callback)
     {
-        QueryResult<Args...>& result = GetQueryResult<Args...>();
+        auto& firstPool = Pool<First>();
 
-        //TODO- a more efficient method is giving each component pool a version.
-        // and just comparing the result's version with the component pools it needs.
-        if (result.Version != QueryVersion)
+        for (size_t i = 0; i < firstPool.Size(); ++i)
         {
-            std::tuple<ComponentPool<Args>&...> pools = GetPools<Args...>();
-            auto& pool = std::get<0>(pools);
+            const unsigned int entityId = firstPool.GetIdByIndex(i);
 
-            result.Clear();
-            PopulateResult(result, pools);
-            result.Version = QueryVersion;
+            if (!(Pool<Rest>().HasId(entityId) && ...))
+            {
+                continue;
+            }
+
+            callback(entityId, firstPool.GetComponentByIdUnChecked(entityId),
+                Pool<Rest>().GetComponentByIdUnChecked(entityId)...);
         }
-
-        return result;
     }
 
   private:
@@ -205,64 +85,6 @@ struct ComponentPoolQuery
     }
 
     /**
-     * @brief Stores heterogeneous cached query results by query type.
-     *
-     * Each unique combination of requested component types has its own cached
-     * QueryResult instance.
-     */
-    std::unordered_map<std::type_index, std::unique_ptr<IQueryResult>> QueryResults{};
-
-    /**
-     * @brief Returns the cached query result for the specified component types.
-     *
-     * Creates the result if it does not already exist.
-     *
-     * @tparam Args Component types contained in the query.
-     * @return Reference to the cached query result.
-     */
-    template <ComponentType... Args> QueryResult<Args...>& GetQueryResult()
-    {
-        const std::type_index key = typeid(QueryResult<Args...>);
-
-        auto it = QueryResults.find(key);
-
-        if (it == QueryResults.end())
-        {
-            it = QueryResults.emplace(key, std::make_unique<QueryResult<Args...>>()).first;
-        }
-
-        return static_cast<QueryResult<Args...>&>(*it->second);
-    }
-
-    /**
-     * @brief Populates a query result with matching entities.
-     *
-     * Iterates over the smallest component pool and checks whether each
-     * entity also exists in every other requested pool.
-     *
-     * @tparam Args Component types contained in the query.
-     * @param result Query result to populate.
-     * @param pools Component pools used by the query.
-     */
-    template <ComponentType... Args>
-    void PopulateResult(QueryResult<Args...>& result, std::tuple<ComponentPool<Args>&...>& pools)
-    {
-        auto& driverPool = GetSmallestPool(pools);
-        result.Reserve(driverPool.Size());
-
-        for (size_t i = 0; i < driverPool.Size(); ++i)
-        {
-            const unsigned int id = driverPool.GetIdByIndex(i);
-
-            if ((std::get<ComponentPool<Args>&>(pools).HasId(id) && ...))
-            {
-                result.EntityIds.push_back(id);
-                AddComponents(result, id, pools);
-            }
-        }
-    }
-
-    /**
      * @brief Returns the smallest component pool in a query.
      *
      * The smallest pool is used as the query's driver pool, reducing the
@@ -281,31 +103,6 @@ struct ComponentPoolQuery
             { (..., (smallest = pool.Size() < smallest->Size() ? &pool : smallest)); }, pools);
 
         return *smallest;
-    }
-
-    /**
-     * @brief Adds component pointers for an entity to a query result.
-     *
-     * Components are stored as pointers so that subsequent query iteration
-     * can access them directly without performing another pool lookup.
-     *
-     * @tparam Args Component types contained in the query.
-     * @param result Query result to populate.
-     * @param id Entity ID to add.
-     * @param Pools Component pools used by the query.
-     */
-    template <ComponentType... Args>
-    void AddComponents(
-        QueryResult<Args...>& result, const unsigned int id, std::tuple<ComponentPool<Args>&...>& Pools)
-    {
-        std::apply(
-            [&](auto&... pools)
-            {
-                (std::get<std::vector<Args*>>(result.Components)
-                        .emplace_back(&pools.GetComponentByIdUnChecked(id)),
-                    ...);
-            },
-            Pools);
     }
 
     /**

@@ -40,8 +40,8 @@ struct RenderBatch
         Mesh->Generate();
         Mesh->VAO.SetVertexBuffer(Buffer, 1, sizeof(InstanceData));
 
-        Mesh->VAO.SetMatrix4AttribPointer(4, 0, 1);
-        Mesh->VAO.SetMatrix3AttribPointer(8, sizeof(M::Matrix4), 1);
+        Mesh->VAO.SetMatrix4AttribPointer(4, offsetof(InstanceData, ModelMatrix), 1);
+        Mesh->VAO.SetMatrix3AttribPointer(8, offsetof(InstanceData, NormalMatrix), 1);
         Mesh->VAO.SetAttribDivisor(1, 1);
 
         Mesh->DrawInstanced(instanceCount);

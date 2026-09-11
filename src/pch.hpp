@@ -5,6 +5,8 @@
 #include <cmath>
 #include <concepts>
 #include <filesystem>
+#include <flat_map>
+#include <flat_set>
 #include <format>
 #include <functional>
 #include <iosfwd>
@@ -14,6 +16,7 @@
 #include <optional>
 #include <random>
 #include <ranges>
+#include <set>
 #include <span>
 #include <string>
 #include <string_view>

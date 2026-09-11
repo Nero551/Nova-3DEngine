@@ -43,13 +43,13 @@ template <ComponentType T> struct ComponentPool : IComponentPool
      */
     struct Iterator
     {
-        ComponentPool& Pool;
+        ComponentPool* Pool;
         size_t Index;
 
         /** @brief Returns the entity ID and corresponding component. */
         std::pair<unsigned int, T&> operator*() const
         {
-            return {Pool.Components.GetSparseIndex(Index), Pool.Components.GetByIndex(Index)};
+            return {Pool->Components.GetSparseIndex(Index), Pool->Components.GetByIndex(Index)};
         }
 
         /** @brief Advances the iterator to the next component. */
@@ -69,13 +69,13 @@ template <ComponentType T> struct ComponentPool : IComponentPool
     /** @brief Returns an iterator to the first component. */
     Iterator begin()
     {
-        return {.Pool = *this, .Index = 0};
+        return {.Pool = this, .Index = 0};
     }
 
     /** @brief Returns an iterator past the last component. */
     Iterator end()
     {
-        return {.Pool = *this, .Index = Components.Size()};
+        return {.Pool = this, .Index = Components.Size()};
     }
 
     ComponentPool()

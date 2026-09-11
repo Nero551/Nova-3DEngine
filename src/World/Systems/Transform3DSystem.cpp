@@ -8,29 +8,56 @@ namespace N
 {
 void Transform3DSystem::Update(double fdt)
 {
-    auto& query = World::Get().Query;
+    auto& world = World::Get();
+    auto& query = world.Query;
     auto& transformPool = query.Pool<Transform3DComponent>();
-    for (auto [entityId, transform] : query.With<Transform3DComponent>())
-    {
-        auto& entity = World::Get().FindEntity(entityId);
 
-        if (entity.HasParent() && transform.InheritTransform)
+    query.ForEach<Transform3DComponent>(
+        [&](unsigned int entityId, Transform3DComponent& transform)
         {
-            auto& parent = entity.GetParent();
-            if (transformPool.HasId(parent.Id))
+            auto& entity = world.FindEntity(entityId);
+
+            if (transform.InheritTransform)
             {
-                auto& parentTransform = transformPool.GetComponentById(parent.Id);
+                auto& parent = entity.GetParent();
 
-                transform.GlobalPosition = parentTransform.GlobalPosition + transform.Position;
-                transform.GlobalRotation = parentTransform.GlobalRotation * transform.Rotation;
-                transform.GlobalScale = parentTransform.GlobalScale * transform.Scale;
-                continue;
+                if (transformPool.HasId(parent.Id))
+                {
+                    auto& parentTransform = transformPool.GetComponentById(parent.Id);
+
+                    if (transform.Position.IsChanged() || parentTransform.GlobalPosition.IsChanged())
+                    {
+                        transform.GlobalPosition = parentTransform.GlobalPosition + transform.Position;
+                    }
+
+                    if (transform.Rotation.IsChanged() || parentTransform.GlobalRotation.IsChanged())
+                    {
+                        transform.GlobalRotation = parentTransform.GlobalRotation * transform.Rotation;
+                    }
+
+                    if (transform.Scale.IsChanged() || parentTransform.GlobalScale.IsChanged())
+                    {
+                        transform.GlobalScale = parentTransform.GlobalScale * transform.Scale;
+                    }
+
+                    return;
+                }
             }
-        }
 
-        transform.GlobalPosition = transform.Position;
-        transform.GlobalRotation = transform.Rotation;
-        transform.GlobalScale = transform.Scale;
-    }
+            if (transform.Position.IsChanged())
+            {
+                transform.GlobalPosition = transform.Position;
+            }
+
+            if (transform.Rotation.IsChanged())
+            {
+                transform.GlobalRotation = transform.Rotation;
+            }
+
+            if (transform.Scale.IsChanged())
+            {
+                transform.GlobalScale = transform.Scale;
+            }
+        });
 }
 } // namespace N

@@ -176,16 +176,17 @@ void Renderer::RenderWorld()
         batch.Instances.clear();
     }
 
-    for (auto [entityId, transformComponent, meshComponent, materialComponent] :
-        query.With<Transform3DComponent, MeshComponent, MaterialComponent>())
-    {
-        if (materialComponent.Material->Shader->HotReload == true)
+    query.ForEach<MaterialComponent, Transform3DComponent, MeshComponent>(
+        [&](unsigned int entityId, MaterialComponent& materialComponent, Transform3DComponent& transform,
+            MeshComponent& meshComponent)
         {
-            materialComponent.Material->Shader->Reload();
-        }
+            if (materialComponent.Material->Shader->HotReload == true)
+            {
+                materialComponent.Material->Shader->Reload();
+            }
 
-        FillBatches(transformComponent, materialComponent, meshComponent);
-    }
+            FillBatches(transform, materialComponent, meshComponent);
+        });
     for (auto& batch : Batches)
     {
         batch.Render();
