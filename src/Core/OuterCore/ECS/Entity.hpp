@@ -147,6 +147,7 @@ struct Entity
      * @return True if the entity is an ancestor.
      */
     bool HasAncestor(unsigned int id);
+    U::CheckedPtr<Entity> TryGetParent();
 
     /**
      * @brief Gets the entity's parent.

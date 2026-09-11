@@ -175,6 +175,15 @@ bool Entity::HasAncestor(const unsigned int id)
     return IsDescendantOf(id);
 }
 
+U::CheckedPtr<Entity> Entity::TryGetParent()
+{
+    if (Parent == 0)
+    {
+        return nullptr;
+    }
+    return &World::Get().FindEntity(Parent);
+}
+
 Entity& Entity::GetParent()
 {
     return World::Get().FindEntity(Parent);

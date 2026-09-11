@@ -25,31 +25,31 @@ struct Transform3DComponent : Component
   public:
     [[nodiscard]] M::Matrix4 GetModelMatrix()
     {
-        if (DirtyPos.NearlyEquals(GlobalPosition) && DirtyScale.NearlyEquals(GlobalScale) &&
-            DirtyRotation.NearlyEquals(GlobalRotation))
+        if (!DirtyPos.NearlyEquals(GlobalPosition) || !DirtyScale.NearlyEquals(GlobalScale) ||
+            !DirtyRotation.NearlyEquals(GlobalRotation))
         {
+            DirtyPos = GlobalPosition;
+            DirtyRotation = GlobalRotation;
+            DirtyScale = GlobalScale;
+
+            M::Matrix4 modelMatrix = M::Matrix4::Identity;
+            modelMatrix = modelMatrix.Translate({GlobalPosition});
+            modelMatrix *= GlobalRotation.ToMatrix4();
+            modelMatrix = modelMatrix.Scale(GlobalScale);
+            DirtyModelMatrix = modelMatrix;
             return DirtyModelMatrix;
         }
-        DirtyPos = GlobalPosition;
-        DirtyRotation = GlobalRotation;
-        DirtyScale = GlobalScale;
-
-        M::Matrix4 modelMatrix = M::Matrix4::Identity;
-        modelMatrix = modelMatrix.Translate({GlobalPosition});
-        modelMatrix *= GlobalRotation.ToMatrix4();
-        modelMatrix = modelMatrix.Scale(GlobalScale);
-        DirtyModelMatrix = modelMatrix;
         return DirtyModelMatrix;
     }
 
     [[nodiscard]] M::Matrix3 GetNormalMatrix()
     {
-        if (DirtyPos.NearlyEquals(GlobalPosition) && DirtyScale.NearlyEquals(GlobalScale) &&
-            DirtyRotation.NearlyEquals(GlobalRotation))
+        if (!DirtyPos.NearlyEquals(GlobalPosition) || !DirtyScale.NearlyEquals(GlobalScale) ||
+            !DirtyRotation.NearlyEquals(GlobalRotation))
         {
+            DirtyNormalMatrix = GetModelMatrix().ToMatrix3().Inverse().Transpose();
             return DirtyNormalMatrix;
         }
-        DirtyNormalMatrix = GetModelMatrix().ToMatrix3().Inverse().Transpose();
         return DirtyNormalMatrix;
     }
 

@@ -35,15 +35,17 @@ Matrix3::Matrix3(const float m00, const float m01, const float m02, const float 
 
 //? Operations
 
-//? Methods
 Matrix3 Matrix3::Scale(const Vector3& scale) const
 {
-    Matrix3 scaleMatrix = Identity;
-    scaleMatrix(0, 0) = scale.x;
-    scaleMatrix(1, 1) = scale.y;
-    scaleMatrix(2, 2) = scale.z;
+    Matrix3 result = *this;
+    for (size_t row = 0; row < 3; ++row)
+    {
+        result(row, 0) *= scale.x;
+        result(row, 1) *= scale.y;
+        result(row, 2) *= scale.z;
+    }
 
-    return *this * scaleMatrix;
+    return result;
 }
 
 Matrix3 Matrix3::RotateX(const float radian) const
@@ -120,47 +122,59 @@ Matrix3 Matrix3::Translate(const Vector2& trans) const
 
 float Matrix3::Determinant() const
 {
-    return (*this)(0, 0) * Minor(0, 0).Determinant() - (*this)(0, 1) * Minor(0, 1).Determinant() +
-        (*this)(0, 2) * Minor(0, 2).Determinant();
+    const float a = (*this)(0, 0);
+    const float b = (*this)(0, 1);
+    const float c = (*this)(0, 2);
+
+    const float d = (*this)(1, 0);
+    const float e = (*this)(1, 1);
+    const float f = (*this)(1, 2);
+
+    const float g = (*this)(2, 0);
+    const float h = (*this)(2, 1);
+    const float i = (*this)(2, 2);
+
+    return a * (e * i - f * h) - b * (d * i - f * g) + c * (d * h - e * g);
 }
 
 Matrix3 Matrix3::Transpose() const
 {
     Matrix3 result;
 
-    for (int row = 0; row < 3; ++row)
-    {
-        for (int col = 0; col < 3; ++col)
-        {
-            result(row, col) = (*this)(col, row);
-        }
-    }
+    result(0, 0) = (*this)(0, 0);
+    result(0, 1) = (*this)(1, 0);
+    result(0, 2) = (*this)(2, 0);
+
+    result(1, 0) = (*this)(0, 1);
+    result(1, 1) = (*this)(1, 1);
+    result(1, 2) = (*this)(2, 1);
+
+    result(2, 0) = (*this)(0, 2);
+    result(2, 1) = (*this)(1, 2);
+    result(2, 2) = (*this)(2, 2);
 
     return result;
 }
 
 Matrix3 Matrix3::Inverse() const
 {
-    Matrix3 cofactorMatrix;
+    const float a = (*this)(0, 0);
+    const float b = (*this)(0, 1);
+    const float c = (*this)(0, 2);
 
-    for (int row = 0; row < 3; ++row)
-    {
-        for (int col = 0; col < 3; ++col)
-        {
-            Matrix2 minor = Minor(row, col);
+    const float d = (*this)(1, 0);
+    const float e = (*this)(1, 1);
+    const float f = (*this)(1, 2);
 
-            float det = minor.Determinant();
+    const float g = (*this)(2, 0);
+    const float h = (*this)(2, 1);
+    const float i = (*this)(2, 2);
 
-            if ((row + col) % 2 == 1)
-            {
-                det = -det;
-            }
+    const float A = e * i - f * h;
+    const float B = f * g - d * i;
+    const float C = d * h - e * g;
 
-            cofactorMatrix(row, col) = det;
-        }
-    }
-
-    float det = Determinant();
+    const float det = a * A + b * B + c * C;
 
     if (std::abs(det) < EPSILON)
     {
@@ -168,7 +182,23 @@ Matrix3 Matrix3::Inverse() const
         return Identity;
     }
 
-    return cofactorMatrix.Transpose() / det;
+    const float inverseDet = 1.0f / det;
+
+    Matrix3 result;
+
+    result(0, 0) = A * inverseDet;
+    result(0, 1) = (c * h - b * i) * inverseDet;
+    result(0, 2) = (b * f - c * e) * inverseDet;
+
+    result(1, 0) = B * inverseDet;
+    result(1, 1) = (a * i - c * g) * inverseDet;
+    result(1, 2) = (c * d - a * f) * inverseDet;
+
+    result(2, 0) = C * inverseDet;
+    result(2, 1) = (b * g - a * h) * inverseDet;
+    result(2, 2) = (a * e - b * d) * inverseDet;
+
+    return result;
 }
 
 Matrix2 Matrix3::Minor(const int row, const int col) const

@@ -46,23 +46,26 @@ Matrix4::Matrix4(const float m00, const float m01, const float m02, const float 
 
 Matrix4 Matrix4::Translate(const Vector3& translation) const
 {
-    Matrix4 transMatrix = Identity;
-    transMatrix(0, 3) = translation.x;
-    transMatrix(1, 3) = translation.y;
-    transMatrix(2, 3) = translation.z;
+    Matrix4 result = *this;
 
-    return *this * transMatrix;
+    result(0, 3) += translation.x;
+    result(1, 3) += translation.y;
+    result(2, 3) += translation.z;
+
+    return result;
 }
-
-//? Methods
 Matrix4 Matrix4::Scale(const Vector3& scale) const
 {
-    Matrix4 scaleMatrix = Identity;
-    scaleMatrix(0, 0) = scale.x;
-    scaleMatrix(1, 1) = scale.y;
-    scaleMatrix(2, 2) = scale.z;
+    Matrix4 result = *this;
 
-    return *this * scaleMatrix;
+    for (size_t row = 0; row < 3; ++row)
+    {
+        result(row, 0) *= scale.x;
+        result(row, 1) *= scale.y;
+        result(row, 2) *= scale.z;
+    }
+
+    return result;
 }
 
 Matrix4 Matrix4::RotateX(const float radian) const
@@ -107,23 +110,33 @@ Matrix4 Matrix4::Rotate(const Vector3& eulerRotation) const
 
     return *this * rotationMatrix;
 }
-
 Matrix4 Matrix4::RotateAroundAxis(const Vector3& axis, const float radian) const
 {
+    const Vector3 forward = axis.Normalized();
+
+    const float c = std::cos(radian);
+    const float s = std::sin(radian);
+    const float t = 1.0f - c;
+
+    const float x = forward.x;
+    const float y = forward.y;
+    const float z = forward.z;
+
     Matrix4 rotationMatrix = Identity;
-    rotationMatrix = rotationMatrix.RotateZ(radian);
 
-    Vector3 forward = axis.Normalized();
-    Vector3 helper = forward.IsParallelTo(Vector3::Up) ? Vector3::Right : Vector3::Up;
+    rotationMatrix(0, 0) = t * x * x + c;
+    rotationMatrix(0, 1) = t * x * y - s * z;
+    rotationMatrix(0, 2) = t * x * z + s * y;
 
-    Vector3 right = helper.Cross(forward);
-    Vector3 up = forward.Cross(right);
+    rotationMatrix(1, 0) = t * x * y + s * z;
+    rotationMatrix(1, 1) = t * y * y + c;
+    rotationMatrix(1, 2) = t * y * z - s * x;
 
-    const Basis basis(right, up, forward);
-    const Matrix4 basisMatrix = basis.GetMatrix();
+    rotationMatrix(2, 0) = t * x * z - s * y;
+    rotationMatrix(2, 1) = t * y * z + s * x;
+    rotationMatrix(2, 2) = t * z * z + c;
 
-    Matrix4 finalMatrix = basisMatrix * rotationMatrix * basisMatrix.Inverse();
-    return *this * finalMatrix;
+    return *this * rotationMatrix;
 }
 
 Matrix3 Matrix4::ToMatrix3() const
@@ -317,22 +330,26 @@ Matrix4 Matrix4::operator-(const Matrix4& mat4) const
 
 Matrix4 Matrix4::operator*(const Matrix4& mat4) const
 {
-    Matrix4 result = Zero;
+    Matrix4 result;
 
     for (int row = 0; row < 4; ++row)
     {
-        for (int col = 0; col < 4; ++col)
-        {
-            for (int k = 0; k < 4; ++k)
-            {
-                result(row, col) += (*this)(row, k) * mat4(k, col);
-            }
-        }
+        const float a0 = (*this)(row, 0);
+        const float a1 = (*this)(row, 1);
+        const float a2 = (*this)(row, 2);
+        const float a3 = (*this)(row, 3);
+
+        result(row, 0) = a0 * mat4(0, 0) + a1 * mat4(1, 0) + a2 * mat4(2, 0) + a3 * mat4(3, 0);
+
+        result(row, 1) = a0 * mat4(0, 1) + a1 * mat4(1, 1) + a2 * mat4(2, 1) + a3 * mat4(3, 1);
+
+        result(row, 2) = a0 * mat4(0, 2) + a1 * mat4(1, 2) + a2 * mat4(2, 2) + a3 * mat4(3, 2);
+
+        result(row, 3) = a0 * mat4(0, 3) + a1 * mat4(1, 3) + a2 * mat4(2, 3) + a3 * mat4(3, 3);
     }
 
     return result;
 }
-
 Matrix4& Matrix4::operator+=(const Matrix4& mat4)
 {
     return *this = *this + mat4;

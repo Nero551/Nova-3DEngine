@@ -87,7 +87,7 @@ void Physics::Start()
     };
 
     M::Vector2 vi = M::Vector2::FromPolar({M::Rad(20), 11});
-    U::Logger::Info(ProjectilePosition(vi));
+    // U::Logger::Info(ProjectilePosition(vi));
 }
 
 static float time = 0;
