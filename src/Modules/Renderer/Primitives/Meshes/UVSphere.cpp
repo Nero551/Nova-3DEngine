@@ -52,8 +52,7 @@ Mesh& Primitives::CreateUVSphere(
             if (stack != 0)
             {
                 indices.insert(indices.end(),
-                    {static_cast<unsigned>(k1), static_cast<unsigned>(k2),
-                        static_cast<unsigned>(k1 + 1)});
+                    {static_cast<unsigned>(k1), static_cast<unsigned>(k2), static_cast<unsigned>(k1 + 1)});
             }
 
             if (stack != stacks - 1)

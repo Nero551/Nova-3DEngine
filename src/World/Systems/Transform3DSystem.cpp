@@ -18,8 +18,7 @@ void Transform3DSystem::Update(double fdt)
             auto& parent = entity.GetParent();
             if (query.Pool<Transform3DComponent>().HasId(parent.Id))
             {
-                auto& parentTransform =
-                    query.Pool<Transform3DComponent>().GetComponentById(parent.Id);
+                auto& parentTransform = query.Pool<Transform3DComponent>().GetComponentById(parent.Id);
 
                 transform.GlobalPosition = parentTransform.GlobalPosition + transform.Position;
                 transform.GlobalRotation = parentTransform.GlobalRotation * transform.Rotation;

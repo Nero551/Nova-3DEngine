@@ -57,7 +57,7 @@ struct ShaderSource : Resource
     std::unordered_set<std::string> Includes;
 
     void Preprocess();
-    void PreprocessIncludes(const std::string& path, std::string& code,
-        std::unordered_set<std::string>& includesProcessing);
+    void PreprocessIncludes(
+        const std::string& path, std::string& code, std::unordered_set<std::string>& includesProcessing);
 };
 } // namespace N

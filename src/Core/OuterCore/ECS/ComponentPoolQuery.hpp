@@ -69,8 +69,7 @@ struct ComponentPoolQuery
              */
             std::tuple<unsigned int, Args&...> operator*() const
             {
-                return {Result.EntityIds[Index],
-                    *std::get<std::vector<Args*>>(Result.Components)[Index]...};
+                return {Result.EntityIds[Index], *std::get<std::vector<Args*>>(Result.Components)[Index]...};
             }
 
             /** @brief Advances the iterator to the next result. */
@@ -123,8 +122,7 @@ struct ComponentPoolQuery
         {
             EntityIds.reserve(size);
 
-            std::apply(
-                [size](auto&... components) { (components.reserve(size), ...); }, Components);
+            std::apply([size](auto&... components) { (components.reserve(size), ...); }, Components);
         }
     };
 
@@ -206,7 +204,6 @@ struct ComponentPoolQuery
         static const TypeId Id = NextTypeId++;
         return Id;
     }
-    //TODO- by using power 2 page size for sparse set pagination, u can prevent doing modulo & division. sppeds up sparse sets alot.
 
     /**
      * @brief Stores heterogeneous cached query results by query type.
@@ -298,8 +295,8 @@ struct ComponentPoolQuery
      * @param Pools Component pools used by the query.
      */
     template <ComponentType... Args>
-    void AddComponents(QueryResult<Args...>& result, const unsigned int id,
-        std::tuple<ComponentPool<Args>&...>& Pools)
+    void AddComponents(
+        QueryResult<Args...>& result, const unsigned int id, std::tuple<ComponentPool<Args>&...>& Pools)
     {
         std::apply(
             [&](auto&... pools)
@@ -330,14 +327,11 @@ struct ComponentPoolQuery
      */
     void SubscribeToEvents()
     {
-        Service::Get<EventBus>().Sub<EntityDestroyed>(
-            [this](const EntityDestroyed&) { ++QueryVersion; });
+        Service::Get<EventBus>().Sub<EntityDestroyed>([this](const EntityDestroyed&) { ++QueryVersion; });
 
-        Service::Get<EventBus>().Sub<EntityCreated>(
-            [this](const EntityCreated&) { ++QueryVersion; });
+        Service::Get<EventBus>().Sub<EntityCreated>([this](const EntityCreated&) { ++QueryVersion; });
 
-        Service::Get<EventBus>().Sub<ComponentAdded>(
-            [this](const ComponentAdded&) { ++QueryVersion; });
+        Service::Get<EventBus>().Sub<ComponentAdded>([this](const ComponentAdded&) { ++QueryVersion; });
     }
 
     friend struct World;

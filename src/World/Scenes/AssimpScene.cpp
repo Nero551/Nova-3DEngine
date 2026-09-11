@@ -42,18 +42,16 @@ static void ProcessFaces(std::vector<unsigned int>& indices, const aiMesh* mesh)
     }
 }
 
-static Material& ProcessMaterial(
-    const aiScene* scene, const aiMesh* mesh, const std::string& directory)
+static Material& ProcessMaterial(const aiScene* scene, const aiMesh* mesh, const std::string& directory)
 {
     auto& resourceManager = Service::Get<ResourceManager>();
 
-    auto& material =
-        resourceManager.Load<Material>("material_" + std::to_string(mesh->mMaterialIndex));
+    auto& material = resourceManager.Load<Material>("material_" + std::to_string(mesh->mMaterialIndex));
 
     material.Shader = &resourceManager.Load<Shader>("s");
 
-    material.Shader->AssignSource(resourceManager.Load<ShaderSource>(
-        "s", "Assets/Shaders/shader.frag", ShaderStage::Fragment));
+    material.Shader->AssignSource(
+        resourceManager.Load<ShaderSource>("s", "Assets/Shaders/shader.frag", ShaderStage::Fragment));
 
     material.Shader->AssignSource(
         resourceManager.Load<ShaderSource>("s", "Assets/Shaders/shader.vert", ShaderStage::Vertex));
@@ -109,8 +107,8 @@ static void ProcessNode(
 
         auto& material = ProcessMaterial(scene, mesh, directory);
 
-        auto& meshResource = resourceManager.Load<Mesh>(
-            "mesh_" + std::to_string(node->mMeshes[m]), vertices, indices);
+        auto& meshResource =
+            resourceManager.Load<Mesh>("mesh_" + std::to_string(node->mMeshes[m]), vertices, indices);
 
         meshPool.Add(entity.Id).Mesh = &meshResource;
         materialPool.Add(entity.Id).Material = &material;

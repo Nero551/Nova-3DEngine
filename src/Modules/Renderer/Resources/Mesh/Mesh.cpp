@@ -92,8 +92,8 @@ void Mesh::Regenerate()
 
 void Mesh::DrawElements() const
 {
-    glDrawElements(static_cast<GLenum>(Topology), static_cast<GLsizei>(Indices.size()),
-        GL_UNSIGNED_INT, nullptr);
+    glDrawElements(
+        static_cast<GLenum>(Topology), static_cast<GLsizei>(Indices.size()), GL_UNSIGNED_INT, nullptr);
 }
 
 void Mesh::ApplyCulling() const

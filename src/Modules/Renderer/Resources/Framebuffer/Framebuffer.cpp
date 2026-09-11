@@ -63,8 +63,8 @@ void Framebuffer::AttachTexture(FramebufferAttachment textureAttachment, Texture
     glNamedFramebufferTexture(Id, static_cast<GLenum>(textureAttachment), texture.GetId(), 0);
 }
 
-void Framebuffer::Blit(Framebuffer& dst, int srcW, int srcH, int dstW, int dstH, BufferBit buffer,
-    TextureFilter filter)
+void Framebuffer::Blit(
+    Framebuffer& dst, int srcW, int srcH, int dstW, int dstH, BufferBit buffer, TextureFilter filter)
 {
     if (!IsGenerated())
     {
@@ -75,8 +75,8 @@ void Framebuffer::Blit(Framebuffer& dst, int srcW, int srcH, int dstW, int dstH,
         dst.Generate();
     }
 
-    glBlitNamedFramebuffer(Id, dst.Id, 0, 0, srcW, srcH, 0, 0, dstW, dstH,
-        static_cast<GLbitfield>(buffer), static_cast<GLenum>(filter));
+    glBlitNamedFramebuffer(Id, dst.Id, 0, 0, srcW, srcH, 0, 0, dstW, dstH, static_cast<GLbitfield>(buffer),
+        static_cast<GLenum>(filter));
 }
 
 void Framebuffer::AttachRenderBuffer(FramebufferAttachment attachment, Renderbuffer& renderbuffer)
@@ -107,8 +107,7 @@ void Framebuffer::Resize(int width, int height)
         buffer->Height = height;
         buffer->Generate();
 
-        glNamedFramebufferRenderbuffer(
-            Id, static_cast<GLenum>(attachment), GL_RENDERBUFFER, buffer->GetId());
+        glNamedFramebufferRenderbuffer(Id, static_cast<GLenum>(attachment), GL_RENDERBUFFER, buffer->GetId());
     }
 }
 

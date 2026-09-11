@@ -106,14 +106,13 @@ struct AttributeInfo final
     }
 };
 
-template <typename T>
-AttributeInfo RegisterAttribute(const std::string_view name, const unsigned int offset)
+template <typename T> AttributeInfo RegisterAttribute(const std::string_view name, const unsigned int offset)
 {
     TypeRegistry::Register(GetTypeInfo<T>());
     return {.Name = name, .Offset = offset, .TypeID = GetTypeId<T>()};
 }
 
-#define REGISTER_ATTRIBUTE(Type, Member)                                                           \
+#define REGISTER_ATTRIBUTE(Type, Member)                                                                     \
     N::Reflection::RegisterAttribute<decltype(Type::Member)>(#Member, offsetof(Type, Member))
 
 } // namespace N::Reflection

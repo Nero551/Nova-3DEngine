@@ -32,8 +32,8 @@ Image::Image(const std::string& filePath, const bool flip)
     stbi_image_free(pixels);
 }
 
-Image::Image(const int width, const int height, const ColorChannels channels,
-    const std::vector<unsigned char>& pixels)
+Image::Image(
+    const int width, const int height, const ColorChannels channels, const std::vector<unsigned char>& pixels)
 {
     Width = width;
     Height = height;

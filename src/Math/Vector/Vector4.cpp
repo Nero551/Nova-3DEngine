@@ -28,10 +28,7 @@ Vector4::Vector4() : x(0), y(0), z(0), w(0) {}
 
 Vector4::Vector4(const float all) : x(all), y(all), z(all), w(all) {}
 
-Vector4::Vector4(const float x, const float y, const float z, const float w)
-    : x(x), y(y), z(z), w(w)
-{
-}
+Vector4::Vector4(const float x, const float y, const float z, const float w) : x(x), y(y), z(z), w(w) {}
 
 //?Operators
 
@@ -63,8 +60,7 @@ float Vector4::Dot(const Vector4& vec4) const
 
 Vector4 Vector4::Lerp(const Vector4& vec4, const float t) const
 {
-    return {
-        M::Lerp(x, vec4.x, t), M::Lerp(y, vec4.y, t), M::Lerp(z, vec4.z, t), M::Lerp(w, vec4.w, t)};
+    return {M::Lerp(x, vec4.x, t), M::Lerp(y, vec4.y, t), M::Lerp(z, vec4.z, t), M::Lerp(w, vec4.w, t)};
 }
 
 float Vector4::Distance(const Vector4& vec4) const

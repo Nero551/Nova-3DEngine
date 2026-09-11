@@ -70,18 +70,15 @@ void VertexArray::SetMatrix3AttribPointer(int startIndex, int offset, int bindin
 {
     SetAttribPointer(startIndex, 3, DataType::Float, bindingIndex, 0 + offset);
     SetAttribPointer(startIndex + 1, 3, DataType::Float, bindingIndex, sizeof(M::Vector3) + offset);
-    SetAttribPointer(
-        startIndex + 2, 3, DataType::Float, bindingIndex, 2 * sizeof(M::Vector3) + offset);
+    SetAttribPointer(startIndex + 2, 3, DataType::Float, bindingIndex, 2 * sizeof(M::Vector3) + offset);
 }
 
 void VertexArray::SetMatrix4AttribPointer(int startIndex, int offset, int bindingIndex)
 {
     SetAttribPointer(startIndex, 4, DataType::Float, bindingIndex, 0 + offset);
     SetAttribPointer(startIndex + 1, 4, DataType::Float, bindingIndex, sizeof(M::Vector4) + offset);
-    SetAttribPointer(
-        startIndex + 2, 4, DataType::Float, bindingIndex, 2 * sizeof(M::Vector4) + offset);
-    SetAttribPointer(
-        startIndex + 3, 4, DataType::Float, bindingIndex, 3 * sizeof(M::Vector4) + offset);
+    SetAttribPointer(startIndex + 2, 4, DataType::Float, bindingIndex, 2 * sizeof(M::Vector4) + offset);
+    SetAttribPointer(startIndex + 3, 4, DataType::Float, bindingIndex, 3 * sizeof(M::Vector4) + offset);
 }
 
 void VertexArray::SetAttribDivisor(int bindingIndex, int divisor)

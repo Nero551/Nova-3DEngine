@@ -17,10 +17,9 @@ Matrix4::Matrix4(const float mAll)
     }
 }
 
-Matrix4::Matrix4(const float m00, const float m01, const float m02, const float m03,
-    const float m10, const float m11, const float m12, const float m13, const float m20,
-    const float m21, const float m22, const float m23, const float m30, const float m31,
-    const float m32, const float m33)
+Matrix4::Matrix4(const float m00, const float m01, const float m02, const float m03, const float m10,
+    const float m11, const float m12, const float m13, const float m20, const float m21, const float m22,
+    const float m23, const float m30, const float m31, const float m32, const float m33)
 {
     (*this)(0, 0) = m00;
     (*this)(0, 1) = m01;
@@ -129,12 +128,12 @@ Matrix4 Matrix4::RotateAroundAxis(const Vector3& axis, const float radian) const
 
 Matrix3 Matrix4::ToMatrix3() const
 {
-    return {(*this)(0, 0), (*this)(0, 1), (*this)(0, 2), (*this)(1, 0), (*this)(1, 1),
-        (*this)(1, 2), (*this)(2, 0), (*this)(2, 1), (*this)(2, 2)};
+    return {(*this)(0, 0), (*this)(0, 1), (*this)(0, 2), (*this)(1, 0), (*this)(1, 1), (*this)(1, 2),
+        (*this)(2, 0), (*this)(2, 1), (*this)(2, 2)};
 }
 
-Matrix4 Matrix4::Orthographic(const float left, const float right, const float bottom,
-    const float top, const float near, const float far)
+Matrix4 Matrix4::Orthographic(const float left, const float right, const float bottom, const float top,
+    const float near, const float far)
 {
     Matrix4 matrix = Identity;
 
@@ -149,8 +148,7 @@ Matrix4 Matrix4::Orthographic(const float left, const float right, const float b
     return matrix;
 }
 
-Matrix4 Matrix4::Perspective(
-    const float fovRad, const float aspectRatio, const float near, const float far)
+Matrix4 Matrix4::Perspective(const float fovRad, const float aspectRatio, const float near, const float far)
 {
     Matrix4 matrix = Zero;
 
@@ -353,17 +351,13 @@ Matrix4& Matrix4::operator*=(const Matrix4& mat4)
 //* Vectors
 Vector4 Matrix4::operator*(const Vector4& vec4) const
 {
-    return {(*this)(0, 0) * vec4.x + (*this)(0, 1) * vec4.y + (*this)(0, 2) * vec4.z +
-            (*this)(0, 3) * vec4.w,
+    return {(*this)(0, 0) * vec4.x + (*this)(0, 1) * vec4.y + (*this)(0, 2) * vec4.z + (*this)(0, 3) * vec4.w,
 
-        (*this)(1, 0) * vec4.x + (*this)(1, 1) * vec4.y + (*this)(1, 2) * vec4.z +
-            (*this)(1, 3) * vec4.w,
+        (*this)(1, 0) * vec4.x + (*this)(1, 1) * vec4.y + (*this)(1, 2) * vec4.z + (*this)(1, 3) * vec4.w,
 
-        (*this)(2, 0) * vec4.x + (*this)(2, 1) * vec4.y + (*this)(2, 2) * vec4.z +
-            (*this)(2, 3) * vec4.w,
+        (*this)(2, 0) * vec4.x + (*this)(2, 1) * vec4.y + (*this)(2, 2) * vec4.z + (*this)(2, 3) * vec4.w,
 
-        (*this)(3, 0) * vec4.x + (*this)(3, 1) * vec4.y + (*this)(3, 2) * vec4.z +
-            (*this)(3, 3) * vec4.w};
+        (*this)(3, 0) * vec4.x + (*this)(3, 1) * vec4.y + (*this)(3, 2) * vec4.z + (*this)(3, 3) * vec4.w};
 }
 
 //* Scalars
@@ -447,17 +441,13 @@ Matrix4 operator*(const float scalar, const Matrix4& mat4)
 
 std::ostream& operator<<(std::ostream& os, const Matrix4& mat4)
 {
-    os << "[ " << mat4(0, 0) << "  " << mat4(0, 1) << "  " << mat4(0, 2) << "  " << mat4(0, 3)
-       << " ]\n";
+    os << "[ " << mat4(0, 0) << "  " << mat4(0, 1) << "  " << mat4(0, 2) << "  " << mat4(0, 3) << " ]\n";
 
-    os << "[ " << mat4(1, 0) << "  " << mat4(1, 1) << "  " << mat4(1, 2) << "  " << mat4(1, 3)
-       << " ]\n";
+    os << "[ " << mat4(1, 0) << "  " << mat4(1, 1) << "  " << mat4(1, 2) << "  " << mat4(1, 3) << " ]\n";
 
-    os << "[ " << mat4(2, 0) << "  " << mat4(2, 1) << "  " << mat4(2, 2) << "  " << mat4(2, 3)
-       << " ]\n";
+    os << "[ " << mat4(2, 0) << "  " << mat4(2, 1) << "  " << mat4(2, 2) << "  " << mat4(2, 3) << " ]\n";
 
-    os << "[ " << mat4(3, 0) << "  " << mat4(3, 1) << "  " << mat4(3, 2) << "  " << mat4(3, 3)
-       << " ]";
+    os << "[ " << mat4(3, 0) << "  " << mat4(3, 1) << "  " << mat4(3, 2) << "  " << mat4(3, 3) << " ]";
 
     return os;
 }

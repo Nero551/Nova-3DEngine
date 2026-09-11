@@ -174,8 +174,7 @@ Matrix2& Matrix2::operator*=(const Matrix2& mat2)
 //* Vectors
 Vector2 Matrix2::operator*(const Vector2& vec2) const
 {
-    return {(*this)(0, 0) * vec2.x + (*this)(0, 1) * vec2.y,
-        (*this)(1, 0) * vec2.x + (*this)(1, 1) * vec2.y};
+    return {(*this)(0, 0) * vec2.x + (*this)(0, 1) * vec2.y, (*this)(1, 0) * vec2.x + (*this)(1, 1) * vec2.y};
 }
 
 //* Scalars

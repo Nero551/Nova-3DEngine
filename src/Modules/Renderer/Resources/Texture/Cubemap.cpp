@@ -15,10 +15,9 @@ void Cubemap::Generate()
     Width = Front.Width;
     Height = Front.Height;
 
-    if (Back.Width != Width || Back.Height != Height || Top.Width != Width ||
-        Top.Height != Height || Bottom.Width != Width || Bottom.Height != Height ||
-        Right.Width != Width || Right.Height != Height || Left.Width != Width ||
-        Left.Height != Height)
+    if (Back.Width != Width || Back.Height != Height || Top.Width != Width || Top.Height != Height ||
+        Bottom.Width != Width || Bottom.Height != Height || Right.Width != Width || Right.Height != Height ||
+        Left.Width != Width || Left.Height != Height)
     {
         U::Logger::Error("Cubemap faces must all have the same dimensions.");
         return;

@@ -15,8 +15,7 @@ void Stencil::Apply()
         glEnable(GL_STENCIL_TEST);
     }
 
-    glStencilOp(
-        static_cast<GLenum>(SFail), static_cast<GLenum>(DFail), static_cast<GLenum>(SDPass));
+    glStencilOp(static_cast<GLenum>(SFail), static_cast<GLenum>(DFail), static_cast<GLenum>(SDPass));
     glStencilMask(WriteMask);
     glStencilFunc(static_cast<GLenum>(Function), Ref, FunctionMask);
 }

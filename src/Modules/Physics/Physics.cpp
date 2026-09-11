@@ -24,17 +24,16 @@ static MeshInstance3D& CreatePoint(M::Vector4 col)
     material.Color = col;
     auto& shader = resourceManager.Load<Shader>("pointShader");
 
-    shader.AssignSource(resourceManager.Load<ShaderSource>(
-        "pointVert", "Assets/Shaders/shader.vert", ShaderStage::Vertex));
-    shader.AssignSource(resourceManager.Load<ShaderSource>(
-        "pointFrag", "Assets/Shaders/shader.frag", ShaderStage::Fragment));
+    shader.AssignSource(
+        resourceManager.Load<ShaderSource>("pointVert", "Assets/Shaders/shader.vert", ShaderStage::Vertex));
+    shader.AssignSource(
+        resourceManager.Load<ShaderSource>("pointFrag", "Assets/Shaders/shader.frag", ShaderStage::Fragment));
     material.Shader = &shader;
 
     auto& point = World::Get().CreateEntity<MeshInstance3D>();
     World::Get().Query.Pool<MeshComponent>().GetComponentById(point.Id).Mesh = &mesh;
     World::Get().Query.Pool<MaterialComponent>().GetComponentById(point.Id).Material = &material;
-    World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.Id).Scale =
-        M::Vector3{0.2};
+    World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.Id).Scale = M::Vector3{0.2};
     World::Get().Root->AttachChild(point);
 
     return point;
@@ -46,8 +45,7 @@ static void Plot(const M::Vector3 vec3, const M::Vector4 col = {1, 1, 1, 1})
     if (vec3.x < max && vec3.y < max && vec3.z < max)
     {
         auto& point = CreatePoint(col);
-        auto& transform =
-            World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.Id);
+        auto& transform = World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.Id);
         transform.Position.x = vec3.x;
         transform.Position.y = vec3.y;
         transform.Position.z = vec3.z;
@@ -65,8 +63,8 @@ void Physics::Start()
 
     objectShader.AssignSource(resourceManager.Load<ShaderSource>(
         "objectFrag", "Assets/Shaders/shader.frag", ShaderStage::Fragment));
-    objectShader.AssignSource(resourceManager.Load<ShaderSource>(
-        "objectVert", "Assets/Shaders/shader.vert", ShaderStage::Vertex));
+    objectShader.AssignSource(
+        resourceManager.Load<ShaderSource>("objectVert", "Assets/Shaders/shader.vert", ShaderStage::Vertex));
 
     auto& objectMaterial = resourceManager.Load<Material>("cubeMaterial");
     objectMaterial.Shader = &objectShader;

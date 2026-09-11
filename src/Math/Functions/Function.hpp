@@ -42,8 +42,7 @@ template <typename Input, typename Output> struct Function
      * @param g Function applied before this function.
      * @return The composed function.
      */
-    template <typename Middle>
-    Function<Middle, Output> Compose(const Function<Middle, Input>& g) const
+    template <typename Middle> Function<Middle, Output> Compose(const Function<Middle, Input>& g) const
     {
         return [f = *this, g](const Middle& input) { return f(g(input)); };
     }
@@ -57,8 +56,8 @@ template <typename Input, typename Output> struct Function
      * @note Only available for functions with a scalar Input type.
      */
     Function<float, Output> Differentiate(float dx = 0.001f,
-        DifferentiationMethod method = DifferentiationMethod::Central,
-        bool relativeStep = true) const requires IsScalar<Input>
+        DifferentiationMethod method = DifferentiationMethod::Central, bool relativeStep = true) const
+        requires IsScalar<Input>
     {
         return [f = *this, dx, method, relativeStep](const float x)
         {
@@ -88,8 +87,8 @@ template <typename Input, typename Output> struct Function
      * @note Only available for functions with a scalar Input type.
      */
     Output Derivative(float x, float dx = 0.001f,
-        DifferentiationMethod method = DifferentiationMethod::Central,
-        bool relativeStep = true) const requires IsScalar<Input>
+        DifferentiationMethod method = DifferentiationMethod::Central, bool relativeStep = true) const
+        requires IsScalar<Input>
     {
         return Differentiate(dx, method, relativeStep)(x);
     }
@@ -222,8 +221,7 @@ template <typename Input, typename Output> struct Function
     }
 
     /** @brief Composes this function with another function, producing f(g(x)). */
-    template <typename Middle>
-    Function<Middle, Output> operator()(const Function<Middle, Input>& g) const
+    template <typename Middle> Function<Middle, Output> operator()(const Function<Middle, Input>& g) const
     {
         return Compose(g);
     }

@@ -10,8 +10,7 @@ struct InstanceData
     M::Matrix4 ModelMatrix;
     M::Matrix3 NormalMatrix;
 
-    InstanceData(const M::Matrix4& model, const M::Matrix3& normal)
-        : ModelMatrix(model), NormalMatrix(normal)
+    InstanceData(const M::Matrix4& model, const M::Matrix3& normal) : ModelMatrix(model), NormalMatrix(normal)
     {
     }
 };

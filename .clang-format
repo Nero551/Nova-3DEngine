@@ -5,7 +5,7 @@ AllowShortCaseExpressionOnASingleLine: false
 AllowShortEnumsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: Empty
 BreakBeforeBraces: Allman
-ColumnLimit: 100
+ColumnLimit: 110
 IndentWidth: 4
 RequiresClausePosition: WithPreceding
 AlignOperands: DontAlign

@@ -27,8 +27,7 @@ void LightingSystem::Render()
     auto& world = World::Get();
 
     LightingBuffer->Set(
-        static_cast<int>(world.Query.With<LightComponent, Transform3DComponent>().EntityIds.size()),
-        0);
+        static_cast<int>(world.Query.With<LightComponent, Transform3DComponent>().EntityIds.size()), 0);
 
     int i = 0;
     for (auto [entityId, lightComponent, transform] :

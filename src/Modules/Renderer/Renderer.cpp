@@ -87,8 +87,7 @@ void Renderer::SetupMSAAFrameBuffer()
     colorBuffer.Samples = MSAASamples;
     colorBuffer.InternalFormat = TextureInternalFormat::RGB8;
 
-    auto& depthstencilBuffer =
-        resources.Load<Renderbuffer>("[Renderer] MSAA DepthStencil Render Buffer");
+    auto& depthstencilBuffer = resources.Load<Renderbuffer>("[Renderer] MSAA DepthStencil Render Buffer");
     depthstencilBuffer.Height = window.GetHeight();
     depthstencilBuffer.Width = window.GetWidth();
     depthstencilBuffer.Samples = MSAASamples;
@@ -169,8 +168,7 @@ void Renderer::RenderWorld()
     GUniformbuffer->Set(view, 0);
     GUniformbuffer->Set(projection, 64);
     GUniformbuffer->Set(Engine::Get().GetTime(), 128);
-    GUniformbuffer->Set(
-        query.Pool<Transform3DComponent>().GetComponentById(camera->Id).GlobalPosition, 144);
+    GUniformbuffer->Set(query.Pool<Transform3DComponent>().GetComponentById(camera->Id).GlobalPosition, 144);
     GUniformbuffer->Bind();
 
     for (auto& batch : Batches | std::views::values)
@@ -194,8 +192,8 @@ void Renderer::RenderWorld()
     }
 }
 
-void Renderer::FillBatches(Transform3DComponent& transformComponent,
-    MaterialComponent& materialComponent, MeshComponent& meshComponent)
+void Renderer::FillBatches(Transform3DComponent& transformComponent, MaterialComponent& materialComponent,
+    MeshComponent& meshComponent)
 {
     RenderBatch::BatchKey key = {&*materialComponent.Material, &*meshComponent.Mesh};
     auto it = Batches.find(key);

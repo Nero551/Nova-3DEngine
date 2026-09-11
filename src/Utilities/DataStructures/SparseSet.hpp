@@ -19,6 +19,8 @@ template <typename D> struct SparseSet
     // another idea for this. is a new data structure. the POOL!! / FreeList
     // the pool can determine what is the next entity id to use, the usual map contains the actual entities.
     // since pools whole gimmick is the ability to reuse empty slots in a vector
+    //
+    //TODO- by using power 2 page size for sparse set pagination, u can prevent doing modulo & division. speeds up sparse sets alot.
 
     using DenseIndex = size_t;
     using SparseIndex = size_t;

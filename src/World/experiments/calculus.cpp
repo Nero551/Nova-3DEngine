@@ -20,20 +20,16 @@ static MeshInstance3D& CreatePoint(M::Vector4 col)
 
     auto& point = World::Get().CreateEntity<MeshInstance3D>();
     World::Get().Query.Pool<MeshComponent>().GetComponentById(point.Id).Mesh = &mesh;
-    World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.Id).Scale =
-        M::Vector3{0.2};
+    World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.Id).Scale = M::Vector3{0.2};
 
     if (resourceManager.Exists<Material>(std::format("m{}{}{}", col.z, col.x, col.y)))
     {
-        auto& material =
-            resourceManager.Load<Material>(std::format("m{}{}{}", col.z, col.x, col.y));
-        World::Get().Query.Pool<MaterialComponent>().GetComponentById(point.Id).Material =
-            &material;
+        auto& material = resourceManager.Load<Material>(std::format("m{}{}{}", col.z, col.x, col.y));
+        World::Get().Query.Pool<MaterialComponent>().GetComponentById(point.Id).Material = &material;
     }
     else
     {
-        auto& material =
-            resourceManager.Load<Material>(std::format("m{}{}{}", col.z, col.x, col.y));
+        auto& material = resourceManager.Load<Material>(std::format("m{}{}{}", col.z, col.x, col.y));
         material.Color = col;
         auto& shader = resourceManager.Load<Shader>("pointShader");
 
@@ -42,8 +38,7 @@ static MeshInstance3D& CreatePoint(M::Vector4 col)
         shader.AssignSource(resourceManager.Load<ShaderSource>(
             "pointFrag", "Assets/Shaders/shader.frag", ShaderStage::Fragment));
         material.Shader = &shader;
-        World::Get().Query.Pool<MaterialComponent>().GetComponentById(point.Id).Material =
-            &material;
+        World::Get().Query.Pool<MaterialComponent>().GetComponentById(point.Id).Material = &material;
     }
 
     World::Get().Root->AttachChild(point);
@@ -98,8 +93,7 @@ void calculus::Update(double dt)
     {
         for (auto& point : points)
         {
-            auto& transform =
-                World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point->Id);
+            auto& transform = World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point->Id);
             transform.Position *= multiplier;
         }
     }
@@ -163,8 +157,8 @@ void calculus::FourDimensionalProjection(int increase)
         {
             for (int h = -180; h < 180; h += increase)
             {
-                M::Vector4 v4 = M::Vector4::FromHyperSpherical(
-                    M::HyperSpherical(M::Rad(theta), M::Rad(phi), M::Rad(h)));
+                M::Vector4 v4 =
+                    M::Vector4::FromHyperSpherical(M::HyperSpherical(M::Rad(theta), M::Rad(phi), M::Rad(h)));
                 M::Vector3 proj = v4.StereoProject();
                 auto& point = Plot(proj);
                 points.emplace_back(&point);

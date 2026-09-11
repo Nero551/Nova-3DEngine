@@ -50,8 +50,7 @@ Polar Complex::ToPolar() const
 
 bool Complex::NearlyEquals(const Complex& b, float epsilon) const
 {
-    return M::NearlyEquals(Real, b.Real, epsilon) &&
-        M::NearlyEquals(Imaginary, b.Imaginary, epsilon);
+    return M::NearlyEquals(Real, b.Real, epsilon) && M::NearlyEquals(Imaginary, b.Imaginary, epsilon);
 }
 
 bool Complex::operator==(const Complex& b) const

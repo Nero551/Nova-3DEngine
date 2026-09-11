@@ -59,8 +59,8 @@ struct Matrix4
      *     [ m20 m21 m22 m23 ]
      *     [ m30 m31 m32 m33 ]
      */
-    Matrix4(float m00, float m01, float m02, float m03, float m10, float m11, float m12, float m13,
-        float m20, float m21, float m22, float m23, float m30, float m31, float m32, float m33);
+    Matrix4(float m00, float m01, float m02, float m03, float m10, float m11, float m12, float m13, float m20,
+        float m21, float m22, float m23, float m30, float m31, float m32, float m33);
 
     const std::array<std::array<float, 4>, 4>& Data() const
     {
@@ -135,8 +135,7 @@ struct Matrix4
  * @param near Near clipping plane.
  * @param far Far clipping plane.
  */
-    static Matrix4 Orthographic(
-        float left, float right, float bottom, float top, float near, float far);
+    static Matrix4 Orthographic(float left, float right, float bottom, float top, float near, float far);
 
     /**
      * @brief Creates a perspective projection matrix.

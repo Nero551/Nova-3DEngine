@@ -55,8 +55,8 @@ struct VertexArray
      * specified vertex's buffer initial offset.
      * @param normalized Whether integer values are converted to normalized floats.
      */
-    void SetAttribPointer(int index, int size, DataType type, int bindingIndex, size_t offset,
-        bool normalized = false);
+    void SetAttribPointer(
+        int index, int size, DataType type, int bindingIndex, size_t offset, bool normalized = false);
 
     /**
      * @brief Maps a Matrix3 to three consecutive vertex attributes.

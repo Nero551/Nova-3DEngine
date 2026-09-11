@@ -16,8 +16,7 @@ void IndexBuffer::Generate()
 void IndexBuffer::SetData(const std::vector<unsigned int>& indices)
 {
     Generate();
-    glNamedBufferData(
-        Id, indices.size() * sizeof(unsigned int), indices.data(), static_cast<GLenum>(Usage));
+    glNamedBufferData(Id, indices.size() * sizeof(unsigned int), indices.data(), static_cast<GLenum>(Usage));
 }
 
 bool IndexBuffer::IsGenerated()
