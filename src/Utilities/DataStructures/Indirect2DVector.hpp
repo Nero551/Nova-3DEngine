@@ -70,6 +70,86 @@ template <typename T> struct Indirect2DVector
     std::vector<Key> Indices{};
 
     /**
+     * @brief Iterator over the densely stored values.
+     *
+     * Iteration follows the order of the dense `Data` storage. Deletion may
+     * change the order of values due to swap-and-pop.
+     */
+    struct Iterator
+    {
+        Indirect2DVector* IndirectVector;
+        size_t Index;
+
+        /**
+         * @brief Advances the iterator to the next value.
+         *
+         * @return Reference to this iterator.
+         */
+        Iterator& operator++()
+        {
+            ++Index;
+            return *this;
+        }
+
+        /**
+         * @brief Returns the current value.
+         *
+         * @return Reference to the current value.
+         */
+        T& operator*() const
+        {
+            return IndirectVector->Data[Index];
+        }
+
+        T* operator->() const
+        {
+            return &IndirectVector->Data[Index];
+        }
+
+        /**
+         * @brief Compares two iterators for inequality.
+         *
+         * @param other Iterator to compare against.
+         * @return True if the iterators refer to different positions.
+         */
+        bool operator!=(const Iterator& other) const
+        {
+            return Index != other.Index;
+        }
+
+        /**
+         * @brief Compares two iterators for equality.
+         *
+         * @param other Iterator to compare against.
+         * @return True if the iterators refer to the same position.
+         */
+        bool operator==(const Iterator& other) const
+        {
+            return Index == other.Index;
+        }
+    };
+
+    /**
+     * @brief Returns an iterator to the first stored value.
+     *
+     * @return Iterator to the first value.
+     */
+    Iterator begin()
+    {
+        return {this, 0};
+    }
+
+    /**
+     * @brief Returns an iterator past the last stored value.
+     *
+     * @return Iterator past the final value.
+     */
+    Iterator end()
+    {
+        return {this, Data.size()};
+    }
+
+    /**
      * @brief Inserts a value at the specified indices if it does not exist.
      *
      * If `(a, b)` already exists, the existing value is returned and the
@@ -161,9 +241,9 @@ template <typename T> struct Indirect2DVector
      * @param a First lookup index.
      * @param b Second lookup index.
      * @param args Arguments forwarded to the value's constructor.
-     * @return Reference to the existing or newly constructed value.
+     * @return an iterator.
      */
-    template <typename... Args> T& Emplace(Index a, Index b, Args&&... args)
+    template <typename... Args> Iterator Emplace(Index a, Index b, Args&&... args)
     {
         Index& index = ResizeLookup(a, b)[b];
 
@@ -174,7 +254,31 @@ template <typename T> struct Indirect2DVector
             Indices.push_back({a, b});
         }
 
-        return Data[index];
+        return {.IndirectVector = this, .Index = index};
+    }
+
+    Iterator Find(const size_t a, const size_t b)
+    {
+        if (a >= Lookup.size())
+        {
+            return end();
+        }
+
+        const auto& row = Lookup[a];
+
+        if (b >= row.size())
+        {
+            return end();
+        }
+
+        const Index index = row[b];
+
+        if (index == InvalidIndex)
+        {
+            return end();
+        }
+
+        return {.IndirectVector = this, .Index = index};
     }
 
     /**
@@ -223,81 +327,6 @@ template <typename T> struct Indirect2DVector
     {
         Data.reserve(count);
         Indices.reserve(count);
-    }
-
-    /**
-     * @brief Iterator over the densely stored values.
-     *
-     * Iteration follows the order of the dense `Data` storage. Deletion may
-     * change the order of values due to swap-and-pop.
-     */
-    struct Iterator
-    {
-        Indirect2DVector& IndirectVector;
-        size_t Index;
-
-        /**
-         * @brief Advances the iterator to the next value.
-         *
-         * @return Reference to this iterator.
-         */
-        Iterator& operator++()
-        {
-            ++Index;
-            return *this;
-        }
-
-        /**
-         * @brief Returns the current value.
-         *
-         * @return Reference to the current value.
-         */
-        T& operator*() const
-        {
-            return IndirectVector.Data[Index];
-        }
-
-        /**
-         * @brief Compares two iterators for inequality.
-         *
-         * @param other Iterator to compare against.
-         * @return True if the iterators refer to different positions.
-         */
-        bool operator!=(const Iterator& other) const
-        {
-            return Index != other.Index;
-        }
-
-        /**
-         * @brief Compares two iterators for equality.
-         *
-         * @param other Iterator to compare against.
-         * @return True if the iterators refer to the same position.
-         */
-        bool operator==(const Iterator& other) const
-        {
-            return Index == other.Index;
-        }
-    };
-
-    /**
-     * @brief Returns an iterator to the first stored value.
-     *
-     * @return Iterator to the first value.
-     */
-    Iterator begin()
-    {
-        return {*this, 0};
-    }
-
-    /**
-     * @brief Returns an iterator past the last stored value.
-     *
-     * @return Iterator past the final value.
-     */
-    Iterator end()
-    {
-        return {*this, Data.size()};
     }
 
   private:

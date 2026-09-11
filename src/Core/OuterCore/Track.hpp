@@ -14,20 +14,6 @@ template <typename T> struct Track
 {
     Track() {};
     Track(const T& value) : Value(value) {}
-    template <typename F> Track(const T& value, F&& callback) : Value(value)
-    {
-        Connect(std::forward<F>(callback));
-    }
-
-    template <typename F> size_t Connect(F&& callback)
-    {
-        const auto id = Event.Sub([callback = std::forward<F>(callback)](TrackChanged&) { callback(); });
-        return id;
-    }
-    void Disconnect(size_t subscription)
-    {
-        Event.Unsub(subscription);
-    }
 
     const T& Get() const
     {
@@ -123,18 +109,12 @@ template <typename T> struct Track
 
     void MarkChanged()
     {
-        if (Changed)
-        {
-            return;
-        }
         Changed = true;
-        Event.Fire();
     }
 
   private:
     T Value{};
     bool Changed = false;
-    TrackChanged Event{};
 };
 
 } // namespace N

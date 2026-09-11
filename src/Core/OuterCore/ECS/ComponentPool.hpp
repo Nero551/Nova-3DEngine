@@ -98,7 +98,7 @@ template <ComponentType T> struct ComponentPool : IComponentPool
      */
     T& Add(const unsigned int entityId)
     {
-        auto& component = Components.Emplace(entityId);
+        auto& component = Components.Emplace(entityId)->DenseValue;
         Service::Get<EventBus>().Fire<ComponentAdded>(entityId);
         return component;
     }

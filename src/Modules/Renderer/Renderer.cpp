@@ -198,8 +198,14 @@ void Renderer::FillBatches(Transform3DComponent& transformComponent, MaterialCom
     unsigned int materialId = materialComponent.Material->GetResourceId();
     unsigned int meshId = meshComponent.Mesh->GetResourceId();
 
-    auto& batch = Batches.Emplace(materialId, meshId, meshComponent.Mesh, materialComponent.Material);
-    batch.Instances.emplace_back(transformComponent.GetModelMatrix(), transformComponent.GetNormalMatrix());
+    auto batch = Batches.Find(materialId, meshId);
+
+    if (batch == Batches.end())
+    {
+        batch = Batches.Emplace(materialId, meshId, meshComponent.Mesh, materialComponent.Material);
+    }
+
+    batch->Instances.emplace_back(transformComponent.GetModelMatrix(), transformComponent.GetNormalMatrix());
 }
 
 // TODO- if there is multiple semi-transparent objects behind each other , depth testing

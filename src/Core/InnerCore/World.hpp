@@ -54,8 +54,8 @@ struct World : SystemOwner
         entity->Id = id;
         entity->Initialize();
 
-        auto& it = Entities.Emplace(id, std::move(entity));
-        T& createdEntity = static_cast<T&>(*it);
+        auto it = Entities.Emplace(id, std::move(entity));
+        T& createdEntity = static_cast<T&>(*it->DenseValue);
         Service::Get<EventBus>().Fire<EntityCreated>(createdEntity);
 
         return createdEntity;

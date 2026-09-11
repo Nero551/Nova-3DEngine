@@ -60,7 +60,7 @@ template <typename D> struct SparseSet
   public:
     struct Iterator
     {
-        SparseSet& Set;
+        SparseSet* Set;
         DenseIndex Index;
 
         /** @brief Advances the iterator to the next value. */
@@ -74,12 +74,27 @@ template <typename D> struct SparseSet
         {
             SparseIndex SparseValue;
             D& DenseValue;
+
+            DereferencedIterator* operator->()
+            {
+                return this;
+            }
+
+            const DereferencedIterator* operator->() const
+            {
+                return this;
+            }
         };
 
         /** @brief Returns the sparse index and corresponding value. */
         DereferencedIterator operator*() const
         {
-            return {.SparseValue = Set.Indices[Index], .DenseValue = Set.Dense[Index]};
+            return {.SparseValue = Set->Indices[Index], .DenseValue = Set->Dense[Index]};
+        }
+
+        DereferencedIterator operator->() const
+        {
+            return {.SparseValue = Set->Indices[Index], .DenseValue = Set->Dense[Index]};
         }
 
         /** @brief Compares two iterators for inequality. */
@@ -97,13 +112,13 @@ template <typename D> struct SparseSet
     /** @brief Returns an iterator to the first value. */
     Iterator begin()
     {
-        return {*this, 0};
+        return {this, 0};
     }
 
     /** @brief Returns an iterator past the last value. */
     Iterator end()
     {
-        return {*this, Size()};
+        return {this, Size()};
     }
 
     /** @brief Returns whether the specified sparse index exists. */
@@ -127,7 +142,7 @@ template <typename D> struct SparseSet
         if (!Contains(index))
             return end();
 
-        return {*this, Sparse[index]};
+        return {.Set = this, .Index = Sparse[index]};
     }
 
     /** @brief Get but without the Contains check. if doesn't exist, it will just blow up */
@@ -174,7 +189,7 @@ template <typename D> struct SparseSet
     }
 
     /** @brief Constructs a value at the specified sparse index. */
-    template <typename... Args> D& Emplace(const SparseIndex s, Args&&... args)
+    template <typename... Args> Iterator Emplace(const SparseIndex s, Args&&... args)
     {
         if (!Contains(s))
         {
@@ -186,7 +201,7 @@ template <typename D> struct SparseSet
             Dense.emplace_back(std::forward<Args>(args)...);
         }
 
-        return Dense[Sparse[s]];
+        return {.Set = this, .Index = Sparse[s]};
     }
 
     /** @brief Removes the value at the specified sparse index. */

@@ -57,7 +57,7 @@ Entity& World::FindEntity(unsigned int id)
     {
         U::Logger::Fatal("Entity Not Found: ", id);
     }
-    return *(*entity).DenseValue;
+    return *entity->DenseValue;
 }
 
 U::CheckedPtr<Entity> World::TryFindEntity(const unsigned int id)
@@ -69,7 +69,7 @@ U::CheckedPtr<Entity> World::TryFindEntity(const unsigned int id)
         return nullptr;
     }
 
-    return &*(*entity).DenseValue;
+    return &*entity->DenseValue;
 }
 
 // TODO- quick flicker happens at the start of the run, its input mouse rapidly changing when changing MouseMode.
