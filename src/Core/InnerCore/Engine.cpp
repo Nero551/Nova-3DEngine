@@ -77,7 +77,7 @@ void Engine::Configure()
     AddModule<Input>();
     AddModule<Renderer>();
     AddModule<Profiling>();
-    // AddModule<Physics>();
+    AddModule<Physics>();
 }
 
 void Engine::Start()

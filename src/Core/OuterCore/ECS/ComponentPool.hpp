@@ -125,6 +125,11 @@ template <ComponentType T> struct ComponentPool : IComponentPool
         return Components.GetUnchecked(entityId);
     }
 
+    void Reserve(size_t count)
+    {
+        Components.Reserve(count);
+    }
+
     /**
      * @brief Returns the entity ID at a dense storage index.
      *

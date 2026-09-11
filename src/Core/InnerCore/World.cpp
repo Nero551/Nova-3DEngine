@@ -45,6 +45,10 @@ void World::RemoveEntity(const unsigned int id)
         Entities.Delete(descendant->Id);
     }
 }
+void World::ReserveEntities(size_t count)
+{
+    Entities.Reserve(count);
+}
 
 Entity& World::FindEntity(unsigned int id)
 {

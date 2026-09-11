@@ -69,7 +69,7 @@ static float x = -10;
 
 void calculus::Start()
 {
-    // ThreeDimensionalProjection(1);
+    ThreeDimensionalProjection(1);
 }
 
 static float multiplier = 1;
@@ -136,7 +136,6 @@ void calculus::TwoDimensionalProjection(int increase)
 
 void calculus::ThreeDimensionalProjection(int increase)
 {
-    points.reserve(M::Pow(360 / increase, 2));
     U::Logger::Info(M::Pow(360 / increase, 2));
 
     for (int theta = -180; theta < 180; theta += increase)
@@ -144,7 +143,7 @@ void calculus::ThreeDimensionalProjection(int increase)
         for (int phi = -180; phi < 180; phi += increase)
         {
             M::Vector3 v3 = M::Vector3::FromSpherical(M::Spherical(M::Rad(theta), M::Rad(phi)));
-            // auto& d3point = Plot(v3);
+            auto& d3point = Plot(v3);
             M::Vector2 proj = v3.StereoProject();
             auto& point = Plot({proj.x, proj.y, 0});
             points.emplace_back(&point);
@@ -157,6 +156,7 @@ void calculus::FourDimensionalProjection(int increase)
 {
     points.reserve(M::Pow(360 / increase, 3));
     U::Logger::Info(M::Pow(360 / increase, 3));
+    World::Get().ReserveEntities(M::Pow(360 / increase, 3));
     for (int theta = -180; theta < 180; theta += increase)
     {
         for (int phi = -180; phi < 180; phi += increase)

@@ -2,6 +2,8 @@
 
 #include "Utilities/CheckedPtr.hpp"
 
+#include <unordered_set>
+
 namespace N
 {
 /**
@@ -119,10 +121,10 @@ struct Entity
 
     /**
      * @brief Checks whether this entity is a descendant of another entity.
-     * @param entity Potential ancestor entity.
+     * @param entityId Potential ancestor entity.
      * @return True if this entity is a descendant of the given entity.
      */
-    bool IsDescendantOf(const Entity& entity);
+    bool IsDescendantOf(unsigned int entityId) const;
 
     /**
      * @brief Gets all ancestors of the entity.
@@ -134,17 +136,17 @@ struct Entity
 
     /**
      * @brief Checks whether an entity is an ancestor of this entity.
-     * @param entity Potential descendant entity.
+     * @param entityId Potential descendant entity.
      * @return True if this entity is an ancestor.
      */
-    bool IsAncestorOf(const Entity& entity);
+    bool IsAncestorOf(unsigned int entityId) const;
 
     /**
      * @brief Checks whether this entity has the specified ancestor.
      * @param id Id of the potential ancestor.
      * @return True if the entity is an ancestor.
      */
-    bool HasAncestor(unsigned int id) const;
+    bool HasAncestor(unsigned int id);
 
     /**
      * @brief Gets the entity's parent.
@@ -178,7 +180,7 @@ struct Entity
     Entity& GetRoot();
 
   private:
-    std::vector<unsigned int> Children;
+    std::unordered_set<unsigned int> Children;
 
     /** @brief Parent entity in the hierarchy. */
     unsigned int Parent{};

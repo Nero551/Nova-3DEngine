@@ -9,6 +9,7 @@ void Entity::DestroyChild(const unsigned int id)
     {
         return;
     }
+
     auto& child = World::Get().FindEntity(id);
     child.Destroy();
 }
@@ -27,7 +28,13 @@ void Entity::AttachChild(Entity& child)
         return;
     }
 
-    if (child.IsAncestorOf(*this))
+    if (child.IsDescendantOf(Id))
+    {
+        U::Logger::Error("An entity cannot have its descendant as a child.");
+        return;
+    }
+
+    if (child.IsAncestorOf(Id))
     {
         U::Logger::Error("An entity cannot have its ancestor as a child.");
         return;
@@ -38,23 +45,19 @@ void Entity::AttachChild(Entity& child)
         child.ClearParent();
     }
 
-    Children.emplace_back(child.Id);
-
-    child.Parent = this->Id;
+    Children.insert(child.Id);
+    child.Parent = Id;
 }
 
 void Entity::DetachChild(const unsigned int id)
 {
-    const auto it = std::ranges::find(Children, id);
-
-    if (it != Children.end())
+    if (Children.erase(id))
     {
         World::Get().FindEntity(id).Parent = 0;
-        Children.erase(it);
     }
 }
 
-Entity& Entity::GetChild(unsigned int id)
+Entity& Entity::GetChild(const unsigned int id)
 {
     if (HasChild(id))
     {
@@ -76,8 +79,7 @@ U::CheckedPtr<Entity> Entity::TryGetChild(const unsigned int id)
 
 bool Entity::HasChild(const unsigned int id) const
 {
-    auto it = std::ranges::find(Children, id);
-    return it != Children.end();
+    return Children.contains(id);
 }
 
 size_t Entity::ChildCount() const
@@ -90,7 +92,7 @@ std::vector<U::CheckedPtr<Entity>> Entity::GetChildren()
     std::vector<U::CheckedPtr<Entity>> children;
     children.reserve(Children.size());
 
-    for (unsigned int id : Children)
+    for (const unsigned int id : Children)
     {
         children.emplace_back(&World::Get().FindEntity(id));
     }
@@ -102,7 +104,7 @@ void Entity::DestroyChildren()
 {
     while (!Children.empty())
     {
-        DestroyChild(Children.back());
+        DestroyChild(*Children.begin());
     }
 }
 
@@ -118,14 +120,22 @@ std::vector<U::CheckedPtr<Entity>> Entity::GetDescendants()
 
 bool Entity::HasDescendant(const unsigned int id) const
 {
-    const U::CheckedPtr<Entity> descendant = World::Get().TryFindEntity(id);
-    return descendant && descendant->IsDescendantOf(*this);
+    return IsAncestorOf(id);
 }
 
-bool Entity::IsDescendantOf(const Entity& entity)
+bool Entity::IsDescendantOf(const unsigned int entityId) const
 {
-    return std::ranges::any_of(
-        GetAncestors(), [&entity](const auto& ancestor) { return ancestor->Id == entity.Id; });
+    unsigned int current = Parent;
+
+    while (current != 0)
+    {
+        if (current == entityId)
+            return true;
+
+        current = World::Get().FindEntity(current).Parent;
+    }
+
+    return false;
 }
 
 std::vector<U::CheckedPtr<Entity>> Entity::GetAncestors()
@@ -144,16 +154,25 @@ std::vector<U::CheckedPtr<Entity>> Entity::GetAncestors()
     return ancestors;
 }
 
-bool Entity::IsAncestorOf(const Entity& entity)
+bool Entity::IsAncestorOf(const unsigned int entityId) const
 {
-    return std::ranges::any_of(GetDescendants(),
-        [&entity](const auto& descendant) { return descendant->Id == entity.Id; });
+    for (const unsigned int id : Children)
+    {
+        if (id == entityId)
+            return true;
+
+        const Entity& child = World::Get().FindEntity(id);
+
+        if (child.IsAncestorOf(entityId))
+            return true;
+    }
+
+    return false;
 }
 
-bool Entity::HasAncestor(const unsigned int id) const
+bool Entity::HasAncestor(const unsigned int id)
 {
-    U::CheckedPtr<Entity> ancestor = World::Get().TryFindEntity(id);
-    return ancestor && ancestor->IsAncestorOf(*this);
+    return IsDescendantOf(id);
 }
 
 Entity& Entity::GetParent()
@@ -189,14 +208,16 @@ Entity& Entity::GetRoot()
     U::CheckedPtr current = this;
 
     while (current->HasParent())
+    {
         current = &World::Get().FindEntity(current->Parent);
+    }
 
     return *current;
 }
 
 void Entity::RecursiveChildren(std::vector<U::CheckedPtr<Entity>>& entities, const Entity& entity)
 {
-    for (unsigned int id : entity.Children)
+    for (const unsigned int id : entity.Children)
     {
         Entity& child = World::Get().FindEntity(id);
 

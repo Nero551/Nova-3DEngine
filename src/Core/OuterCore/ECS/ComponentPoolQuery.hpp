@@ -138,15 +138,15 @@ struct ComponentPoolQuery
      */
     template <ComponentType T> ComponentPool<T>& Pool()
     {
-        const auto type = std::type_index(typeid(T));
-        auto it = ComponentPools.find(type);
+        const TypeId typeId = GetTypeId<T>();
 
-        if (it == ComponentPools.end())
-        {
-            it = ComponentPools.emplace(type, std::make_unique<ComponentPool<T>>()).first;
-        }
+        if (typeId >= ComponentPools.size())
+            ComponentPools.resize(typeId + 1);
 
-        return static_cast<ComponentPool<T>&>(*it->second);
+        if (!ComponentPools[typeId])
+            ComponentPools[typeId] = std::make_unique<ComponentPool<T>>();
+
+        return static_cast<ComponentPool<T>&>(*ComponentPools[typeId]);
     }
 
     /**
@@ -197,8 +197,16 @@ struct ComponentPoolQuery
      * Component types are identified using their std::type_index.
      *
      */
-    std::unordered_map<std::type_index, std::unique_ptr<IComponentPool>> ComponentPools{};
-    //TODO- this is bottlenecking, give each component pool an id and use a sparse set instead of this map.
+    std::vector<std::unique_ptr<IComponentPool>> ComponentPools{};
+
+    using TypeId = size_t;
+    inline static size_t NextTypeId{};
+    template <typename T> TypeId GetTypeId()
+    {
+        static const TypeId Id = NextTypeId++;
+        return Id;
+    }
+    //TODO- by using power 2 page size for sparse set pagination, u can prevent doing modulo & division. sppeds up sparse sets alot.
 
     /**
      * @brief Stores heterogeneous cached query results by query type.

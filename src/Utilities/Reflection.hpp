@@ -100,9 +100,9 @@ struct AttributeInfo final
         return os;
     }
 
-    const TypeInfo* GetType() const
+    const TypeInfo& GetType() const
     {
-        return TypeRegistry::Get(TypeID);
+        return *TypeRegistry::Get(TypeID);
     }
 };
 
