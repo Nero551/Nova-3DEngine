@@ -43,6 +43,7 @@ struct ResourceManager : Service
         else
         {
             auto resource = std::make_unique<T>(name, std::forward<Args>(args)...);
+            resource->ResourceId = NextId++;
             Resources.emplace(key, std::move(resource));
 
             return static_cast<T&>(*Resources.at(key));
@@ -61,5 +62,6 @@ struct ResourceManager : Service
 
   private:
     std::unordered_map<std::string, std::unique_ptr<Resource>> Resources;
+    unsigned int NextId = 0;
 };
 } // namespace N

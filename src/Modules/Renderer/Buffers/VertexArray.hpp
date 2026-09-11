@@ -9,9 +9,15 @@ namespace N
  * configuration. */
 struct VertexArray
 {
-    /** @brief Constructs an ungenerated vertex array object. */
-    VertexArray();
 
+    /** @brief Constructs an ungenerated vertex array object. */
+    VertexArray() {}
+
+    VertexArray(const VertexArray&) = delete;
+    VertexArray& operator=(const VertexArray&) = delete;
+
+    VertexArray(VertexArray&& Other) noexcept : Id(std::exchange(Other.Id, 0)) {}
+    VertexArray& operator=(VertexArray&& Other) noexcept;
     /** @brief Generates the VAO if it has not already been generated. */
     void Generate();
 

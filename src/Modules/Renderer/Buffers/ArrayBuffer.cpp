@@ -2,8 +2,17 @@
 
 namespace N
 {
-ArrayBuffer::ArrayBuffer() {}
 
+ArrayBuffer& ArrayBuffer::operator=(ArrayBuffer&& Other) noexcept
+{
+    if (this != &Other)
+    {
+        Delete();
+        Id = std::exchange(Other.Id, 0);
+    }
+
+    return *this;
+}
 void ArrayBuffer::Generate()
 {
     if (IsGenerated())
@@ -26,7 +35,7 @@ void ArrayBuffer::Delete()
 
 ArrayBuffer::~ArrayBuffer()
 {
-    glDeleteBuffers(1, &Id);
+    Delete();
 }
 
 void ArrayBuffer::Bind()

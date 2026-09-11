@@ -171,7 +171,7 @@ void Renderer::RenderWorld()
     GUniformbuffer->Set(query.Pool<Transform3DComponent>().GetComponentById(camera->Id).GlobalPosition, 144);
     GUniformbuffer->Bind();
 
-    for (auto& batch : Batches | std::views::values)
+    for (auto& batch : Batches)
     {
         batch.Instances.clear();
     }
@@ -186,7 +186,7 @@ void Renderer::RenderWorld()
 
         FillBatches(transformComponent, materialComponent, meshComponent);
     }
-    for (auto& batch : Batches | std::views::values)
+    for (auto& batch : Batches)
     {
         batch.Render();
     }
@@ -195,15 +195,11 @@ void Renderer::RenderWorld()
 void Renderer::FillBatches(Transform3DComponent& transformComponent, MaterialComponent& materialComponent,
     MeshComponent& meshComponent)
 {
-    RenderBatch::BatchKey key = {&*materialComponent.Material, &*meshComponent.Mesh};
-    auto it = Batches.find(key);
+    unsigned int materialId = materialComponent.Material->GetResourceId();
+    unsigned int meshId = meshComponent.Mesh->GetResourceId();
 
-    if (it == Batches.end())
-    {
-        it = Batches.try_emplace(key, meshComponent.Mesh, materialComponent.Material).first;
-    }
-    it->second.Instances.emplace_back(
-        transformComponent.GetModelMatrix(), transformComponent.GetNormalMatrix());
+    auto& batch = Batches.Emplace(materialId, meshId, meshComponent.Mesh, materialComponent.Material);
+    batch.Instances.emplace_back(transformComponent.GetModelMatrix(), transformComponent.GetNormalMatrix());
 }
 
 // TODO- if there is multiple semi-transparent objects behind each other , depth testing

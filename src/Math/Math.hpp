@@ -37,6 +37,8 @@
 #include "Vector/Vector3.hpp"
 #include "Vector/Vector4.hpp"
 
+//TODO- optimize the math ya piece of shit
+
 /**
  * @namespace N::M
  * @brief A Float-based math library for the Nova game engine. everything uses floats

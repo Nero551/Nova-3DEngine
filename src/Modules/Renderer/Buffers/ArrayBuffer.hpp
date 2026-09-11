@@ -11,8 +11,12 @@ struct ArrayBuffer
     BufferUsage Usage = BufferUsage::StaticDraw;
 
     /** @brief Constructs an ungenerated array buffer. */
-    ArrayBuffer();
+    ArrayBuffer() {}
 
+    ArrayBuffer(const ArrayBuffer&) = delete;
+    ArrayBuffer& operator=(const ArrayBuffer&) = delete;
+    ArrayBuffer(ArrayBuffer&& Other) noexcept : Id(std::exchange(Other.Id, 0)) {}
+    ArrayBuffer& operator=(ArrayBuffer&& Other) noexcept;
     /** @brief Generates the buffer once; subsequent calls have no effect. */
     void Generate();
 

@@ -37,6 +37,11 @@ struct RenderBatch
         int instanceCount = Instances.size();
         Buffer.SetData(Instances);
 
+        U::Logger::Info("Matrix4: " + std::to_string(sizeof(M::Matrix4)));
+        U::Logger::Info("Matrix3: " + std::to_string(sizeof(M::Matrix3)));
+        U::Logger::Info("InstanceData: " + std::to_string(sizeof(InstanceData)));
+        U::Logger::Info("Matrix3 offset: " + std::to_string(offsetof(InstanceData, NormalMatrix)));
+
         Mesh->Generate();
         Mesh->VAO.SetVertexBuffer(Buffer, 1, sizeof(InstanceData));
 

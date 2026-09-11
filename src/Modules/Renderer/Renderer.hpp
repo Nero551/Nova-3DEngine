@@ -8,6 +8,7 @@
 #include "Resources/Material/Material.hpp"
 #include "Resources/Mesh/Mesh.hpp"
 #include "Resources/Uniformbuffer/Uniformbuffer.hpp"
+#include "Utilities/DataStructures/Indirect2DVector.hpp"
 #include "World/Components/Transform3DComponent.hpp"
 
 namespace N
@@ -22,7 +23,8 @@ struct Renderer : Module
     U::CheckedPtr<Mesh> ScreenMesh{"Renderer has no Screen Mesh to render on"};
     U::CheckedPtr<Uniformbuffer> GUniformbuffer{"Renderer has no Uniform buffer to use"};
 
-    std::unordered_map<RenderBatch::BatchKey, RenderBatch, RenderBatch::BatchKeyHash> Batches;
+    Indirect2DVector<RenderBatch> Batches;
+    // std::unordered_map<RenderBatch::BatchKey, RenderBatch, RenderBatch::BatchKeyHash> Batches;
 
   protected:
     void SetupFramebuffer();

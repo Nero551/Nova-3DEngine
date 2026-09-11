@@ -7,8 +7,7 @@
 
 namespace N
 {
-VertexArray::VertexArray() {}
-
+VertexArray& VertexArray::operator=(VertexArray&& Other) noexcept {}
 void VertexArray::Generate()
 {
     if (IsGenerated())
@@ -31,7 +30,7 @@ void VertexArray::Delete()
 
 VertexArray::~VertexArray()
 {
-    glDeleteVertexArrays(1, &Id);
+    Delete();
 }
 
 void VertexArray::Bind()

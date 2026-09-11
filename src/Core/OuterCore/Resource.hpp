@@ -24,5 +24,14 @@ struct Resource
     Resource(Resource&&) = default;
 
     Resource& operator=(Resource&&) = default;
+
+    unsigned int GetResourceId() const
+    {
+        return ResourceId;
+    }
+
+  private:
+    friend struct ResourceManager;
+    unsigned int ResourceId = 0;
 };
 } // namespace N
