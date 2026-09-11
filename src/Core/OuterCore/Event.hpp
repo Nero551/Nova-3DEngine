@@ -1,4 +1,5 @@
 #pragma once
+#include "Utilities/Logger.hpp"
 
 namespace N
 {
@@ -17,6 +18,8 @@ template <typename T> struct Event : IEvent
     /** @brief Dispatches the event to all registered listeners. */
     void Fire()
     {
+        U::Logger::Info("Event listeners: " + std::to_string(Listeners.size()));
+
         for (const auto& listener : Listeners)
         {
             listener.Callback(static_cast<T&>(*this));
@@ -24,12 +27,13 @@ template <typename T> struct Event : IEvent
     }
 
     /** @brief Registers a listener and returns its unique subscription ID. */
-    template <typename F> requires std::invocable<F, const T&>
+    template <typename F> requires std::invocable<F, T&>
     std::size_t Sub(F&& callback)
     {
         const auto subscription = ++NextSubscription;
-        auto method = [callback = std::forward<F>(callback)](T& e) mutable { callback(e); };
-        Listeners.push_back({.Subscription = subscription, .Callback = method});
+
+        Listeners.push_back({.Subscription = subscription, .Callback = std::forward<F>(callback)});
+
         return subscription;
     }
 

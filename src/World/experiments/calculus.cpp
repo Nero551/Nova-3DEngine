@@ -51,9 +51,9 @@ static Entity& Plot(const M::Vector3 vec3, const M::Vector4 col = {1, 1, 1, 1})
 {
     auto& point = CreatePoint(col);
     auto& transform = World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.Id);
-    transform.Position.x = vec3.x;
-    transform.Position.y = vec3.y;
-    transform.Position.z = vec3.z;
+    transform.Position().x = vec3.x;
+    transform.Position().y = vec3.y;
+    transform.Position().z = vec3.z;
 
     return point;
 }
@@ -64,7 +64,7 @@ static float x = -10;
 
 void calculus::Start()
 {
-    ThreeDimensionalProjection(2);
+    ThreeDimensionalProjection(10);
 }
 
 static float multiplier = 1;
@@ -137,11 +137,9 @@ void calculus::ThreeDimensionalProjection(int increase)
         for (int phi = -180; phi < 180; phi += increase)
         {
             M::Vector3 v3 = M::Vector3::FromSpherical(M::Spherical(M::Rad(theta), M::Rad(phi)));
-            auto& d3point = Plot(v3);
             M::Vector2 proj = v3.StereoProject();
             auto& point = Plot({proj.x, proj.y, 0});
             points.emplace_back(&point);
-            // points.emplace_back(&d3point);
         }
     }
 }

@@ -13,6 +13,7 @@ target_precompile_headers(Nova PRIVATE
         "$<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/src/pch.hpp>"
 )
 
+set_property(TARGET Nova PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
 set(TRACY_ENABLE ON CACHE BOOL "Enable Tracy" FORCE)
 add_subdirectory(src/Core)
 add_subdirectory(src/Utilities)

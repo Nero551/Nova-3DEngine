@@ -171,7 +171,6 @@ struct ComponentPoolQuery
             auto& pool = std::get<0>(pools);
 
             result.Clear();
-            result.Reserve(pool.Size());
             PopulateResult(result, pools);
             result.Version = QueryVersion;
         }
@@ -249,6 +248,7 @@ struct ComponentPoolQuery
     void PopulateResult(QueryResult<Args...>& result, std::tuple<ComponentPool<Args>&...>& pools)
     {
         auto& driverPool = GetSmallestPool(pools);
+        result.Reserve(driverPool.Size());
 
         for (size_t i = 0; i < driverPool.Size(); ++i)
         {

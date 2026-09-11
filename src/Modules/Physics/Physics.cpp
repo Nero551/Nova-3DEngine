@@ -46,9 +46,10 @@ static void Plot(const M::Vector3 vec3, const M::Vector4 col = {1, 1, 1, 1})
     {
         auto& point = CreatePoint(col);
         auto& transform = World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.Id);
-        transform.Position.x = vec3.x;
-        transform.Position.y = vec3.y;
-        transform.Position.z = vec3.z;
+        transform.Position().x = vec3.x;
+        transform.Position().y = vec3.y;
+        transform.Position().z = vec3.z;
+        transform.Position -= 2;
     }
 }
 
