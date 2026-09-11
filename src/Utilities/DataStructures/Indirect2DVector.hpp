@@ -88,7 +88,7 @@ template <typename T> struct Indirect2DVector
         {
             index = static_cast<Index>(Data.size());
             Data.push_back(value);
-            Indices.emplace_back({a, b});
+            Indices.push_back({a, b});
         }
 
         return Data[index];
@@ -171,7 +171,7 @@ template <typename T> struct Indirect2DVector
         {
             index = static_cast<Index>(Data.size());
             Data.emplace_back(std::forward<Args>(args)...);
-            Indices.emplace_back({a, b});
+            Indices.push_back({a, b});
         }
 
         return Data[index];
