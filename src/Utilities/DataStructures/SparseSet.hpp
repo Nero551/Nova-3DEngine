@@ -41,11 +41,11 @@ template <typename D> struct SparseSet
     //
     //TODO- by using power 2 page size for sparse set pagination, u can prevent doing modulo & division. speeds up sparse sets alot.
 
-    using DenseIndex = size_t;
-    using SparseIndex = size_t;
+    using DenseIndex = unsigned int;
+    using SparseIndex = unsigned int;
 
     /** @brief Represents an invalid index. */
-    static constexpr auto InvalidIndex = std::numeric_limits<size_t>::max();
+    static constexpr auto InvalidIndex = std::numeric_limits<SparseIndex>::max();
 
   private:
     /** @brief Contains the actual values. */
@@ -172,7 +172,8 @@ template <typename D> struct SparseSet
     }
 
     /** @brief Inserts a value at the specified sparse index. */
-    D& Push(const SparseIndex s, const D& d)
+    template <typename U> requires std::constructible_from<D, U&&>
+    D& Push(SparseIndex s, U&& value)
     {
         if (!Contains(s))
         {
@@ -181,7 +182,7 @@ template <typename D> struct SparseSet
 
             Sparse[s] = Dense.size();
             Indices.push_back(s);
-            Dense.push_back(d);
+            Dense.push_back(value);
         }
 
         return Dense[Sparse[s]];
@@ -237,7 +238,6 @@ template <typename D> struct SparseSet
     {
         Dense.clear();
         Indices.clear();
-        Sparse.clear();
     }
 
     /** @brief Reserves dense storage for the specified number of elements. */

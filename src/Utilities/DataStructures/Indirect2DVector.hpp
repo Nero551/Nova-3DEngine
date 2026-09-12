@@ -35,7 +35,7 @@ namespace N
  */
 template <typename T> struct Indirect2DVector
 {
-    using Index = size_t;
+    using Index = unsigned int;
 
     /** @brief Represents an invalid dense index. */
     static constexpr Index InvalidIndex = std::numeric_limits<Index>::max();

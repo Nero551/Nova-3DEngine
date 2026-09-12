@@ -5,7 +5,7 @@ namespace N
 
 template <typename T> struct TypedVector
 {
-    using TypeId = size_t;
+    using TypeId = unsigned int;
     TypeId NextTypeId{};
 
     std::vector<T> Data{};
@@ -56,6 +56,11 @@ template <typename T> struct TypedVector
             Data[typeId] = T(std::forward<Parameters>(parameters)...);
         }
         return Data[typeId];
+    }
+
+    TypeId Size() const
+    {
+        return Data.size();
     }
 
   private:

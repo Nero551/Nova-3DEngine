@@ -16,8 +16,7 @@ namespace N
 struct IComponentPool
 {
     virtual ~IComponentPool() = default;
-    virtual size_t Size() const = 0;
-    virtual unsigned int GetIdByIndex(const size_t index) const = 0;
+    virtual unsigned int Size() const = 0;
 };
 
 /** @brief Defines a valid component type. */
@@ -44,7 +43,7 @@ template <ComponentType T> struct ComponentPool : IComponentPool
     struct Iterator
     {
         ComponentPool* Pool;
-        size_t Index;
+        unsigned int Index;
 
         /** @brief Returns the entity ID and corresponding component. */
         std::pair<unsigned int, T&> operator*() const
@@ -135,7 +134,7 @@ template <ComponentType T> struct ComponentPool : IComponentPool
      * @param index Dense index of the component.
      * @return Entity ID associated with the component.
      */
-    unsigned int GetIdByIndex(const size_t index) const override
+    unsigned int GetIdByIndex(const size_t index) const
     {
         return Components.GetSparseIndex(index);
     }
@@ -146,7 +145,7 @@ template <ComponentType T> struct ComponentPool : IComponentPool
      * @param index Dense index of the component.
      * @return Reference to the stored component.
      */
-    T& GetComponentByIndex(const size_t index)
+    T& GetComponentByIndex(const unsigned int index)
     {
         return Components.GetByIndex(index);
     }
@@ -161,8 +160,13 @@ template <ComponentType T> struct ComponentPool : IComponentPool
         Components.Delete(entityId);
     }
 
+    unsigned int GetIndexById(unsigned int entityId)
+    {
+        return Components.GetDenseIndex(entityId);
+    }
+
     /** @brief Returns the number of stored components. */
-    size_t Size() const override
+    unsigned int Size() const override
     {
         return Components.Size();
     }

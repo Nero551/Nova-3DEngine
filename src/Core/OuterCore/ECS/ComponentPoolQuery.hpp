@@ -10,11 +10,11 @@ namespace N
 /**
  * @brief Provides cached queries over component pools.
  *
- * Queries match entities containing all requested component types and return
- * references to their components through reusable query results.
+ * Queries match entities containing all requested component types and invoke
+ * a callback with references to their components.
  *
- * Query results are automatically invalidated when the world's entity or
- * component structure changes and are rebuilt on the next query.
+ * Matching entity IDs are cached and reused until the world's entity/component
+ * structure changes.
  */
 struct ComponentPoolQuery
 {
@@ -36,53 +36,74 @@ struct ComponentPoolQuery
         return static_cast<ComponentPool<T>&>(*ComponentPools.Get<T>());
     }
 
-    //TODO- could cache entity list and not do HasId every time, since that's the most expensive.
-    // same way i did for query results by subbing to events and updating QueryVersion then.
-    // i could give each pool a version, if version doesn't match the cache, rebuild.
-
-    //TODO- i could give the version to the entity list itself, and make pools update their own version on component added.
-    // then i do the check here.
-
-    //TODO- have a GetQueryId method just like GetTypeId, but accepts ...Args, will give different ids for every combo of pools.
-    // could make a custom container for this type of vector.
-    // one that uses this Id thing made from type templates. call it like, TypedVector.
-
-    //TODO- unique pointers aren't cache local, make a new data structure for this.
-    // a container for handling objects of different types but same base. (ex: system, module, entity, etc)
-    // without using unique pointers.
-
-    struct EntityListCache
+    /**
+     * @brief Caches the entity IDs matching a component query.
+     *
+     * The cached entity list is rebuilt when its version does not match
+     * the current query version.
+     */
+    struct QueryCache
     {
         std::vector<unsigned int> Entities;
+        TypedVector<std::vector<unsigned int>> DenseIndices;
         unsigned int Version = 0;
     };
 
+    /**
+     * @brief Iterates over entities containing all specified components.
+     *
+     * On the first query, the matching entity IDs are determined by iterating
+     * over the first component pool and checking the remaining pools.
+     * Subsequent calls reuse the cached entity IDs until the query version
+     * changes.
+     *
+     * @tparam First First component type and driver pool.
+     * @tparam Rest Additional component types that must be present.
+     * @tparam Function Callback type.
+     *
+     * @param callback Function invoked with the entity ID and references to
+     *                 all requested components.
+     */
     template <ComponentType First, ComponentType... Rest, typename Function>
     requires std::invocable<Function, unsigned int, First&, Rest&...>
     void ForEach(Function&& callback)
     {
         auto pools = GetPools<First, Rest...>();
 
-        if (!QueryCache.Contains<First, Rest...>())
+        if (!QueryCaches.Contains<First, Rest...>())
         {
-            QueryCache.Emplace<First, Rest...>();
+            QueryCaches.Emplace<First, Rest...>();
         }
 
-        auto& cache = QueryCache.Get<First, Rest...>();
+        QueryCache& cache = QueryCaches.Get<First, Rest...>();
 
         if (cache.Version == QueryVersion)
         {
-            for (unsigned int entityId : cache.Entities)
+            auto& firstPool = std::get<ComponentPool<First>&>(pools);
+            auto& firstIndices = cache.DenseIndices.Get<First>();
+
+            for (size_t i = 0; i < cache.Entities.size(); ++i)
             {
-                //TODO- GetComponentByIdUnchecked is the bottleneck.
-                callback(entityId, std::get<ComponentPool<First>&>(pools).GetComponentByIdUnchecked(entityId),
-                    std::get<ComponentPool<Rest>&>(pools).GetComponentByIdUnchecked(entityId)...);
+                const unsigned int entityId = cache.Entities[i];
+
+                callback(entityId, firstPool.GetComponentByIndex(firstIndices[i]),
+                    std::get<ComponentPool<Rest>&>(pools).GetComponentByIndex(
+                        cache.DenseIndices.Get<Rest>()[i])...);
             }
 
             return;
         }
-
         cache.Entities.clear();
+        if (!cache.DenseIndices.Contains<First>())
+        {
+            cache.DenseIndices.Emplace<First>();
+            (cache.DenseIndices.Emplace<Rest>(), ...);
+        }
+        else
+        {
+            cache.DenseIndices.Get<First>().clear();
+            (cache.DenseIndices.Get<Rest>().clear(), ...);
+        }
 
         auto& firstPool = std::get<ComponentPool<First>&>(pools);
 
@@ -94,6 +115,12 @@ struct ComponentPoolQuery
             }
 
             cache.Entities.emplace_back(entityId);
+
+            cache.DenseIndices.Get<First>().emplace_back(firstPool.GetIndexById(entityId));
+
+            (cache.DenseIndices.Get<Rest>().emplace_back(
+                 std::get<ComponentPool<Rest>&>(pools).GetIndexById(entityId)),
+                ...);
 
             callback(entityId, firstComponent,
                 std::get<ComponentPool<Rest>&>(pools).GetComponentByIdUnchecked(entityId)...);
@@ -107,40 +134,23 @@ struct ComponentPoolQuery
      * @brief Version of the current entity/component structure.
      *
      * Incremented whenever an event occurs that can change query membership.
-     * Cached query results compare their stored version against this value
+     * Cached entity lists compare their stored version against this value
      * to determine whether they must be rebuilt.
      */
     unsigned int QueryVersion = 1;
 
     /**
-     * @brief Stores heterogeneous component pools by component type.
+     * @brief Stores component pools indexed by component type.
      *
-     * Component types are identified using their std::type_index.
-     *
+     * Each component type has its own pool, while the container provides
+     * type-based lookup for heterogeneous pool storage.
      */
     TypedVector<std::unique_ptr<IComponentPool>> ComponentPools{};
-    TypedVector<EntityListCache> QueryCache;
 
     /**
-     * @brief Returns the smallest component pool in a query.
-     *
-     * The smallest pool is used as the query's driver pool, reducing the
-     * number of entity membership checks required when rebuilding a result.
-     *
-     * @tparam Args Component types contained in the query.
-     * @param pools Component pools to compare.
-     * @return Reference to the smallest component pool.
+     * @brief Stores cached entity lists indexed by their component query.
      */
-    template <ComponentType... Args>
-    IComponentPool& GetSmallestPool(std::tuple<ComponentPool<Args>&...>& pools)
-    {
-        IComponentPool* smallest = &std::get<0>(pools);
-
-        std::apply([&smallest](auto&... pool)
-            { (..., (smallest = pool.Size() < smallest->Size() ? &pool : smallest)); }, pools);
-
-        return *smallest;
-    }
+    TypedVector<QueryCache> QueryCaches;
 
     /**
      * @brief Returns the component pools for the specified component types.
@@ -156,7 +166,7 @@ struct ComponentPoolQuery
     /**
      * @brief Subscribes to events that can invalidate cached queries.
      *
-     * Query results are invalidated when entities are created or destroyed,
+     * cached entity lists are invalidated when entities are created or destroyed,
      * or when a component is added to an entity.
      */
     void SubscribeToEvents()
