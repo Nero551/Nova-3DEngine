@@ -45,7 +45,7 @@ template <typename D> struct SparseSet
     using SparseIndex = size_t;
 
     /** @brief Represents an invalid index. */
-    static constexpr size_t InvalidIndex = std::numeric_limits<size_t>::max();
+    static constexpr auto InvalidIndex = std::numeric_limits<size_t>::max();
 
   private:
     /** @brief Contains the actual values. */
@@ -145,12 +145,6 @@ template <typename D> struct SparseSet
         return {.Set = this, .Index = Sparse[index]};
     }
 
-    /** @brief Get but without the Contains check. if doesn't exist, it will just blow up */
-    D& GetUnchecked(const SparseIndex index)
-    {
-        return Dense[Sparse[index]];
-    }
-
     /** @brief Returns the value associated with the specified dense index. */
     D& GetByIndex(const DenseIndex index)
     {
@@ -242,14 +236,14 @@ template <typename D> struct SparseSet
     }
 
     /** @brief Reserves dense storage for the specified number of elements. */
-    void Reserve(const size_t size)
+    void Reserve(const DenseIndex size)
     {
         Dense.reserve(size);
         Indices.reserve(size);
     }
 
     /** @brief Returns the number of stored values. */
-    size_t Size() const
+    DenseIndex Size() const
     {
         return Dense.size();
     }

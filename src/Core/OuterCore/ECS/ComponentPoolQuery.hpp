@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ComponentPool.hpp"
+#include "Utilities/DataStructures/TypedVector.hpp"
 #include "World/Events/EntityCreated.hpp"
 
 namespace N
@@ -27,34 +28,44 @@ struct ComponentPoolQuery
      */
     template <ComponentType T> ComponentPool<T>& Pool()
     {
-        const TypeId typeId = GetTypeId<T>();
+        if (!ComponentPools.Contains<T>())
+        {
+            ComponentPools.Emplace<T>(std::make_unique<ComponentPool<T>>());
+        }
 
-        if (typeId >= ComponentPools.size())
-            ComponentPools.resize(typeId + 1);
-
-        if (!ComponentPools[typeId])
-            ComponentPools[typeId] = std::make_unique<ComponentPool<T>>();
-
-        return static_cast<ComponentPool<T>&>(*ComponentPools[typeId]);
+        return static_cast<ComponentPool<T>&>(*ComponentPools.Get<T>());
     }
 
+    //TODO- could cache entity list and not do HasId every time, since that's the most expensive.
+    // same way i did for query results by subbing to events and updating QueryVersion then.
+    // i could give each pool a version, if version doesn't match the cache, rebuild.
+
+    //TODO- i could give the version to the entity list itself, and make pools update their own version on component added.
+    // then i do the check here.
+
+    //TODO- have a GetQueryId method just like GetTypeId, but accepts ...Args, will give different ids for every combo of pools.
+    // could make a custom container for this type of vector.
+    // one that uses this Id thing made from type templates. call it like, TypedVector.
+
+    //TODO- unique pointers aren't cache local, make a new data structure for this.
+    // a container for handling objects of different types but same base. (ex: system, module, entity, etc)
+    // without using unique pointers.
     template <ComponentType First, ComponentType... Rest, typename Function>
     requires std::invocable<Function, unsigned int, First&, Rest&...>
     void ForEach(Function&& callback)
     {
+        auto pools = GetPools<Rest...>();
         auto& firstPool = Pool<First>();
 
-        for (size_t i = 0; i < firstPool.Size(); ++i)
+        for (auto [entityId, firstComponent] : firstPool)
         {
-            const unsigned int entityId = firstPool.GetIdByIndex(i);
-
-            if (!(Pool<Rest>().HasId(entityId) && ...))
+            if (!((std::get<ComponentPool<Rest>&>(pools).HasId(entityId)) && ...))
             {
                 continue;
             }
 
-            callback(entityId, firstPool.GetComponentByIdUnChecked(entityId),
-                Pool<Rest>().GetComponentByIdUnChecked(entityId)...);
+            callback(entityId, firstComponent,
+                std::get<ComponentPool<Rest>&>(pools).GetComponentById(entityId)...);
         }
     }
 
@@ -74,13 +85,14 @@ struct ComponentPoolQuery
      * Component types are identified using their std::type_index.
      *
      */
-    std::vector<std::unique_ptr<IComponentPool>> ComponentPools{};
+    TypedVector<std::unique_ptr<IComponentPool>> ComponentPools{};
+    // TypedVector<> QueryCache
 
-    using TypeId = size_t;
-    inline static size_t NextTypeId{};
-    template <typename T> TypeId GetTypeId()
+    using QueryId = size_t;
+    inline static QueryId NextQueryId{};
+    template <ComponentType... Args> QueryId GetQueryId()
     {
-        static const TypeId Id = NextTypeId++;
+        static const QueryId Id = NextQueryId++;
         return Id;
     }
 

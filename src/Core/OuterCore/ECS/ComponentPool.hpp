@@ -119,12 +119,6 @@ template <ComponentType T> struct ComponentPool : IComponentPool
     {
         return Components.Get(entityId);
     }
-
-    T& GetComponentByIdUnChecked(const unsigned int entityId)
-    {
-        return Components.GetUnchecked(entityId);
-    }
-
     void Reserve(size_t count)
     {
         Components.Reserve(count);
