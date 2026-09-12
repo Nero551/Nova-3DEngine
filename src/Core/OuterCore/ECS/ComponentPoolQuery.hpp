@@ -45,7 +45,6 @@ struct ComponentPoolQuery
     struct QueryCache
     {
         std::vector<unsigned int> Entities;
-        TypedVector<std::vector<unsigned int>> DenseIndices;
         unsigned int Version = 0;
     };
 
@@ -80,30 +79,16 @@ struct ComponentPoolQuery
         if (cache.Version == QueryVersion)
         {
             auto& firstPool = std::get<ComponentPool<First>&>(pools);
-            auto& firstIndices = cache.DenseIndices.Get<First>();
 
-            for (size_t i = 0; i < cache.Entities.size(); ++i)
+            for (unsigned int entityId : cache.Entities)
             {
-                const unsigned int entityId = cache.Entities[i];
-
-                callback(entityId, firstPool.GetComponentByIndex(firstIndices[i]),
-                    std::get<ComponentPool<Rest>&>(pools).GetComponentByIndex(
-                        cache.DenseIndices.Get<Rest>()[i])...);
+                callback(entityId, firstPool.GetComponentByIdUnchecked(entityId),
+                    (std::get<ComponentPool<Rest>&>(pools).GetComponentByIdUnchecked(entityId))...);
             }
 
             return;
         }
         cache.Entities.clear();
-        if (!cache.DenseIndices.Contains<First>())
-        {
-            cache.DenseIndices.Emplace<First>();
-            (cache.DenseIndices.Emplace<Rest>(), ...);
-        }
-        else
-        {
-            cache.DenseIndices.Get<First>().clear();
-            (cache.DenseIndices.Get<Rest>().clear(), ...);
-        }
 
         auto& firstPool = std::get<ComponentPool<First>&>(pools);
 
@@ -115,12 +100,6 @@ struct ComponentPoolQuery
             }
 
             cache.Entities.emplace_back(entityId);
-
-            cache.DenseIndices.Get<First>().emplace_back(firstPool.GetIndexById(entityId));
-
-            (cache.DenseIndices.Get<Rest>().emplace_back(
-                 std::get<ComponentPool<Rest>&>(pools).GetIndexById(entityId)),
-                ...);
 
             callback(entityId, firstComponent,
                 std::get<ComponentPool<Rest>&>(pools).GetComponentByIdUnchecked(entityId)...);
@@ -176,6 +155,7 @@ struct ComponentPoolQuery
         Service::Get<EventBus>().Sub<EntityCreated>([this](const EntityCreated&) { ++QueryVersion; });
 
         Service::Get<EventBus>().Sub<ComponentAdded>([this](const ComponentAdded&) { ++QueryVersion; });
+        Service::Get<EventBus>().Sub<ComponentRemoved>([this](const ComponentRemoved&) { ++QueryVersion; });
     }
 
     friend struct World;

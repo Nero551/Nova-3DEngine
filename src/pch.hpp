@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <any>
 #include <array>
+#include <assert.h>
+#include <cassert>
 #include <cmath>
 #include <concepts>
 #include <filesystem>

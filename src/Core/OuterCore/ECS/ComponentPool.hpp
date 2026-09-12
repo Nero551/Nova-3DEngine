@@ -5,6 +5,7 @@
 #include "Core/Services/EventBus.hpp"
 #include "Utilities/DataStructures/SparseSet.hpp"
 #include "World/Events/ComponentAdded.hpp"
+#include "World/Events/ComponentRemoved.hpp"
 #include "World/Events/EntityDestroyed.hpp"
 
 namespace N
@@ -84,7 +85,7 @@ template <ComponentType T> struct ComponentPool : IComponentPool
             {
                 if (HasId(event.entity.Id))
                 {
-                    RemoveById(event.entity.Id);
+                    Remove(event.entity.Id);
                 }
             });
     }
@@ -155,9 +156,10 @@ template <ComponentType T> struct ComponentPool : IComponentPool
      *
      * @param entityId ID of the entity whose component should be removed.
      */
-    void RemoveById(const unsigned int entityId)
+    void Remove(const unsigned int entityId)
     {
         Components.Delete(entityId);
+        Service::Get<EventBus>().Fire<ComponentRemoved>(entityId);
     }
 
     unsigned int GetIndexById(unsigned int entityId)
