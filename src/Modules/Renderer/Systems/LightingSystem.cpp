@@ -30,11 +30,11 @@ void LightingSystem::Render()
 
     int i = 0;
 
+    constexpr unsigned int LightStride = 144;
     world.Query.ForEach<LightComponent, Transform3DComponent>(
         [&](unsigned int entityId, LightComponent& lightComponent, Transform3DComponent& transform)
         {
-            constexpr size_t LightStride = 144;
-            const size_t LightOffset = 16 + i * LightStride;
+            const unsigned int LightOffset = 16 + i * LightStride;
 
             LightingBuffer->Set(static_cast<int>(lightComponent.Type), LightOffset + 0);
             LightingBuffer->Set(transform.GetForward(), LightOffset + 16, 4);

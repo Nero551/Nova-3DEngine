@@ -99,7 +99,7 @@ struct ComponentPoolQuery
                 continue;
             }
 
-            cache.Entities.emplace_back(entityId);
+            cache.Entities.push_back(entityId);
 
             callback(entityId, firstComponent,
                 std::get<ComponentPool<Rest>&>(pools).GetComponentByIdUnchecked(entityId)...);

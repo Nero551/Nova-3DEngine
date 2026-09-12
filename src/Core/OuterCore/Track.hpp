@@ -29,7 +29,6 @@ template <typename T> struct Track
     {
         if (Value == value)
         {
-            U::Logger::Info(Changed);
             ClearChanged();
             return;
         }

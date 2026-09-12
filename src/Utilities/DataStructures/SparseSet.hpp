@@ -43,16 +43,20 @@ template <typename D> struct SparseSet
 
     using DenseIndex = unsigned int;
     using SparseIndex = unsigned int;
+    static constexpr SparseIndex PageSie = 4096;
 
     /** @brief Represents an invalid index. */
     static constexpr auto InvalidIndex = std::numeric_limits<SparseIndex>::max();
 
+    struct Entry
+    {
+        D Value;
+        SparseIndex Index;
+    };
+
   private:
     /** @brief Contains the actual values. */
-    std::vector<D> Dense{};
-
-    /** @brief Maps dense indices to their sparse indices. */
-    std::vector<SparseIndex> Indices{};
+    std::vector<Entry> Dense{};
 
     /** @brief Maps sparse indices to their dense indices. */
     std::vector<DenseIndex> Sparse{};
@@ -89,12 +93,12 @@ template <typename D> struct SparseSet
         /** @brief Returns the sparse index and corresponding value. */
         DereferencedIterator operator*() const
         {
-            return {.SparseValue = Set->Indices[Index], .DenseValue = Set->Dense[Index]};
+            return {.SparseValue = Set->Dense[Index].Index, .DenseValue = Set->Dense[Index]};
         }
 
         DereferencedIterator operator->() const
         {
-            return {.SparseValue = Set->Indices[Index], .DenseValue = Set->Dense[Index]};
+            return {.SparseValue = Set->Dense[Index].Index, .DenseValue = Set->Dense[Index].Value};
         }
 
         /** @brief Compares two iterators for inequality. */
@@ -133,12 +137,12 @@ template <typename D> struct SparseSet
         if (!Contains(s))
             U::Logger::Fatal("SparseSet does not contain the specified sparse index.");
 
-        return Dense[Sparse[s]];
+        return Dense[Sparse[s]].Value;
     }
 
     D& GetUnchecked(const SparseIndex s)
     {
-        return Dense[Sparse[s]];
+        return Dense[Sparse[s]].Value;
     }
 
     /** @brief Finds the value associated with the specified sparse index. */
@@ -154,15 +158,32 @@ template <typename D> struct SparseSet
     D& GetByIndex(const DenseIndex index)
     {
         if (index >= Dense.size())
+        {
             U::Logger::Fatal("SparseSet dense index out of bounds.");
+        }
 
-        return Dense[index];
+        return Dense[index].Value;
     }
 
     /** @brief Returns the sparse index associated with a dense index. */
     SparseIndex GetSparseIndex(const DenseIndex index) const
     {
-        return Indices[index];
+        return Dense[index].Index;
+    }
+
+    Entry& GetEntry(SparseIndex s)
+    {
+        if (index >= Dense.size())
+        {
+            U::Logger::Fatal("SparseSet dense index out of bounds.");
+        }
+
+        return Dense[index];
+    }
+
+    Entry& GetEntryUnchecked(SparseIndex s)
+    {
+        return Dense[index];
     }
 
     /** @brief Returns the dense index associated with a sparse index. */
@@ -181,8 +202,7 @@ template <typename D> struct SparseSet
                 Sparse.resize(s + 1, InvalidIndex);
 
             Sparse[s] = Dense.size();
-            Indices.push_back(s);
-            Dense.push_back(value);
+            Dense.push_back({std::forward<U>(value), s});
         }
 
         return Dense[Sparse[s]];
@@ -197,8 +217,7 @@ template <typename D> struct SparseSet
                 Sparse.resize(s + 1, InvalidIndex);
 
             Sparse[s] = Dense.size();
-            Indices.push_back(s);
-            Dense.emplace_back(std::forward<Args>(args)...);
+            Dense.emplace_back(Entry{.Value = D{std::forward<Args>(args)...}, .Index = s});
         }
 
         return {.Set = this, .Index = Sparse[s]};
@@ -214,37 +233,33 @@ template <typename D> struct SparseSet
 
         if (index != Dense.size() - 1)
         {
-            const SparseIndex lastElement = Indices.back();
+            Entry& lastDenseEntry = Dense.back();
 
-            std::swap(Dense[index], Dense.back());
-            std::swap(Indices[index], Indices.back());
+            std::swap(Dense[index], lastDenseEntry);
 
-            Sparse[lastElement] = index;
+            Sparse[lastDenseEntry.Index] = index;
         }
 
         Dense.pop_back();
-        Indices.pop_back();
         Sparse[s] = InvalidIndex;
     }
 
     /** @brief Removes the value at the specified dense index. */
     void DeleteByIndex(DenseIndex index)
     {
-        Delete(Indices[index]);
+        Delete(Dense[index].Index);
     }
 
     /** @brief Removes all values while retaining allocated memory. */
     void Clear()
     {
         Dense.clear();
-        Indices.clear();
     }
 
     /** @brief Reserves dense storage for the specified number of elements. */
     void Reserve(const DenseIndex size)
     {
         Dense.reserve(size);
-        Indices.reserve(size);
     }
 
     /** @brief Returns the number of stored values. */

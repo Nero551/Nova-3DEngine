@@ -180,8 +180,6 @@ void Renderer::RenderWorld()
         [&](unsigned int entityId, MaterialComponent& materialComponent, Transform3DComponent& transform,
             MeshComponent& meshComponent)
         {
-            assert(materialComponent.Material);
-            assert(meshComponent.Mesh);
             if (materialComponent.Material->Shader->HotReload == true)
             {
                 materialComponent.Material->Shader->Reload();

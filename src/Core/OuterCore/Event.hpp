@@ -18,7 +18,6 @@ template <typename T> struct Event : IEvent
     /** @brief Dispatches the event to all registered listeners. */
     void Fire()
     {
-        U::Logger::Info("Event listeners: " + std::to_string(Listeners.size()));
 
         for (const auto& listener : Listeners)
         {
