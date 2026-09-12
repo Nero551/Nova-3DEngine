@@ -50,12 +50,41 @@ struct ComponentPoolQuery
     //TODO- unique pointers aren't cache local, make a new data structure for this.
     // a container for handling objects of different types but same base. (ex: system, module, entity, etc)
     // without using unique pointers.
+
+    struct EntityListCache
+    {
+        std::vector<unsigned int> Entities;
+        unsigned int Version = 0;
+    };
+
     template <ComponentType First, ComponentType... Rest, typename Function>
     requires std::invocable<Function, unsigned int, First&, Rest&...>
     void ForEach(Function&& callback)
     {
-        auto pools = GetPools<Rest...>();
-        auto& firstPool = Pool<First>();
+        auto pools = GetPools<First, Rest...>();
+
+        if (!QueryCache.Contains<First, Rest...>())
+        {
+            QueryCache.Emplace<First, Rest...>();
+        }
+
+        auto& cache = QueryCache.Get<First, Rest...>();
+
+        if (cache.Version == QueryVersion)
+        {
+            for (unsigned int entityId : cache.Entities)
+            {
+                //TODO- GetComponentByIdUnchecked is the bottleneck.
+                callback(entityId, std::get<ComponentPool<First>&>(pools).GetComponentByIdUnchecked(entityId),
+                    std::get<ComponentPool<Rest>&>(pools).GetComponentByIdUnchecked(entityId)...);
+            }
+
+            return;
+        }
+
+        cache.Entities.clear();
+
+        auto& firstPool = std::get<ComponentPool<First>&>(pools);
 
         for (auto [entityId, firstComponent] : firstPool)
         {
@@ -64,9 +93,13 @@ struct ComponentPoolQuery
                 continue;
             }
 
+            cache.Entities.emplace_back(entityId);
+
             callback(entityId, firstComponent,
-                std::get<ComponentPool<Rest>&>(pools).GetComponentById(entityId)...);
+                std::get<ComponentPool<Rest>&>(pools).GetComponentByIdUnchecked(entityId)...);
         }
+
+        cache.Version = QueryVersion;
     }
 
   private:
@@ -86,15 +119,7 @@ struct ComponentPoolQuery
      *
      */
     TypedVector<std::unique_ptr<IComponentPool>> ComponentPools{};
-    // TypedVector<> QueryCache
-
-    using QueryId = size_t;
-    inline static QueryId NextQueryId{};
-    template <ComponentType... Args> QueryId GetQueryId()
-    {
-        static const QueryId Id = NextQueryId++;
-        return Id;
-    }
+    TypedVector<EntityListCache> QueryCache;
 
     /**
      * @brief Returns the smallest component pool in a query.

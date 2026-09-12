@@ -85,6 +85,29 @@ template <typename T> struct Track
         return Value / value;
     }
 
+    template <typename V>
+    T friend operator+(const V& other, const Track& value) requires(!std::same_as<V, Track>)
+    {
+        return other + value;
+    }
+    template <typename V>
+    T friend operator-(const V& other, const Track& value) requires(!std::same_as<V, Track>)
+    {
+        return other - value;
+    }
+
+    template <typename V>
+    T friend operator*(const V& other, const Track& value) requires(!std::same_as<V, Track>)
+    {
+        return other * value;
+    }
+
+    template <typename V>
+    T friend operator/(const V& other, const Track& value) requires(!std::same_as<V, Track>)
+    {
+        return other / value;
+    }
+
     Track& operator=(const T& value)
     {
         Set(value);

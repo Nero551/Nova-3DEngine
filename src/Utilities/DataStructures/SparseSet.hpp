@@ -136,6 +136,11 @@ template <typename D> struct SparseSet
         return Dense[Sparse[s]];
     }
 
+    D& GetUnchecked(const SparseIndex s)
+    {
+        return Dense[Sparse[s]];
+    }
+
     /** @brief Finds the value associated with the specified sparse index. */
     Iterator Find(const SparseIndex index)
     {

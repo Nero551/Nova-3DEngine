@@ -16,7 +16,7 @@ namespace N
 static MeshInstance3D& CreatePoint(M::Vector4 col)
 {
     auto& resourceManager = Service::Get<ResourceManager>();
-    auto& mesh = Primitives::CreateUVSphere("point");
+    auto& mesh = Primitives::CreateQuad("point");
 
     auto& point = World::Get().CreateEntity<MeshInstance3D>();
     World::Get().Query.Pool<MeshComponent>().GetComponentById(point.Id).Mesh = &mesh;

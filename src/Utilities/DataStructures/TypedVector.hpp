@@ -13,7 +13,7 @@ template <typename T> struct TypedVector
     template <typename... Args> bool Contains()
     {
         const TypeId typeId = GetTypeId<Args...>();
-        return typeId < Data.size() && Data[typeId] != nullptr;
+        return typeId < Data.size();
     }
 
     template <typename... Args> T& Get()
