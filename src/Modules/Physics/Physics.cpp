@@ -6,6 +6,7 @@
 #include "Core/Services/ResourceManager.hpp"
 #include "Math/Color/Color.hpp"
 #include "Math/Complex/Complex.hpp"
+#include "Math/Equations/QuadraticEquationSolver.hpp"
 #include "Math/Functions/Function.hpp"
 #include "Modules/Input/Input.hpp"
 #include "Modules/Renderer/Components/MaterialComponent.hpp"
@@ -49,7 +50,6 @@ static void Plot(const M::Vector3 vec3, const M::Vector4 col = {1, 1, 1, 1})
         transform.Position().x = vec3.x;
         transform.Position().y = vec3.y;
         transform.Position().z = vec3.z;
-        transform.Position -= 2;
     }
 }
 
@@ -76,19 +76,6 @@ void Physics::Start()
     query.Pool<BodyComponent>().Add(cube.Id);
     cubeId = cube.Id;
     World::Get().Root->AttachChild(cube);
-
-    M::Function<M::Vector2, M::Vector2> ProjectilePosition = [](const M::Vector2 vi)
-    {
-        M::Vector2 a = {0, -9.8};
-        float t = -vi.y / a.y;
-        M::Vector2 vf = {vi.x + a.x * t, 0};
-        M::Vector2 p = (vf + vi) * t / 2.0;
-        p.x *= 2;
-        return p;
-    };
-
-    M::Vector2 vi = M::Vector2::FromPolar({M::Rad(20), 11});
-    // U::Logger::Info(ProjectilePosition(vi));
 }
 
 static float time = 0;
@@ -96,11 +83,22 @@ static M::Vector3 ExternalForces;
 
 void Physics::FixedUpdate(double fdt)
 {
-    time += fdt;
+    time += fdt / 2;
 
-    M::Vector2 a = {0, -9.8};
-    M::Vector2 vi = {5, 5};
-    M::Vector2 pi = {0, 0};
+    float g = -9.8;
+    float h = 45;
+    float theta = 30;
+    M::Vector2 Vi = M::Vector2::FromPolar({M::Rad(theta), 20});
+
+    M::Function<float, M::Vector2> P = [&](const float t)
+    {
+        float pX = Vi.x * t;
+        float pY = h + Vi.y * t + 1.0f / 2.0f * g * M::Pow(t, 2);
+
+        return M::Vector2{pX, pY};
+    };
+
+    U::Logger::Info(M::Vector2{Vi.x, Vi.y + g * SolveQuadratic(1.0f / 2.0f * g, Vi.y, h).x2}.Length());
 
     // M::Function<float, M::Vector2> v = [vi, a](const auto t)
     // {

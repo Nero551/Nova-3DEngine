@@ -3,5 +3,8 @@
 
 namespace N::M
 {
-bool NearlyEquals(float a, float b, float epsilon = EPSILON);
+constexpr bool NearlyEquals(const float a, const float b, const float epsilon = EPSILON)
+{
+    return std::abs(a - b) <= epsilon;
 }
+} // namespace N::M

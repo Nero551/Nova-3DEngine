@@ -1,11 +1,30 @@
 #pragma once
+#include "Constants.hpp"
 
 namespace N::M
 {
-float Rad(float deg);
-float Deg(float rad);
+constexpr float Rad(const float deg)
+{
+    return deg * PI / 180;
+}
 
-float DSin(float deg);
-float DCos(float deg);
-float DTan(float deg);
+constexpr float Deg(const float rad)
+{
+    return rad * 180 / PI;
+}
+
+constexpr float DSin(const float deg)
+{
+    return std::sin(Rad(deg));
+}
+
+constexpr float DCos(const float deg)
+{
+    return std::cos(Rad(deg));
+}
+
+constexpr float DTan(const float deg)
+{
+    return std::tan(Rad(deg));
+}
 } // namespace N::M
