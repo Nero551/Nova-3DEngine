@@ -1,5 +1,6 @@
 #pragma once
 #include "Utilities/CheckedPtr.hpp"
+#include "Utilities/DataStructures/TypedVector.hpp"
 #include "Utilities/Logger.hpp"
 
 namespace N
@@ -23,19 +24,19 @@ struct Service
      */
     template <ServiceType T> static T& Get()
     {
-        auto service = Services.find(typeid(T));
+        auto service = Services.Find<T>();
         if (service == Services.end())
         {
             U::Logger::Fatal(std::format("Service Not Found: {}", typeid(T).name()));
         }
-        return static_cast<T&>(*service->second);
+        return static_cast<T&>(**service);
     }
 
     /**
      * @brief Returns all currently registered services.
      * @return A vector of pointers to the registered services.
      */
-    static const std::unordered_map<std::type_index, std::unique_ptr<Service>>& GetAll()
+    static const TypedVector<std::unique_ptr<Service>>& GetAll()
     {
         return Services;
     }
@@ -59,14 +60,14 @@ struct Service
      */
     template <ServiceType T> static T& Add()
     {
-        if (Services.contains(typeid(T)))
+        if (Services.Contains<T>())
         {
             U::Logger::Error(std::format(" Service {} Already Added", typeid(T).name()));
-            return static_cast<T&>(*Services.at(typeid(T)));
+            return static_cast<T&>(*Services.Get<T>());
         }
 
         auto service = std::make_unique<T>();
-        Services.emplace(std::type_index(typeid(T)), std::move(service));
+        Services.Emplace<T>(std::move(service));
 
         return Get<T>();
     }
@@ -75,9 +76,10 @@ struct Service
     /** @brief Destroys all services */
     static void DestroyServices()
     {
-        Services.clear();
+        Services.Clear();
     }
 
-    inline static std::unordered_map<std::type_index, std::unique_ptr<Service>> Services;
+    static TypedVector<std::unique_ptr<Service>> Services;
 };
+inline TypedVector<std::unique_ptr<Service>> Service::Services;
 } // namespace N

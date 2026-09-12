@@ -51,12 +51,17 @@ struct Engine
     /** @brief Returns a registered module by type. */
     template <ModuleType T> T& GetModule()
     {
-        auto module = Modules.find(typeid(T));
+        auto module = Modules.Find<T>();
         if (module == Modules.end())
         {
             U::Logger::Fatal(std::format("Module {} not found", typeid(T).name()));
         }
-        return static_cast<T&>(*module->second);
+        return static_cast<T&>(**module);
+    }
+
+    const TypedVector<std::unique_ptr<Module>>& GetAllModules() const
+    {
+        return Modules;
     }
 
   private:
@@ -64,7 +69,7 @@ struct Engine
     inline static U::CheckedPtr<Engine> Instance = nullptr;
 
     /** @brief Registered engine modules. */
-    std::unordered_map<std::type_index, std::unique_ptr<Module>> Modules;
+    TypedVector<std::unique_ptr<Module>> Modules;
 
     /** @brief Previous frame start time. in seconds */
     double LastFrame = 0;
@@ -87,8 +92,8 @@ struct Engine
     template <ModuleType T> T& AddModule()
     {
         auto module = std::make_unique<T>();
-        Modules.emplace(typeid(T), std::move(module));
-        return static_cast<T&>(*Modules.find(typeid(T))->second);
+        Modules.Emplace<T>(std::move(module));
+        return static_cast<T&>(*Modules.GetUnchecked<T>());
     }
 
     /** @brief Starts the engine and its systems. */

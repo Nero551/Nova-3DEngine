@@ -94,7 +94,7 @@ void World::Start()
     FirstScene firstScene;
     coordinateAxes.GetRoot().AttachChild(firstScene.GetRoot());
 
-    for (auto& system : Systems | std::views::values)
+    for (auto& system : Systems)
     {
         system->Start();
     }
@@ -124,7 +124,7 @@ void World::Update(const double dt)
         U::Logger::Info(Entities.Size());
     }
 
-    for (auto& system : Systems | std::views::values)
+    for (auto& system : Systems)
     {
         system->Update(dt);
     }
@@ -132,7 +132,7 @@ void World::Update(const double dt)
 
 void World::FixedUpdate(const double fdt)
 {
-    for (auto& system : Systems | std::views::values)
+    for (auto& system : Systems)
     {
         system->FixedUpdate(fdt);
     }
@@ -140,7 +140,7 @@ void World::FixedUpdate(const double fdt)
 
 void World::Stop()
 {
-    for (auto& system : Systems | std::views::values)
+    for (auto& system : Systems)
     {
         system->Stop();
     }
@@ -148,7 +148,7 @@ void World::Stop()
 
 void World::BeginFrame(const double dt)
 {
-    for (auto& system : Systems | std::views::values)
+    for (auto& system : Systems)
     {
         system->BeginFrame(dt);
     }
@@ -156,7 +156,7 @@ void World::BeginFrame(const double dt)
 
 void World::EndFrame(const double dt)
 {
-    for (auto& system : Systems | std::views::values)
+    for (auto& system : Systems)
     {
         system->EndFrame(dt);
     }
@@ -164,7 +164,7 @@ void World::EndFrame(const double dt)
 
 void World::Render()
 {
-    for (auto& system : Systems | std::views::values)
+    for (auto& system : Systems)
     {
         system->Render();
     }
