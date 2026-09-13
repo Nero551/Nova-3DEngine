@@ -3,33 +3,16 @@
 
 namespace N::M
 {
-inline std::string Superscript(int exponent)
+
+struct IDimension
 {
-    static constexpr std::string_view Digits[] = {"⁰", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹"};
-    if (exponent == 1)
-        return "";
-
-    std::string result;
-
-    if (exponent < 0)
-    {
-        result += "⁻";
-        exponent = -exponent;
-    }
-
-    std::string digits = std::to_string(exponent);
-
-    for (char digit : digits)
-        result += Digits[digit - '0'];
-
-    return result;
-}
+};
 
 template <typename T>
-concept IsDimensional = std::derived_from<T, IDimensional>;
+concept IsDimension = std::derived_from<T, IDimension>;
 
 template <typename ValueType, typename D> requires IsDimensional<D>
-struct Dimension
+struct Dimension : IDimension
 {
     ValueType Value;
 
@@ -46,29 +29,35 @@ struct Dimension
     }
 
     template <int E>
-    using DimensionExponentSub = Dimension<ValueType, typename D::template WithExponent<D::Exponent - E>>;
-
-    template <int E>
-    using DimensionExponentAdd = Dimension<ValueType, typename D::template WithExponent<D::Exponent + E>>;
-
-    template <int E>
-    DimensionExponentAdd<E> operator*(const Dimension<ValueType, typename D::template WithExponent<E>>& other)
+    Dimension<ValueType, typename D::template WithExponent<D::Exponent + E>> operator*(
+        const Dimension<ValueType, typename D::template WithExponent<E>>& other)
     {
         return Value * other.Value;
     }
 
     template <int E>
-    DimensionExponentSub<E> operator/(const Dimension<ValueType, typename D::template WithExponent<E>>& other)
+    Dimension<ValueType, typename D::template WithExponent<D::Exponent - E>> operator/(
+        const Dimension<ValueType, typename D::template WithExponent<E>>& other)
     {
         return Value / other.Value;
     }
 
-    friend std::ostream& operator<<(std::ostream& os, const Dimension& t)
+    template <typename Dim> requires IsDimensional<Dim>
+    Dimension<ValueType, DivideDimensional<D, Dim>> operator/(const Dimension<ValueType, Dim>& other)
     {
-        os << t.Value;
-        ((os << ' ' << D::Name << Superscript(D::Exponent)));
+        return Value / other.Value;
+    }
 
-        return os;
+    template <typename Dim> requires IsDimensional<Dim>
+    Dimension<ValueType, MultiplyDimensional<D, Dim>> operator*(const Dimension<ValueType, Dim>& other)
+    {
+        return Value * other.Value;
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const Dimension& dimension)
+    {
+        os << dimension.Value << ' ';
+        return D::Print(os);
     }
 };
 

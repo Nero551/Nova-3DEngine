@@ -78,10 +78,10 @@ void Physics::Start()
     cubeId = cube.Id;
     World::Get().Root->AttachChild(cube);
 
-    M::Dimension<float, M::Time<2>> t1 = 5;
+    M::Dimension<float, M::Length<3>> t1 = 5;
     M::Dimension<float, M::Time<1>> t2 = 3;
 
-    U::Logger::Info((t1 * t2));
+    U::Logger::Info((t1 / t2));
 }
 
 static float time = 0;
