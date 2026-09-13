@@ -117,3 +117,7 @@
 ### Week 11 — September 5–11
 
 - Optimizations (CPU can now handle ~32k entities 40fps)
+
+### Week 12 — September 12–18
+
+- Compile-time dimensional analysis 

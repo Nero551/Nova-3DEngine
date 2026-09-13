@@ -78,8 +78,16 @@ void Physics::Start()
     cubeId = cube.Id;
     World::Get().Root->AttachChild(cube);
 
-    M::Dimension<float, M::Length<3>> t1 = 5;
+    M::Dimension<float, M::Length<1>> t1 = 5;
     M::Dimension<float, M::Time<1>> t2 = 3;
+
+    M::Function<M::Dimension<M::Quaternion, M::Time<1>>, M::Dimension<M::Vector2, M::Length<1>>> F =
+        [&](const M::Dimension<M::Quaternion, M::Time<1>> t)
+    {
+        return M::Dimension<M::Vector2, M::Length<1>>{
+            {t.Value.Angle(), t.Value.Magnitude()}
+        };
+    };
 
     U::Logger::Info((t1 / t2));
 }
