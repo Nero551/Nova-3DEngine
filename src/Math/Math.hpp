@@ -1,24 +1,17 @@
 #pragma once
-#include "Common/Logarithms.hpp"
-#include "Complex/ComplexLogarithms.hpp"
-#include "Quaternion/QuaternionLogarithms.hpp"
-
-#include "Common/Exponentials.hpp"
-#include "Complex/ComplexExponentials.hpp"
-#include "Quaternion/QuaternionExponentials.hpp"
-
+#include "Color/Color.hpp"
 #include "Common/Comparison.hpp"
 #include "Common/Constants.hpp"
 #include "Common/Constraints.hpp"
+#include "Common/Exponentials.hpp"
 #include "Common/Interpolation.hpp"
+#include "Common/Logarithms.hpp"
 #include "Common/Random.hpp"
 #include "Common/Trigonometry.hpp"
 
-#include "Functions/Function.hpp"
-
-#include "Quaternion/Quaternion.hpp"
-
 #include "Complex/Complex.hpp"
+#include "Complex/ComplexExponentials.hpp"
+#include "Complex/ComplexLogarithms.hpp"
 #include "Complex/Constants.hpp"
 
 #include "Coordinates/HyperSpherical.hpp"
@@ -26,12 +19,17 @@
 #include "Coordinates/QPolar.hpp"
 #include "Coordinates/Spherical.hpp"
 
-#include "Color/Color.hpp"
+#include "Equations/QuadraticEquationSolver.hpp"
+#include "Functions/Function.hpp"
 #include "Geometry/Basis.hpp"
 
 #include "Matrix/Matrix2.hpp"
 #include "Matrix/Matrix3.hpp"
 #include "Matrix/Matrix4.hpp"
+
+#include "Quaternion/Quaternion.hpp"
+#include "Quaternion/QuaternionExponentials.hpp"
+#include "Quaternion/QuaternionLogarithms.hpp"
 
 #include "Vector/Vector2.hpp"
 #include "Vector/Vector3.hpp"

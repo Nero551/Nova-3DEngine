@@ -86,36 +86,6 @@ void Physics::FixedUpdate(double fdt)
     time += fdt / 2;
 
     float g = -9.8;
-    float h = 45;
-    float theta = 30;
-    M::Vector2 Vi = M::Vector2::FromPolar({M::Rad(theta), 20});
-
-    M::Function<float, M::Vector2> P = [&](const float t)
-    {
-        float pX = Vi.x * t;
-        float pY = h + Vi.y * t + 1.0f / 2.0f * g * M::Pow(t, 2);
-
-        return M::Vector2{pX, pY};
-    };
-
-    U::Logger::Info(M::Vector2{Vi.x, Vi.y + g * SolveQuadratic(1.0f / 2.0f * g, Vi.y, h).x2}.Length());
-
-    // M::Function<float, M::Vector2> v = [vi, a](const auto t)
-    // {
-    // M::Vector2 vf = vi + a * t;
-    // return vf;
-    // };
-
-    // M::Function<float, M::Vector2> p = v.Integrate(0);
-
-    // Plot({p(time).x, p(time).y, 0}, M::Color::Blue);
-    // Plot({v(time).x, v(time).y, 0}, M::Color::Red);
-    // Plot({v.Derivative(time).x, v.Derivative(time).y, 0}, M::Color::Green);
-
-    // if (M::NearlyEquals(v(time).Angle(), v.Derivative(time).Angle()))
-    // {
-    // U::Logger::Info(v(time).Angle(), " ", v.Derivative(time).Angle());
-    // }
 
     auto& resourceManager = Service::Get<ResourceManager>();
     auto& input = Engine::Get().GetModule<Input>();
