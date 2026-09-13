@@ -1,4 +1,6 @@
 #pragma once
+#include "Dimensionals.hpp"
+
 namespace N::M
 {
 inline std::string Superscript(int exponent)
@@ -23,15 +25,11 @@ inline std::string Superscript(int exponent)
     return result;
 }
 
-template <int Exp> struct Time
-{
-    static constexpr int Exponent = Exp;
-    static constexpr std::string_view Name = "s";
+template <typename T>
+concept IsDimensional = std::derived_from<T, IDimensional>;
 
-    template <int E> using WithExponent = Time<E>;
-};
-
-template <typename ValueType, typename D> struct Dimension
+template <typename ValueType, typename D> requires IsDimensional<D>
+struct Dimension
 {
     ValueType Value;
 

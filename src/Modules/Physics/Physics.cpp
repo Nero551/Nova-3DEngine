@@ -81,12 +81,6 @@ void Physics::Start()
     M::Dimension<float, M::Time<2>> t1 = 5;
     M::Dimension<float, M::Time<1>> t2 = 3;
 
-    // M::Dimension<float, 1, M::Length> L1 = 10;
-
-    // M::Length<float> t3 = 3;
-
-    // M::Time<float>{2} + M::Time<float>{3};
-
     U::Logger::Info((t1 * t2));
 }
 
