@@ -1,7 +1,4 @@
 #pragma once
-
-#include <vector>
-
 namespace N
 {
 

@@ -12,6 +12,7 @@ template <typename T>
 concept IsScalar = std::same_as<std::remove_cvref_t<T>, float>;
 
 template <typename Input, typename Output> struct Function;
+
 /** @brief Checks whether a callable accepts Input, returns Output, and is not already a Function. */
 template <typename F, typename Input, typename Output>
 concept CompatibleCallable = std::same_as<std::invoke_result_t<F, Input>, Output> &&

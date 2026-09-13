@@ -11,17 +11,13 @@ namespace N
  * @brief Provides cached queries over component pools.
  *
  * Queries match entities containing all requested component types and invoke
- * a callback with references to their components.
- *
- * Matching entity IDs are cached and reused until the world's entity/component
- * structure changes.
+ * a callback with references to their components. Matching entity IDs are
+ * cached and reused until the query structure changes.
  */
 struct ComponentPoolQuery
 {
     /**
-     * @brief Returns the component pool for the specified type.
-     *
-     * Creates the pool if it does not already exist.
+     * @brief Returns the component pool for a type, creating it if needed.
      *
      * @tparam T Component type.
      * @return Reference to the component pool.
@@ -36,12 +32,7 @@ struct ComponentPoolQuery
         return static_cast<ComponentPool<T>&>(*ComponentPools.Get<T>());
     }
 
-    /**
-     * @brief Caches the entity IDs matching a component query.
-     *
-     * The cached entity list is rebuilt when its version does not match
-     * the current query version.
-     */
+    /** @brief Stores the cached results and version of a component query. */
     struct QueryCache
     {
         std::vector<unsigned int> Entities;
@@ -51,17 +42,15 @@ struct ComponentPoolQuery
     /**
      * @brief Iterates over entities containing all specified components.
      *
-     * On the first query, the matching entity IDs are determined by iterating
-     * over the first component pool and checking the remaining pools.
-     * Subsequent calls reuse the cached entity IDs until the query version
-     * changes.
+     * The first component acts as the driver pool. Matching entity IDs are
+     * cached so subsequent calls avoid rebuilding the query until the query
+     * structure changes.
      *
      * @tparam First First component type and driver pool.
-     * @tparam Rest Additional component types that must be present.
+     * @tparam Rest Additional component types.
      * @tparam Function Callback type.
      *
-     * @param callback Function invoked with the entity ID and references to
-     *                 all requested components.
+     * @param callback Function invoked with the entity ID and component references.
      */
     template <ComponentType First, ComponentType... Rest, typename Function>
     requires std::invocable<Function, unsigned int, First&, Rest&...>
@@ -69,12 +58,12 @@ struct ComponentPoolQuery
     {
         auto pools = GetPools<First, Rest...>();
 
-        if (!QueryCaches.Contains<First, Rest...>())
+        if (!CachedQueries.Contains<First, Rest...>())
         {
-            QueryCaches.Emplace<First, Rest...>();
+            CachedQueries.Emplace<First, Rest...>();
         }
 
-        QueryCache& cache = QueryCaches.Get<First, Rest...>();
+        QueryCache& cache = CachedQueries.Get<First, Rest...>();
 
         if (cache.Version == QueryVersion)
         {
@@ -88,6 +77,7 @@ struct ComponentPoolQuery
 
             return;
         }
+
         cache.Entities.clear();
 
         auto& firstPool = std::get<ComponentPool<First>&>(pools);
@@ -109,30 +99,17 @@ struct ComponentPoolQuery
     }
 
   private:
-    /**
-     * @brief Version of the current entity/component structure.
-     *
-     * Incremented whenever an event occurs that can change query membership.
-     * Cached entity lists compare their stored version against this value
-     * to determine whether they must be rebuilt.
-     */
+    /** @brief Version used to detect changes that can invalidate query caches. */
     unsigned int QueryVersion = 1;
 
-    /**
-     * @brief Stores component pools indexed by component type.
-     *
-     * Each component type has its own pool, while the container provides
-     * type-based lookup for heterogeneous pool storage.
-     */
+    /** @brief Stores all component pools indexed by their component type. */
     TypedVector<std::unique_ptr<IComponentPool>> ComponentPools{};
 
-    /**
-     * @brief Stores cached entity lists indexed by their component query.
-     */
-    TypedVector<QueryCache> QueryCaches;
+    /** @brief Stores cached results for each component query. */
+    TypedVector<QueryCache> CachedQueries;
 
     /**
-     * @brief Returns the component pools for the specified component types.
+     * @brief Returns the component pools for the specified types.
      *
      * @tparam Args Component types to retrieve.
      * @return Tuple containing references to the requested component pools.
@@ -143,10 +120,10 @@ struct ComponentPoolQuery
     }
 
     /**
-     * @brief Subscribes to events that can invalidate cached queries.
+     * @brief Subscribes to events that can change query membership.
      *
-     * cached entity lists are invalidated when entities are created or destroyed,
-     * or when a component is added to an entity.
+     * Each relevant event increments the query version, causing cached
+     * entity lists to be rebuilt on their next use.
      */
     void SubscribeToEvents()
     {

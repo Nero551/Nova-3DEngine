@@ -6,6 +6,7 @@
 #include "Core/Services/ResourceManager.hpp"
 #include "Math/Color/Color.hpp"
 #include "Math/Complex/Complex.hpp"
+#include "Math/DimensionalAnalysis/Dimension.hpp"
 #include "Math/Equations/QuadraticEquationSolver.hpp"
 #include "Math/Functions/Function.hpp"
 #include "Modules/Input/Input.hpp"
@@ -76,6 +77,17 @@ void Physics::Start()
     query.Pool<BodyComponent>().Add(cube.Id);
     cubeId = cube.Id;
     World::Get().Root->AttachChild(cube);
+
+    M::Dimension<float, M::Time<2>> t1 = 5;
+    M::Dimension<float, M::Time<1>> t2 = 3;
+
+    // M::Dimension<float, 1, M::Length> L1 = 10;
+
+    // M::Length<float> t3 = 3;
+
+    // M::Time<float>{2} + M::Time<float>{3};
+
+    U::Logger::Info((t1 * t2));
 }
 
 static float time = 0;
