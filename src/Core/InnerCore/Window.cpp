@@ -32,8 +32,6 @@ void Window::Terminate()
     glfwDestroyWindow(GlfwWindow);
 }
 
-Window::~Window() {}
-
 float Window::GetAspectRatio() const
 {
     return static_cast<float>(GetWidth()) / static_cast<float>(GetHeight());

@@ -15,8 +15,6 @@ namespace N
 {
 Engine::Engine()
 {
-    GraphicsContext.Initialize();
-    Window.Generate(800, 600, "Nova");
     if (Instance)
     {
         U::Log::Fatal("Only one Engine may exist.");
@@ -83,11 +81,14 @@ void Engine::Configure()
 
 void Engine::Start()
 {
+    GraphicsContext.Initialize();
+    Window.Generate(800, 600, "Nova");
+    Configure();
+    World.emplace();
+
     TracyGpuContext;
     ZoneScopedN("Start");
     TracyGpuZone("Start");
-    Configure();
-    World.emplace();
 
     for (auto& service : Service::GetAll())
     {

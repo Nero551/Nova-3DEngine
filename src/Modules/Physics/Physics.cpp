@@ -78,6 +78,8 @@ void Physics::Start()
     query.Pool<BodyComponent>().Add(cube.Id);
     cubeId = cube.Id;
     World::Get().GetRoot().AttachChild(cube);
+
+    //TODO- look into c++ traits
 }
 
 static float time = 0;
