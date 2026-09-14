@@ -3,7 +3,7 @@
 #include <fstream>
 #include <sstream>
 
-#include "Utilities/Logger.hpp"
+#include "Utilities/Log.hpp"
 
 namespace N::U
 {
@@ -15,7 +15,7 @@ std::string FileSystem::ReadFile(const std::string& path)
 
     if (buffer.str().empty())
     {
-        Logger::Error("File Doesn't Exist: " + path);
+        Log::Error("File Doesn't Exist: " + path);
     }
 
     return buffer.str();
@@ -27,7 +27,7 @@ void FileSystem::WriteFile(const std::string& path, const std::string& content)
 
     if (!file)
     {
-        Logger::Error("Failed to write file: " + path);
+        Log::Error("Failed to write file: " + path);
         return;
     }
 

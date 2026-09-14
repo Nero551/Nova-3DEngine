@@ -7,7 +7,7 @@
 #include "Core/OuterCore/Resource.hpp"
 #include "Modules/Renderer/Resources/Shader/ShaderSourceValidator.hpp"
 #include "Utilities/FileSystem/FileSystem.hpp"
-#include "Utilities/Logger.hpp"
+#include "Utilities/Log.hpp"
 
 namespace N
 {
@@ -72,7 +72,7 @@ void ShaderSource::Compile()
     if (!success)
     {
         glGetShaderInfoLog(Id, 512, nullptr, infoLog);
-        U::Logger::Error(std::string("Shader:" + Name) + infoLog + " | " + Path);
+        U::Log::Error(std::string("Shader:" + Name) + infoLog + " | " + Path);
 
         if (Stage == ShaderStage::Fragment)
         {
@@ -135,7 +135,7 @@ void ShaderSource::PreprocessIncludes(
                 // Check Circular Include
                 if (!includesProcessing.insert(includePath).second)
                 {
-                    U::Logger::Fatal("Circular Include: " + includePath.string() + " | In Shader: " + path);
+                    U::Log::Fatal("Circular Include: " + includePath.string() + " | In Shader: " + path);
                 }
 
                 // Recursively Include

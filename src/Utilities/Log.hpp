@@ -3,7 +3,7 @@
 namespace N::U
 {
 /** @brief Provides formatted console logging and pointer validation. */
-struct Logger
+struct Log
 {
     /** @brief Prints a message to the console. */
     template <typename... Args> static void Print(const Args&... args)
@@ -45,12 +45,13 @@ struct Logger
         throw std::runtime_error("");
     }
 
-    /** @brief Validates a raw pointer and returns the referenced object. */
-    template <typename T> static T& Require(T* rawPtr, const std::string_view message)
+    /** @brief Validates a raw pointer and returns the dereferenced object. */
+    template <typename T>
+    static T& Require(T* rawPtr, const std::string_view nullMessage = "Attempted to deference a null pointer")
     {
         if (!rawPtr)
         {
-            Fatal(message);
+            Fatal(nullMessage);
         }
         return *rawPtr;
     }

@@ -2,7 +2,7 @@
 
 #include "../Geometry/Basis.hpp"
 #include "Math/Common/Comparison.hpp"
-#include "Utilities/Logger.hpp"
+#include "Utilities/Log.hpp"
 
 namespace N::M
 {
@@ -178,7 +178,7 @@ Matrix3 Matrix3::Inverse() const
 
     if (std::abs(det) < EPSILON)
     {
-        U::Logger::Error("Matrix is not invertible");
+        U::Log::Error("Matrix is not invertible");
         return Identity;
     }
 

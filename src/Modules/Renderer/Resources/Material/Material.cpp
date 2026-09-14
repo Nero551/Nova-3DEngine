@@ -5,7 +5,7 @@
 #include "../Shader/Uniforms/IntUniform.hpp"
 #include "../Shader/Uniforms/Vector3Uniform.hpp"
 #include "../Shader/Uniforms/Vector4Uniform.hpp"
-#include "Utilities/Logger.hpp"
+#include "Utilities/Log.hpp"
 
 namespace N
 {
@@ -22,7 +22,7 @@ void Material::AssignTexture(Texture& texture, const unsigned int slot)
 {
     if (slot >= MaxCustomTextures)
     {
-        U::Logger::Error("Material: ", Name, " Texture slot out of bounds: " + texture.Name);
+        U::Log::Error("Material: ", Name, " Texture slot out of bounds: " + texture.Name);
         return;
     }
     CustomTextures[slot] = &texture;

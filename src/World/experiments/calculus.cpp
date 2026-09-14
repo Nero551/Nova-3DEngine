@@ -116,7 +116,7 @@ void calculus::Update(double dt)
 void calculus::TwoDimensionalProjection(int increase)
 {
     points.reserve(M::Pow(360 / increase, 1));
-    U::Logger::Info(M::Pow(360 / increase, 1));
+    U::Log::Info(M::Pow(360 / increase, 1));
     for (int theta = -180; theta < 180; theta += increase)
     {
         M::Vector2 v2 = M::Vector2::FromPolar(M::Polar(M::Rad(theta)));
@@ -130,7 +130,7 @@ void calculus::TwoDimensionalProjection(int increase)
 
 void calculus::ThreeDimensionalProjection(int increase)
 {
-    U::Logger::Info(M::Pow(360 / increase, 2));
+    U::Log::Info(M::Pow(360 / increase, 2));
 
     for (int theta = -180; theta < 180; theta += increase)
     {
@@ -147,7 +147,7 @@ void calculus::ThreeDimensionalProjection(int increase)
 void calculus::FourDimensionalProjection(int increase)
 {
     points.reserve(M::Pow(360 / increase, 3));
-    U::Logger::Info(M::Pow(360 / increase, 3));
+    U::Log::Info(M::Pow(360 / increase, 3));
     World::Get().ReserveEntities(M::Pow(360 / increase, 3));
     for (int theta = -180; theta < 180; theta += increase)
     {

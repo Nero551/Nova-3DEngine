@@ -1,6 +1,6 @@
 #pragma once
 #include "OpenGL.hpp"
-#include "Utilities/Logger.hpp"
+#include "Utilities/Log.hpp"
 #include <glslang/Public/ShaderLang.h>
 
 namespace N
@@ -15,7 +15,7 @@ struct GraphicsContext
     GraphicsContext()
     {
         glfwSetErrorCallback([](const int error, const char* description)
-            { U::Logger::Error("[GLFW]", error, ": ", description); });
+            { U::Log::Error("[GLFW]", error, ": ", description); });
         if (!glfwInit())
         {
             throw std::runtime_error("Failed to initialize GLFW");

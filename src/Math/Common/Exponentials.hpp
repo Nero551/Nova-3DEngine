@@ -1,5 +1,5 @@
 #pragma once
-#include "Utilities/Logger.hpp"
+#include "Utilities/Log.hpp"
 
 namespace N::M
 {
@@ -21,7 +21,7 @@ constexpr float Exp(const float x)
 constexpr float Factorial(const int x)
 {
     if (x < 0)
-        U::Logger::Error("Factorial requires a non-negative integer");
+        U::Log::Error("Factorial requires a non-negative integer");
 
     int result = 1;
 

@@ -3,6 +3,7 @@
 #include "../Coordinates/QPolar.hpp"
 #include "../Matrix/Matrix4.hpp"
 #include "../Vector/Vector3.hpp"
+#include "Math/Functions/Function.hpp"
 
 namespace N::M
 {

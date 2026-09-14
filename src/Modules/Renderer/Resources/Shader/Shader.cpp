@@ -3,7 +3,7 @@
 #include <OpenGL.hpp>
 
 #include "Uniforms/FloatUniform.hpp"
-#include "Utilities/Logger.hpp"
+#include "Utilities/Log.hpp"
 
 namespace N
 {
@@ -77,7 +77,7 @@ void Shader::CreateProgram()
 
     if (Sources.empty())
     {
-        U::Logger::Warning("Shader Program:" + Name + " Has No Sources");
+        U::Log::Warning("Shader Program:" + Name + " Has No Sources");
         return;
     }
 
@@ -99,7 +99,7 @@ void Shader::CreateProgram()
     if (!success)
     {
         glGetProgramInfoLog(Id, 512, nullptr, infoLog);
-        U::Logger::Error(std::string("Shader Program: " + Name + " Linking Failed: ") + infoLog);
+        U::Log::Error(std::string("Shader Program: " + Name + " Linking Failed: ") + infoLog);
     }
 }
 

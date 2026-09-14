@@ -136,7 +136,7 @@ template <typename D> struct SparseSet
     D& Get(const SparseIndex s)
     {
         if (!Contains(s))
-            U::Logger::Fatal("SparseSet does not contain the specified sparse index.");
+            U::Log::Fatal("SparseSet does not contain the specified sparse index.");
 
         return Dense[Sparse[s]].Value;
     }
@@ -179,7 +179,7 @@ template <typename D> struct SparseSet
     D& GetByIndex(const DenseIndex index)
     {
         if (index >= Dense.size())
-            U::Logger::Fatal("SparseSet dense index out of bounds.");
+            U::Log::Fatal("SparseSet dense index out of bounds.");
 
         return Dense[index].Value;
     }
@@ -206,7 +206,7 @@ template <typename D> struct SparseSet
     Entry& GetEntry(const SparseIndex s)
     {
         if (!Contains(s))
-            U::Logger::Fatal("SparseSet does not contain the specified sparse index.");
+            U::Log::Fatal("SparseSet does not contain the specified sparse index.");
 
         return Dense[Sparse[s]];
     }

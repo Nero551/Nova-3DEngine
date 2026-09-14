@@ -27,6 +27,10 @@ concept IsDimension = std::derived_from<T, IDimension>;
 template <typename ValueType, typename D> requires IsDimensional<D>
 struct Dimension : IDimension
 {
+    //TODO- a better system would be to remove division entirely and define it as a x b^-1 instead.
+    // cuz rn the system thinks a x b^-1 and a/b are different. will also make printing easier.
+    // it will unify operations overall.
+
     ValueType Value;
 
     /** @brief Constructs a dimension from a numerical value. */
@@ -115,6 +119,16 @@ struct Dimension : IDimension
     {
         os << dimension.Value << ' ';
         return D::Print(os);
+    }
+
+    ValueType& operator()()
+    {
+        return Value;
+    }
+
+    const ValueType& operator()() const
+    {
+        return Value;
     }
 };
 

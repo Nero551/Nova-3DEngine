@@ -17,7 +17,7 @@ struct EventBus : Service
     {
         if constexpr (!std::constructible_from<T, Args...>)
         {
-            U::Logger::Fatal(std::string("Event: ") + typeid(T).name() +
+            U::Log::Fatal(std::string("Event: ") + typeid(T).name() +
                 " Can't Be Constructed From the Given Arguments.");
         }
 
@@ -39,7 +39,7 @@ struct EventBus : Service
     {
         if constexpr (!std::constructible_from<T, Args...>)
         {
-            U::Logger::Fatal(std::string("Event: ") + typeid(T).name() +
+            U::Log::Fatal(std::string("Event: ") + typeid(T).name() +
                 " Can't Be Constructed From the Given Arguments.");
         }
 

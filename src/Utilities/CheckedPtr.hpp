@@ -1,5 +1,5 @@
 #pragma once
-#include "Utilities/Logger.hpp"
+#include "Utilities/Log.hpp"
 
 namespace N::U
 {

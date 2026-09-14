@@ -1,5 +1,5 @@
 #pragma once
-#include "Utilities/Logger.hpp"
+#include "Utilities/Log.hpp"
 
 #include <limits>
 #include <utility>
@@ -206,7 +206,7 @@ template <typename T> struct Indirect2DVector
     {
         if (!Contains(a, b))
         {
-            U::Logger::Fatal("Indirect2DVector: Index does not exist.");
+            U::Log::Fatal("Indirect2DVector: Index does not exist.");
         }
 
         return Data[Lookup[a][b]];
@@ -225,7 +225,7 @@ template <typename T> struct Indirect2DVector
     {
         if (!Contains(a, b))
         {
-            U::Logger::Fatal("Indirect2DVector: Index does not exist.");
+            U::Log::Fatal("Indirect2DVector: Index does not exist.");
         }
 
         return Data[Lookup[a][b]];

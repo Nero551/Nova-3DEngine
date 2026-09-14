@@ -55,7 +55,7 @@ Entity& World::FindEntity(unsigned int id)
     auto entity = Entities.Find(id);
     if (entity == Entities.end())
     {
-        U::Logger::Fatal("Entity Not Found: ", id);
+        U::Log::Fatal("Entity Not Found: ", id);
     }
     return *entity->DenseValue;
 }
@@ -121,7 +121,7 @@ void World::Update(const double dt)
 
     if (Engine::Get().GetModule<Input>().IsKeyPressed(Key::T))
     {
-        U::Logger::Info(Entities.Size());
+        U::Log::Info(Entities.Size());
     }
 
     for (auto& system : Systems)

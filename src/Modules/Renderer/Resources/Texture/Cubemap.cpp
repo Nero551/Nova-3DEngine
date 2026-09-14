@@ -1,6 +1,6 @@
 #include "Cubemap.hpp"
 
-#include "Utilities/Logger.hpp"
+#include "Utilities/Log.hpp"
 
 namespace N
 {
@@ -19,7 +19,7 @@ void Cubemap::Generate()
         Bottom.Width != Width || Bottom.Height != Height || Right.Width != Width || Right.Height != Height ||
         Left.Width != Width || Left.Height != Height)
     {
-        U::Logger::Error("Cubemap faces must all have the same dimensions.");
+        U::Log::Error("Cubemap faces must all have the same dimensions.");
         return;
     }
 

@@ -2,7 +2,7 @@
 
 #include "Math/Common/Comparison.hpp"
 #include "Math/Geometry/Basis.hpp"
-#include "Utilities/Logger.hpp"
+#include "Utilities/Log.hpp"
 
 namespace N::M
 {
@@ -237,7 +237,7 @@ Matrix4 Matrix4::Inverse() const
 
     if (M::NearlyEquals(std::abs(det), 0.0))
     {
-        U::Logger::Error("Matrix is not invertible");
+        U::Log::Error("Matrix is not invertible");
         return Identity;
     }
 

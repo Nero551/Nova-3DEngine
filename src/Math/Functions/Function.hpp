@@ -3,7 +3,7 @@
 #include "IntegrationMethod.hpp"
 #include "Math/Common/Comparison.hpp"
 #include "Math/Common/Exponentials.hpp"
-#include "Utilities/Logger.hpp"
+#include "Utilities/Log.hpp"
 
 namespace N::M
 {
@@ -72,7 +72,7 @@ template <typename Input, typename Output> struct Function
             case DifferentiationMethod::Backward:
                 return (f(x) - f(x - h)) / h;
             default:
-                U::Logger::Fatal("Invalid Differentiation Method");
+                U::Log::Fatal("Invalid Differentiation Method");
                 return Output{};
             }
         };
@@ -141,7 +141,7 @@ template <typename Input, typename Output> struct Function
                     result += (f(x) + f(x + width)) / 2.0f * width;
                     break;
                 default:
-                    U::Logger::Fatal("Invalid Integration Method");
+                    U::Log::Fatal("Invalid Integration Method");
                 }
             }
             return result;

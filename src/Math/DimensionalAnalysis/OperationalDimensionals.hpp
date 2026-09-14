@@ -15,7 +15,7 @@ struct OperationalDimensional : IDimensional
      */
     template <int E> using WithExponent = OperationalDimensional;
 
-    static constexpr int Exponent = 0;
+    static constexpr int Exponent = 1;
 };
 
 /**
@@ -36,6 +36,10 @@ struct DivideDimensional : OperationalDimensional
 
     static std::ostream& Print(std::ostream& os)
     {
+        if constexpr (std::derived_from<Numerator, OperationalDimensional>)
+        {
+        }
+
         Numerator::Print(os);
         os << '/';
         return Denominator::Print(os);

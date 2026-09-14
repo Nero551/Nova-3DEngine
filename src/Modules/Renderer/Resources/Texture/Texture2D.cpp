@@ -1,7 +1,7 @@
 #include "Texture2D.hpp"
 #include "OpenGL.hpp"
 
-#include "Utilities/Logger.hpp"
+#include "Utilities/Log.hpp"
 
 namespace N
 {
@@ -59,7 +59,7 @@ void Texture2D::UseImage(const U::Image& image)
         InternalFormat = TextureInternalFormat::RGBA8;
         break;
     default:
-        U::Logger::Error("Unsupported Texture Channel Count");
+        U::Log::Error("Unsupported Texture Channel Count");
     }
 }
 

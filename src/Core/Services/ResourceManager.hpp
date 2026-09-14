@@ -2,7 +2,7 @@
 
 #include "Core/OuterCore/Resource.hpp"
 #include "Core/OuterCore/Service.hpp"
-#include "Utilities/Logger.hpp"
+#include "Utilities/Log.hpp"
 
 namespace N
 {
@@ -37,7 +37,7 @@ struct ResourceManager : Service
 
         if constexpr (!std::constructible_from<T, const std::string&, Args...>)
         {
-            U::Logger::Fatal("Resource: " + name + " ,Of Type: " + typeid(T).name() +
+            U::Log::Fatal("Resource: " + name + " ,Of Type: " + typeid(T).name() +
                 " Can't Be Constructed From the Given Arguments.");
         }
         else

@@ -6,6 +6,7 @@
 #include "Core/Services/ResourceManager.hpp"
 #include "Math/Color/Color.hpp"
 #include "Math/Complex/Complex.hpp"
+#include "Math/DimensionalAnalysis/DerivedDimensionals.hpp"
 #include "Math/DimensionalAnalysis/Dimension.hpp"
 #include "Math/Equations/QuadraticEquationSolver.hpp"
 #include "Math/Functions/Function.hpp"
@@ -78,18 +79,9 @@ void Physics::Start()
     cubeId = cube.Id;
     World::Get().Root->AttachChild(cube);
 
-    M::Dimension<float, M::Length<1>> t1 = 5;
-    M::Dimension<float, M::Time<1>> t2 = 3;
+    M::Dimension<float, M::Acceleration> t1 = 5;
 
-    M::Function<M::Dimension<M::Quaternion, M::Time<1>>, M::Dimension<M::Vector2, M::Length<1>>> F =
-        [&](const M::Dimension<M::Quaternion, M::Time<1>> t)
-    {
-        return M::Dimension<M::Vector2, M::Length<1>>{
-            {t.Value.Angle(), t.Value.Magnitude()}
-        };
-    };
-
-    U::Logger::Info((t1 / t2));
+    U::Log::Info(t1 * t1);
 }
 
 static float time = 0;

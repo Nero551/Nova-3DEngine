@@ -1,7 +1,7 @@
 #pragma once
 #include "Utilities/CheckedPtr.hpp"
 #include "Utilities/DataStructures/TypedVector.hpp"
-#include "Utilities/Logger.hpp"
+#include "Utilities/Log.hpp"
 
 namespace N
 {
@@ -27,7 +27,7 @@ struct Service
         auto service = Services.Find<T>();
         if (service == Services.end())
         {
-            U::Logger::Fatal(std::format("Service Not Found: {}", typeid(T).name()));
+            U::Log::Fatal(std::format("Service Not Found: {}", typeid(T).name()));
         }
         return static_cast<T&>(**service);
     }
@@ -62,7 +62,7 @@ struct Service
     {
         if (Services.Contains<T>())
         {
-            U::Logger::Error(std::format(" Service {} Already Added", typeid(T).name()));
+            U::Log::Error(std::format(" Service {} Already Added", typeid(T).name()));
             return static_cast<T&>(*Services.Get<T>());
         }
 

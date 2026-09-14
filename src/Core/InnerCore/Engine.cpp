@@ -18,7 +18,7 @@ Engine::Engine()
     Window.Generate(800, 600, "Nova");
     if (Instance)
     {
-        U::Logger::Fatal("Only one Engine may exist.");
+        U::Log::Fatal("Only one Engine may exist.");
     }
     Instance = this;
 }

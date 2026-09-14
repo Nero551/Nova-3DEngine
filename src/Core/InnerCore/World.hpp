@@ -4,7 +4,7 @@
 #include "Core/OuterCore/Service.hpp"
 #include "Core/Services/EventBus.hpp"
 #include "SystemOwner.hpp"
-#include "Utilities/Logger.hpp"
+#include "Utilities/Log.hpp"
 #include "World/Events/EntityCreated.hpp"
 
 namespace N

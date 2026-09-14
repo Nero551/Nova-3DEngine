@@ -18,25 +18,25 @@ void Entity::AttachChild(Entity& child)
 {
     if (HasChild(child.Id))
     {
-        U::Logger::Error("Child Entity already exists: " + std::to_string(child.Id));
+        U::Log::Error("Child Entity already exists: " + std::to_string(child.Id));
         return;
     }
 
     if (&child == this)
     {
-        U::Logger::Error("An entity cannot be its own child.");
+        U::Log::Error("An entity cannot be its own child.");
         return;
     }
 
     if (child.IsDescendantOf(Id))
     {
-        U::Logger::Error("An entity cannot have its descendant as a child.");
+        U::Log::Error("An entity cannot have its descendant as a child.");
         return;
     }
 
     if (child.IsAncestorOf(Id))
     {
-        U::Logger::Error("An entity cannot have its ancestor as a child.");
+        U::Log::Error("An entity cannot have its ancestor as a child.");
         return;
     }
 
@@ -64,7 +64,7 @@ Entity& Entity::GetChild(const unsigned int id)
         return World::Get().FindEntity(id);
     }
 
-    U::Logger::Fatal(std::format("Entity {} has no child {}", Id, id));
+    U::Log::Fatal(std::format("Entity {} has no child {}", Id, id));
 }
 
 U::CheckedPtr<Entity> Entity::TryGetChild(const unsigned int id)

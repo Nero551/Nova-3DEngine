@@ -5,7 +5,7 @@
 #include <stb_image.h>
 #include <stb_image_write.h>
 
-#include "Utilities/Logger.hpp"
+#include "Utilities/Log.hpp"
 
 namespace N::U
 {
@@ -20,7 +20,7 @@ Image::Image(const std::string& filePath, const bool flip)
 
     if (!pixels)
     {
-        Logger::Error("Failed To Load Image: " + filePath);
+        Log::Error("Failed To Load Image: " + filePath);
         return;
     }
 

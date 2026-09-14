@@ -67,7 +67,7 @@ struct ComponentPoolQuery
 
         if (cache.Version == QueryVersion)
         {
-            auto& firstPool = std::get<ComponentPool<First>&>(pools);
+            ComponentPool<First>& firstPool = std::get<ComponentPool<First>&>(pools);
 
             for (unsigned int entityId : cache.Entities)
             {

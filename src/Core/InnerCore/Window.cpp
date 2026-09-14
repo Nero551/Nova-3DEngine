@@ -1,7 +1,7 @@
 #include "Window.hpp"
 
 #include "Engine.hpp"
-#include "Utilities/Logger.hpp"
+#include "Utilities/Log.hpp"
 
 namespace N
 {
@@ -12,16 +12,16 @@ void Window::Generate(const int width, const int height, const std::string& titl
     GLFWwindow* glfwWindow = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
     if (!glfwWindow)
     {
-        U::Logger::Fatal("Failed To Create Window");
+        U::Log::Fatal("Failed To Create Window");
     }
     glfwMakeContextCurrent(glfwWindow);
 
     if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
     {
-        U::Logger::Fatal("Failed To Initialize GLAD");
+        U::Log::Fatal("Failed To Initialize GLAD");
     }
 
-    U::Logger::Info(glGetString(GL_VERSION));
+    U::Log::Info(glGetString(GL_VERSION));
 
     glViewport(0, 0, width, height);
     GlfwWindow = glfwWindow;

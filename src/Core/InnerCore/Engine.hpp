@@ -54,7 +54,7 @@ struct Engine
         auto module = Modules.Find<T>();
         if (module == Modules.end())
         {
-            U::Logger::Fatal(std::format("Module {} not found", typeid(T).name()));
+            U::Log::Fatal(std::format("Module {} not found", typeid(T).name()));
         }
         return static_cast<T&>(**module);
     }

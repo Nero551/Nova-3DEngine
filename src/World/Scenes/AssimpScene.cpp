@@ -130,7 +130,7 @@ AssimpScene::AssimpScene(const std::string& filepath)
 
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
-        U::Logger::Error("[ASSIMP] Failed To Load Scene: ", importer.GetErrorString());
+        U::Log::Error("[ASSIMP] Failed To Load Scene: ", importer.GetErrorString());
 
         return;
     }

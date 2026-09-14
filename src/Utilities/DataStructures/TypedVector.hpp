@@ -1,5 +1,5 @@
 #pragma once
-#include "Utilities/Logger.hpp"
+#include "Utilities/Log.hpp"
 namespace N
 {
 
@@ -120,7 +120,7 @@ template <typename T> struct TypedVector
     {
         if (!Contains<Args...>())
         {
-            U::Logger::Fatal("TypedVector does not contain the specified TypeId.");
+            U::Log::Fatal("TypedVector does not contain the specified TypeId.");
         }
         return Data[GetTypeId<Args...>()];
     }
