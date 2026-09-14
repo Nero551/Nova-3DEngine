@@ -23,11 +23,10 @@ struct Window
     void Generate(int width, int height, const std::string& title);
     void Terminate();
 
-    /** @brief Destroys the underlying GLFW window. */
-    ~Window();
-
     /** @brief Returns the window's width-to-height ratio. */
     [[nodiscard]] float GetAspectRatio() const;
+
+    void MakeCurrentContext();
 
     /**
      * @brief Checks whether the window has been requested to close.

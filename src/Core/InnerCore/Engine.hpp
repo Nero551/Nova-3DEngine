@@ -17,6 +17,7 @@ concept ModuleType = std::derived_from<T, Module>;
  */
 struct Engine
 {
+    GraphicsContext GraphicsContext{};
     Window Window;
     std::optional<World> World;
 
@@ -61,8 +62,6 @@ struct Engine
     }
 
   private:
-    GraphicsContext GraphicsContext{};
-
     /** @brief Global engine instance. */
     inline static U::CheckedPtr<Engine> Instance = nullptr;
 

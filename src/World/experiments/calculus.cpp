@@ -45,7 +45,7 @@ static Entity& CreatePoint(M::Vector4 col)
     return point;
 }
 
-static std::vector<U::CheckedPtr<Entity>> points = {};
+static std::vector<unsigned int> points = {};
 
 static Entity& Plot(const M::Vector3 vec3, const M::Vector4 col = {1, 1, 1, 1})
 {
@@ -93,7 +93,7 @@ void calculus::Update(double dt)
     {
         for (auto& point : points)
         {
-            auto& transform = World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point->Id);
+            auto& transform = World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point);
             transform.Position *= multiplier;
         }
     }
@@ -123,7 +123,7 @@ void calculus::TwoDimensionalProjection(int increase)
         float proj = v2.StereoProject();
         // auto& d2point = Plot({v2.x, v2.y, 0});
         auto& point = Plot({proj, 0, 0});
-        points.emplace_back(&point);
+        points.emplace_back(point.Id);
         // points.emplace_back(&d2point);
     }
 }
@@ -139,7 +139,7 @@ void calculus::ThreeDimensionalProjection(int increase)
             M::Vector3 v3 = M::Vector3::FromSpherical(M::Spherical(M::Rad(theta), M::Rad(phi)));
             M::Vector2 proj = v3.StereoProject();
             auto& point = Plot({proj.x, proj.y, 0});
-            points.emplace_back(&point);
+            points.emplace_back(point.Id);
         }
     }
 }
@@ -159,7 +159,7 @@ void calculus::FourDimensionalProjection(int increase)
                     M::Vector4::FromHyperSpherical(M::HyperSpherical(M::Rad(theta), M::Rad(phi), M::Rad(h)));
                 M::Vector3 proj = v4.StereoProject();
                 auto& point = Plot(proj);
-                points.emplace_back(&point);
+                points.emplace_back(point.Id);
             }
         }
     }

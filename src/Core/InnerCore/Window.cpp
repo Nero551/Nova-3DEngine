@@ -10,11 +10,13 @@ void Window::Generate(const int width, const int height, const std::string& titl
     SetHints();
 
     GLFWwindow* glfwWindow = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
+    GlfwWindow = glfwWindow;
     if (!glfwWindow)
     {
         U::Log::Fatal("Failed To Create Window");
     }
-    glfwMakeContextCurrent(glfwWindow);
+
+    MakeCurrentContext();
 
     if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
     {
@@ -24,21 +26,21 @@ void Window::Generate(const int width, const int height, const std::string& titl
     U::Log::Info(glGetString(GL_VERSION));
 
     glViewport(0, 0, width, height);
-    GlfwWindow = glfwWindow;
 }
 void Window::Terminate()
 {
     glfwDestroyWindow(GlfwWindow);
 }
 
-Window::~Window()
-{
-    Terminate();
-}
+Window::~Window() {}
 
 float Window::GetAspectRatio() const
 {
     return static_cast<float>(GetWidth()) / static_cast<float>(GetHeight());
+}
+void Window::MakeCurrentContext()
+{
+    glfwMakeContextCurrent(GlfwWindow);
 }
 
 bool Window::ShouldClose()
