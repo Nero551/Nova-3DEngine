@@ -13,7 +13,7 @@
 
 namespace N
 {
-static MeshInstance3D& CreatePoint(M::Vector4 col)
+static Entity& CreatePoint(M::Vector4 col)
 {
     auto& resourceManager = Service::Get<ResourceManager>();
     auto& mesh = Primitives::CreateQuad("point");
@@ -41,7 +41,7 @@ static MeshInstance3D& CreatePoint(M::Vector4 col)
         World::Get().Query.Pool<MaterialComponent>().GetComponentById(point.Id).Material = &material;
     }
 
-    World::Get().Root->AttachChild(point);
+    World::Get().GetRoot().AttachChild(point);
     return point;
 }
 

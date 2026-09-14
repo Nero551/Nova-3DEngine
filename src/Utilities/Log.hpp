@@ -71,5 +71,5 @@ struct Log
 
     /** @brief Sets the console text color to blue. */
     static constexpr auto Blue = "\033[34m";
-};
+}; // namespace Log
 } // namespace N::U

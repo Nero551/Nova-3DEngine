@@ -31,9 +31,9 @@ void World::RemoveEntity(const unsigned int id)
         entity->ClearParent();
     }
 
-    if (entity->Id == Root->Id)
+    if (entity->Id == Root)
     {
-        Root.Reset();
+        RemoveEntity(Root);
     }
 
     Service::Get<EventBus>().Fire<EntityDestroyed>(*entity);
@@ -52,24 +52,21 @@ void World::ReserveEntities(size_t count)
 
 Entity& World::FindEntity(unsigned int id)
 {
-    auto entity = Entities.Find(id);
-    if (entity == Entities.end())
+    if (!Entities.Contains(id))
     {
         U::Log::Fatal("Entity Not Found: ", id);
     }
-    return *entity->DenseValue;
+    return Entities.Get(id);
 }
 
 U::CheckedPtr<Entity> World::TryFindEntity(const unsigned int id)
 {
-    auto entity = Entities.Find(id);
 
-    if (entity == Entities.end())
+    if (!Entities.Contains(id))
     {
         return nullptr;
     }
-
-    return &*entity->DenseValue;
+    return &Entities.Get(id);
 }
 
 // TODO- quick flicker happens at the start of the run, its input mouse rapidly changing when changing MouseMode.
@@ -77,19 +74,19 @@ void World::Start()
 {
     Query.SubscribeToEvents();
     AddSystem<Transform3DSystem>();
-    // AddSystem<calculus>();
+    AddSystem<calculus>();
 
     Engine::Get().GetModule<Input>().SetMouseMode(MouseMode::Disabled);
 
-    Root = &CreateEntity<Nova>();
+    SetRoot(CreateEntity<Nova>().Id);
 
     auto& camera = CreateEntity<Camera>();
     Query.Pool<Transform3DComponent>().GetComponentById(camera.Id).Position = {0, 0, 10};
-    Root->AttachChild(camera);
-    ActiveCamera = &camera;
+    GetRoot().AttachChild(camera);
+    SetCamera(camera.Id);
 
     CoordinateAxesScene coordinateAxes;
-    Root->AttachChild(coordinateAxes.GetRoot());
+    GetRoot().AttachChild(coordinateAxes.GetRoot());
 
     FirstScene firstScene;
     coordinateAxes.GetRoot().AttachChild(firstScene.GetRoot());

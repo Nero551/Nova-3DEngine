@@ -24,11 +24,11 @@ struct Vector4
 
     static Vector4 FromHyperSpherical(const HyperSpherical& hyperSpherical);
 
-    Vector4();
+    constexpr Vector4() : x(0), y(0), z(0), w(0) {}
 
-    Vector4(float all);
+    constexpr Vector4(const float all) : x(all), y(all), z(all), w(all) {}
 
-    Vector4(float x, float y, float z, float w);
+    constexpr Vector4(const float x, const float y, const float z, const float w) : x(x), y(y), z(z), w(w) {};
 
     /**
      * @brief Returns the squared magnitude of the vector.

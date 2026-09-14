@@ -24,15 +24,6 @@ Vector4 Vector4::FromHyperSpherical(const HyperSpherical& hyperSpherical)
     return result;
 }
 
-Vector4::Vector4() : x(0), y(0), z(0), w(0) {}
-
-Vector4::Vector4(const float all) : x(all), y(all), z(all), w(all) {}
-
-Vector4::Vector4(const float x, const float y, const float z, const float w) : x(x), y(y), z(z), w(w) {}
-
-//?Operators
-
-//?Methods
 float Vector4::LengthSquared() const
 {
     return x * x + y * y + z * z + w * w;

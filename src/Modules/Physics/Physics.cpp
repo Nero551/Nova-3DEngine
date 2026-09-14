@@ -19,7 +19,7 @@
 
 namespace N
 {
-static MeshInstance3D& CreatePoint(M::Vector4 col)
+static Entity& CreatePoint(M::Vector4 col)
 {
     auto& resourceManager = Service::Get<ResourceManager>();
     auto& mesh = Primitives::CreateCube("point");
@@ -37,7 +37,7 @@ static MeshInstance3D& CreatePoint(M::Vector4 col)
     World::Get().Query.Pool<MeshComponent>().GetComponentById(point.Id).Mesh = &mesh;
     World::Get().Query.Pool<MaterialComponent>().GetComponentById(point.Id).Material = &material;
     World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.Id).Scale = M::Vector3{0.2};
-    World::Get().Root->AttachChild(point);
+    World::Get().GetRoot().AttachChild(point);
 
     return point;
 }
@@ -77,11 +77,7 @@ void Physics::Start()
     query.Pool<MaterialComponent>().GetComponentById(cube.Id).Material = &objectMaterial;
     query.Pool<BodyComponent>().Add(cube.Id);
     cubeId = cube.Id;
-    World::Get().Root->AttachChild(cube);
-
-    M::Dimension<float, M::Acceleration> t1 = 5;
-
-    U::Log::Info(t1 * t1);
+    World::Get().GetRoot().AttachChild(cube);
 }
 
 static float time = 0;

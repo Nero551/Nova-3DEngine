@@ -16,14 +16,15 @@ struct GraphicsContext
     {
         glfwSetErrorCallback([](const int error, const char* description)
             { U::Log::Error("[GLFW]", error, ": ", description); });
+
         if (!glfwInit())
         {
-            throw std::runtime_error("Failed to initialize GLFW");
+            U::Log::Fatal("Failed to initialize GLFW");
         }
 
         if (!glslang::InitializeProcess())
         {
-            throw std::runtime_error("Failed to initialize glslang");
+            U::Log::Fatal("Failed to initialize glslang");
         }
     }
 

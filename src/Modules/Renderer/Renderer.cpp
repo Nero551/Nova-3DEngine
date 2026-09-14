@@ -157,18 +157,18 @@ void Renderer::BeginFrame(double dt)
 // compute shader.
 void Renderer::RenderWorld()
 {
-    const auto& camera = World::Get().ActiveCamera;
+    const auto& camera = World::Get().GetCamera();
     auto& query = World::Get().Query;
 
     const M::Matrix4 projection =
-        query.Pool<CameraComponent>().GetComponentById(camera->Id).GetProjectionMatrix();
+        query.Pool<CameraComponent>().GetComponentById(camera.Id).GetProjectionMatrix();
 
     const M::Matrix4 view = GetSystem<CameraSystem>().GetViewMatrix();
 
     GUniformbuffer->Set(view, 0);
     GUniformbuffer->Set(projection, 64);
     GUniformbuffer->Set(Engine::Get().GetTime(), 128);
-    GUniformbuffer->Set(query.Pool<Transform3DComponent>().GetComponentById(camera->Id).GlobalPosition, 144);
+    GUniformbuffer->Set(query.Pool<Transform3DComponent>().GetComponentById(camera.Id).GlobalPosition, 144);
     GUniformbuffer->Bind();
 
     for (auto& batch : Batches)

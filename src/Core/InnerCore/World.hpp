@@ -19,13 +19,41 @@ concept EntityType = std::derived_from<T, Entity>;
  */
 struct World : SystemOwner
 {
-    U::CheckedPtr<Entity> Root{"World Has No Root Entity"};
-    U::CheckedPtr<Entity> ActiveCamera{"World Has No Active Camera"};
     ComponentPoolQuery Query;
     int MaxLights = 24;
 
     /** @brief Gets the global World instance. */
     static World& Get();
+
+    void SetRoot(unsigned int id)
+    {
+        Root = id;
+    }
+
+    Entity& GetRoot()
+    {
+        auto root = TryFindEntity(Root);
+        if (!root)
+        {
+            U::Log::Fatal("No Root Is Set Or Root Is Not An Entity");
+        }
+        return *root;
+    }
+
+    void SetCamera(unsigned int id)
+    {
+        ActiveCamera = id;
+    }
+
+    Entity& GetCamera()
+    {
+        auto camera = TryFindEntity(ActiveCamera);
+        if (!camera)
+        {
+            U::Log::Fatal("No Active Camera Is Set Or Active Camera Is Not An Entity");
+        }
+        return *camera;
+    }
 
     /**
      * @brief Removes an entity from the world.
@@ -47,18 +75,17 @@ struct World : SystemOwner
      * @tparam T Entity type to create.
      * @return Reference to the newly created entity.
      */
-    template <EntityType T> T& CreateEntity()
+    template <EntityType T> Entity& CreateEntity()
     {
         const unsigned int id = currentEntityId++;
-        auto entity = std::make_unique<T>();
-        entity->Id = id;
-        entity->Initialize();
+        T entity;
+        entity.Id = id;
+        entity.Initialize();
 
         auto it = Entities.Emplace(id, std::move(entity));
-        T& createdEntity = static_cast<T&>(*it->DenseValue);
-        Service::Get<EventBus>().Fire<EntityCreated>(createdEntity);
+        Service::Get<EventBus>().Fire<EntityCreated>(it->DenseValue);
 
-        return createdEntity;
+        return it->DenseValue;
     }
 
     /**
@@ -93,7 +120,9 @@ struct World : SystemOwner
     friend struct Engine;
 
   private:
-    SparseSet<std::unique_ptr<Entity>> Entities;
+    SparseSet<Entity> Entities;
+    unsigned int Root;
+    unsigned int ActiveCamera;
 
     /** @brief ID assigned to the most recently created entity. */
     unsigned int currentEntityId = 0;
