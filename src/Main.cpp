@@ -1,8 +1,4 @@
 #include "Core/InnerCore/Engine.hpp"
-#include "Math/Matrix/Matrix4.hpp"
-#include "Math/Quaternion/Quaternion.hpp"
-#include "Utilities/Reflection.hpp"
-
 static void Testing() {}
 int main()
 {

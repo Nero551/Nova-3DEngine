@@ -14,9 +14,8 @@ namespace N
 {
 World& World::Get()
 {
-    return Engine::Get().World;
+    return *Engine::Get().World;
 }
-
 void World::RemoveEntity(const unsigned int id)
 {
     auto entity = TryFindEntity(id);

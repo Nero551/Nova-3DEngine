@@ -26,10 +26,14 @@ void Window::Generate(const int width, const int height, const std::string& titl
     glViewport(0, 0, width, height);
     GlfwWindow = glfwWindow;
 }
+void Window::Terminate()
+{
+    glfwDestroyWindow(GlfwWindow);
+}
 
 Window::~Window()
 {
-    glfwDestroyWindow(GlfwWindow);
+    Terminate();
 }
 
 float Window::GetAspectRatio() const

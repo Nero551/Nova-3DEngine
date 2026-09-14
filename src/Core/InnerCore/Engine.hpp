@@ -17,12 +17,8 @@ concept ModuleType = std::derived_from<T, Module>;
  */
 struct Engine
 {
-  private:
-    GraphicsContext GraphicsContext{};
-
-  public:
     Window Window;
-    World World;
+    std::optional<World> World;
 
     Engine(const Engine&) = delete;
     Engine& operator=(const Engine&) = delete;
@@ -65,6 +61,8 @@ struct Engine
     }
 
   private:
+    GraphicsContext GraphicsContext{};
+
     /** @brief Global engine instance. */
     inline static U::CheckedPtr<Engine> Instance = nullptr;
 

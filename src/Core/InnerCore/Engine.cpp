@@ -15,6 +15,7 @@ namespace N
 {
 Engine::Engine()
 {
+    GraphicsContext.Initialize();
     Window.Generate(800, 600, "Nova");
     if (Instance)
     {
@@ -71,8 +72,8 @@ void Engine::Configure()
     // Window.SetSize(1980, 1200);
     glfwSwapInterval(0);
 
-    Service::Add<ResourceManager>();
     Service::Add<EventBus>();
+    Service::Add<ResourceManager>();
 
     AddModule<Input>();
     AddModule<Renderer>();
@@ -86,13 +87,14 @@ void Engine::Start()
     ZoneScopedN("Start");
     TracyGpuZone("Start");
     Configure();
+    World.emplace();
 
     for (auto& service : Service::GetAll())
     {
         service->Start();
     }
 
-    World.Start();
+    World->Start();
 
     for (auto& module : Modules)
     {
@@ -100,12 +102,108 @@ void Engine::Start()
     }
 }
 
+void Engine::BeginFrame()
+{
+    ZoneScopedN("Begin Frame");
+    TracyGpuZone("Begin Frame");
+
+    const double currentTime = glfwGetTime();
+    DeltaTime = currentTime - LastFrame;
+    LastFrame = currentTime;
+    Time = currentTime;
+
+    Window.PollEvents();
+
+    World->BeginFrame(DeltaTime);
+    for (auto& module : Modules)
+        module->BeginFrame(DeltaTime);
+
+    for (auto& service : Service::GetAll())
+    {
+        service->BeginFrame(DeltaTime);
+    }
+}
+
+void Engine::FixedUpdate()
+{
+    ZoneScopedN("Fixed Update");
+    TracyGpuZone("Fixed Update");
+
+    World->FixedUpdate(FixedDeltaTime);
+    for (auto& module : Modules)
+    {
+        module->FixedUpdate(FixedDeltaTime);
+    }
+
+    for (auto& service : Service::GetAll())
+    {
+        service->FixedUpdate(FixedDeltaTime);
+    }
+}
+
+void Engine::Update()
+{
+    ZoneScopedN("Update");
+    TracyGpuZone("Update");
+
+    World->Update(DeltaTime);
+
+    for (auto& module : Modules)
+    {
+        module->Update(DeltaTime);
+    }
+
+    for (auto& service : Service::GetAll())
+    {
+        service->Update(DeltaTime);
+    }
+}
+
+void Engine::Render()
+{
+    ZoneScopedN("Render");
+    TracyGpuZone("Render");
+
+    World->Render();
+    for (auto& module : Modules)
+    {
+        module->Render();
+    }
+
+    for (auto& service : Service::GetAll())
+    {
+        service->Render();
+    }
+}
+
+void Engine::EndFrame()
+{
+    ZoneScopedN("End Frame");
+    TracyGpuZone("End Frame");
+
+    Window.SwapBuffers();
+    World->EndFrame(DeltaTime);
+
+    for (auto& module : Modules)
+    {
+        module->EndFrame(DeltaTime);
+    }
+
+    for (auto& service : Service::GetAll())
+    {
+        service->EndFrame();
+    }
+
+    FrameMark;
+    TracyGpuCollect;
+}
+
 void Engine::Stop()
 {
     ZoneScopedN("Stop");
     TracyGpuZone("Stop");
     auto& services = Service::GetAll();
-    World.Stop();
+    World->Stop();
 
     for (auto& module : Modules)
     {
@@ -123,101 +221,8 @@ void Engine::Stop()
     {
         Instance.Reset();
     }
-}
 
-void Engine::BeginFrame()
-{
-    ZoneScopedN("Begin Frame");
-    TracyGpuZone("Begin Frame");
-
-    const double currentTime = glfwGetTime();
-    DeltaTime = currentTime - LastFrame;
-    LastFrame = currentTime;
-    Time = currentTime;
-
-    Window.PollEvents();
-
-    World.BeginFrame(DeltaTime);
-    for (auto& module : Modules)
-        module->BeginFrame(DeltaTime);
-
-    for (auto& service : Service::GetAll())
-    {
-        service->BeginFrame(DeltaTime);
-    }
-}
-
-void Engine::EndFrame()
-{
-    ZoneScopedN("End Frame");
-    TracyGpuZone("End Frame");
-
-    Window.SwapBuffers();
-    World.EndFrame(DeltaTime);
-
-    for (auto& module : Modules)
-    {
-        module->EndFrame(DeltaTime);
-    }
-
-    for (auto& service : Service::GetAll())
-    {
-        service->EndFrame();
-    }
-
-    FrameMark;
-    TracyGpuCollect;
-}
-
-void Engine::Update()
-{
-    ZoneScopedN("Update");
-    TracyGpuZone("Update");
-
-    World.Update(DeltaTime);
-
-    for (auto& module : Modules)
-    {
-        module->Update(DeltaTime);
-    }
-
-    for (auto& service : Service::GetAll())
-    {
-        service->Update(DeltaTime);
-    }
-}
-
-void Engine::FixedUpdate()
-{
-    ZoneScopedN("Fixed Update");
-    TracyGpuZone("Fixed Update");
-
-    World.FixedUpdate(FixedDeltaTime);
-    for (auto& module : Modules)
-    {
-        module->FixedUpdate(FixedDeltaTime);
-    }
-
-    for (auto& service : Service::GetAll())
-    {
-        service->FixedUpdate(FixedDeltaTime);
-    }
-}
-
-void Engine::Render()
-{
-    ZoneScopedN("Render");
-    TracyGpuZone("Render");
-
-    World.Render();
-    for (auto& module : Modules)
-    {
-        module->Render();
-    }
-
-    for (auto& service : Service::GetAll())
-    {
-        service->Render();
-    }
+    Window.Terminate();
+    GraphicsContext.Terminate();
 }
 } // namespace N

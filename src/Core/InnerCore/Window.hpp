@@ -21,6 +21,7 @@ struct Window
     * @param title Window title.
     */
     void Generate(int width, int height, const std::string& title);
+    void Terminate();
 
     /** @brief Destroys the underlying GLFW window. */
     ~Window();

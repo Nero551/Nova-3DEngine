@@ -19,11 +19,13 @@ concept EntityType = std::derived_from<T, Entity>;
  */
 struct World : SystemOwner
 {
-    ComponentPoolQuery Query;
+    ComponentPoolQuery Query{};
     int MaxLights = 24;
 
     /** @brief Gets the global World instance. */
     static World& Get();
+
+    World() {}
 
     void SetRoot(unsigned int id)
     {
@@ -120,9 +122,9 @@ struct World : SystemOwner
     friend struct Engine;
 
   private:
-    SparseSet<Entity> Entities;
-    unsigned int Root;
-    unsigned int ActiveCamera;
+    SparseSet<Entity> Entities{};
+    unsigned int Root{};
+    unsigned int ActiveCamera{};
 
     /** @brief ID assigned to the most recently created entity. */
     unsigned int currentEntityId = 0;
