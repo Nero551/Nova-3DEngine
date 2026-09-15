@@ -172,7 +172,7 @@ template <ComponentType T> struct ComponentPool : IComponentPool
      */
     void Remove(const unsigned int entityId)
     {
-        Components.Delete(entityId);
+        Components.Erase(entityId);
         Service::Get<EventBus>().Fire<ComponentRemoved>(entityId);
     }
 

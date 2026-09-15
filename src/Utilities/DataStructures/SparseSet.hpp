@@ -90,12 +90,12 @@ template <typename D> struct SparseSet
         };
 
         /** @brief Returns the sparse index and corresponding value. */
-        DereferencedIterator operator*() const
+        DereferencedIterator operator*()
         {
             return {.SparseValue = Set->Dense[Index].Index, .DenseValue = Set->Dense[Index].Value};
         }
 
-        DereferencedIterator operator->() const
+        DereferencedIterator operator->()
         {
             return {.SparseValue = Set->Dense[Index].Index, .DenseValue = Set->Dense[Index].Value};
         }
@@ -113,16 +113,73 @@ template <typename D> struct SparseSet
         }
     };
 
+    struct ConstIterator
+    {
+        const SparseSet* Set;
+        DenseIndex Index;
+
+        /** @brief Advances the iterator to the next entry. */
+        ConstIterator& operator++()
+        {
+            ++Index;
+            return *this;
+        }
+
+        struct DereferencedConstIterator
+        {
+            SparseIndex SparseValue;
+            const D& DenseValue;
+
+            const DereferencedConstIterator* operator->() const
+            {
+                return this;
+            }
+        };
+
+        /** @brief Returns the sparse index and corresponding value. */
+        DereferencedConstIterator operator*() const
+        {
+            return {.SparseValue = Set->Dense[Index].Index, .DenseValue = Set->Dense[Index].Value};
+        }
+
+        DereferencedConstIterator operator->() const
+        {
+            return {.SparseValue = Set->Dense[Index].Index, .DenseValue = Set->Dense[Index].Value};
+        }
+
+        /** @brief Compares two iterators for inequality. */
+        bool operator!=(const ConstIterator& other) const
+        {
+            return Index != other.Index;
+        }
+
+        /** @brief Compares two iterators for equality. */
+        bool operator==(const ConstIterator& other) const
+        {
+            return Index == other.Index;
+        }
+    };
+
     /** @brief Returns an iterator to the first entry. */
     Iterator begin()
     {
-        return {this, 0};
+        return {.Set = this, .Index = 0};
     }
 
     /** @brief Returns an iterator past the last entry. */
     Iterator end()
     {
-        return {this, Size()};
+        return {.Set = this, .Index = Size()};
+    }
+
+    ConstIterator begin() const
+    {
+        return {.Set = this, .Index = 0};
+    }
+
+    ConstIterator end() const
+    {
+        return {.Set = this, .Index = Size()};
     }
 
     /** @brief Returns whether the specified sparse index exists. */
@@ -308,11 +365,14 @@ template <typename D> struct SparseSet
      * Uses swap-and-pop to maintain dense storage.
      *
      * @param s Sparse index to remove.
+     * @return if value was there and got deleted.
      */
-    void Delete(const SparseIndex s)
+    bool Erase(const SparseIndex s)
     {
         if (!Contains(s))
-            return;
+        {
+            return false;
+        }
 
         const DenseIndex index = Sparse[s];
 
@@ -327,6 +387,8 @@ template <typename D> struct SparseSet
 
         Dense.pop_back();
         Sparse[s] = InvalidIndex;
+
+        return true;
     }
 
     /**

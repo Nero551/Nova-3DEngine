@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Utilities/CheckedPtr.hpp"
+#include "Utilities/DataStructures/SparseSet.hpp"
 
 #include <unordered_set>
 
@@ -132,7 +133,7 @@ struct Entity
      * ancestors in the hierarchy.
      * @return A vector containing pointers to all ancestors.
      */
-    std::vector<U::CheckedPtr<Entity>> GetAncestors();
+    std::vector<U::CheckedPtr<Entity>> GetAncestors() const;
 
     /**
      * @brief Checks whether an entity is an ancestor of this entity.
@@ -181,7 +182,7 @@ struct Entity
     Entity& GetRoot();
 
   private:
-    std::unordered_set<unsigned int> Children;
+    SparseSet<unsigned int> Children;
 
     /** @brief Parent entity in the hierarchy. */
     unsigned int Parent{};

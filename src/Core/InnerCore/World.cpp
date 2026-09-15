@@ -36,12 +36,12 @@ void World::RemoveEntity(const unsigned int id)
     }
 
     Service::Get<EventBus>().Fire<EntityDestroyed>(*entity);
-    Entities.Delete(id);
+    Entities.Erase(id);
 
     for (auto& descendant : descendants)
     {
         Service::Get<EventBus>().Fire<EntityDestroyed>(*descendant);
-        Entities.Delete(descendant->Id);
+        Entities.Erase(descendant->Id);
     }
 }
 void World::ReserveEntities(size_t count)
