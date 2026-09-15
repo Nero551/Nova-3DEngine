@@ -8,6 +8,12 @@
 namespace N
 {
 //
+
+//TODO- split this into 3 components for cpu cache locality.
+// a Transform3DComponent, containing Position,Rotation,Scale,InheritTransform.
+// a WorldTransform3DComponent, containing the global versions of the transform.
+// a Transform3DMatricesComponent, containing the matrices.
+// transform system will be the one who keeps all 3 datas in sync.
 struct Transform3DComponent : Component
 {
     Track<M::Vector3> Position = M::Vector3::Zero;

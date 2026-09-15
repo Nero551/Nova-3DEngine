@@ -100,6 +100,10 @@ template <ComponentType T> struct ComponentPool : IComponentPool
     {
         auto& component = Components.Emplace(entityId)->DenseValue;
         Service::Get<EventBus>().Fire<ComponentAdded>(entityId);
+
+        // U::Log::Info(Components.Size(), " × ", sizeof(typename SparseSet<T>::Entry), " = ",
+        // Components.Size() * sizeof(typename SparseSet<T>::Entry), " bytes");
+
         return component;
     }
 
@@ -149,6 +153,16 @@ template <ComponentType T> struct ComponentPool : IComponentPool
     T& GetComponentByIndex(const unsigned int index)
     {
         return Components.GetByIndex(index);
+    }
+
+    T& GetComponentByIndexUnchecked(const unsigned int index)
+    {
+        return Components.GetByIndexUnchecked(index);
+    }
+
+    SparseSet<T>::Entry& GetComponentAndIdByIndexUnchecked(const unsigned int index)
+    {
+        return Components.GetEntryByIndexUnchecked(index);
     }
 
     /**

@@ -43,6 +43,12 @@ template <typename D> struct SparseSet
     };
 
   private:
+    //TODO- the design where i merge indices and dense into 1 vector is called AoS.
+    // the one where they are separate is called SoA.
+    // AoS is good if am accessing the indices that much while iterating.
+    // SoA is better if am not, improves cache locality.
+    // depends on the findings, but i should probably use SoA.
+
     /** @brief Densely packed values. */
     std::vector<Entry> Dense{};
 
@@ -184,6 +190,11 @@ template <typename D> struct SparseSet
         return Dense[index].Value;
     }
 
+    D& GetByIndexUnchecked(const DenseIndex index)
+    {
+        return Dense[index].Value;
+    }
+
     /**
      * @brief Returns the sparse index associated with a dense index.
      *
@@ -209,6 +220,11 @@ template <typename D> struct SparseSet
             U::Log::Fatal("SparseSet does not contain the specified sparse index.");
 
         return Dense[Sparse[s]];
+    }
+
+    Entry& GetEntryByIndexUnchecked(const DenseIndex index)
+    {
+        return Dense[index];
     }
 
     /**
@@ -340,6 +356,7 @@ template <typename D> struct SparseSet
     void Reserve(const DenseIndex size)
     {
         Dense.reserve(size);
+        Sparse.reserve(size);
     }
 
     /** @brief Returns the number of stored values. */

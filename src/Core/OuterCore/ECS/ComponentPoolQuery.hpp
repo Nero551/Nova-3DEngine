@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ComponentPool.hpp"
+#include "Math/Common/Logarithms.hpp"
 #include "Utilities/DataStructures/TypedVector.hpp"
 #include "World/Events/EntityCreated.hpp"
 
@@ -56,6 +57,8 @@ struct ComponentPoolQuery
     requires std::invocable<Function, unsigned int, First&, Rest&...>
     void ForEach(Function&& callback)
     {
+        //TODO- it appears the actual problem is the size of my components.
+        // transform component is 216 bytes, multiply that by 120k entities
         auto pools = GetPools<First, Rest...>();
 
         if (!CachedQueries.Contains<First, Rest...>())
@@ -71,6 +74,7 @@ struct ComponentPoolQuery
 
             for (unsigned int entityId : cache.Entities)
             {
+
                 callback(entityId, firstPool.GetComponentByIdUnchecked(entityId),
                     (std::get<ComponentPool<Rest>&>(pools).GetComponentByIdUnchecked(entityId))...);
             }
