@@ -92,12 +92,14 @@ template <typename D> struct SparseSet
         /** @brief Returns the sparse index and corresponding value. */
         DereferencedIterator operator*()
         {
-            return {.SparseValue = Set->Dense[Index].Index, .DenseValue = Set->Dense[Index].Value};
+            auto& entry = Set->Dense[Index];
+            return {.SparseValue = entry.Index, .DenseValue = entry.Value};
         }
 
         DereferencedIterator operator->()
         {
-            return {.SparseValue = Set->Dense[Index].Index, .DenseValue = Set->Dense[Index].Value};
+            auto& entry = Set->Dense[Index];
+            return {.SparseValue = entry.Index, .DenseValue = entry.Value};
         }
 
         /** @brief Compares two iterators for inequality. */
@@ -139,12 +141,14 @@ template <typename D> struct SparseSet
         /** @brief Returns the sparse index and corresponding value. */
         DereferencedConstIterator operator*() const
         {
-            return {.SparseValue = Set->Dense[Index].Index, .DenseValue = Set->Dense[Index].Value};
+            auto& entry = Set->Dense[Index];
+            return {.SparseValue = entry.Index, .DenseValue = entry.Value};
         }
 
         DereferencedConstIterator operator->() const
         {
-            return {.SparseValue = Set->Dense[Index].Index, .DenseValue = Set->Dense[Index].Value};
+            auto& entry = Set->Dense[Index];
+            return {.SparseValue = entry.Index, .DenseValue = entry.Value};
         }
 
         /** @brief Compares two iterators for inequality. */

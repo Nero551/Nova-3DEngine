@@ -7,14 +7,15 @@ add_executable(Nova
         src/TracyMemory.cpp
 )
 
-set_target_properties(Nova PROPERTIES UNITY_BUILD ON)
 
 target_precompile_headers(Nova PRIVATE
         "$<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/src/pch.hpp>"
 )
 
+set_target_properties(Nova PROPERTIES UNITY_BUILD ON)
 set_property(TARGET Nova PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
 set(TRACY_ENABLE ON CACHE BOOL "Enable Tracy" FORCE)
+
 add_subdirectory(src/Core)
 add_subdirectory(src/Utilities)
 add_subdirectory(src/Modules)
@@ -47,7 +48,7 @@ target_link_libraries(Nova
 
 target_compile_options(Nova PRIVATE
         -Wall
-        #        -Wextra
-        #        -Wpedantic
+        -Wextra
+        -Wpedantic
         -g -fno-omit-frame-pointer -rdynamic
 )
