@@ -265,12 +265,12 @@ Matrix4 Matrix3::ToMatrix4() const
 
 float& Matrix3::operator()(const int row, const int col)
 {
-    return m[col][row];
+    return m_Data[col][row];
 }
 
 const float& Matrix3::operator()(const int row, const int col) const
 {
-    return m[col][row];
+    return m_Data[col][row];
 }
 
 //* Matrices

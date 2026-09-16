@@ -34,7 +34,7 @@ namespace N::M
 struct Matrix4
 {
   private:
-    std::array<std::array<float, 4>, 4> m = {};
+    std::array<std::array<float, 4>, 4> m_Data = {};
 
   public:
     /**
@@ -64,7 +64,7 @@ struct Matrix4
 
     const std::array<std::array<float, 4>, 4>& Data() const
     {
-        return m;
+        return m_Data;
     };
 
     /**

@@ -31,7 +31,7 @@ struct Matrix4;
 struct Matrix3
 {
   private:
-    std::array<std::array<float, 3>, 3> m = {};
+    std::array<std::array<float, 3>, 3> m_Data = {};
 
   public:
     /**
@@ -60,7 +60,7 @@ struct Matrix3
 
     const std::array<std::array<float, 3>, 3>& Data() const
     {
-        return m;
+        return m_Data;
     };
 
     /**

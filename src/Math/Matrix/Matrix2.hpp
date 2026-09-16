@@ -25,7 +25,7 @@ namespace N::M
 struct Matrix2
 {
   private:
-    std::array<std::array<float, 2>, 2> m = {};
+    std::array<std::array<float, 2>, 2> m_Data = {};
 
   public:
     /**
@@ -52,7 +52,7 @@ struct Matrix2
 
     const std::array<std::array<float, 2>, 2>& Data() const
     {
-        return m;
+        return m_Data;
     };
 
     /**

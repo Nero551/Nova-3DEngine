@@ -289,12 +289,12 @@ bool Matrix4::NearlyEquals(const Matrix4& mat4, const float epsilon) const
 
 float& Matrix4::operator()(const int row, const int col)
 {
-    return m[col][row];
+    return m_Data[col][row];
 }
 
 const float& Matrix4::operator()(const int row, const int col) const
 {
-    return m[col][row];
+    return m_Data[col][row];
 }
 
 //* Matrices

@@ -2,6 +2,8 @@
 /.cache
 /.vscode/
 /.idea/
+/.agent/
+/.codex/
 /Tests/build-tests/
 /Docs/API/
 /Traces/

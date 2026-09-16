@@ -26,7 +26,7 @@ template <typename Input, typename Output> struct Function
      * @param f Callable used to evaluate the function.
      */
     template <typename F> requires CompatibleCallable<F, Input, Output>
-    Function(F&& f) : Func(std::forward<F>(f)){};
+    Function(F&& f) : m_Func(std::forward<F>(f)){};
 
     /**
      * @brief Evaluates the function at the given input.
@@ -35,7 +35,7 @@ template <typename Input, typename Output> struct Function
      */
     Output Evaluate(const Input& input) const
     {
-        return Func(input);
+        return m_Func(input);
     }
 
     /**
@@ -433,6 +433,6 @@ template <typename Input, typename Output> struct Function
     }
 
   private:
-    std::function<Output(Input)> Func;
+    std::function<Output(Input)> m_Func;
 };
 } // namespace N::M
