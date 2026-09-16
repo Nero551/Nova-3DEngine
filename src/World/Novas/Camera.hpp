@@ -9,7 +9,7 @@ struct Camera : Nova3D
     void Initialize() override
     {
         Nova3D::Initialize();
-        World::Get().Query.Pool<CameraComponent>().Add(Id);
+        World::Get().Query.Pool<CameraComponent>().Add(GetId());
     }
 };
 } // namespace N

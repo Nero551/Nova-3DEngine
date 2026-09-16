@@ -83,9 +83,9 @@ template <ComponentType T> struct ComponentPool : IComponentPool
         Service::Get<EventBus>().Sub<EntityDestroyed>(
             [this](const EntityDestroyed& event)
             {
-                if (HasId(event.entity.Id))
+                if (HasId(event.entity.GetId()))
                 {
-                    Remove(event.entity.Id);
+                    Remove(event.entity.GetId());
                 }
             });
     }

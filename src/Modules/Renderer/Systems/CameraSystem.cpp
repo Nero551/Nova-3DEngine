@@ -15,8 +15,8 @@ void CameraSystem::Update(const double dt)
     auto& input = Engine::Get().GetModule<Input>();
     auto& camera = world.GetCamera();
 
-    auto& transform = query.Pool<Transform3DComponent>().GetComponentById(camera.Id);
-    auto& cameraComponent = query.Pool<CameraComponent>().GetComponentById(camera.Id);
+    auto& transform = query.Pool<Transform3DComponent>().GetComponentById(camera.GetId());
+    auto& cameraComponent = query.Pool<CameraComponent>().GetComponentById(camera.GetId());
 
     cameraComponent.AspectRatio = Engine::Get().Window.GetAspectRatio();
 
@@ -74,7 +74,7 @@ M::Matrix4 CameraSystem::GetViewMatrix()
 {
     auto& world = World::Get();
     auto& camera = world.GetCamera();
-    auto& transform = world.Query.Pool<Transform3DComponent>().GetComponentById(camera.Id);
+    auto& transform = world.Query.Pool<Transform3DComponent>().GetComponentById(camera.GetId());
 
     const M::Vector3 pos = transform.Position;
     const M::Vector3 forward = transform.GetForward();

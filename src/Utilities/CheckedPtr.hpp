@@ -15,79 +15,79 @@ template <typename T> struct CheckedPtr
     /** @brief Constructs a CheckedPtr from a raw pointer. */
     CheckedPtr(T* objectPtr)
     {
-        ptr = objectPtr;
+        m_Ptr = objectPtr;
     }
 
     /** @brief Constructs a null CheckedPtr with a custom error message. */
     CheckedPtr(const std::string_view nullMessage)
     {
-        this->nullMessage = nullMessage;
+        this->m_NullMessage = nullMessage;
     }
 
     /** @brief Constructs a CheckedPtr from a pointer with a custom error message. */
     CheckedPtr(T* objectPtr, const std::string_view nullMessage)
     {
-        ptr = objectPtr;
-        this->nullMessage = nullMessage;
+        m_Ptr = objectPtr;
+        this->m_NullMessage = nullMessage;
     }
 
     /** @brief Assigns a raw pointer to the CheckedPtr. */
     CheckedPtr& operator=(T* objectPtr)
     {
-        ptr = objectPtr;
+        m_Ptr = objectPtr;
         return *this;
     }
 
     /** @brief Accesses a member through the pointer, checking for null. */
     T* operator->() const
     {
-        return ptr;
+        return m_Ptr;
     }
 
     /** @brief Compares the stored pointer with a raw pointer. */
     bool operator==(T* otherPtr) const
     {
-        return ptr == otherPtr;
+        return m_Ptr == otherPtr;
     }
 
     /** @brief Compares the stored pointer with another checked pointer. */
     bool operator==(const CheckedPtr& otherCheckedPtr) const
     {
-        return ptr == otherCheckedPtr.ptr;
+        return m_Ptr == otherCheckedPtr.m_Ptr;
     }
 
     /** @brief Dereferences the pointer, checking for null. */
     T& operator*() const
     {
-        return *ptr;
+        return *m_Ptr;
     }
 
     /** @brief Checks whether the pointer is non-null. */
     explicit operator bool() const
     {
-        return ptr != nullptr;
+        return m_Ptr != nullptr;
     }
 
     /** @brief Resets the pointer to null. */
     void Reset()
     {
-        ptr = nullptr;
+        m_Ptr = nullptr;
     }
 
     /** @brief Returns the stored raw pointer without validation. */
     [[nodiscard]] T* Get() const
     {
-        return ptr;
+        return m_Ptr;
     }
 
     /** @brief Checks whether the pointer is null. */
     [[nodiscard]] bool IsNull() const
     {
-        return ptr == nullptr;
+        return m_Ptr == nullptr;
     }
 
   private:
-    T* ptr = nullptr;
-    std::string_view nullMessage = "[NULL PTR] ";
+    T* m_Ptr = nullptr;
+    std::string_view m_NullMessage = "[NULL PTR] ";
 };
 } // namespace N::U

@@ -81,7 +81,7 @@ struct World : SystemOwner
     {
         const unsigned int id = currentEntityId++;
         T entity;
-        entity.Id = id;
+        entity.m_Id = id;
         entity.Initialize();
 
         auto it = Entities.Emplace(id, std::move(entity));

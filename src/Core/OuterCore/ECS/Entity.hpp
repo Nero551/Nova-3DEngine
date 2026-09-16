@@ -7,6 +7,7 @@
 
 namespace N
 {
+struct World;
 /**
 
 * @brief Represents an entity in the world.
@@ -19,8 +20,6 @@ namespace N
   */
 struct Entity
 {
-    unsigned int Id = 0;
-
     virtual ~Entity() = default;
 
     Entity() = default;
@@ -41,6 +40,12 @@ struct Entity
     * initialization.
       */
     virtual void Initialize() {}
+
+    unsigned int GetId() const
+    {
+        return m_Id;
+    };
+
     /**
 
     * @brief Destroys a direct child entity.
@@ -182,10 +187,11 @@ struct Entity
     Entity& GetRoot();
 
   private:
-    SparseSet<unsigned int> Children;
+    SparseSet<unsigned int> m_Children;
+    unsigned int m_Id = 0;
 
     /** @brief Parent entity in the hierarchy. */
-    unsigned int Parent{};
+    unsigned int m_Parent{};
 
     /**
      * @brief Recursively collects all descendants of an entity.
@@ -193,5 +199,7 @@ struct Entity
      * @param entity Entity whose descendants should be traversed.
      */
     void RecursiveChildren(std::vector<U::CheckedPtr<Entity>>& entities, const Entity& entity);
+
+    friend struct World;
 };
 } // namespace N

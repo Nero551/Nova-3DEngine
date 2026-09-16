@@ -14,20 +14,20 @@ void Transform3DSystem::Update(double fdt)
 
     for (auto& entity : world.GetRoot().GetDescendants())
     {
-        if (!transformPool.HasId(entity->Id))
+        if (!transformPool.HasId(entity->GetId()))
         {
             continue;
         }
 
-        auto& transform = transformPool.GetComponentById(entity->Id);
+        auto& transform = transformPool.GetComponentById(entity->GetId());
 
         if (transform.InheritTransform)
         {
             auto& parent = entity->GetParent();
 
-            if (transformPool.HasId(parent.Id))
+            if (transformPool.HasId(parent.GetId()))
             {
-                auto& parentTransform = transformPool.GetComponentById(parent.Id);
+                auto& parentTransform = transformPool.GetComponentById(parent.GetId());
 
                 transform.GlobalPosition = parentTransform.GlobalPosition + transform.Position;
                 transform.GlobalRotation = parentTransform.GlobalRotation * transform.Rotation;

@@ -9,7 +9,7 @@ struct Light : Nova3D
     void Initialize() override
     {
         Nova3D::Initialize();
-        World::Get().Query.Pool<LightComponent>().Add(Id);
+        World::Get().Query.Pool<LightComponent>().Add(GetId());
     }
 };
 } // namespace N

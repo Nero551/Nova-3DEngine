@@ -15,7 +15,7 @@ struct Log
     /** @brief Logs an informational message. */
     template <typename... Args> static void Info(const Args&... args)
     {
-        std::cout << Green << "ℹ️ [INFO] " << Reset;
+        std::cout << m_Green << "ℹ️ [INFO] " << m_Reset;
         (..., (std::cout << args));
         std::cout << '\n';
     }
@@ -23,7 +23,7 @@ struct Log
     /** @brief Logs a warning message. */
     template <typename... Args> static void Warning(const Args&... args)
     {
-        std::cout << Yellow << "⚠️ [WARNING] " << Reset;
+        std::cout << m_Yellow << "⚠️ [WARNING] " << m_Reset;
         (..., (std::cout << args));
         std::cout << '\n';
     }
@@ -31,7 +31,7 @@ struct Log
     /** @brief Logs an error message. */
     template <typename... Args> static void Error(const Args&... args)
     {
-        std::cout << Red << "❌ [ERROR] " << Reset;
+        std::cout << m_Red << "❌ [ERROR] " << m_Reset;
         (..., (std::cout << args));
         std::cout << '\n';
     }
@@ -39,7 +39,7 @@ struct Log
     /** @brief Logs a fatal error and throws an exception. */
     template <typename... Args> [[noreturn]] static void Fatal(const Args&... args)
     {
-        std::cout << Red << "💀 [FATAL] " << Reset;
+        std::cout << m_Red << "💀 [FATAL] " << m_Reset;
         (..., (std::cout << args));
         std::cout << '\n';
         throw std::runtime_error("");
@@ -58,18 +58,18 @@ struct Log
 
   private:
     /** @brief Resets the console text color. */
-    static constexpr auto Reset = "\033[0m";
+    static constexpr auto m_Reset = "\033[0m";
 
     /** @brief Sets the console text color to red. */
-    static constexpr auto Red = "\033[31m";
+    static constexpr auto m_Red = "\033[31m";
 
     /** @brief Sets the console text color to green. */
-    static constexpr auto Green = "\033[32m";
+    static constexpr auto m_Green = "\033[32m";
 
     /** @brief Sets the console text color to yellow. */
-    static constexpr auto Yellow = "\033[33m";
+    static constexpr auto m_Yellow = "\033[33m";
 
     /** @brief Sets the console text color to blue. */
-    static constexpr auto Blue = "\033[34m";
+    static constexpr auto m_Blue = "\033[34m";
 }; // namespace Log
 } // namespace N::U

@@ -32,12 +32,12 @@ CoordinateAxesScene::CoordinateAxesScene()
     lightMaterial.Shader = &lightShader;
 
     auto& light = world.CreateEntity<Light>();
-    query.Pool<Transform3DComponent>().GetComponentById(light.Id).Rotation =
+    query.Pool<Transform3DComponent>().GetComponentById(light.GetId()).Rotation =
         M::Quaternion::FromEulerXYZ(M::Vector3{M::Rad(32.5)});
     GetRoot().AttachChild(light);
 
     auto& light2 = world.CreateEntity<Light>();
-    query.Pool<Transform3DComponent>().GetComponentById(light2.Id).Rotation =
+    query.Pool<Transform3DComponent>().GetComponentById(light2.GetId()).Rotation =
         M::Quaternion::FromEulerXYZ(M::Vector3{M::Rad(-32.5)});
     GetRoot().AttachChild(light2);
 
@@ -50,41 +50,41 @@ CoordinateAxesScene::CoordinateAxesScene()
     auto& line = Primitives::CreateLine("Line");
 
     auto& xAxis = world.CreateEntity<MeshInstance3D>();
-    query.Pool<MeshComponent>().GetComponentById(xAxis.Id).Mesh = &line;
+    query.Pool<MeshComponent>().GetComponentById(xAxis.GetId()).Mesh = &line;
 
-    auto& xMaterial = query.Pool<MaterialComponent>().GetComponentById(xAxis.Id);
+    auto& xMaterial = query.Pool<MaterialComponent>().GetComponentById(xAxis.GetId());
     xMaterial.Material = &resourceManager.Load<Material>("X-Axis Material");
     xMaterial.Material->Shader = &shader;
 
-    query.Pool<Transform3DComponent>().GetComponentById(xAxis.Id).Rotation =
+    query.Pool<Transform3DComponent>().GetComponentById(xAxis.GetId()).Rotation =
         M::Quaternion::FromEulerXYZ({0, M::Rad(90), 0});
-    query.Pool<Transform3DComponent>().GetComponentById(xAxis.Id).Scale = {1, 1, 200};
+    query.Pool<Transform3DComponent>().GetComponentById(xAxis.GetId()).Scale = {1, 1, 200};
     xMaterial.Material->Color = M::Color::Red;
 
     GetRoot().AttachChild(xAxis);
 
     auto& yAxis = world.CreateEntity<MeshInstance3D>();
-    query.Pool<MeshComponent>().GetComponentById(yAxis.Id).Mesh = &line;
+    query.Pool<MeshComponent>().GetComponentById(yAxis.GetId()).Mesh = &line;
 
-    auto& yMaterial = query.Pool<MaterialComponent>().GetComponentById(yAxis.Id);
+    auto& yMaterial = query.Pool<MaterialComponent>().GetComponentById(yAxis.GetId());
     yMaterial.Material = &resourceManager.Load<Material>("Y-Axis Material");
     yMaterial.Material->Shader = &shader;
 
-    query.Pool<Transform3DComponent>().GetComponentById(yAxis.Id).Rotation =
+    query.Pool<Transform3DComponent>().GetComponentById(yAxis.GetId()).Rotation =
         M::Quaternion::FromEulerXYZ({M::Rad(-90), 0, 0});
-    query.Pool<Transform3DComponent>().GetComponentById(yAxis.Id).Scale = {1, 1, 200};
+    query.Pool<Transform3DComponent>().GetComponentById(yAxis.GetId()).Scale = {1, 1, 200};
     yMaterial.Material->Color = M::Color::Green;
 
     GetRoot().AttachChild(yAxis);
 
     auto& zAxis = world.CreateEntity<MeshInstance3D>();
-    query.Pool<MeshComponent>().GetComponentById(zAxis.Id).Mesh = &line;
+    query.Pool<MeshComponent>().GetComponentById(zAxis.GetId()).Mesh = &line;
 
-    auto& zMaterial = query.Pool<MaterialComponent>().GetComponentById(zAxis.Id);
+    auto& zMaterial = query.Pool<MaterialComponent>().GetComponentById(zAxis.GetId());
     zMaterial.Material = &resourceManager.Load<Material>("Z-Axis Material");
     zMaterial.Material->Shader = &shader;
 
-    query.Pool<Transform3DComponent>().GetComponentById(zAxis.Id).Scale = {1, 1, 200};
+    query.Pool<Transform3DComponent>().GetComponentById(zAxis.GetId()).Scale = {1, 1, 200};
     zMaterial.Material->Color = M::Color::Blue;
 
     GetRoot().AttachChild(zAxis);

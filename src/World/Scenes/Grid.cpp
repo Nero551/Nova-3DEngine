@@ -41,9 +41,9 @@ void Grid::CreateGridLine(const M::Quaternion rotation, const M::Vector3 positio
     auto& line = Primitives::CreateLine("Line");
 
     auto& l = World::Get().CreateEntity<MeshInstance3D>();
-    auto& materialComponent = World::Get().Query.Pool<MaterialComponent>().GetComponentById(l.Id);
-    auto& meshComponent = World::Get().Query.Pool<MeshComponent>().GetComponentById(l.Id);
-    auto& transformComponent = World::Get().Query.Pool<Transform3DComponent>().GetComponentById(l.Id);
+    auto& materialComponent = World::Get().Query.Pool<MaterialComponent>().GetComponentById(l.GetId());
+    auto& meshComponent = World::Get().Query.Pool<MeshComponent>().GetComponentById(l.GetId());
+    auto& transformComponent = World::Get().Query.Pool<Transform3DComponent>().GetComponentById(l.GetId());
     meshComponent.Mesh = &line;
     materialComponent.Material = &resourceManager.Load<Material>("GridLine Material");
     materialComponent.Material->Shader = &shader;

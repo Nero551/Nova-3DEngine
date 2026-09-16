@@ -110,8 +110,8 @@ static void ProcessNode(
         auto& meshResource =
             resourceManager.Load<Mesh>("mesh_" + std::to_string(node->mMeshes[m]), vertices, indices);
 
-        meshPool.Add(entity.Id).Mesh = &meshResource;
-        materialPool.Add(entity.Id).Material = &material;
+        meshPool.Add(entity.GetId()).Mesh = &meshResource;
+        materialPool.Add(entity.GetId()).Material = &material;
     }
 
     parent.AttachChild(entity);

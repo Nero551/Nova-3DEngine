@@ -34,9 +34,9 @@ static Entity& CreatePoint(M::Vector4 col)
     material.Shader = &shader;
 
     auto& point = World::Get().CreateEntity<MeshInstance3D>();
-    World::Get().Query.Pool<MeshComponent>().GetComponentById(point.Id).Mesh = &mesh;
-    World::Get().Query.Pool<MaterialComponent>().GetComponentById(point.Id).Material = &material;
-    World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.Id).Scale = M::Vector3{0.2};
+    World::Get().Query.Pool<MeshComponent>().GetComponentById(point.GetId()).Mesh = &mesh;
+    World::Get().Query.Pool<MaterialComponent>().GetComponentById(point.GetId()).Material = &material;
+    World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.GetId()).Scale = M::Vector3{0.2};
     World::Get().GetRoot().AttachChild(point);
 
     return point;
@@ -48,7 +48,7 @@ static void Plot(const M::Vector3 vec3, const M::Vector4 col = {1, 1, 1, 1})
     if (vec3.x < max && vec3.y < max && vec3.z < max)
     {
         auto& point = CreatePoint(col);
-        auto& transform = World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.Id);
+        auto& transform = World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.GetId());
         transform.Position().x = vec3.x;
         transform.Position().y = vec3.y;
         transform.Position().z = vec3.z;
@@ -73,11 +73,19 @@ void Physics::Start()
     objectMaterial.Shader = &objectShader;
 
     auto& cube = World::Get().CreateEntity<MeshInstance3D>();
-    query.Pool<MeshComponent>().GetComponentById(cube.Id).Mesh = &mesh;
-    query.Pool<MaterialComponent>().GetComponentById(cube.Id).Material = &objectMaterial;
-    query.Pool<BodyComponent>().Add(cube.Id);
-    cubeId = cube.Id;
+    query.Pool<MeshComponent>().GetComponentById(cube.GetId()).Mesh = &mesh;
+    query.Pool<MaterialComponent>().GetComponentById(cube.GetId()).Material = &objectMaterial;
+    query.Pool<BodyComponent>().Add(cube.GetId());
+    cubeId = cube.GetId();
     World::Get().GetRoot().AttachChild(cube);
+
+    M::Vector2 bVi = M::Vector2::FromPolar({M::Rad(120), 10});
+    M::Vector2 wVi = M::Vector2::FromPolar({M::Rad(0), 5});
+
+    M::Vector2 bVio = bVi + wVi;
+
+    U::Log::Info(M::Deg(bVio.Angle()));
+    U::Log::Info(bVio.Length());
 
     //TODO- look into c++ traits
 }

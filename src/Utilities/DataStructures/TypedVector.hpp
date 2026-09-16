@@ -29,12 +29,12 @@ template <typename T> struct TypedVector
          */
         T& operator*() const
         {
-            return TypedVector->Data[Index];
+            return TypedVector->m_Data[Index];
         }
 
         T* operator->() const
         {
-            return &TypedVector->Data[Index];
+            return &TypedVector->m_Data[Index];
         }
 
         bool operator!=(const Iterator& other) const
@@ -71,12 +71,12 @@ template <typename T> struct TypedVector
          */
         const T& operator*() const
         {
-            return TypedVector->Data[Index];
+            return TypedVector->m_Data[Index];
         }
 
         const T* operator->() const
         {
-            return &TypedVector->Data[Index];
+            return &TypedVector->m_Data[Index];
         }
 
         bool operator!=(const ConstIterator& other) const
@@ -97,7 +97,7 @@ template <typename T> struct TypedVector
 
     Iterator end()
     {
-        return {.TypedVector = this, .Index = Data.size()};
+        return {.TypedVector = this, .Index = m_Data.size()};
     }
 
     ConstIterator begin() const
@@ -107,13 +107,13 @@ template <typename T> struct TypedVector
 
     ConstIterator end() const
     {
-        return {.TypedVector = this, .Index = Data.size()};
+        return {.TypedVector = this, .Index = m_Data.size()};
     }
 
     template <typename... Args> bool Contains()
     {
         const TypeId typeId = GetTypeId<Args...>();
-        return typeId < Data.size();
+        return typeId < m_Data.size();
     }
 
     template <typename... Args> T& Get()
@@ -122,19 +122,19 @@ template <typename T> struct TypedVector
         {
             U::Log::Fatal("TypedVector does not contain the specified TypeId.");
         }
-        return Data[GetTypeId<Args...>()];
+        return m_Data[GetTypeId<Args...>()];
     }
 
     template <typename... Args> T& GetUnchecked()
     {
-        return Data[GetTypeId<Args...>()];
+        return m_Data[GetTypeId<Args...>()];
     }
 
     template <typename... Args> Iterator Find()
     {
         TypeId typeId = GetTypeId<Args...>();
 
-        if (typeId >= Data.size())
+        if (typeId >= m_Data.size())
         {
             return end();
         }
@@ -148,19 +148,19 @@ template <typename T> struct TypedVector
 
         if (!Contains<Args...>())
         {
-            if (Data.size() <= typeId)
+            if (m_Data.size() <= typeId)
             {
-                Data.resize(typeId + 1);
+                m_Data.resize(typeId + 1);
             }
-            Data[typeId] = value;
+            m_Data[typeId] = value;
         }
 
-        return Data[typeId];
+        return m_Data[typeId];
     }
 
     void Clear()
     {
-        Data.clear();
+        m_Data.clear();
     }
 
     template <typename... Args, typename... Parameters> Iterator Emplace(Parameters&&... parameters)
@@ -170,28 +170,28 @@ template <typename T> struct TypedVector
         if (!Contains<Args...>())
         {
 
-            if (Data.size() <= typeId)
+            if (m_Data.size() <= typeId)
             {
-                Data.resize(typeId + 1);
+                m_Data.resize(typeId + 1);
             }
 
-            Data[typeId] = T(std::forward<Parameters>(parameters)...);
+            m_Data[typeId] = T(std::forward<Parameters>(parameters)...);
         }
         return {this, typeId};
     }
 
     TypeId Size() const
     {
-        return Data.size();
+        return m_Data.size();
     }
 
   private:
-    TypeId NextTypeId{};
-    std::vector<T> Data{};
+    TypeId m_NextTypeId{};
+    std::vector<T> m_Data{};
 
     template <typename... Args> TypeId GetTypeId()
     {
-        static const TypeId Id = NextTypeId++;
+        static const TypeId Id = m_NextTypeId++;
         return Id;
     }
 };

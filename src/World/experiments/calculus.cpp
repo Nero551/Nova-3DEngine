@@ -19,13 +19,13 @@ static Entity& CreatePoint(M::Vector4 col)
     auto& mesh = Primitives::CreateQuad("point");
 
     auto& point = World::Get().CreateEntity<MeshInstance3D>();
-    World::Get().Query.Pool<MeshComponent>().GetComponentById(point.Id).Mesh = &mesh;
-    World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.Id).Scale = M::Vector3{0.2};
+    World::Get().Query.Pool<MeshComponent>().GetComponentById(point.GetId()).Mesh = &mesh;
+    World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.GetId()).Scale = M::Vector3{0.2};
 
     if (resourceManager.Exists<Material>(std::format("m{}{}{}", col.z, col.x, col.y)))
     {
         auto& material = resourceManager.Load<Material>(std::format("m{}{}{}", col.z, col.x, col.y));
-        World::Get().Query.Pool<MaterialComponent>().GetComponentById(point.Id).Material = &material;
+        World::Get().Query.Pool<MaterialComponent>().GetComponentById(point.GetId()).Material = &material;
     }
     else
     {
@@ -38,7 +38,7 @@ static Entity& CreatePoint(M::Vector4 col)
         shader.AssignSource(resourceManager.Load<ShaderSource>(
             "pointFrag", "Assets/Shaders/shader.frag", ShaderStage::Fragment));
         material.Shader = &shader;
-        World::Get().Query.Pool<MaterialComponent>().GetComponentById(point.Id).Material = &material;
+        World::Get().Query.Pool<MaterialComponent>().GetComponentById(point.GetId()).Material = &material;
     }
 
     World::Get().GetRoot().AttachChild(point);
@@ -50,7 +50,7 @@ static std::vector<unsigned int> points = {};
 static Entity& Plot(const M::Vector3 vec3, const M::Vector4 col = {1, 1, 1, 1})
 {
     auto& point = CreatePoint(col);
-    auto& transform = World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.Id);
+    auto& transform = World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.GetId());
     transform.Position().x = vec3.x;
     transform.Position().y = vec3.y;
     transform.Position().z = vec3.z;
@@ -123,7 +123,7 @@ void calculus::TwoDimensionalProjection(int increase)
         float proj = v2.StereoProject();
         // auto& d2point = Plot({v2.x, v2.y, 0});
         auto& point = Plot({proj, 0, 0});
-        points.emplace_back(point.Id);
+        points.emplace_back(point.GetId());
         // points.emplace_back(&d2point);
     }
 }
@@ -139,7 +139,7 @@ void calculus::ThreeDimensionalProjection(int increase)
             M::Vector3 v3 = M::Vector3::FromSpherical(M::Spherical(M::Rad(theta), M::Rad(phi)));
             M::Vector2 proj = v3.StereoProject();
             auto& point = Plot({proj.x, proj.y, 0});
-            points.emplace_back(point.Id);
+            points.emplace_back(point.GetId());
         }
     }
 }
@@ -159,7 +159,7 @@ void calculus::FourDimensionalProjection(int increase)
                     M::Vector4::FromHyperSpherical(M::HyperSpherical(M::Rad(theta), M::Rad(phi), M::Rad(h)));
                 M::Vector3 proj = v4.StereoProject();
                 auto& point = Plot(proj);
-                points.emplace_back(point.Id);
+                points.emplace_back(point.GetId());
             }
         }
     }

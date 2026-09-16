@@ -9,7 +9,7 @@ N::Entity& N::Scene::GetRoot()
 
 void N::Scene::SetRoot(const Entity& entity)
 {
-    Root = entity.Id;
+    Root = entity.GetId();
 }
 
 void N::Scene::SetRoot(const unsigned int entityId)

@@ -30,7 +30,7 @@ void World::RemoveEntity(const unsigned int id)
         entity->ClearParent();
     }
 
-    if (entity->Id == Root)
+    if (entity->GetId() == Root)
     {
         RemoveEntity(Root);
     }
@@ -41,7 +41,7 @@ void World::RemoveEntity(const unsigned int id)
     for (auto& descendant : descendants)
     {
         Service::Get<EventBus>().Fire<EntityDestroyed>(*descendant);
-        Entities.Erase(descendant->Id);
+        Entities.Erase(descendant->GetId());
     }
 }
 void World::ReserveEntities(size_t count)
@@ -73,16 +73,16 @@ void World::Start()
 {
     Query.SubscribeToEvents();
     AddSystem<Transform3DSystem>();
-    AddSystem<calculus>();
+    // AddSystem<calculus>();
 
     Engine::Get().GetModule<Input>().SetMouseMode(MouseMode::Disabled);
 
-    SetRoot(CreateEntity<Nova>().Id);
+    SetRoot(CreateEntity<Nova>().GetId());
 
     auto& camera = CreateEntity<Camera>();
-    Query.Pool<Transform3DComponent>().GetComponentById(camera.Id).Position = {0, 0, 10};
+    Query.Pool<Transform3DComponent>().GetComponentById(camera.GetId()).Position = {0, 0, 10};
     GetRoot().AttachChild(camera);
-    SetCamera(camera.Id);
+    SetCamera(camera.GetId());
 
     CoordinateAxesScene coordinateAxes;
     GetRoot().AttachChild(coordinateAxes.GetRoot());

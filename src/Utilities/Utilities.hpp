@@ -3,7 +3,7 @@
 #include "CheckedPtr.hpp"
 #include "FileSystem/FileSystem.hpp"
 #include "Image/Image.hpp"
-#include "Logger.hpp"
+#include "Log.hpp"
 
 /**
  * @namespace N::U
