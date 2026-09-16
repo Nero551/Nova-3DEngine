@@ -1,13 +1,11 @@
 #pragma once
 
 #include "ComponentPool.hpp"
-#include "Math/Common/Logarithms.hpp"
 #include "Utilities/DataStructures/TypedVector.hpp"
 #include "World/Events/EntityCreated.hpp"
 
 namespace N
 {
-
 /**
  * @brief Provides cached queries over component pools.
  *

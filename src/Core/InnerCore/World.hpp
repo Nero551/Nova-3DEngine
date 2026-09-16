@@ -5,7 +5,6 @@
 #include "Core/Services/EventBus.hpp"
 #include "SystemOwner.hpp"
 #include "Utilities/Log.hpp"
-#include "World/Events/EntityCreated.hpp"
 
 namespace N
 {

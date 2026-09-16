@@ -107,6 +107,8 @@ struct Entity
      */
     std::vector<U::CheckedPtr<Entity>> GetChildren();
 
+    void ForEachChild(const std::function<void(unsigned int)>& callback);
+
     /** @brief Destroys all direct children of the entity. */
     void DestroyChildren();
 
@@ -117,6 +119,8 @@ struct Entity
      * @return A vector containing pointers to all descendants.
      */
     std::vector<U::CheckedPtr<Entity>> GetDescendants();
+
+    void ForEachDescendant(const std::function<void(unsigned int)>& callback);
 
     /**
      * @brief Checks whether an entity is a descendant of this entity.
@@ -139,6 +143,8 @@ struct Entity
      * @return A vector containing pointers to all ancestors.
      */
     std::vector<U::CheckedPtr<Entity>> GetAncestors() const;
+
+    void ForEachAncestor(const std::function<void(unsigned int)>& callback) const;
 
     /**
      * @brief Checks whether an entity is an ancestor of this entity.

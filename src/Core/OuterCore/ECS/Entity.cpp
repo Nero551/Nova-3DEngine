@@ -99,12 +99,11 @@ std::vector<U::CheckedPtr<Entity>> Entity::GetChildren()
 
     return children;
 }
-
-void Entity::DestroyChildren()
+void Entity::ForEachChild(const std::function<void(unsigned int)>& callback)
 {
-    while (!m_Children.Empty())
+    for (auto [i, id] : m_Children)
     {
-        DestroyChild(m_Children.begin()->DenseValue);
+        callback(id);
     }
 }
 
@@ -116,6 +115,34 @@ std::vector<U::CheckedPtr<Entity>> Entity::GetDescendants()
     RecursiveChildren(descendants, *this);
 
     return descendants;
+}
+void Entity::ForEachDescendant(const std::function<void(unsigned int)>& callback)
+{
+    ForEachChild(
+        [&](const unsigned int childId)
+        {
+            callback(childId);
+            World::Get().FindEntity(childId).ForEachDescendant(callback);
+        });
+}
+
+void Entity::RecursiveChildren(std::vector<U::CheckedPtr<Entity>>& entities, const Entity& entity)
+{
+    for (auto [i, id] : entity.m_Children)
+    {
+        Entity& child = World::Get().FindEntity(id);
+
+        entities.emplace_back(&child);
+        RecursiveChildren(entities, child);
+    }
+}
+
+void Entity::DestroyChildren()
+{
+    while (!m_Children.Empty())
+    {
+        DestroyChild(m_Children.begin()->DenseValue);
+    }
 }
 
 bool Entity::HasDescendant(const unsigned int id) const
@@ -152,6 +179,17 @@ std::vector<U::CheckedPtr<Entity>> Entity::GetAncestors() const
     }
 
     return ancestors;
+}
+void Entity::ForEachAncestor(const std::function<void(unsigned int)>& callback) const
+{
+    unsigned int current = m_Parent;
+
+    while (current != 0)
+    {
+        callback(current);
+        const Entity& entity = World::Get().FindEntity(current);
+        current = entity.m_Parent;
+    }
 }
 
 bool Entity::IsAncestorOf(const unsigned int entityId) const
@@ -222,16 +260,5 @@ Entity& Entity::GetRoot()
     }
 
     return *current;
-}
-
-void Entity::RecursiveChildren(std::vector<U::CheckedPtr<Entity>>& entities, const Entity& entity)
-{
-    for (auto [i, id] : entity.m_Children)
-    {
-        Entity& child = World::Get().FindEntity(id);
-
-        entities.emplace_back(&child);
-        RecursiveChildren(entities, child);
-    }
 }
 } // namespace N

@@ -12,33 +12,36 @@ void Transform3DSystem::Update(double fdt)
     auto& query = world.Query;
     auto& transformPool = query.Pool<Transform3DComponent>();
 
-    for (auto& entity : world.GetRoot().GetDescendants())
-    {
-        if (!transformPool.HasId(entity->GetId()))
+    world.GetRoot().ForEachDescendant(
+        [&](unsigned int entityId)
         {
-            continue;
-        }
+            auto& entity = world.FindEntity(entityId);
 
-        auto& transform = transformPool.GetComponentById(entity->GetId());
-
-        if (transform.InheritTransform)
-        {
-            auto& parent = entity->GetParent();
-
-            if (transformPool.HasId(parent.GetId()))
+            if (!transformPool.HasId(entityId))
             {
-                auto& parentTransform = transformPool.GetComponentById(parent.GetId());
-
-                transform.GlobalPosition = parentTransform.GlobalPosition + transform.Position;
-                transform.GlobalRotation = parentTransform.GlobalRotation * transform.Rotation;
-                transform.GlobalScale = parentTransform.GlobalScale * transform.Scale;
-
                 return;
             }
-        }
-        transform.GlobalPosition = transform.Position;
-        transform.GlobalRotation = transform.Rotation;
-        transform.GlobalScale = transform.Scale;
-    }
+
+            auto& transform = transformPool.GetComponentById(entityId);
+
+            if (transform.InheritTransform)
+            {
+                auto& parent = entity.GetParent();
+
+                if (transformPool.HasId(parent.GetId()))
+                {
+                    auto& parentTransform = transformPool.GetComponentById(parent.GetId());
+
+                    transform.GlobalPosition = parentTransform.GlobalPosition + transform.Position;
+                    transform.GlobalRotation = parentTransform.GlobalRotation * transform.Rotation;
+                    transform.GlobalScale = parentTransform.GlobalScale * transform.Scale;
+
+                    return;
+                }
+            }
+            transform.GlobalPosition = transform.Position;
+            transform.GlobalRotation = transform.Rotation;
+            transform.GlobalScale = transform.Scale;
+        });
 }
 } // namespace N

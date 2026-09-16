@@ -80,15 +80,12 @@ void Physics::Start()
     cubeId = cube.GetId();
     World::Get().GetRoot().AttachChild(cube);
 
-    M::Vector2 bVi = M::Vector2::FromPolar({M::Rad(120), 10});
-    M::Vector2 wVi = M::Vector2::FromPolar({M::Rad(0), 5});
+    M::Vector2 pi = M::Vector2::FromPolar({M::Rad(95), 29});
+    M::Vector2 vi = M::Vector2::FromPolar({M::Rad(40), 4.5});
+    M::Vector2 a = M::Vector2::FromPolar({M::Rad(200), 1.9});
 
-    M::Vector2 bVio = bVi + wVi;
-
-    U::Log::Info(M::Deg(bVio.Angle()));
-    U::Log::Info(bVio.Length());
-
-    //TODO- look into c++ traits
+    U::Log::Info(vi + (a * 5));
+    U::Log::Info(pi + vi * 5 + (a * 25));
 }
 
 static float time = 0;
