@@ -49,10 +49,11 @@ template <typename T> struct Indirect2DVector
         Index B;
     };
 
+  private:
     /**
      * @brief Two-dimensional lookup table mapping `(a, b)` to a dense data index.
      */
-    std::vector<std::vector<Index>> Lookup{};
+    std::vector<std::vector<Index>> m_Lookup{};
 
     /**
      * @brief Dense storage containing all inserted values.
@@ -60,15 +61,16 @@ template <typename T> struct Indirect2DVector
      * Values remain contiguous. Deletion uses swap-and-pop, so element order
      * and dense indices are not stable.
      */
-    std::vector<T> Data{};
+    std::vector<T> m_Data{};
 
     /**
      * @brief Maps dense indices to their corresponding two-dimensional keys.
      *
      * Used to update the lookup when an element is moved during deletion.
      */
-    std::vector<Key> Indices{};
+    std::vector<Key> m_Indices{};
 
+  public:
     /**
      * @brief Iterator over the densely stored values.
      *
@@ -98,12 +100,12 @@ template <typename T> struct Indirect2DVector
          */
         T& operator*() const
         {
-            return IndirectVector->Data[Index];
+            return IndirectVector->m_Data[Index];
         }
 
         T* operator->() const
         {
-            return &IndirectVector->Data[Index];
+            return &IndirectVector->m_Data[Index];
         }
 
         /**
@@ -146,7 +148,7 @@ template <typename T> struct Indirect2DVector
      */
     Iterator end()
     {
-        return {this, Data.size()};
+        return {this, m_Data.size()};
     }
 
     /**
@@ -166,12 +168,12 @@ template <typename T> struct Indirect2DVector
 
         if (index == InvalidIndex)
         {
-            index = static_cast<Index>(Data.size());
-            Data.push_back(value);
-            Indices.push_back({a, b});
+            index = static_cast<Index>(m_Data.size());
+            m_Data.push_back(value);
+            m_Indices.push_back({a, b});
         }
 
-        return Data[index];
+        return m_Data[index];
     }
 
     /**
@@ -183,12 +185,12 @@ template <typename T> struct Indirect2DVector
      */
     bool Contains(const Index a, const Index b) const
     {
-        if (a >= Lookup.size())
+        if (a >= m_Lookup.size())
         {
             return false;
         }
 
-        const auto& row = Lookup[a];
+        const auto& row = m_Lookup[a];
 
         return b < row.size() && row[b] != InvalidIndex;
     }
@@ -209,7 +211,7 @@ template <typename T> struct Indirect2DVector
             U::Log::Fatal("Indirect2DVector: Index does not exist.");
         }
 
-        return Data[Lookup[a][b]];
+        return m_Data[m_Lookup[a][b]];
     }
 
     /**
@@ -228,7 +230,7 @@ template <typename T> struct Indirect2DVector
             U::Log::Fatal("Indirect2DVector: Index does not exist.");
         }
 
-        return Data[Lookup[a][b]];
+        return m_Data[m_Lookup[a][b]];
     }
 
     /**
@@ -249,9 +251,9 @@ template <typename T> struct Indirect2DVector
 
         if (index == InvalidIndex)
         {
-            index = static_cast<Index>(Data.size());
-            Data.emplace_back(std::forward<Args>(args)...);
-            Indices.push_back({a, b});
+            index = static_cast<Index>(m_Data.size());
+            m_Data.emplace_back(std::forward<Args>(args)...);
+            m_Indices.push_back({a, b});
         }
 
         return {.IndirectVector = this, .Index = index};
@@ -259,12 +261,12 @@ template <typename T> struct Indirect2DVector
 
     Iterator Find(const size_t a, const size_t b)
     {
-        if (a >= Lookup.size())
+        if (a >= m_Lookup.size())
         {
             return end();
         }
 
-        const auto& row = Lookup[a];
+        const auto& row = m_Lookup[a];
 
         if (b >= row.size())
         {
@@ -298,22 +300,22 @@ template <typename T> struct Indirect2DVector
             return;
         }
 
-        const Index index = Lookup[a][b];
-        const Index lastIndex = Data.size() - 1;
+        const Index index = m_Lookup[a][b];
+        const Index lastIndex = m_Data.size() - 1;
 
         if (index != lastIndex)
         {
-            const Key lastKey = Indices.back();
+            const Key lastKey = m_Indices.back();
 
-            std::swap(Data[index], Data.back());
-            std::swap(Indices[index], Indices.back());
+            std::swap(m_Data[index], m_Data.back());
+            std::swap(m_Indices[index], m_Indices.back());
 
-            Lookup[lastKey.A][lastKey.B] = index;
+            m_Lookup[lastKey.A][lastKey.B] = index;
         }
 
-        Data.pop_back();
-        Indices.pop_back();
-        Lookup[a][b] = InvalidIndex;
+        m_Data.pop_back();
+        m_Indices.pop_back();
+        m_Lookup[a][b] = InvalidIndex;
     }
 
     /**
@@ -325,8 +327,8 @@ template <typename T> struct Indirect2DVector
      */
     void Reserve(Index count)
     {
-        Data.reserve(count);
-        Indices.reserve(count);
+        m_Data.reserve(count);
+        m_Indices.reserve(count);
     }
 
   private:
@@ -342,12 +344,12 @@ template <typename T> struct Indirect2DVector
      */
     std::vector<Index>& ResizeLookup(Index a, Index b)
     {
-        if (Lookup.size() <= a)
+        if (m_Lookup.size() <= a)
         {
-            Lookup.resize(a + 1);
+            m_Lookup.resize(a + 1);
         }
 
-        auto& row = Lookup[a];
+        auto& row = m_Lookup[a];
 
         if (row.size() <= b)
         {
