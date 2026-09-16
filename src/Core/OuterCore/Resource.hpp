@@ -11,6 +11,8 @@ namespace N
  */
 struct Resource
 {
+    using ResourceId = unsigned int;
+
     std::string Name;
 
     Resource(std::string name) : Name(std::move(name)) {};
@@ -25,13 +27,13 @@ struct Resource
 
     Resource& operator=(Resource&&) = default;
 
-    unsigned int GetResourceId() const
+    ResourceId GetResourceId() const
     {
         return m_ResourceId;
     }
 
   private:
     friend struct ResourceManager;
-    unsigned int m_ResourceId = 0;
+    ResourceId m_ResourceId = 0;
 };
 } // namespace N

@@ -113,7 +113,7 @@ int Shader::GetUniformLocation(const std::string& name)
     }
     else
     {
-        location = glGetUniformLocation(m_Id, name.c_str());
+        location = glGetUniformLocation(m_Id, name.data());
 
         if (location == -1)
         {

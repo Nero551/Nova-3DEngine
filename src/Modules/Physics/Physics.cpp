@@ -16,6 +16,7 @@
 #include "Modules/Renderer/Primitives/Primitives.hpp"
 #include "World/Components/Transform3DComponent.hpp"
 #include "World/Novas/MeshInstance3D.hpp"
+#include "sketch.hpp"
 
 namespace N
 {

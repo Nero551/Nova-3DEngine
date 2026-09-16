@@ -62,6 +62,6 @@ struct ResourceManager : Service
 
   private:
     std::unordered_map<std::string, std::unique_ptr<Resource>> m_Resources;
-    unsigned int m_NextId = 0;
+    Resource::ResourceId m_NextId = 0;
 };
 } // namespace N

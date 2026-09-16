@@ -74,7 +74,7 @@ U::CheckedPtr<Entity> Entity::TryGetChild(const unsigned int id)
         return &World::Get().FindEntity(id);
     }
 
-    return nullptr;
+    return {std::format("Entity {} has no child {}", m_Id, id)};
 }
 
 bool Entity::HasChild(const unsigned int id) const
@@ -170,7 +170,7 @@ bool Entity::IsAncestorOf(const unsigned int entityId) const
     return false;
 }
 
-bool Entity::HasAncestor(const unsigned int id)
+bool Entity::HasAncestor(const unsigned int id) const
 {
     return IsDescendantOf(id);
 }
@@ -184,7 +184,7 @@ U::CheckedPtr<Entity> Entity::TryGetParent()
     return &World::Get().FindEntity(m_Parent);
 }
 
-Entity& Entity::GetParent()
+Entity& Entity::GetParent() const
 {
     return World::Get().FindEntity(m_Parent);
 }
