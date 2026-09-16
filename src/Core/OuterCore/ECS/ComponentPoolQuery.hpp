@@ -25,12 +25,12 @@ struct ComponentPoolQuery
      */
     template <ComponentType T> ComponentPool<T>& Pool()
     {
-        if (!ComponentPools.Contains<T>())
+        if (!m_ComponentPools.Contains<T>())
         {
-            ComponentPools.Emplace<T>(std::make_unique<ComponentPool<T>>());
+            m_ComponentPools.Emplace<T>(std::make_unique<ComponentPool<T>>());
         }
 
-        return static_cast<ComponentPool<T>&>(*ComponentPools.Get<T>());
+        return static_cast<ComponentPool<T>&>(*m_ComponentPools.Get<T>());
     }
 
     /** @brief Stores the cached results and version of a component query. */
@@ -61,14 +61,14 @@ struct ComponentPoolQuery
         // transform component is 216 bytes, multiply that by 120k entities
         auto pools = GetPools<First, Rest...>();
 
-        if (!CachedQueries.Contains<First, Rest...>())
+        if (!m_CachedQueries.Contains<First, Rest...>())
         {
-            CachedQueries.Emplace<First, Rest...>();
+            m_CachedQueries.Emplace<First, Rest...>();
         }
 
-        QueryCache& cache = CachedQueries.Get<First, Rest...>();
+        QueryCache& cache = m_CachedQueries.Get<First, Rest...>();
 
-        if (cache.Version == QueryVersion)
+        if (cache.Version == m_QueryVersion)
         {
             ComponentPool<First>& firstPool = std::get<ComponentPool<First>&>(pools);
 
@@ -99,18 +99,18 @@ struct ComponentPoolQuery
                 std::get<ComponentPool<Rest>&>(pools).GetComponentByIdUnchecked(entityId)...);
         }
 
-        cache.Version = QueryVersion;
+        cache.Version = m_QueryVersion;
     }
 
   private:
     /** @brief Version used to detect changes that can invalidate query caches. */
-    unsigned int QueryVersion = 1;
+    unsigned int m_QueryVersion = 1;
 
     /** @brief Stores all component pools indexed by their component type. */
-    TypedVector<std::unique_ptr<IComponentPool>> ComponentPools{};
+    TypedVector<std::unique_ptr<IComponentPool>> m_ComponentPools{};
 
     /** @brief Stores cached results for each component query. */
-    TypedVector<QueryCache> CachedQueries;
+    TypedVector<QueryCache> m_CachedQueries;
 
     /**
      * @brief Returns the component pools for the specified types.
@@ -131,12 +131,12 @@ struct ComponentPoolQuery
      */
     void SubscribeToEvents()
     {
-        Service::Get<EventBus>().Sub<EntityDestroyed>([this](const EntityDestroyed&) { ++QueryVersion; });
+        Service::Get<EventBus>().Sub<EntityDestroyed>([this](const EntityDestroyed&) { ++m_QueryVersion; });
 
-        Service::Get<EventBus>().Sub<EntityCreated>([this](const EntityCreated&) { ++QueryVersion; });
+        Service::Get<EventBus>().Sub<EntityCreated>([this](const EntityCreated&) { ++m_QueryVersion; });
 
-        Service::Get<EventBus>().Sub<ComponentAdded>([this](const ComponentAdded&) { ++QueryVersion; });
-        Service::Get<EventBus>().Sub<ComponentRemoved>([this](const ComponentRemoved&) { ++QueryVersion; });
+        Service::Get<EventBus>().Sub<ComponentAdded>([this](const ComponentAdded&) { ++m_QueryVersion; });
+        Service::Get<EventBus>().Sub<ComponentRemoved>([this](const ComponentRemoved&) { ++m_QueryVersion; });
     }
 
     friend struct World;

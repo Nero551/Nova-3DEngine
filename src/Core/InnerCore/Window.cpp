@@ -10,7 +10,7 @@ void Window::Generate(const int width, const int height, const std::string& titl
     SetHints();
 
     GLFWwindow* glfwWindow = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
-    GlfwWindow = glfwWindow;
+    m_GlfwWindow = glfwWindow;
     if (!glfwWindow)
     {
         U::Log::Fatal("Failed To Create Window");
@@ -29,7 +29,7 @@ void Window::Generate(const int width, const int height, const std::string& titl
 }
 void Window::Terminate()
 {
-    glfwDestroyWindow(GlfwWindow);
+    glfwDestroyWindow(m_GlfwWindow);
 }
 
 float Window::GetAspectRatio() const
@@ -38,17 +38,17 @@ float Window::GetAspectRatio() const
 }
 void Window::MakeCurrentContext()
 {
-    glfwMakeContextCurrent(GlfwWindow);
+    glfwMakeContextCurrent(m_GlfwWindow);
 }
 
 bool Window::ShouldClose()
 {
-    return glfwWindowShouldClose(GlfwWindow);
+    return glfwWindowShouldClose(m_GlfwWindow);
 }
 
 void Window::SwapBuffers()
 {
-    glfwSwapBuffers(GlfwWindow);
+    glfwSwapBuffers(m_GlfwWindow);
 }
 
 void Window::PollEvents()
@@ -58,7 +58,7 @@ void Window::PollEvents()
 
 void Window::SetTitle(const std::string& title)
 {
-    glfwSetWindowTitle(GlfwWindow, title.c_str());
+    glfwSetWindowTitle(m_GlfwWindow, title.c_str());
 }
 
 void Window::SetIcon(const U::Image& icon)
@@ -67,17 +67,17 @@ void Window::SetIcon(const U::Image& icon)
     image.height = icon.Height;
     image.width = icon.Width;
     image.pixels = const_cast<unsigned char*>(icon.Pixels.data());
-    glfwSetWindowIcon(GlfwWindow, 1, &image);
+    glfwSetWindowIcon(m_GlfwWindow, 1, &image);
 }
 
 void Window::SetHeight(const int height)
 {
-    glfwSetWindowSize(GlfwWindow, GetWidth(), height);
+    glfwSetWindowSize(m_GlfwWindow, GetWidth(), height);
 }
 
 void Window::SetWidth(const int width)
 {
-    glfwSetWindowSize(GlfwWindow, width, GetHeight());
+    glfwSetWindowSize(m_GlfwWindow, width, GetHeight());
 }
 
 void Window::SetSize(const int width, const int height)
@@ -90,7 +90,7 @@ int Window::GetHeight() const
 {
     int height = 0;
     int width = 0;
-    glfwGetWindowSize(GlfwWindow, &width, &height);
+    glfwGetWindowSize(m_GlfwWindow, &width, &height);
     return height;
 }
 
@@ -98,18 +98,18 @@ int Window::GetWidth() const
 {
     int height = 0;
     int width = 0;
-    glfwGetWindowSize(GlfwWindow, &width, &height);
+    glfwGetWindowSize(m_GlfwWindow, &width, &height);
     return width;
 }
 
 void Window::Close()
 {
-    glfwSetWindowShouldClose(GlfwWindow, GL_TRUE);
+    glfwSetWindowShouldClose(m_GlfwWindow, GL_TRUE);
 }
 
 GLFWwindow* Window::GetGlfwWindow()
 {
-    return GlfwWindow;
+    return m_GlfwWindow;
 }
 
 void Window::SetHints()

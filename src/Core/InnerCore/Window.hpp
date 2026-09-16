@@ -68,7 +68,7 @@ struct Window
     GLFWwindow* GetGlfwWindow();
 
   private:
-    GLFWwindow* GlfwWindow;
+    GLFWwindow* m_GlfwWindow;
 
     void SetHints();
 };

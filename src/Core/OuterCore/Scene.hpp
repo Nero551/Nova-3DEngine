@@ -24,6 +24,6 @@ struct Scene
     void SetRoot(unsigned int entityId);
 
   private:
-    unsigned int Root;
+    unsigned int m_Root;
 };
 } // namespace N

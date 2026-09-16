@@ -49,7 +49,7 @@ template <ComponentType T> struct ComponentPool : IComponentPool
         /** @brief Returns the entity ID and corresponding component. */
         std::pair<unsigned int, T&> operator*() const
         {
-            return {Pool->Components.GetSparseIndex(Index), Pool->Components.GetByIndex(Index)};
+            return {Pool->m_Components.GetSparseIndex(Index), Pool->m_Components.GetByIndex(Index)};
         }
 
         /** @brief Advances the iterator to the next component. */
@@ -75,7 +75,7 @@ template <ComponentType T> struct ComponentPool : IComponentPool
     /** @brief Returns an iterator past the last component. */
     Iterator end()
     {
-        return {.Pool = this, .Index = Components.Size()};
+        return {.Pool = this, .Index = m_Components.Size()};
     }
 
     ComponentPool()
@@ -98,7 +98,7 @@ template <ComponentType T> struct ComponentPool : IComponentPool
      */
     T& Add(const unsigned int entityId)
     {
-        auto& component = Components.Emplace(entityId)->DenseValue;
+        auto& component = m_Components.Emplace(entityId)->DenseValue;
         Service::Get<EventBus>().Fire<ComponentAdded>(entityId);
 
         // U::Log::Info(Components.Size(), " × ", sizeof(typename SparseSet<T>::Entry), " = ",
@@ -110,7 +110,7 @@ template <ComponentType T> struct ComponentPool : IComponentPool
     /** @brief Returns whether the specified entity has this component. */
     bool HasId(const unsigned int entityId) const
     {
-        return Components.Contains(entityId);
+        return m_Components.Contains(entityId);
     }
 
     /**
@@ -121,16 +121,16 @@ template <ComponentType T> struct ComponentPool : IComponentPool
      */
     T& GetComponentById(const unsigned int entityId)
     {
-        return Components.Get(entityId);
+        return m_Components.Get(entityId);
     }
 
     T& GetComponentByIdUnchecked(const unsigned int entityId)
     {
-        return Components.GetUnchecked(entityId);
+        return m_Components.GetUnchecked(entityId);
     }
     void Reserve(size_t count)
     {
-        Components.Reserve(count);
+        m_Components.Reserve(count);
     }
 
     /**
@@ -141,7 +141,7 @@ template <ComponentType T> struct ComponentPool : IComponentPool
      */
     unsigned int GetIdByIndex(const size_t index) const
     {
-        return Components.GetSparseIndex(index);
+        return m_Components.GetSparseIndex(index);
     }
 
     /**
@@ -152,17 +152,17 @@ template <ComponentType T> struct ComponentPool : IComponentPool
      */
     T& GetComponentByIndex(const unsigned int index)
     {
-        return Components.GetByIndex(index);
+        return m_Components.GetByIndex(index);
     }
 
     T& GetComponentByIndexUnchecked(const unsigned int index)
     {
-        return Components.GetByIndexUnchecked(index);
+        return m_Components.GetByIndexUnchecked(index);
     }
 
     SparseSet<T>::Entry& GetComponentAndIdByIndexUnchecked(const unsigned int index)
     {
-        return Components.GetEntryByIndexUnchecked(index);
+        return m_Components.GetEntryByIndexUnchecked(index);
     }
 
     /**
@@ -172,24 +172,24 @@ template <ComponentType T> struct ComponentPool : IComponentPool
      */
     void Remove(const unsigned int entityId)
     {
-        Components.Erase(entityId);
+        m_Components.Erase(entityId);
         Service::Get<EventBus>().Fire<ComponentRemoved>(entityId);
     }
 
     unsigned int GetIndexById(unsigned int entityId)
     {
-        return Components.GetDenseIndex(entityId);
+        return m_Components.GetDenseIndex(entityId);
     }
 
     /** @brief Returns the number of stored components. */
     unsigned int Size() const override
     {
-        return Components.Size();
+        return m_Components.Size();
     }
 
   private:
     /** @brief Stores components using dense storage with sparse entity ID lookup. */
-    SparseSet<T> Components{};
+    SparseSet<T> m_Components{};
 };
 
 } // namespace N

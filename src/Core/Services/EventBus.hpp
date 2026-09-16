@@ -21,8 +21,8 @@ struct EventBus : Service
                 " Can't Be Constructed From the Given Arguments.");
         }
 
-        auto listeners = Listeners.find(typeid(T));
-        if (listeners == Listeners.end())
+        auto listeners = m_Listeners.find(typeid(T));
+        if (listeners == m_Listeners.end())
         {
             return;
         }
@@ -44,7 +44,7 @@ struct EventBus : Service
         }
 
         auto event = std::make_unique<T>(std::forward<Args>(args)...);
-        FireQueue.emplace_back(std::move(event));
+        m_FireQueue.emplace_back(std::move(event));
     }
 
     /** @brief Dispatches all events currently waiting in the fire queue. */
@@ -58,16 +58,16 @@ struct EventBus : Service
         auto method = [callback = std::forward<F>(callback)](IEvent& e) mutable
         { callback(static_cast<T&>(e)); };
 
-        const auto subscription = ++NextSubscription;
-        Listeners[typeid(T)].push_back({.Subscription = subscription, .Callback = method});
+        const auto subscription = ++m_NextSubscription;
+        m_Listeners[typeid(T)].push_back({.Subscription = subscription, .Callback = method});
         return subscription;
     }
 
     /** @brief Removes a global event subscription by its subscription ID. */
     template <EventType T> void Unsub(std::size_t subscription)
     {
-        auto it = Listeners.find(typeid(T));
-        if (it != Listeners.end())
+        auto it = m_Listeners.find(typeid(T));
+        if (it != m_Listeners.end())
         {
             size_t i = 0;
             while (i < it->second.size() && it->second.at(i).Subscription != subscription)
@@ -81,7 +81,7 @@ struct EventBus : Service
 
                 if (it->second.empty())
                 {
-                    Listeners.erase(it);
+                    m_Listeners.erase(it);
                 }
             }
         }
@@ -96,13 +96,13 @@ struct EventBus : Service
     };
 
     /** @brief Global event listeners grouped by event type. */
-    std::unordered_map<std::type_index, std::vector<Entry>> Listeners;
+    std::unordered_map<std::type_index, std::vector<Entry>> m_Listeners;
 
     /** @brief Events waiting for deferred dispatch. */
-    std::vector<std::unique_ptr<IEvent>> FireQueue;
+    std::vector<std::unique_ptr<IEvent>> m_FireQueue;
 
     /** @brief Generates unique subscription IDs. */
-    size_t NextSubscription = 0;
+    size_t m_NextSubscription = 0;
 
   protected:
     void EndFrame() override;

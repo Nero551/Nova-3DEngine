@@ -19,7 +19,7 @@ template <typename T> struct Event : IEvent
     void Fire()
     {
 
-        for (const auto& listener : Listeners)
+        for (const auto& listener : m_Listeners)
         {
             listener.Callback(static_cast<T&>(*this));
         }
@@ -29,9 +29,9 @@ template <typename T> struct Event : IEvent
     template <typename F> requires std::invocable<F, T&>
     std::size_t Sub(F&& callback)
     {
-        const auto subscription = ++NextSubscription;
+        const auto subscription = ++m_NextSubscription;
 
-        Listeners.push_back({.Subscription = subscription, .Callback = std::forward<F>(callback)});
+        m_Listeners.push_back({.Subscription = subscription, .Callback = std::forward<F>(callback)});
 
         return subscription;
     }
@@ -40,13 +40,13 @@ template <typename T> struct Event : IEvent
     void Unsub(std::size_t subscription)
     {
         int i = 0;
-        while (i < Listeners.size() && Listeners.at(i).Subscription != subscription)
+        while (i < m_Listeners.size() && m_Listeners.at(i).Subscription != subscription)
         {
             ++i;
         }
-        if (i < Listeners.size())
+        if (i < m_Listeners.size())
         {
-            Listeners.erase(Listeners.begin() + i);
+            m_Listeners.erase(m_Listeners.begin() + i);
         }
     }
 
@@ -58,7 +58,7 @@ template <typename T> struct Event : IEvent
         std::function<void(T&)> Callback;
     };
 
-    std::vector<Entry> Listeners;
-    std::size_t NextSubscription = 0;
+    std::vector<Entry> m_Listeners;
+    std::size_t m_NextSubscription = 0;
 };
 } // namespace N

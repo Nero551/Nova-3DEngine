@@ -4,15 +4,15 @@
 
 N::Entity& N::Scene::GetRoot()
 {
-    return World::Get().FindEntity(Root);
+    return World::Get().FindEntity(m_Root);
 }
 
 void N::Scene::SetRoot(const Entity& entity)
 {
-    Root = entity.GetId();
+    m_Root = entity.GetId();
 }
 
 void N::Scene::SetRoot(const unsigned int entityId)
 {
-    Root = entityId;
+    m_Root = entityId;
 }

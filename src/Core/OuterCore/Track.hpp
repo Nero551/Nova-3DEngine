@@ -7,38 +7,38 @@ namespace N
 template <typename T> struct Track
 {
     Track() {};
-    Track(const T& value) : Value(value) {}
+    Track(const T& value) : m_Value(value) {}
 
     const T& Get() const
     {
-        return Value;
+        return m_Value;
     }
 
     T& operator()()
     {
         MarkChanged();
-        return Value;
+        return m_Value;
     }
 
     const T& operator()() const
     {
-        return Value;
+        return m_Value;
     }
 
     void Set(const T& value)
     {
-        if (Value == value)
+        if (m_Value == value)
         {
             ClearChanged();
             return;
         }
-        Value = value;
+        m_Value = value;
         MarkChanged();
     }
 
     operator const T&() const
     {
-        return Value;
+        return m_Value;
     }
 
     template <typename V> Track& operator+=(const V& value)
@@ -67,21 +67,21 @@ template <typename T> struct Track
 
     template <typename V> T operator+(const V& value)
     {
-        return Value + value;
+        return m_Value + value;
     }
 
     template <typename V> T operator-(const V& value)
     {
-        return Value - value;
+        return m_Value - value;
     }
 
     template <typename V> T operator*(const V& value)
     {
-        return Value * value;
+        return m_Value * value;
     }
     template <typename V> T operator/(const V& value)
     {
-        return Value / value;
+        return m_Value / value;
     }
 
     template <typename V>
@@ -115,25 +115,25 @@ template <typename T> struct Track
 
     bool IsChanged() const
     {
-        return Changed;
+        return m_Changed;
     }
 
     void ClearChanged()
     {
-        Changed = false;
+        m_Changed = false;
     }
 
     void MarkChanged()
     {
-        if (!Changed)
+        if (!m_Changed)
         {
-            Changed = true;
+            m_Changed = true;
         }
     }
 
   private:
-    T Value{};
-    bool Changed = false;
+    T m_Value{};
+    bool m_Changed = false;
 };
 
 } // namespace N

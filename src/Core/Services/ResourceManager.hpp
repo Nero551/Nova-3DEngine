@@ -29,10 +29,10 @@ struct ResourceManager : Service
     template <ResourceType T, typename... Args> T& Load(const std::string& name, Args&&... args)
     {
         std::string key = typeid(T).name() + name;
-        if (Resources.contains(key))
+        if (m_Resources.contains(key))
         {
             // N::U::Logger::Warning("Resource: " + name + " Already Loaded.");
-            return static_cast<T&>(*Resources.at(key));
+            return static_cast<T&>(*m_Resources.at(key));
         }
 
         if constexpr (!std::constructible_from<T, const std::string&, Args...>)
@@ -43,17 +43,17 @@ struct ResourceManager : Service
         else
         {
             auto resource = std::make_unique<T>(name, std::forward<Args>(args)...);
-            resource->ResourceId = NextId++;
-            Resources.emplace(key, std::move(resource));
+            resource->m_ResourceId = m_NextId++;
+            m_Resources.emplace(key, std::move(resource));
 
-            return static_cast<T&>(*Resources.at(key));
+            return static_cast<T&>(*m_Resources.at(key));
         }
     }
 
     template <ResourceType T> bool Exists(const std::string& name)
     {
         std::string key = typeid(T).name() + name;
-        if (Resources.contains(key))
+        if (m_Resources.contains(key))
         {
             return true;
         }
@@ -61,7 +61,7 @@ struct ResourceManager : Service
     }
 
   private:
-    std::unordered_map<std::string, std::unique_ptr<Resource>> Resources;
-    unsigned int NextId = 0;
+    std::unordered_map<std::string, std::unique_ptr<Resource>> m_Resources;
+    unsigned int m_NextId = 0;
 };
 } // namespace N

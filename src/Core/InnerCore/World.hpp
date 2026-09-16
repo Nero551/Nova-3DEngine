@@ -29,12 +29,12 @@ struct World : SystemOwner
 
     void SetRoot(unsigned int id)
     {
-        Root = id;
+        m_Root = id;
     }
 
     Entity& GetRoot()
     {
-        auto root = TryFindEntity(Root);
+        auto root = TryFindEntity(m_Root);
         if (!root)
         {
             U::Log::Fatal("No Root Is Set Or Root Is Not An Entity");
@@ -44,12 +44,12 @@ struct World : SystemOwner
 
     void SetCamera(unsigned int id)
     {
-        ActiveCamera = id;
+        m_ActiveCamera = id;
     }
 
     Entity& GetCamera()
     {
-        auto camera = TryFindEntity(ActiveCamera);
+        auto camera = TryFindEntity(m_ActiveCamera);
         if (!camera)
         {
             U::Log::Fatal("No Active Camera Is Set Or Active Camera Is Not An Entity");
@@ -79,12 +79,12 @@ struct World : SystemOwner
      */
     template <EntityType T> Entity& CreateEntity()
     {
-        const unsigned int id = currentEntityId++;
+        const unsigned int id = m_CurrentEntityId++;
         T entity;
         entity.m_Id = id;
         entity.Initialize();
 
-        auto it = Entities.Emplace(id, std::move(entity));
+        auto it = m_Entities.Emplace(id, std::move(entity));
         Service::Get<EventBus>().Fire<EntityCreated>(it->DenseValue);
 
         return it->DenseValue;
@@ -122,11 +122,11 @@ struct World : SystemOwner
     friend struct Engine;
 
   private:
-    SparseSet<Entity> Entities{};
-    unsigned int Root{};
-    unsigned int ActiveCamera{};
+    SparseSet<Entity> m_Entities{};
+    unsigned int m_Root{};
+    unsigned int m_ActiveCamera{};
 
     /** @brief ID assigned to the most recently created entity. */
-    unsigned int currentEntityId = 0;
+    unsigned int m_CurrentEntityId = 0;
 };
 } // namespace N

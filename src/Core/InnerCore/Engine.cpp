@@ -29,22 +29,22 @@ Engine& Engine::Get()
 
 void Engine::Run()
 {
-    LastFrame = glfwGetTime();
+    m_LastFrame = glfwGetTime();
     double accumulator = 0;
-    Running = true;
+    m_Running = true;
 
     Start();
-    while (Running)
+    while (m_Running)
     {
         BeginFrame();
 
-        accumulator += DeltaTime;
+        accumulator += m_DeltaTime;
         accumulator = std::min(accumulator, 1.0);
 
-        while (accumulator >= FixedDeltaTime)
+        while (accumulator >= m_FixedDeltaTime)
         {
             FixedUpdate();
-            accumulator -= FixedDeltaTime;
+            accumulator -= m_FixedDeltaTime;
         }
 
         Update();
@@ -56,12 +56,12 @@ void Engine::Run()
 
 void Engine::Shutdown()
 {
-    Running = false;
+    m_Running = false;
 }
 
 double Engine::GetTime() const
 {
-    return Time;
+    return m_Time;
 }
 
 void Engine::Configure()
@@ -97,7 +97,7 @@ void Engine::Start()
 
     World->Start();
 
-    for (auto& module : Modules)
+    for (auto& module : m_Modules)
     {
         module->Start();
     }
@@ -109,19 +109,19 @@ void Engine::BeginFrame()
     TracyGpuZone("Begin Frame");
 
     const double currentTime = glfwGetTime();
-    DeltaTime = currentTime - LastFrame;
-    LastFrame = currentTime;
-    Time = currentTime;
+    m_DeltaTime = currentTime - m_LastFrame;
+    m_LastFrame = currentTime;
+    m_Time = currentTime;
 
     Window.PollEvents();
 
-    World->BeginFrame(DeltaTime);
-    for (auto& module : Modules)
-        module->BeginFrame(DeltaTime);
+    World->BeginFrame(m_DeltaTime);
+    for (auto& module : m_Modules)
+        module->BeginFrame(m_DeltaTime);
 
     for (auto& service : Service::GetAll())
     {
-        service->BeginFrame(DeltaTime);
+        service->BeginFrame(m_DeltaTime);
     }
 }
 
@@ -130,15 +130,15 @@ void Engine::FixedUpdate()
     ZoneScopedN("Fixed Update");
     TracyGpuZone("Fixed Update");
 
-    World->FixedUpdate(FixedDeltaTime);
-    for (auto& module : Modules)
+    World->FixedUpdate(m_FixedDeltaTime);
+    for (auto& module : m_Modules)
     {
-        module->FixedUpdate(FixedDeltaTime);
+        module->FixedUpdate(m_FixedDeltaTime);
     }
 
     for (auto& service : Service::GetAll())
     {
-        service->FixedUpdate(FixedDeltaTime);
+        service->FixedUpdate(m_FixedDeltaTime);
     }
 }
 
@@ -147,16 +147,16 @@ void Engine::Update()
     ZoneScopedN("Update");
     TracyGpuZone("Update");
 
-    World->Update(DeltaTime);
+    World->Update(m_DeltaTime);
 
-    for (auto& module : Modules)
+    for (auto& module : m_Modules)
     {
-        module->Update(DeltaTime);
+        module->Update(m_DeltaTime);
     }
 
     for (auto& service : Service::GetAll())
     {
-        service->Update(DeltaTime);
+        service->Update(m_DeltaTime);
     }
 }
 
@@ -166,7 +166,7 @@ void Engine::Render()
     TracyGpuZone("Render");
 
     World->Render();
-    for (auto& module : Modules)
+    for (auto& module : m_Modules)
     {
         module->Render();
     }
@@ -183,11 +183,11 @@ void Engine::EndFrame()
     TracyGpuZone("End Frame");
 
     Window.SwapBuffers();
-    World->EndFrame(DeltaTime);
+    World->EndFrame(m_DeltaTime);
 
-    for (auto& module : Modules)
+    for (auto& module : m_Modules)
     {
-        module->EndFrame(DeltaTime);
+        module->EndFrame(m_DeltaTime);
     }
 
     for (auto& service : Service::GetAll())
@@ -206,7 +206,7 @@ void Engine::Stop()
     auto& services = Service::GetAll();
     World->Stop();
 
-    for (auto& module : Modules)
+    for (auto& module : m_Modules)
     {
         module->Stop();
     }

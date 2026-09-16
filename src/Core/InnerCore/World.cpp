@@ -30,42 +30,42 @@ void World::RemoveEntity(const unsigned int id)
         entity->ClearParent();
     }
 
-    if (entity->GetId() == Root)
+    if (entity->GetId() == m_Root)
     {
-        RemoveEntity(Root);
+        RemoveEntity(m_Root);
     }
 
     Service::Get<EventBus>().Fire<EntityDestroyed>(*entity);
-    Entities.Erase(id);
+    m_Entities.Erase(id);
 
     for (auto& descendant : descendants)
     {
         Service::Get<EventBus>().Fire<EntityDestroyed>(*descendant);
-        Entities.Erase(descendant->GetId());
+        m_Entities.Erase(descendant->GetId());
     }
 }
 void World::ReserveEntities(size_t count)
 {
-    Entities.Reserve(count);
+    m_Entities.Reserve(count);
 }
 
 Entity& World::FindEntity(unsigned int id)
 {
-    if (!Entities.Contains(id))
+    if (!m_Entities.Contains(id))
     {
         U::Log::Fatal("Entity Not Found: ", id);
     }
-    return Entities.Get(id);
+    return m_Entities.Get(id);
 }
 
 U::CheckedPtr<Entity> World::TryFindEntity(const unsigned int id)
 {
 
-    if (!Entities.Contains(id))
+    if (!m_Entities.Contains(id))
     {
         return nullptr;
     }
-    return &Entities.Get(id);
+    return &m_Entities.Get(id);
 }
 
 // TODO- quick flicker happens at the start of the run, its input mouse rapidly changing when changing MouseMode.
@@ -117,7 +117,7 @@ void World::Update(const double dt)
 
     if (Engine::Get().GetModule<Input>().IsKeyPressed(Key::T))
     {
-        U::Log::Info(Entities.Size());
+        U::Log::Info(m_Entities.Size());
     }
 
     for (auto& system : Systems)

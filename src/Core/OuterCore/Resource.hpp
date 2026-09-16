@@ -27,11 +27,11 @@ struct Resource
 
     unsigned int GetResourceId() const
     {
-        return ResourceId;
+        return m_ResourceId;
     }
 
   private:
     friend struct ResourceManager;
-    unsigned int ResourceId = 0;
+    unsigned int m_ResourceId = 0;
 };
 } // namespace N

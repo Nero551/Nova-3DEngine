@@ -4,10 +4,10 @@ namespace N
 {
 void EventBus::EmptyFireQueue()
 {
-    for (auto& event : FireQueue)
+    for (auto& event : m_FireQueue)
     {
-        auto listeners = Listeners.find(typeid(*event));
-        if (listeners == Listeners.end())
+        auto listeners = m_Listeners.find(typeid(*event));
+        if (listeners == m_Listeners.end())
         {
             continue;
         }
@@ -17,7 +17,7 @@ void EventBus::EmptyFireQueue()
             listener.Callback(*event);
         }
     }
-    FireQueue.clear();
+    m_FireQueue.clear();
 }
 
 void EventBus::EndFrame()
