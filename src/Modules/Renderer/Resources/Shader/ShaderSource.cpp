@@ -13,24 +13,24 @@ namespace N
 {
 ShaderSource::ShaderSource(
     const std::string& name, const std::string& path, const ShaderStage stage, std::string version)
-    : Resource(name), Path(path), Version(std::move(version)), Stage(stage)
+    : Resource(name), Path(path), Version(std::move(version)), m_Stage(stage)
 {
     SourceCode = U::FileSystem::ReadFile(path);
 }
 
 ShaderSource::~ShaderSource()
 {
-    glDeleteShader(Id);
+    glDeleteShader(m_Id);
 }
 
 unsigned int ShaderSource::GetId() const
 {
-    return Id;
+    return m_Id;
 }
 
 ShaderStage ShaderSource::GetStage() const
 {
-    return Stage;
+    return m_Stage;
 }
 
 void ShaderSource::Compile()
@@ -62,47 +62,47 @@ void ShaderSource::Compile()
 
     const char* string = GeneratedCode.c_str();
 
-    Id = glCreateShader(static_cast<GLenum>(Stage));
-    glShaderSource(Id, 1, &string, nullptr);
-    glCompileShader(Id);
+    m_Id = glCreateShader(static_cast<GLenum>(m_Stage));
+    glShaderSource(m_Id, 1, &string, nullptr);
+    glCompileShader(m_Id);
 
     int success;
     char infoLog[512];
-    glGetShaderiv(Id, GL_COMPILE_STATUS, &success);
+    glGetShaderiv(m_Id, GL_COMPILE_STATUS, &success);
     if (!success)
     {
-        glGetShaderInfoLog(Id, 512, nullptr, infoLog);
+        glGetShaderInfoLog(m_Id, 512, nullptr, infoLog);
         U::Log::Error(std::string("Shader:" + Name) + infoLog + " | " + Path);
 
-        if (Stage == ShaderStage::Fragment)
+        if (m_Stage == ShaderStage::Fragment)
         {
             U::FileSystem::WriteFile("Assets/ShaderCompileError.frag", GeneratedCode);
         }
-        if (Stage == ShaderStage::Vertex)
+        if (m_Stage == ShaderStage::Vertex)
         {
             U::FileSystem::WriteFile("Assets/ShaderCompileError.vert", GeneratedCode);
         }
-        glDeleteShader(Id);
-        Id = 0;
+        glDeleteShader(m_Id);
+        m_Id = 0;
     }
 }
 
 bool ShaderSource::IsCompiled() const
 {
-    return Id != 0;
+    return m_Id != 0;
 }
 
 void ShaderSource::Reload()
 {
     SourceCode = U::FileSystem::ReadFile(Path);
-    glDeleteShader(Id);
-    Id = 0;
+    glDeleteShader(m_Id);
+    m_Id = 0;
 }
 
 void ShaderSource::Preprocess()
 {
     GeneratedCode = SourceCode;
-    Includes.clear();
+    m_Includes.clear();
     GeneratedCode.insert(0, "#" + Version + "\n");
 
     std::unordered_set<std::string> includesProcessing;
@@ -126,7 +126,7 @@ void ShaderSource::PreprocessIncludes(
         if (!includePath.empty())
         {
             // Check If Is Already Included
-            if (Includes.contains(includePath))
+            if (m_Includes.contains(includePath))
             {
                 code.replace(pos, end - pos + 1, "");
             }
@@ -143,7 +143,7 @@ void ShaderSource::PreprocessIncludes(
                 PreprocessIncludes(includePath, includeCode, includesProcessing);
 
                 code.replace(pos, end - pos + 1, includeCode);
-                Includes.insert(includePath);
+                m_Includes.insert(includePath);
 
                 includesProcessing.erase(includePath);
             }

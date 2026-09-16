@@ -58,11 +58,11 @@ struct Shader : Resource
      */
     template <UniformType T> void SetUniform(const T& uniform)
     {
-        auto it = PendingUniforms.find(uniform.Name);
+        auto it = m_PendingUniforms.find(uniform.Name);
 
-        if (it == PendingUniforms.end())
+        if (it == m_PendingUniforms.end())
         {
-            PendingUniforms.emplace(uniform.Name, std::make_unique<T>(uniform));
+            m_PendingUniforms.emplace(uniform.Name, std::make_unique<T>(uniform));
         }
         else
         {
@@ -80,18 +80,18 @@ struct Shader : Resource
 
   private:
     /** @brief OpenGL handle for the shader program. */
-    unsigned int Id = 0;
+    unsigned int m_Id = 0;
 
-    std::unordered_map<std::string, int> UniformLocations;
+    std::unordered_map<std::string, int> m_UniformLocations;
 
     /**
      * @brief Uniform values waiting to be uploaded to the GPU.
      * Uniforms are stored by name and resolved to OpenGL locations
      * when they are uploaded.
      */
-    std::unordered_map<std::string, std::unique_ptr<Uniform>> PendingUniforms;
+    std::unordered_map<std::string, std::unique_ptr<Uniform>> m_PendingUniforms;
 
-    std::vector<U::CheckedPtr<ShaderSource>> Sources;
+    std::vector<U::CheckedPtr<ShaderSource>> m_Sources;
 
     void CreateProgram();
 

@@ -16,7 +16,7 @@ struct VertexArray
     VertexArray(const VertexArray&) = delete;
     VertexArray& operator=(const VertexArray&) = delete;
 
-    VertexArray(VertexArray&& Other) noexcept : Id(std::exchange(Other.Id, 0)) {}
+    VertexArray(VertexArray&& Other) noexcept : m_Id(std::exchange(Other.m_Id, 0)) {}
     VertexArray& operator=(VertexArray&& Other) noexcept;
     /** @brief Generates the VAO if it has not already been generated. */
     void Generate();
@@ -91,6 +91,6 @@ struct VertexArray
     unsigned int GetId() const;
 
   private:
-    unsigned int Id = 0;
+    unsigned int m_Id = 0;
 };
 } // namespace N

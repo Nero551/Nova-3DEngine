@@ -3,32 +3,32 @@
 
 namespace N
 {
-Texture::Texture(const std::string& name, TextureTarget target) : Resource(name), Target(target) {}
+Texture::Texture(const std::string& name, TextureTarget target) : Resource(name), m_Target(target) {}
 
 Texture::~Texture()
 {
-    glDeleteTextures(1, &Id);
+    glDeleteTextures(1, &m_Id);
 }
 
 TextureTarget Texture::GetTarget() const
 {
-    return Target;
+    return m_Target;
 }
 
 unsigned int Texture::GetId() const
 {
-    return Id;
+    return m_Id;
 }
 
 void Texture::Regenerate()
 {
-    glDeleteTextures(1, &Id);
-    Id = 0;
+    glDeleteTextures(1, &m_Id);
+    m_Id = 0;
 }
 
 bool Texture::IsGenerated() const
 {
-    return Id != 0;
+    return m_Id != 0;
 }
 
 void Texture::Generate() {}
@@ -40,7 +40,7 @@ void Texture::Bind(const unsigned int unit)
         Generate();
     }
 
-    glBindTextureUnit(unit, Id);
+    glBindTextureUnit(unit, m_Id);
 }
 
 void Texture::Unbind(unsigned int unit) const

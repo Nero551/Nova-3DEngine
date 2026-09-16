@@ -50,11 +50,11 @@ struct ShaderSource : Resource
     void Reload();
 
   private:
-    unsigned int Id = 0;
-    ShaderStage Stage;
+    unsigned int m_Id = 0;
+    ShaderStage m_Stage;
 
     /** @brief Paths of shader files included by this source. */
-    std::unordered_set<std::string> Includes;
+    std::unordered_set<std::string> m_Includes;
 
     void Preprocess();
     void PreprocessIncludes(

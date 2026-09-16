@@ -8,7 +8,7 @@ Framebuffer::Framebuffer(const std::string& name) : Resource(name) {}
 
 Framebuffer::~Framebuffer()
 {
-    glDeleteFramebuffers(1, &Id);
+    glDeleteFramebuffers(1, &m_Id);
 }
 
 void Framebuffer::Generate()
@@ -17,19 +17,19 @@ void Framebuffer::Generate()
     {
         return;
     }
-    glCreateFramebuffers(1, &Id);
+    glCreateFramebuffers(1, &m_Id);
 }
 
 void Framebuffer::Regenerate()
 {
-    glDeleteFramebuffers(1, &Id);
-    Id = 0;
+    glDeleteFramebuffers(1, &m_Id);
+    m_Id = 0;
 }
 
 void Framebuffer::Bind()
 {
     Generate();
-    glBindFramebuffer(static_cast<GLenum>(Target), Id);
+    glBindFramebuffer(static_cast<GLenum>(Target), m_Id);
 }
 
 void Framebuffer::Unbind()
@@ -39,12 +39,12 @@ void Framebuffer::Unbind()
 
 bool Framebuffer::IsGenerated() const
 {
-    return Id != 0;
+    return m_Id != 0;
 }
 
 bool Framebuffer::IsComplete() const
 {
-    const GLenum status = glCheckNamedFramebufferStatus(Id, static_cast<GLenum>(Target));
+    const GLenum status = glCheckNamedFramebufferStatus(m_Id, static_cast<GLenum>(Target));
 
     if (status != GL_FRAMEBUFFER_COMPLETE)
     {
@@ -60,7 +60,7 @@ void Framebuffer::AttachTexture(FramebufferAttachment textureAttachment, Texture
     Generate();
     texture.Generate();
     TextureAttachments.emplace(textureAttachment, &texture);
-    glNamedFramebufferTexture(Id, static_cast<GLenum>(textureAttachment), texture.GetId(), 0);
+    glNamedFramebufferTexture(m_Id, static_cast<GLenum>(textureAttachment), texture.GetId(), 0);
 }
 
 void Framebuffer::Blit(
@@ -75,8 +75,8 @@ void Framebuffer::Blit(
         dst.Generate();
     }
 
-    glBlitNamedFramebuffer(Id, dst.Id, 0, 0, srcW, srcH, 0, 0, dstW, dstH, static_cast<GLbitfield>(buffer),
-        static_cast<GLenum>(filter));
+    glBlitNamedFramebuffer(m_Id, dst.m_Id, 0, 0, srcW, srcH, 0, 0, dstW, dstH,
+        static_cast<GLbitfield>(buffer), static_cast<GLenum>(filter));
 }
 
 void Framebuffer::AttachRenderBuffer(FramebufferAttachment attachment, Renderbuffer& renderbuffer)
@@ -85,7 +85,7 @@ void Framebuffer::AttachRenderBuffer(FramebufferAttachment attachment, Renderbuf
     renderbuffer.Generate();
     RenderBuffers.emplace(attachment, &renderbuffer);
     glNamedFramebufferRenderbuffer(
-        Id, static_cast<GLenum>(attachment), GL_RENDERBUFFER, renderbuffer.GetId());
+        m_Id, static_cast<GLenum>(attachment), GL_RENDERBUFFER, renderbuffer.GetId());
 }
 
 void Framebuffer::Resize(int width, int height)
@@ -97,7 +97,7 @@ void Framebuffer::Resize(int width, int height)
         texture->Height = height;
         texture->Generate();
 
-        glNamedFramebufferTexture(Id, static_cast<GLenum>(attachment), texture->GetId(), 0);
+        glNamedFramebufferTexture(m_Id, static_cast<GLenum>(attachment), texture->GetId(), 0);
     }
 
     for (auto& [attachment, buffer] : RenderBuffers)
@@ -107,12 +107,13 @@ void Framebuffer::Resize(int width, int height)
         buffer->Height = height;
         buffer->Generate();
 
-        glNamedFramebufferRenderbuffer(Id, static_cast<GLenum>(attachment), GL_RENDERBUFFER, buffer->GetId());
+        glNamedFramebufferRenderbuffer(
+            m_Id, static_cast<GLenum>(attachment), GL_RENDERBUFFER, buffer->GetId());
     }
 }
 
 unsigned int Framebuffer::GetId() const
 {
-    return Id;
+    return m_Id;
 }
 } // namespace N

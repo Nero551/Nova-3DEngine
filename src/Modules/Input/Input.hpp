@@ -35,12 +35,12 @@ struct Input : Module
     void SetMouseMode(MouseMode mode);
 
   private:
-    MouseMode MouseMode = MouseMode::Normal;
-    M::Vector2 MousePosition = M::Vector2::Zero;
-    M::Vector2 PreviousMousePosition = M::Vector2::Zero;
-    bool FirstMouse = true;
+    MouseMode m_MouseMode = MouseMode::Normal;
+    M::Vector2 m_MousePosition = M::Vector2::Zero;
+    M::Vector2 m_PreviousMousePosition = M::Vector2::Zero;
+    bool m_FirstMouse = true;
 
-    M::Vector2 ScrollOffset = M::Vector2::Zero;
+    M::Vector2 m_ScrollOffset = M::Vector2::Zero;
 
     static constexpr unsigned int MouseButtonCount = GLFW_MOUSE_BUTTON_LAST + 1;
     static constexpr unsigned int KeyCount = GLFW_KEY_LAST + 1;
@@ -49,11 +49,11 @@ struct Input : Module
 
     constexpr unsigned int ToIndex(MouseButton button);
 
-    std::array<bool, KeyCount> CurrentKeys{};
-    std::array<bool, KeyCount> PreviousKeys{};
+    std::array<bool, KeyCount> m_CurrentKeys{};
+    std::array<bool, KeyCount> m_PreviousKeys{};
 
-    std::array<bool, MouseButtonCount> CurrentMouseButtons{};
-    std::array<bool, MouseButtonCount> PreviousMouseButtons{};
+    std::array<bool, MouseButtonCount> m_CurrentMouseButtons{};
+    std::array<bool, MouseButtonCount> m_PreviousMouseButtons{};
 
   protected:
     void Start() override;

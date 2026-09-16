@@ -13,22 +13,22 @@ void Texture2D::Generate()
         return;
     }
 
-    glCreateTextures(GL_TEXTURE_2D, 1, &Id);
+    glCreateTextures(GL_TEXTURE_2D, 1, &m_Id);
     SetParameters();
 
     const int mipmapLevels =
         AutoMipmaps ? static_cast<int>(std::floor(std::log2(std::max(Width, Height)))) + 1 : 1;
-    glTextureStorage2D(Id, mipmapLevels, static_cast<GLint>(InternalFormat), Width, Height);
+    glTextureStorage2D(m_Id, mipmapLevels, static_cast<GLint>(InternalFormat), Width, Height);
 
     if (!Data.empty())
     {
-        glTextureSubImage2D(Id, 0, 0, 0, Width, Height, static_cast<GLenum>(Format),
+        glTextureSubImage2D(m_Id, 0, 0, 0, Width, Height, static_cast<GLenum>(Format),
             static_cast<GLenum>(DataType), Data.data());
     }
 
     if (AutoMipmaps)
     {
-        glGenerateTextureMipmap(Id);
+        glGenerateTextureMipmap(m_Id);
     }
 }
 
@@ -65,9 +65,9 @@ void Texture2D::UseImage(const U::Image& image)
 
 void Texture2D::SetParameters() const
 {
-    glTextureParameteri(Id, GL_TEXTURE_WRAP_S, static_cast<GLint>(WrapS));
-    glTextureParameteri(Id, GL_TEXTURE_WRAP_T, static_cast<GLint>(WrapT));
-    glTextureParameteri(Id, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(MinFilter));
-    glTextureParameteri(Id, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(MagFilter));
+    glTextureParameteri(m_Id, GL_TEXTURE_WRAP_S, static_cast<GLint>(WrapS));
+    glTextureParameteri(m_Id, GL_TEXTURE_WRAP_T, static_cast<GLint>(WrapT));
+    glTextureParameteri(m_Id, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(MinFilter));
+    glTextureParameteri(m_Id, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(MagFilter));
 }
 } // namespace N

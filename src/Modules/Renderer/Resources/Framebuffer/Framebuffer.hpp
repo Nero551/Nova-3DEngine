@@ -145,6 +145,6 @@ struct Framebuffer : Resource
 
   private:
     /// OpenGL framebuffer object ID. Zero indicates that no framebuffer exists.
-    unsigned int Id = 0;
+    unsigned int m_Id = 0;
 };
 } // namespace N

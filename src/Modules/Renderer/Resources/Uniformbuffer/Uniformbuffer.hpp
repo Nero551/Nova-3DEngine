@@ -37,7 +37,7 @@ struct Uniformbuffer : Resource
     template <typename T> void Set(const T& value, int offset, int extraSize = 0)
     {
         Generate();
-        glNamedBufferSubData(Id, offset, sizeof(T) + extraSize, &value);
+        glNamedBufferSubData(m_Id, offset, sizeof(T) + extraSize, &value);
     }
 
     /** @brief Checks whether the uniform buffer has been generated. */
@@ -57,6 +57,6 @@ struct Uniformbuffer : Resource
 
   private:
     /** OpenGL uniform buffer object ID. */
-    unsigned int Id = 0;
+    unsigned int m_Id = 0;
 };
 } // namespace N

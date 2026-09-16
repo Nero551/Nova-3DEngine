@@ -23,7 +23,7 @@ void Cubemap::Generate()
         return;
     }
 
-    glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &Id);
+    glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &m_Id);
     SetParameters();
 
     GLenum format = static_cast<GLenum>(Format);
@@ -31,27 +31,27 @@ void Cubemap::Generate()
 
     const int mipmapLevels =
         AutoMipmaps ? static_cast<int>(std::floor(std::log2(std::max(Width, Height)))) + 1 : 1;
-    glTextureStorage2D(Id, mipmapLevels, static_cast<GLint>(InternalFormat), Width, Height);
+    glTextureStorage2D(m_Id, mipmapLevels, static_cast<GLint>(InternalFormat), Width, Height);
 
-    glTextureSubImage3D(Id, 0, 0, 0, 0, Width, Height, 1, format, dataType, Right.Pixels.data());
-    glTextureSubImage3D(Id, 0, 0, 0, 1, Width, Height, 1, format, dataType, Left.Pixels.data());
-    glTextureSubImage3D(Id, 0, 0, 0, 2, Width, Height, 1, format, dataType, Top.Pixels.data());
-    glTextureSubImage3D(Id, 0, 0, 0, 3, Width, Height, 1, format, dataType, Bottom.Pixels.data());
-    glTextureSubImage3D(Id, 0, 0, 0, 4, Width, Height, 1, format, dataType, Front.Pixels.data());
-    glTextureSubImage3D(Id, 0, 0, 0, 5, Width, Height, 1, format, dataType, Back.Pixels.data());
+    glTextureSubImage3D(m_Id, 0, 0, 0, 0, Width, Height, 1, format, dataType, Right.Pixels.data());
+    glTextureSubImage3D(m_Id, 0, 0, 0, 1, Width, Height, 1, format, dataType, Left.Pixels.data());
+    glTextureSubImage3D(m_Id, 0, 0, 0, 2, Width, Height, 1, format, dataType, Top.Pixels.data());
+    glTextureSubImage3D(m_Id, 0, 0, 0, 3, Width, Height, 1, format, dataType, Bottom.Pixels.data());
+    glTextureSubImage3D(m_Id, 0, 0, 0, 4, Width, Height, 1, format, dataType, Front.Pixels.data());
+    glTextureSubImage3D(m_Id, 0, 0, 0, 5, Width, Height, 1, format, dataType, Back.Pixels.data());
 
     if (AutoMipmaps)
     {
-        glGenerateTextureMipmap(Id);
+        glGenerateTextureMipmap(m_Id);
     }
 }
 
 void Cubemap::SetParameters() const
 {
-    glTextureParameteri(Id, GL_TEXTURE_WRAP_S, static_cast<GLint>(WrapS));
-    glTextureParameteri(Id, GL_TEXTURE_WRAP_T, static_cast<GLint>(WrapT));
-    glTextureParameteri(Id, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(MinFilter));
-    glTextureParameteri(Id, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(MagFilter));
-    glTextureParameteri(Id, GL_TEXTURE_WRAP_R, static_cast<GLint>(WrapR));
+    glTextureParameteri(m_Id, GL_TEXTURE_WRAP_S, static_cast<GLint>(WrapS));
+    glTextureParameteri(m_Id, GL_TEXTURE_WRAP_T, static_cast<GLint>(WrapT));
+    glTextureParameteri(m_Id, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(MinFilter));
+    glTextureParameteri(m_Id, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(MagFilter));
+    glTextureParameteri(m_Id, GL_TEXTURE_WRAP_R, static_cast<GLint>(WrapR));
 }
 } // namespace N

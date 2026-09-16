@@ -42,6 +42,6 @@ struct IndexBuffer
     unsigned int GetId() const;
 
   private:
-    unsigned int Id = 0;
+    unsigned int m_Id = 0;
 };
 } // namespace N

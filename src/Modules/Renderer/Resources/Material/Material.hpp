@@ -95,7 +95,7 @@ struct Material : Resource
 
   protected:
     /** Textures assigned to the material's custom texture slots. */
-    std::array<U::CheckedPtr<Texture>, MaxCustomTextures> CustomTextures = {};
+    std::array<U::CheckedPtr<Texture>, MaxCustomTextures> m_CustomTextures = {};
 
     /**
      * @brief sets the material's properties and standard textures.

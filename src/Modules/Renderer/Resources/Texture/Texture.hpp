@@ -92,10 +92,10 @@ struct Texture : Resource
 
   protected:
     /** OpenGL texture object ID. Zero indicates that no object is generated. */
-    unsigned int Id = 0;
+    unsigned int m_Id = 0;
 
   private:
     /** OpenGL texture target associated with this texture type. */
-    TextureTarget Target;
+    TextureTarget m_Target;
 };
 } // namespace N

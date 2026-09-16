@@ -15,7 +15,7 @@ struct ArrayBuffer
 
     ArrayBuffer(const ArrayBuffer&) = delete;
     ArrayBuffer& operator=(const ArrayBuffer&) = delete;
-    ArrayBuffer(ArrayBuffer&& Other) noexcept : Id(std::exchange(Other.Id, 0)) {}
+    ArrayBuffer(ArrayBuffer&& Other) noexcept : m_Id(std::exchange(Other.m_Id, 0)) {}
     ArrayBuffer& operator=(ArrayBuffer&& Other) noexcept;
     /** @brief Generates the buffer once; subsequent calls have no effect. */
     void Generate();
@@ -28,7 +28,7 @@ struct ArrayBuffer
     template <typename T> void SetData(const std::vector<T>& data)
     {
         Generate();
-        glNamedBufferData(Id, data.size() * sizeof(T), data.data(), static_cast<GLenum>(Usage));
+        glNamedBufferData(m_Id, data.size() * sizeof(T), data.data(), static_cast<GLenum>(Usage));
     }
 
     /** @brief Returns true when a valid OpenGL buffer ID has been generated. */
@@ -50,6 +50,6 @@ struct ArrayBuffer
     unsigned int GetId() const;
 
   private:
-    unsigned int Id = 0;
+    unsigned int m_Id = 0;
 };
 } // namespace N

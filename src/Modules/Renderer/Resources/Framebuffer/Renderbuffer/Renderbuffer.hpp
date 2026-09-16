@@ -74,6 +74,6 @@ struct Renderbuffer : Resource
 
   private:
     // OpenGL renderbuffer object ID. Zero indicates that no renderbuffer exists.
-    unsigned int Id = 0;
+    unsigned int m_Id = 0;
 };
 } // namespace N

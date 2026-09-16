@@ -14,18 +14,18 @@ void VertexArray::Generate()
     {
         return;
     }
-    glCreateVertexArrays(1, &Id);
+    glCreateVertexArrays(1, &m_Id);
 }
 
 bool VertexArray::IsGenerated()
 {
-    return Id != 0;
+    return m_Id != 0;
 }
 
 void VertexArray::Delete()
 {
-    glDeleteVertexArrays(1, &Id);
-    Id = 0;
+    glDeleteVertexArrays(1, &m_Id);
+    m_Id = 0;
 }
 
 VertexArray::~VertexArray()
@@ -36,7 +36,7 @@ VertexArray::~VertexArray()
 void VertexArray::Bind()
 {
     Generate();
-    glBindVertexArray(Id);
+    glBindVertexArray(m_Id);
 }
 
 void VertexArray::Unbind()
@@ -47,22 +47,22 @@ void VertexArray::Unbind()
 void VertexArray::SetVertexBuffer(const ArrayBuffer& vbo, int bindingIndex, int stride, int offset)
 {
     Generate();
-    glVertexArrayVertexBuffer(Id, bindingIndex, vbo.GetId(), offset, stride);
+    glVertexArrayVertexBuffer(m_Id, bindingIndex, vbo.GetId(), offset, stride);
 }
 
 void VertexArray::SetIndexBuffer(const IndexBuffer& ebo)
 {
     Generate();
-    glVertexArrayElementBuffer(Id, ebo.GetId());
+    glVertexArrayElementBuffer(m_Id, ebo.GetId());
 }
 
 void VertexArray::SetAttribPointer(
     int index, int size, DataType type, int bindingIndex, size_t offset, bool normalized)
 {
     Generate();
-    glEnableVertexArrayAttrib(Id, index);
-    glVertexArrayAttribFormat(Id, index, size, static_cast<GLenum>(type), normalized, offset);
-    glVertexArrayAttribBinding(Id, index, bindingIndex);
+    glEnableVertexArrayAttrib(m_Id, index);
+    glVertexArrayAttribFormat(m_Id, index, size, static_cast<GLenum>(type), normalized, offset);
+    glVertexArrayAttribBinding(m_Id, index, bindingIndex);
 }
 
 void VertexArray::SetMatrix3AttribPointer(int startIndex, int offset, int bindingIndex)
@@ -83,11 +83,11 @@ void VertexArray::SetMatrix4AttribPointer(int startIndex, int offset, int bindin
 void VertexArray::SetAttribDivisor(int bindingIndex, int divisor)
 {
     Generate();
-    glVertexArrayBindingDivisor(Id, bindingIndex, divisor);
+    glVertexArrayBindingDivisor(m_Id, bindingIndex, divisor);
 }
 
 unsigned int VertexArray::GetId() const
 {
-    return Id;
+    return m_Id;
 }
 } // namespace N

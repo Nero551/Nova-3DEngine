@@ -8,7 +8,7 @@ ArrayBuffer& ArrayBuffer::operator=(ArrayBuffer&& Other) noexcept
     if (this != &Other)
     {
         Delete();
-        Id = std::exchange(Other.Id, 0);
+        m_Id = std::exchange(Other.m_Id, 0);
     }
 
     return *this;
@@ -19,18 +19,18 @@ void ArrayBuffer::Generate()
     {
         return;
     }
-    glCreateBuffers(1, &Id);
+    glCreateBuffers(1, &m_Id);
 }
 
 bool ArrayBuffer::IsGenerated()
 {
-    return Id != 0;
+    return m_Id != 0;
 }
 
 void ArrayBuffer::Delete()
 {
-    glDeleteBuffers(1, &Id);
-    Id = 0;
+    glDeleteBuffers(1, &m_Id);
+    m_Id = 0;
 }
 
 ArrayBuffer::~ArrayBuffer()
@@ -41,7 +41,7 @@ ArrayBuffer::~ArrayBuffer()
 void ArrayBuffer::Bind()
 {
     Generate();
-    glBindBuffer(GL_ARRAY_BUFFER, Id);
+    glBindBuffer(GL_ARRAY_BUFFER, m_Id);
 }
 
 void ArrayBuffer::Unbind()
@@ -51,6 +51,6 @@ void ArrayBuffer::Unbind()
 
 unsigned int ArrayBuffer::GetId() const
 {
-    return Id;
+    return m_Id;
 }
 } // namespace N

@@ -9,25 +9,25 @@ void Uniformbuffer::Generate()
         return;
     }
 
-    glCreateBuffers(1, &Id);
-    glNamedBufferData(Id, Size, nullptr, static_cast<GLenum>(Usage));
+    glCreateBuffers(1, &m_Id);
+    glNamedBufferData(m_Id, Size, nullptr, static_cast<GLenum>(Usage));
 }
 
 bool Uniformbuffer::IsGenerated() const
 {
-    return Id != 0;
+    return m_Id != 0;
 }
 
 void Uniformbuffer::Regenerate()
 {
-    glDeleteBuffers(1, &Id);
-    Id = 0;
+    glDeleteBuffers(1, &m_Id);
+    m_Id = 0;
 }
 
 void Uniformbuffer::Bind()
 {
     Generate();
-    glBindBufferBase(GL_UNIFORM_BUFFER, Binding, Id);
+    glBindBufferBase(GL_UNIFORM_BUFFER, Binding, m_Id);
 }
 
 void Uniformbuffer::Unbind()
@@ -37,6 +37,6 @@ void Uniformbuffer::Unbind()
 
 unsigned int Uniformbuffer::GetId() const
 {
-    return Id;
+    return m_Id;
 }
 } // namespace N

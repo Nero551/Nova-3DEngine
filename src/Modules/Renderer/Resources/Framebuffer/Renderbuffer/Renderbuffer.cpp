@@ -6,12 +6,12 @@ Renderbuffer::Renderbuffer(const std::string& name) : Resource(name) {}
 
 Renderbuffer::~Renderbuffer()
 {
-    glDeleteRenderbuffers(1, &Id);
+    glDeleteRenderbuffers(1, &m_Id);
 }
 
 bool Renderbuffer::IsGenerated() const
 {
-    return Id != 0;
+    return m_Id != 0;
 }
 
 void Renderbuffer::Generate()
@@ -20,33 +20,33 @@ void Renderbuffer::Generate()
     {
         return;
     }
-    glCreateRenderbuffers(1, &Id);
+    glCreateRenderbuffers(1, &m_Id);
 
     if (Samples == 0)
     {
-        glNamedRenderbufferStorage(Id, static_cast<GLenum>(InternalFormat), Width, Height);
+        glNamedRenderbufferStorage(m_Id, static_cast<GLenum>(InternalFormat), Width, Height);
     }
     else
     {
         glNamedRenderbufferStorageMultisample(
-            Id, Samples, static_cast<GLenum>(InternalFormat), Width, Height);
+            m_Id, Samples, static_cast<GLenum>(InternalFormat), Width, Height);
     }
 }
 
 void Renderbuffer::Regenerate()
 {
-    glDeleteRenderbuffers(1, &Id);
-    Id = 0;
+    glDeleteRenderbuffers(1, &m_Id);
+    m_Id = 0;
 }
 
 void Renderbuffer::Bind()
 {
     Generate();
-    glBindRenderbuffer(GL_RENDERBUFFER, Id);
+    glBindRenderbuffer(GL_RENDERBUFFER, m_Id);
 }
 
 unsigned int Renderbuffer::GetId() const
 {
-    return Id;
+    return m_Id;
 }
 } // namespace N

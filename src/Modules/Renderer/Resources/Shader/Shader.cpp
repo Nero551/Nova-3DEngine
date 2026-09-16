@@ -11,29 +11,29 @@ Shader::Shader(const std::string& name) : Resource(name) {}
 
 Shader::~Shader()
 {
-    glDeleteProgram(Id);
+    glDeleteProgram(m_Id);
 }
 
 unsigned int Shader::GetId() const
 {
-    return Id;
+    return m_Id;
 }
 
 void Shader::Use()
 {
     CreateProgram();
-    glUseProgram(Id);
+    glUseProgram(m_Id);
     UploadUniforms();
 }
 
 bool Shader::IsProgramCreated() const
 {
-    return Id != 0;
+    return m_Id != 0;
 }
 
 void Shader::AssignSource(ShaderSource& source)
 {
-    for (auto& existing : Sources)
+    for (auto& existing : m_Sources)
     {
         if (existing->GetStage() == source.GetStage())
         {
@@ -42,24 +42,24 @@ void Shader::AssignSource(ShaderSource& source)
         }
     }
 
-    Sources.emplace_back(&source);
+    m_Sources.emplace_back(&source);
 }
 
 void Shader::Reload()
 {
-    for (auto& source : Sources)
+    for (auto& source : m_Sources)
     {
         source->Reload();
     }
 
-    UniformLocations.clear();
-    glDeleteProgram(Id);
-    Id = 0;
+    m_UniformLocations.clear();
+    glDeleteProgram(m_Id);
+    m_Id = 0;
 }
 
 std::vector<U::CheckedPtr<ShaderSource>>& Shader::GetSources()
 {
-    return Sources;
+    return m_Sources;
 }
 
 void Shader::CreateProgram()
@@ -75,30 +75,30 @@ void Shader::CreateProgram()
     //  gotta figure out how to "Merge" multiple sources too, like if there is 2 vertex
     //  shaders attached both with void main(). Preprocess();
 
-    if (Sources.empty())
+    if (m_Sources.empty())
     {
         U::Log::Warning("Shader Program:" + Name + " Has No Sources");
         return;
     }
 
-    Id = glCreateProgram();
+    m_Id = glCreateProgram();
 
-    for (const auto& source : Sources)
+    for (const auto& source : m_Sources)
     {
         if (!source->IsCompiled())
         {
             source->Compile();
         }
-        glAttachShader(Id, source->GetId());
+        glAttachShader(m_Id, source->GetId());
     }
-    glLinkProgram(Id);
+    glLinkProgram(m_Id);
 
     int success;
     char infoLog[512];
-    glGetProgramiv(Id, GL_LINK_STATUS, &success);
+    glGetProgramiv(m_Id, GL_LINK_STATUS, &success);
     if (!success)
     {
-        glGetProgramInfoLog(Id, 512, nullptr, infoLog);
+        glGetProgramInfoLog(m_Id, 512, nullptr, infoLog);
         U::Log::Error(std::string("Shader Program: " + Name + " Linking Failed: ") + infoLog);
     }
 }
@@ -107,13 +107,13 @@ int Shader::GetUniformLocation(const std::string& name)
 {
     int location;
 
-    if (UniformLocations.contains(name))
+    if (m_UniformLocations.contains(name))
     {
-        location = UniformLocations[name];
+        location = m_UniformLocations[name];
     }
     else
     {
-        location = glGetUniformLocation(Id, name.c_str());
+        location = glGetUniformLocation(m_Id, name.c_str());
 
         if (location == -1)
         {
@@ -121,14 +121,14 @@ int Shader::GetUniformLocation(const std::string& name)
             return -1;
         }
 
-        UniformLocations[name] = location;
+        m_UniformLocations[name] = location;
     }
     return location;
 }
 
 void Shader::UploadUniforms()
 {
-    for (auto& [uniformName, uniform] : PendingUniforms)
+    for (auto& [uniformName, uniform] : m_PendingUniforms)
     {
         int location = GetUniformLocation(uniformName);
         if (location != -1)
