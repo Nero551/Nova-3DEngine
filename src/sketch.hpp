@@ -23,6 +23,8 @@ template <typename T> struct Traits
 
 //TODO- add operator<< to all custom data structures. clean up data structure code.
 
+//TODO- add operator[] for data structures instead of GetUnchecked.
+
 struct Block : N::Component
 {
 };
