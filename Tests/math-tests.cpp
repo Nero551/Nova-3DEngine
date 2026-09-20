@@ -2,47 +2,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
 
-// Common
-#include "Math/Common/Comparison.hpp"
-#include "Math/Common/Constraints.hpp"
-#include "Math/Common/Exponentials.hpp"
-#include "Math/Common/Interpolation.hpp"
-#include "Math/Common/Logarithms.hpp"
-#include "Math/Common/Random.hpp"
-#include "Math/Common/Trigonometry.hpp"
-
-// Complex
-#include "Math/Complex/Complex.hpp"
-#include "Math/Complex/ComplexExponentials.hpp"
-#include "Math/Complex/ComplexLogarithms.hpp"
-#include "Math/Complex/Constants.hpp"
-
-// Coordinates
-#include "Math/Coordinates/HyperSpherical.hpp"
-#include "Math/Coordinates/Polar.hpp"
-#include "Math/Coordinates/QPolar.hpp"
-#include "Math/Coordinates/Spherical.hpp"
-
-// Functions
-#include "Math/Functions/Function.hpp"
-
-// Geometry
-#include "Math/Geometry/Basis.hpp"
-
-// Matrix
-#include "Math/Matrix/Matrix2.hpp"
-#include "Math/Matrix/Matrix3.hpp"
-#include "Math/Matrix/Matrix4.hpp"
-
-// Quaternion
-#include "Math/Quaternion/Quaternion.hpp"
-#include "Math/Quaternion/QuaternionExponentials.hpp"
-#include "Math/Quaternion/QuaternionLogarithms.hpp"
-
-// Vector
-#include "Math/Vector/Vector2.hpp"
-#include "Math/Vector/Vector3.hpp"
-#include "Math/Vector/Vector4.hpp"
+#include "Math/Math.hpp"
 
 using Catch::Approx;
 using Catch::Matchers::WithinAbs;
@@ -433,10 +393,8 @@ TEST_CASE("Function numerical differentiation")
     SECTION("Derivative method")
     {
         REQUIRE(f.Derivative(2.0f, dx) == Approx(4.0f).margin(0.01f));
-        REQUIRE(
-            f.Derivative(2.0f, dx, DifferentiationMethod::Forward) == Approx(4.0f).margin(0.01f));
-        REQUIRE(
-            f.Derivative(2.0f, dx, DifferentiationMethod::Backward) == Approx(4.0f).margin(0.01f));
+        REQUIRE(f.Derivative(2.0f, dx, DifferentiationMethod::Forward) == Approx(4.0f).margin(0.01f));
+        REQUIRE(f.Derivative(2.0f, dx, DifferentiationMethod::Backward) == Approx(4.0f).margin(0.01f));
     }
 
     SECTION("Differentiate returns a function")
@@ -463,12 +421,10 @@ TEST_CASE("Function numerical integration")
     SECTION("Integral method")
     {
         REQUIRE(f.Integral(0.0f, 2.0f, dx) == Approx(8.0f / 3.0f).margin(0.01f));
-        REQUIRE(f.Integral(0.0f, 2.0f, dx, IntegrationMethod::Left) ==
-            Approx(8.0f / 3.0f).margin(0.02f));
-        REQUIRE(f.Integral(0.0f, 2.0f, dx, IntegrationMethod::Right) ==
-            Approx(8.0f / 3.0f).margin(0.02f));
-        REQUIRE(f.Integral(0.0f, 2.0f, dx, IntegrationMethod::Trapezoid) ==
-            Approx(8.0f / 3.0f).margin(0.01f));
+        REQUIRE(f.Integral(0.0f, 2.0f, dx, IntegrationMethod::Left) == Approx(8.0f / 3.0f).margin(0.02f));
+        REQUIRE(f.Integral(0.0f, 2.0f, dx, IntegrationMethod::Right) == Approx(8.0f / 3.0f).margin(0.02f));
+        REQUIRE(
+            f.Integral(0.0f, 2.0f, dx, IntegrationMethod::Trapezoid) == Approx(8.0f / 3.0f).margin(0.01f));
     }
 
     SECTION("Integrate returns cumulative function")
@@ -864,7 +820,7 @@ TEST_CASE("Matrix3 construction and ops")
     REQUIRE(id(0, 0) == 1);
     REQUIRE(id(1, 1) == 1);
     REQUIRE(id(2, 2) == 1);
-    
+
     Matrix3 a(1, 2, 3, 4, 5, 6, 7, 8, 9);
     Matrix3 b(9, 8, 7, 6, 5, 4, 3, 2, 1);
 

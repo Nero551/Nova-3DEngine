@@ -33,7 +33,7 @@ struct Material : Resource
     U::CheckedPtr<Shader> Shader{"Material Has No Shader Assigned"};
 
     /** Base material color. */
-    M::Vector4 Color = {0.5};
+    M::Vector4 Color = M::Vector4{0.5};
 
     /** Ambient lighting color. */
     M::Vector3 Ambient = M::Vector3{0.7};

@@ -17,6 +17,7 @@
 #include <memory>
 #include <numbers>
 #include <optional>
+#include <queue>
 #include <random>
 #include <ranges>
 #include <set>

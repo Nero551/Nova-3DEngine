@@ -130,7 +130,8 @@ void calculus::TwoDimensionalProjection(int increase)
 
 void calculus::ThreeDimensionalProjection(int increase)
 {
-    U::Log::Info(M::Pow(360 / increase, 2));
+    // U::Log::Info(M::Pow(360 / increase, 2));
+    points.reserve(M::Pow(360 / increase, 2));
 
     for (int theta = -180; theta < 180; theta += increase)
     {

@@ -46,6 +46,7 @@
  *  - Complex numbers
  *  - Quaternions
  *  - Multi-variable/valued functions
+ *  - Dimensional Analysis
  */
 namespace N::M
 {

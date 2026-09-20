@@ -26,7 +26,7 @@ struct Vector4
 
     constexpr Vector4() : x(0), y(0), z(0), w(0) {}
 
-    constexpr Vector4(const float all) : x(all), y(all), z(all), w(all) {}
+    explicit constexpr Vector4(const float all) : x(all), y(all), z(all), w(all) {}
 
     constexpr Vector4(const float x, const float y, const float z, const float w) : x(x), y(y), z(z), w(w) {};
 

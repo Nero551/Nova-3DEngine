@@ -12,8 +12,8 @@ Mesh& Primitives::CreateLine(const std::string& name)
         return Service::Get<ResourceManager>().Load<Mesh>(name);
     }
 
-    std::vector vertices = {Vertex({0, 0, -0.5f, 1}, {1}, M::Vector2{0}, {0, 0, 1}),
-        Vertex({0, 0, 0.5f, 1}, {1}, M::Vector2{0}, {0, 0, 1})};
+    std::vector vertices = {Vertex({0, 0, -0.5f, 1}, M::Vector4{1}, M::Vector2{0}, {0, 0, 1}),
+        Vertex({0, 0, 0.5f, 1}, M::Vector4{1}, M::Vector2{0}, {0, 0, 1})};
 
     std::vector<unsigned int> indices = {0, 1};
 
