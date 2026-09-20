@@ -2,13 +2,16 @@
 
 #include "Utilities/Log.hpp"
 
-#include <limits>
-#include <utility>
-#include <vector>
-
 namespace N::U
 {
 
+/**
+ * @brief Indirect two-dimensional storage with dense iteration.
+ *
+ * Maps a pair of indices `(A, B)` to densely packed values. Lookup is O(1)
+ * after row/column storage is allocated, while iteration traverses only
+ * active values. Erasing uses swap-and-pop, so dense indices can change.
+ */
 template <typename T> struct Indirect2DVector
 {
     using Index = unsigned int;
@@ -21,43 +24,43 @@ template <typename T> struct Indirect2DVector
         Index B;
     };
 
-  private:
-    std::vector<std::vector<Index>> m_Lookup{};
-    std::vector<T> m_Data{};
-    std::vector<Key> m_Indices{};
-
-  public:
-    struct Iterator
+    template <bool Const> struct BasicIterator
     {
-        Indirect2DVector* IndirectVector;
-        size_t Index;
+        using IndirectVectorType = std::conditional_t<Const, const Indirect2DVector, Indirect2DVector>;
+        using ReturnType = std::conditional_t<Const, const T, T>;
 
-        Iterator& operator++()
+        IndirectVectorType* IndirectVector;
+        Index Index;
+
+        BasicIterator& operator++()
         {
             ++Index;
             return *this;
         }
 
-        T& operator*() const
+        ReturnType& operator*() const
         {
             return IndirectVector->m_Data[Index];
         }
 
-        T* operator->() const
+        ReturnType* operator->() const
         {
             return &IndirectVector->m_Data[Index];
         }
 
-        bool operator!=(const Iterator& other) const
+        bool operator!=(const BasicIterator& other) const
         {
             return Index != other.Index;
         }
 
-        bool operator==(const Iterator& other) const
+        bool operator==(const BasicIterator& other) const
         {
             return Index == other.Index;
         }
     };
+
+    using Iterator = BasicIterator<false>;
+    using ConstIterator = BasicIterator<true>;
 
     Iterator begin()
     {
@@ -66,9 +69,10 @@ template <typename T> struct Indirect2DVector
 
     Iterator end()
     {
-        return {this, m_Data.size()};
+        return {this, Size()};
     }
 
+    /** @brief Inserts a value if the key does not exist and returns the stored value. */
     T& Push(Index a, Index b, const T& value)
     {
         Index& index = ResizeLookup(a, b)[b];
@@ -115,6 +119,7 @@ template <typename T> struct Indirect2DVector
         return m_Data[m_Lookup[a][b]];
     }
 
+    /** @brief Constructs a value if the key does not exist and returns its iterator. */
     template <typename... Args> Iterator Emplace(Index a, Index b, Args&&... args)
     {
         Index& index = ResizeLookup(a, b)[b];
@@ -129,7 +134,7 @@ template <typename T> struct Indirect2DVector
         return {.IndirectVector = this, .Index = index};
     }
 
-    Iterator Find(const size_t a, const size_t b)
+    Iterator Find(const Index a, const Index b)
     {
         if (a >= m_Lookup.size())
         {
@@ -153,7 +158,11 @@ template <typename T> struct Indirect2DVector
         return {.IndirectVector = this, .Index = index};
     }
 
-    void Delete(Index a, Index b)
+    /**
+     * @brief Removes a value using swap-and-pop.
+     * The dense index of the last value may change as a result.
+     */
+    void Erase(Index a, Index b)
     {
         if (!Contains(a, b))
         {
@@ -184,7 +193,16 @@ template <typename T> struct Indirect2DVector
         m_Indices.reserve(count);
     }
 
+    Index Size() const
+    {
+        return m_Data.size();
+    }
+
   private:
+    std::vector<std::vector<Index>> m_Lookup{};
+    std::vector<T> m_Data{};
+    std::vector<Key> m_Indices{};
+
     std::vector<Index>& ResizeLookup(Index a, Index b)
     {
         if (m_Lookup.size() <= a)
