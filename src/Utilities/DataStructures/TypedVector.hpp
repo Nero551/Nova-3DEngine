@@ -1,32 +1,25 @@
 #pragma once
+
 #include "Utilities/Log.hpp"
-namespace N
+
+namespace N::U
 {
 
 template <typename T> struct TypedVector
 {
     using TypeId = unsigned int;
+
     struct Iterator
     {
         TypedVector* TypedVector;
         size_t Index;
 
-        /**
-         * @brief Advances the iterator to the next value.
-         *
-         * @return Reference to this iterator.
-         */
         Iterator& operator++()
         {
             ++Index;
             return *this;
         }
 
-        /**
-         * @brief Returns the current value.
-         *
-         * @return Reference to the current value.
-         */
         T& operator*() const
         {
             return TypedVector->m_Data[Index];
@@ -53,22 +46,12 @@ template <typename T> struct TypedVector
         const TypedVector* TypedVector;
         size_t Index;
 
-        /**
-         * @brief Advances the iterator to the next value.
-         *
-         * @return Reference to this iterator.
-         */
         ConstIterator& operator++()
         {
             ++Index;
             return *this;
         }
 
-        /**
-         * @brief Returns the current value.
-         *
-         * @return Reference to the current value.
-         */
         const T& operator*() const
         {
             return TypedVector->m_Data[Index];
@@ -122,6 +105,7 @@ template <typename T> struct TypedVector
         {
             U::Log::Fatal("TypedVector does not contain the specified TypeId.");
         }
+
         return m_Data[GetTypeId<Args...>()];
     }
 
@@ -152,6 +136,7 @@ template <typename T> struct TypedVector
             {
                 m_Data.resize(typeId + 1);
             }
+
             m_Data[typeId] = value;
         }
 
@@ -169,7 +154,6 @@ template <typename T> struct TypedVector
 
         if (!Contains<Args...>())
         {
-
             if (m_Data.size() <= typeId)
             {
                 m_Data.resize(typeId + 1);
@@ -177,6 +161,7 @@ template <typename T> struct TypedVector
 
             m_Data[typeId] = T(std::forward<Parameters>(parameters)...);
         }
+
         return {this, typeId};
     }
 
@@ -196,4 +181,4 @@ template <typename T> struct TypedVector
     }
 };
 
-} // namespace N
+} // namespace N::U

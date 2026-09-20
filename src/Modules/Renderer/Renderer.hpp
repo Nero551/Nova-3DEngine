@@ -23,7 +23,7 @@ struct Renderer : Module
     U::CheckedPtr<Mesh> ScreenMesh{"Renderer has no Screen Mesh to render on"};
     U::CheckedPtr<Uniformbuffer> GUniformbuffer{"Renderer has no Uniform buffer to use"};
 
-    Indirect2DVector<RenderBatch> Batches;
+    U::Indirect2DVector<RenderBatch> Batches;
 
   protected:
     void SetupFramebuffer();

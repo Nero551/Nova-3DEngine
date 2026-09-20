@@ -10,7 +10,7 @@ namespace N
  */
 struct Uniformbuffer : Resource
 {
-    // TODO: Store uniforms and calculate their offsets automatically.
+    //TODO: Store uniforms and calculate their offsets automatically.
     // Values currently have to be written to the buffer manually.
 
     /** @brief Specifies how the buffer's data will be used. */

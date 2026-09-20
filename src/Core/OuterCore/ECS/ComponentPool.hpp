@@ -98,7 +98,7 @@ template <ComponentType T> struct ComponentPool : IComponentPool
      */
     T& Add(const unsigned int entityId)
     {
-        auto& component = m_Components.Emplace(entityId)->DenseValue;
+        auto& component = m_Components.Emplace(entityId)->Value;
         Service::Get<EventBus>().Fire<ComponentAdded>(entityId);
 
         // U::Log::Info(Components.Size(), " × ", sizeof(typename SparseSet<T>::Entry), " = ",
@@ -160,7 +160,7 @@ template <ComponentType T> struct ComponentPool : IComponentPool
         return m_Components.GetByIndexUnchecked(index);
     }
 
-    SparseSet<T>::Entry& GetComponentAndIdByIndexUnchecked(const unsigned int index)
+    U::SparseSet<T>::Entry& GetComponentAndIdByIndexUnchecked(const unsigned int index)
     {
         return m_Components.GetEntryByIndexUnchecked(index);
     }
@@ -189,7 +189,7 @@ template <ComponentType T> struct ComponentPool : IComponentPool
 
   private:
     /** @brief Stores components using dense storage with sparse entity ID lookup. */
-    SparseSet<T> m_Components{};
+    U::SparseSet<T> m_Components{};
 };
 
 } // namespace N

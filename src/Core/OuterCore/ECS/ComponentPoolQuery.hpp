@@ -105,10 +105,10 @@ struct ComponentPoolQuery
     unsigned int m_QueryVersion = 1;
 
     /** @brief Stores all component pools indexed by their component type. */
-    TypedVector<std::unique_ptr<IComponentPool>> m_ComponentPools{};
+    U::TypedVector<std::unique_ptr<IComponentPool>> m_ComponentPools{};
 
     /** @brief Stores cached results for each component query. */
-    TypedVector<QueryCache> m_CachedQueries;
+    U::TypedVector<QueryCache> m_CachedQueries;
 
     /**
      * @brief Returns the component pools for the specified types.

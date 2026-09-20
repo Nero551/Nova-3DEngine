@@ -4,7 +4,7 @@
 namespace N
 {
 /** @brief Specifies framebuffer buffers affected by an operation. */
-enum class BufferBit : GLbitfield
+enum class BufferBit
 {
     Color = GL_COLOR_BUFFER_BIT,
     Depth = GL_DEPTH_BUFFER_BIT,

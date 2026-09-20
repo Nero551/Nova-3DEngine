@@ -84,9 +84,9 @@ struct World : SystemOwner
         entity.Initialize();
 
         auto it = m_Entities.Emplace(id, std::move(entity));
-        Service::Get<EventBus>().Fire<EntityCreated>(it->DenseValue);
+        Service::Get<EventBus>().Fire<EntityCreated>(it->Value);
 
-        return it->DenseValue;
+        return it->Value;
     }
 
     /**
@@ -121,7 +121,7 @@ struct World : SystemOwner
     friend struct Engine;
 
   private:
-    SparseSet<Entity> m_Entities{};
+    U::SparseSet<Entity> m_Entities{};
     unsigned int m_Root{};
     unsigned int m_ActiveCamera{};
 

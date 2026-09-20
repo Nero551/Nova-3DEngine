@@ -36,7 +36,7 @@ struct Service
      * @brief Returns all currently registered services.
      * @return A vector of pointers to the registered services.
      */
-    static const TypedVector<std::unique_ptr<Service>>& GetAll()
+    static const U::TypedVector<std::unique_ptr<Service>>& GetAll()
     {
         return Services;
     }
@@ -79,7 +79,7 @@ struct Service
         Services.Clear();
     }
 
-    static TypedVector<std::unique_ptr<Service>> Services;
+    static U::TypedVector<std::unique_ptr<Service>> Services;
 };
-inline TypedVector<std::unique_ptr<Service>> Service::Services;
+inline U::TypedVector<std::unique_ptr<Service>> Service::Services;
 } // namespace N

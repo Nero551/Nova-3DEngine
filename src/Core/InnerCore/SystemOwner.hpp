@@ -32,7 +32,7 @@ struct SystemOwner
 
   protected:
     /** @brief Stores systems indexed by their runtime type. */
-    TypedVector<std::unique_ptr<System>> Systems;
+    U::TypedVector<std::unique_ptr<System>> Systems;
 
     /** @brief Adds the systems owned by the derived class. */
 

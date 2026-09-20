@@ -141,7 +141,7 @@ void Entity::DestroyChildren()
 {
     while (!m_Children.Empty())
     {
-        DestroyChild(m_Children.begin()->DenseValue);
+        DestroyChild(m_Children.begin()->Value);
     }
 }
 

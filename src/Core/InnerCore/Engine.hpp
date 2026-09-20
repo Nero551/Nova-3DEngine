@@ -56,7 +56,7 @@ struct Engine
         return static_cast<T&>(**module);
     }
 
-    const TypedVector<std::unique_ptr<Module>>& GetAllModules() const
+    const U::TypedVector<std::unique_ptr<Module>>& GetAllModules() const
     {
         return m_Modules;
     }
@@ -66,7 +66,7 @@ struct Engine
     inline static U::CheckedPtr<Engine> Instance = nullptr;
 
     /** @brief Registered engine modules. */
-    TypedVector<std::unique_ptr<Module>> m_Modules;
+    U::TypedVector<std::unique_ptr<Module>> m_Modules;
 
     double m_LastFrame = 0;
     bool m_Running = false;

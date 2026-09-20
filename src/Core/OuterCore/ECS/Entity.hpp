@@ -193,7 +193,7 @@ struct Entity
     Entity& GetRoot();
 
   private:
-    SparseSet<unsigned int> m_Children;
+    U::SparseSet<unsigned int> m_Children;
     unsigned int m_Id = 0;
 
     /** @brief Parent entity in the hierarchy. */
