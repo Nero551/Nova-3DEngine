@@ -2,19 +2,17 @@
 
 #include "Core/OuterCore/Resource.hpp"
 #include "Core/OuterCore/Service.hpp"
+#include "Utilities/DataStructures/SparseSet.hpp"
 #include "Utilities/Log.hpp"
 
 namespace N
 {
 template <typename T>
 
-/** @brief Concept for all structs inheriting Resource , represents all objects loadable
-   by ResourceManager */
+/** @brief Concept for all structs inheriting Resource , represents all objects loadable by ResourceManager */
 concept ResourceType = std::derived_from<T, Resource>;
 
-/**
- * @brief Manages the lifetime and retrieval of resources.
- */
+/** @brief Manages the lifetime and retrieval of resources. */
 struct ResourceManager : Service
 {
     /**
@@ -26,42 +24,32 @@ struct ResourceManager : Service
      * @param args Arguments passed to T's constructor after the resource name.
      * @return Reference to the loaded resource.
      */
-    template <ResourceType T, typename... Args> T& Load(const std::string& name, Args&&... args)
+    template <ResourceType T, typename... Args>
+    T& Load(const std::string& name, Args&&... args)
+        requires std::constructible_from<T, const std::string&, Args...>
     {
         std::string key = typeid(T).name() + name;
-        if (m_Resources.contains(key))
+        if (const auto it = m_ResourceLookup.find(key); it != m_ResourceLookup.end())
         {
             // N::U::Logger::Warning("Resource: " + name + " Already Loaded.");
-            return static_cast<T&>(*m_Resources.at(key));
+            return static_cast<T&>(*m_Resources.Get(it->second));
         }
 
-        if constexpr (!std::constructible_from<T, const std::string&, Args...>)
-        {
-            U::Log::Fatal("Resource: " + name + " ,Of Type: " + typeid(T).name() +
-                " Can't Be Constructed From the Given Arguments.");
-        }
-        else
-        {
-            auto resource = std::make_unique<T>(name, std::forward<Args>(args)...);
-            resource->m_ResourceId = m_NextId++;
-            m_Resources.emplace(key, std::move(resource));
-
-            return static_cast<T&>(*m_Resources.at(key));
-        }
+        auto resource = std::make_unique<T>(name, std::forward<Args>(args)...);
+        Resource::ResourceId id = m_NextId++;
+        resource->m_ResourceId = id;
+        m_ResourceLookup.emplace(std::move(key), id);
+        return static_cast<T&>(*m_Resources.Emplace(id, std::move(resource))->Value);
     }
 
-    template <ResourceType T> bool Exists(const std::string& name)
+    template <ResourceType T> bool Exists(const std::string& name) const
     {
-        std::string key = typeid(T).name() + name;
-        if (m_Resources.contains(key))
-        {
-            return true;
-        }
-        return false;
+        return m_ResourceLookup.contains(typeid(T).name() + name);
     }
 
   private:
-    std::unordered_map<std::string, std::unique_ptr<Resource>> m_Resources;
+    U::SparseSet<std::unique_ptr<Resource>> m_Resources;
+    std::unordered_map<std::string, Resource::ResourceId> m_ResourceLookup;
     Resource::ResourceId m_NextId = 0;
 };
 } // namespace N

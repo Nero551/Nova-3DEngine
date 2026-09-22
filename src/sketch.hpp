@@ -95,4 +95,33 @@ Output Summation(const int start, const int end, const N::M::Function<float, Out
     return result;
 }
 
+template <int Row, int Column> struct Matrix
+{
+
+    float& operator()(const int row, const int col)
+    {
+        return m_Data[row][col];
+    }
+
+    std::array<std::array<float, Column>, Row>& Data()
+    {
+        return m_Data;
+    }
+    void RotateZ() requires(Row == Column == 3) {}
+    void RotateZ() requires(Row == Column == 4) {}
+
+  private:
+    std::array<std::array<float, Column>, Row> m_Data;
+};
+
+template <int Components> struct Vector
+{
+    std::array<float, Components> m_Data;
+
+    float& operator()(const int component)
+    {
+        return m_Data[component];
+    }
+};
+
 } // namespace Sketch
