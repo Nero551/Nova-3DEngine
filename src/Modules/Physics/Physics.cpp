@@ -86,6 +86,12 @@ void Physics::Start()
     float vcy = -(t / 2.0f * -9.8f);
 
     U::Log::Info(M::Vector2{vtx, vcy}.ToPolar());
+
+    M::Function<float, float> v = [](const float x) { return x * x; };
+
+    M::Function<float, float> f = [](const float x) { return x * x; };
+
+    U::Log::Info((v + f)(2));
 }
 
 static float time = 0;

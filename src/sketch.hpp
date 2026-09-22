@@ -82,7 +82,8 @@ template <unsigned int... Dimensions> struct Tensor
     std::array<float, (Dimensions * ...)> m_Data;
 };
 
-template <typename Output> Output Summation(int start, int end, N::M::Function<float, Output> f)
+template <typename Output>
+Output Summation(const int start, const int end, const N::M::Function<float, Output>& f)
 {
     Output result{};
 
