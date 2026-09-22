@@ -5,8 +5,6 @@
 
 namespace N::M
 {
-Complex::Complex() : Real(0), Imaginary(0) {}
-Complex::Complex(float real, float imaginary) : Real(real), Imaginary(imaginary) {}
 
 Complex Complex::FromPolar(Polar polar)
 {

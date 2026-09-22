@@ -1,5 +1,6 @@
 #pragma once
 #include "Core/OuterCore/ECS/Component.hpp"
+#include "Math/Functions/Function.hpp"
 #include "Utilities/Log.hpp"
 
 #include <concepts>
@@ -13,7 +14,7 @@ template <typename T> struct Traits
 
 //TODO- store resources in a sparse set using resource ids.
 // i actually dont need to make stuff like Material and FrameBuffer start storing resource ids if i do that.
-// since resources are stored as unique pointers anyway to avoid type erasure.
+// since resources are stored as unique pointers to avoid type erasure.
 // sparse set moving the unique pointers around won't invalidate other pointers to the resources.
 //
 //TODO- pools/freelist for generating ids.
@@ -65,5 +66,32 @@ template <typename T, Index Size> struct Array
   private:
     T m_Data[Size];
 };
+
+template <unsigned int... Dimensions> struct Tensor
+{
+    static constexpr unsigned int Order = sizeof...(Dimensions);
+
+    template <typename... Indices> requires(sizeof...(Indices) == Order)
+    float& operator()(Indices... indices)
+    {
+        //* multi dimensional indices -> flat index calculation
+        return m_Data[0];
+    }
+
+  private:
+    std::array<float, (Dimensions * ...)> m_Data;
+};
+
+template <typename Output> Output Summation(int start, int end, N::M::Function<float, Output> f)
+{
+    Output result{};
+
+    for (int i = start; i < end; ++i)
+    {
+        result += f(i);
+    }
+
+    return result;
+}
 
 } // namespace Sketch

@@ -24,14 +24,14 @@ struct Complex
     float Imaginary;
 
     /** @brief Constructs a complex number with both components set to zero. */
-    Complex();
+    constexpr Complex() : Real(0), Imaginary(0) {}
 
     /**
      * @brief Constructs a complex number from its real and imaginary components.
      * @param real The real component.
      * @param imaginary The imaginary component.
      */
-    Complex(float real, float imaginary);
+    constexpr Complex(float real, float imaginary) : Real(real), Imaginary(imaginary) {}
 
     /**
      * @brief Constructs a complex number from polar coordinates.

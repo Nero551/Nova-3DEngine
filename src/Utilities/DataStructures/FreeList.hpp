@@ -1,7 +1,16 @@
 #pragma once
+
 #include "Utilities/Log.hpp"
+
 namespace N::U
 {
+/**
+ * @brief Index-based container that reuses erased slots without shifting elements.
+ *
+ * Erased slots remain in storage and are tracked by a bit-packed occupancy vector and a FIFO free-index queue.
+ * Erase does not destroy the stored object. resources remain alive until the slot is reused or the container is destroyed.
+ * Size() returns the number of allocated slots, not the number of active elements.
+ */
 template <typename T> struct FreeList
 {
     using Index = unsigned int;
@@ -17,6 +26,7 @@ template <typename T> struct FreeList
         {
             N::U::Log::Fatal("FreeList Doesn't contain specified index: ", index);
         }
+
         return m_Data[index];
     }
 
@@ -50,11 +60,13 @@ template <typename T> struct FreeList
 
     friend std::ostream& operator<<(std::ostream& os, const FreeList& freeList)
     {
+        // In case m_Data[i] is a vector.
+        using U::operator<<;
+
         os << "[";
 
         for (Index i = 0; i < freeList.m_Data.size(); i++)
         {
-
             if (freeList.m_Used[i] == true)
             {
                 os << freeList.m_Data[i];
@@ -69,12 +81,18 @@ template <typename T> struct FreeList
                 os << ", ";
             }
         }
+
         os << "]";
 
         return os;
     }
 
     Index Size() const
+    {
+        return m_Data.size() - m_Free.size();
+    }
+
+    Index FullSize() const
     {
         return m_Data.size();
     }

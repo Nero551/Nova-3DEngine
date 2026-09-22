@@ -3,5 +3,5 @@
 
 namespace N::M
 {
-inline const Complex I{0, 1};
+inline constexpr Complex I{0, 1};
 }

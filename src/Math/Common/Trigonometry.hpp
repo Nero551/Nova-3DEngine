@@ -27,4 +27,24 @@ constexpr float DTan(const float deg)
 {
     return std::tan(Rad(deg));
 }
+
+constexpr float AsinD(const float ratio)
+{
+    return Deg(std::asin(ratio));
+}
+
+constexpr float AcosD(const float ratio)
+{
+    return Deg(std::acos(ratio));
+}
+
+constexpr float AtanD(const float ratio)
+{
+    return Deg(std::atan(ratio));
+}
+
+constexpr float Atan2D(const float y, const float x)
+{
+    return Deg(std::atan2(y, x));
+}
 } // namespace N::M

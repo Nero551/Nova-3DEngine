@@ -5,6 +5,7 @@
 #include "Core/InnerCore/World.hpp"
 #include "Core/Services/ResourceManager.hpp"
 #include "Math/Color/Color.hpp"
+#include "Math/Common/Logarithms.hpp"
 #include "Math/Complex/Complex.hpp"
 #include "Math/DimensionalAnalysis/DerivedDimensionals.hpp"
 #include "Math/DimensionalAnalysis/Dimension.hpp"
@@ -80,12 +81,11 @@ void Physics::Start()
     cubeId = cube.GetId();
     World::Get().GetRoot().AttachChild(cube);
 
-    M::Vector2 pi = M::Vector2::FromPolar({M::Rad(95), 29});
-    M::Vector2 vi = M::Vector2::FromPolar({M::Rad(40), 4.5});
-    M::Vector2 a = M::Vector2::FromPolar({M::Rad(200), 1.9});
+    float vtx = 9.5 * Units::Meter / Units::Second;
+    float t = 16 / vtx;
+    float vcy = -(t / 2.0f * -9.8f);
 
-    U::Log::Info(vi + (a * 5));
-    U::Log::Info(pi + vi * 5 + (a * 25));
+    U::Log::Info(M::Vector2{vtx, vcy}.ToPolar());
 }
 
 static float time = 0;

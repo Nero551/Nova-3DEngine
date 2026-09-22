@@ -365,7 +365,6 @@ Matrix4& Matrix4::operator*=(const Matrix4& mat4)
     return *this = *this * mat4;
 }
 
-//* Vectors
 Vector4 Matrix4::operator*(const Vector4& vec4) const
 {
     return {(*this)(0, 0) * vec4.x + (*this)(0, 1) * vec4.y + (*this)(0, 2) * vec4.z + (*this)(0, 3) * vec4.w,
@@ -377,7 +376,6 @@ Vector4 Matrix4::operator*(const Vector4& vec4) const
         (*this)(3, 0) * vec4.x + (*this)(3, 1) * vec4.y + (*this)(3, 2) * vec4.z + (*this)(3, 3) * vec4.w};
 }
 
-//* Scalars
 Matrix4 Matrix4::operator*(const float scalar) const
 {
     Matrix4 result = Zero;
