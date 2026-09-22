@@ -1,6 +1,7 @@
 #pragma once
 #include "Core/OuterCore/ECS/Component.hpp"
 #include "Math/Functions/Function.hpp"
+#include "Math/Matrix/Matrix3.hpp"
 #include "Utilities/Log.hpp"
 
 #include <concepts>
@@ -12,11 +13,6 @@ template <typename T> struct Traits
     static constexpr bool IsComponent = std::derived_from<T, N::Component>;
 };
 
-//TODO- store resources in a sparse set using resource ids.
-// i actually dont need to make stuff like Material and FrameBuffer start storing resource ids if i do that.
-// since resources are stored as unique pointers to avoid type erasure.
-// sparse set moving the unique pointers around won't invalidate other pointers to the resources.
-//
 //TODO- pools/freelist for generating ids.
 //
 //TODO- the size of transform component is whats bottlenecking.
@@ -116,12 +112,13 @@ template <int Row, int Column> struct Matrix
 
 template <int Components> struct Vector
 {
-    std::array<float, Components> m_Data;
-
     float& operator()(const int component)
     {
         return m_Data[component];
     }
+
+  private:
+    std::array<float, Components> m_Data;
 };
 
 } // namespace Sketch

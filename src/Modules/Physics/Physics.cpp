@@ -4,17 +4,13 @@
 #include "Core/InnerCore/Engine.hpp"
 #include "Core/InnerCore/World.hpp"
 #include "Core/Services/ResourceManager.hpp"
-#include "Math/Color/Color.hpp"
-#include "Math/Common/Logarithms.hpp"
 #include "Math/Complex/Complex.hpp"
-#include "Math/DimensionalAnalysis/DerivedDimensionals.hpp"
-#include "Math/DimensionalAnalysis/Dimension.hpp"
-#include "Math/Equations/QuadraticEquationSolver.hpp"
 #include "Math/Functions/Function.hpp"
 #include "Modules/Input/Input.hpp"
 #include "Modules/Renderer/Components/MaterialComponent.hpp"
 #include "Modules/Renderer/Components/MeshComponent.hpp"
 #include "Modules/Renderer/Primitives/Primitives.hpp"
+#include "Utilities/DataStructures/FreeList.hpp"
 #include "World/Components/Transform3DComponent.hpp"
 #include "World/Novas/MeshInstance3D.hpp"
 #include "sketch.hpp"
@@ -81,17 +77,27 @@ void Physics::Start()
     cubeId = cube.GetId();
     World::Get().GetRoot().AttachChild(cube);
 
+    U::FreeList<unsigned int> fl;
+
+    fl.Push(1);
+    fl.Push(2);
+    fl.Push(3);
+    fl.Push(5);
+    fl.Push(22);
+    fl.Push(20);
+    fl.Push(35);
+    fl.Push(100);
+    fl.Erase(3);
+    fl.Erase(6);
+
+    fl.Push(1000);
+    U::Log::Info(fl);
+
     float vtx = 9.5 * Units::Meter / Units::Second;
     float t = 16 / vtx;
     float vcy = -(t / 2.0f * -9.8f);
 
     U::Log::Info(M::Vector2{vtx, vcy}.ToPolar());
-
-    M::Function<float, float> v = [](const float x) { return x * x; };
-
-    M::Function<float, float> f = [](const float x) { return x * x; };
-
-    U::Log::Info((v + f)(2));
 }
 
 static float time = 0;

@@ -53,17 +53,15 @@ template <typename Input, typename Output> struct Function
      * @brief Calculates the numerical derivative of the function.
      * @param dx Step size used for numerical differentiation.
      * @param method Numerical differentiation method to use.
-     * @param relativeStep Whether dx scales with the input magnitude.
      * @return A function representing the numerical derivative.
      * @note Only available for functions with a scalar Input type.
      */
     Function<float, Output> Differentiate(float dx = 0.001f,
-        DifferentiationMethod method = DifferentiationMethod::Central, bool relativeStep = true) const
-        requires IsScalar<Input>
+        DifferentiationMethod method = DifferentiationMethod::Central) const requires IsScalar<Input>
     {
-        return [f = *this, dx, method, relativeStep](const float x)
+        return [f = *this, dx, method](const float x)
         {
-            const float h = relativeStep ? dx * std::max(1.0f, std::abs(x)) : dx;
+            const float h = dx * std::max(1.0f, std::abs(x));
             switch (method)
             {
             case DifferentiationMethod::Central:
@@ -84,15 +82,23 @@ template <typename Input, typename Output> struct Function
      * @param x Input value at which to evaluate the derivative.
      * @param dx Step size used for numerical differentiation.
      * @param method Numerical differentiation method to use.
-     * @param relativeStep Whether dx scales with the input magnitude.
      * @return The numerical derivative at x.
      * @note Only available for functions with a scalar Input type.
      */
     Output Derivative(float x, float dx = 0.001f,
-        DifferentiationMethod method = DifferentiationMethod::Central, bool relativeStep = true) const
-        requires IsScalar<Input>
+        DifferentiationMethod method = DifferentiationMethod::Central) const requires IsScalar<Input>
     {
-        return Differentiate(dx, method, relativeStep)(x);
+        return Differentiate(dx, method)(x);
+    }
+
+    Output AverageRateOfChange(const float start, const float end) const requires IsScalar<Input>
+    {
+        return (Evaluate(end) - Evaluate(start)) / (end - start);
+    }
+
+    Output Average(const float start, const float end) const requires IsScalar<Input>
+    {
+        return Integrate(start, end) / (end - start);
     }
 
     /**
@@ -162,9 +168,9 @@ template <typename Input, typename Output> struct Function
         {
             Output result{};
             Function currentFunc = f;
-            for (int n = 0; n < terms; ++n)
+            for (unsigned int n = 0; n < terms; ++n)
             {
-                result += currentFunc(a) * std::pow(x - a, n) / Factorial(n);
+                result += currentFunc(a) * Pow(x - a, n) / Factorial(n);
                 currentFunc = currentFunc.Differentiate();
             }
             return result;

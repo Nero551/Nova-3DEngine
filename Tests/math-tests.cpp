@@ -402,7 +402,7 @@ TEST_CASE("Function numerical differentiation")
         auto df = f.Differentiate(dx);
         REQUIRE(df(2.0f) == Approx(4.0f).margin(0.01f));
         // relative step
-        auto dfRel = f.Differentiate(dx, DifferentiationMethod::Central, true);
+        auto dfRel = f.Differentiate(dx, DifferentiationMethod::Central);
         REQUIRE(dfRel(2.0f) == Approx(4.0f).margin(0.01f));
     }
 
