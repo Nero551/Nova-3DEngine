@@ -51,13 +51,14 @@ struct Service
     virtual void EndFrame() {}
     virtual void Stop() {}
 
+  private:
     /**
-     * @brief Registers a new service of the specified type.
-     * If a service of the same type is already registered, the existing
-     * service is returned instead.
-     * @tparam T Type of the service to register.
-     * @return Reference to the registered service.
-     */
+    * @brief Registers a new service of the specified type.
+    * If a service of the same type is already registered, the existing
+    * service is returned instead.
+    * @tparam T Type of the service to register.
+    * @return Reference to the registered service.
+    */
     template <ServiceType T> static T& Add()
     {
         if (Services.Contains<T>())
@@ -72,9 +73,8 @@ struct Service
         return Get<T>();
     }
 
-  private:
     /** @brief Destroys all services */
-    static void DestroyServices()
+    static void TerminateServices()
     {
         Services.Clear();
     }

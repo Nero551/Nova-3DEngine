@@ -11,7 +11,7 @@ namespace N::GraphicsContext
 inline void Initialize()
 {
     glfwSetErrorCallback(
-        [](const int error, const char* description) { U::Log::Error("[GLFW]", error, ": ", description); });
+        [](const int error, const char* description) { U::Log::Error("[GLFW] ", error, ": ", description); });
 
     if (!glfwInit())
     {

@@ -67,7 +67,7 @@ double Engine::GetTime() const
 void Engine::Configure()
 {
     Window.SetIcon({"Assets/icon.png"});
-    // Window.SetSize(1980, 1200);
+    // Window.SetSize(1920, 1200);
     glfwSwapInterval(0);
 
     Service::Add<EventBus>();
@@ -216,8 +216,6 @@ void Engine::Stop()
         service->Stop();
     }
 
-    Service::DestroyServices();
-
     if (Instance == this)
     {
         Instance.Reset();
@@ -225,5 +223,6 @@ void Engine::Stop()
 
     Window.Terminate();
     GraphicsContext::Terminate();
+    Service::TerminateServices();
 }
 } // namespace N

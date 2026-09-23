@@ -36,6 +36,7 @@ void Window::Terminate()
     if (!IsTerminated())
     {
         glfwDestroyWindow(m_GlfwWindow);
+        m_GlfwWindow = nullptr;
     }
 }
 bool Window::IsTerminated() const
@@ -93,8 +94,7 @@ void Window::SetWidth(const int width)
 
 void Window::SetSize(const int width, const int height)
 {
-    SetWidth(width);
-    SetHeight(height);
+    glfwSetWindowSize(m_GlfwWindow, width, height);
 }
 
 int Window::GetHeight() const
