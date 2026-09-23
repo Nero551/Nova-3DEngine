@@ -76,28 +76,6 @@ void Physics::Start()
     query.Pool<BodyComponent>().Add(cube.GetId());
     cubeId = cube.GetId();
     World::Get().GetRoot().AttachChild(cube);
-
-    U::FreeList<unsigned int> fl;
-
-    fl.Push(1);
-    fl.Push(2);
-    fl.Push(3);
-    fl.Push(5);
-    fl.Push(22);
-    fl.Push(20);
-    fl.Push(35);
-    fl.Push(100);
-    fl.Erase(3);
-    fl.Erase(6);
-
-    fl.Push(1000);
-    U::Log::Info(fl);
-
-    float vtx = 9.5 * Units::Meter / Units::Second;
-    float t = 16 / vtx;
-    float vcy = -(t / 2.0f * -9.8f);
-
-    U::Log::Info(M::Vector2{vtx, vcy}.ToPolar());
 }
 
 static float time = 0;

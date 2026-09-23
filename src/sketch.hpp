@@ -66,17 +66,102 @@ template <typename T, Index Size> struct Array
 template <unsigned int... Dimensions> struct Tensor
 {
     static constexpr unsigned int Order = sizeof...(Dimensions);
+    static constexpr unsigned int Size = (Dimensions * ...);
 
-    template <typename... Indices> requires(sizeof...(Indices) == Order)
-    float& operator()(Indices... indices)
+    Tensor() {}
+    explicit Tensor(float all)
     {
-        //* multi dimensional indices -> flat index calculation
-        return m_Data[0];
+        m_Data.fill(all);
+    }
+
+    template <typename... Numbers>
+    requires(sizeof...(Numbers) == Size && (std::convertible_to<Numbers, float> && ...))
+    Tensor(Numbers... numbers) : m_Data{static_cast<float>(numbers)...}
+    {
+    }
+
+    template <typename... Indices>
+    float& operator()(Indices... indices)
+        requires(sizeof...(Indices) == Order && (std::integral<Indices> && ...))
+    {
+        int indexArray[] = {indices...};
+
+        unsigned int flatIndex = 0;
+        for (int i = 0; i < Order; ++i)
+        {
+            flatIndex += indexArray[i] * Strides[i];
+        }
+
+        N::U::Log::Info(flatIndex);
+        return m_Data[flatIndex];
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const Tensor& tensor)
+    {
+        Print(os, tensor, {Dimensions...}, 0, 0, 0);
+        return os;
     }
 
   private:
-    std::array<float, (Dimensions * ...)> m_Data;
+    std::array<float, Size> m_Data{0};
+
+    static constexpr std::array<unsigned int, Order> GetStrides()
+    {
+        constexpr unsigned int dimensions[] = {Dimensions...};
+        std::array<unsigned int, Order> strides{};
+        unsigned int stride = 1;
+
+        for (int i = Order - 1; i >= 0; --i)
+        {
+            strides[i] = stride;
+            stride *= dimensions[i];
+        }
+
+        return strides;
+    }
+
+    static constexpr std::array<unsigned int, Order> Strides = GetStrides();
+
+    static void Print(std::ostream& os, const Tensor& tensor,
+        const std::array<unsigned int, Order> dimensions, unsigned int dimension, unsigned int flatIndex,
+        unsigned int indent)
+    {
+        os << std::string(indent, ' ') << "[\n";
+
+        if (dimension == Order - 1)
+        {
+            for (unsigned int i = 0; i < dimensions[dimension]; ++i)
+            {
+                os << std::string(indent + 4, ' ') << tensor.m_Data[flatIndex + i];
+
+                if (i + 1 < dimensions[dimension])
+                    os << ' ';
+            }
+
+            os << '\n';
+        }
+        else
+        {
+            for (unsigned int i = 0; i < dimensions[dimension]; ++i)
+            {
+                Print(os, tensor, dimensions, dimension + 1, flatIndex + i * tensor.Strides[dimension],
+                    indent + 4);
+            }
+        }
+
+        os << std::string(indent, ' ') << ']';
+
+        if (dimension != 0)
+            os << '\n';
+    }
 };
+
+inline void Test2()
+{
+    Tensor<2, 2> t(5, 2, 3, 6);
+    // t(0, 1) = 5;
+    N::U::Log::Info(t);
+}
 
 template <typename Output>
 Output Summation(const int start, const int end, const N::M::Function<float, Output>& f)
