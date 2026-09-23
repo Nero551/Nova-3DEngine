@@ -176,8 +176,22 @@ Output Summation(const int start, const int end, const N::M::Function<float, Out
     return result;
 }
 
-template <int Row, int Column> struct Matrix
+template <unsigned int Row, unsigned int Column> struct Matrix
 {
+    static constexpr unsigned int Size = Row * Column;
+
+    Matrix() {}
+
+    explicit Matrix(float all)
+    {
+        m_Data.fill(all);
+    }
+
+    template <typename... Numbers>
+    requires(sizeof...(Numbers) == Size && (std::convertible_to<Numbers, float> && ...))
+    Matrix(Numbers... numbers) : m_Data{static_cast<float>(numbers)...}
+    {
+    }
 
     float& operator()(const int row, const int col)
     {
@@ -197,13 +211,25 @@ template <int Row, int Column> struct Matrix
 
 template <int Components> struct Vector
 {
+    Vector() {}
+    explicit Vector(float all)
+    {
+        m_Data.fill(all);
+    }
+
+    template <typename... Numbers>
+    requires(sizeof...(Numbers) == Components && (std::convertible_to<Numbers, float> && ...))
+    Vector(Numbers... numbers) : m_Data{static_cast<float>(numbers)...}
+    {
+    }
+
     float& operator()(const int component)
     {
         return m_Data[component];
     }
 
   private:
-    std::array<float, Components> m_Data;
+    std::array<float, Components> m_Data{0};
 };
 
 } // namespace Sketch
