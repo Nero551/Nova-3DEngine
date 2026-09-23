@@ -3,7 +3,7 @@
 
 int main()
 {
-    Sketch::Test2();
+    Sketch::Test();
     return 0;
 
     N::Engine engine;

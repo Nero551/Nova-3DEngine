@@ -8,11 +8,6 @@
 namespace Sketch
 {
 
-template <typename T> struct Traits
-{
-    static constexpr bool IsComponent = std::derived_from<T, N::Component>;
-};
-
 //TODO- pools/freelist for generating ids.
 //
 //TODO- the size of transform component is whats bottlenecking.
@@ -22,6 +17,11 @@ template <typename T> struct Traits
 
 //TODO- add operator[] for data structures instead of GetUnchecked.
 
+template <typename T> struct Traits
+{
+    static constexpr bool IsComponent = std::derived_from<T, N::Component>;
+};
+
 struct Block : N::Component
 {
 };
@@ -29,12 +29,6 @@ struct Block : N::Component
 struct NotBlock
 {
 };
-
-inline void Test()
-{
-    N::U::Log::Info(Traits<Block>::IsComponent);    // true
-    N::U::Log::Info(Traits<NotBlock>::IsComponent); // false
-}
 
 using Index = unsigned int;
 
@@ -63,6 +57,23 @@ template <typename T, Index Size> struct Array
     T m_Data[Size];
 };
 
+template <typename Input, typename Output>
+Output Summation(const int start, const int end, const N::M::Function<Input, Output>& f)
+    requires(std::is_arithmetic_v<Input>)
+{
+    Output result{};
+
+    for (int i = start; i <= end; ++i)
+    {
+        result += f(static_cast<Input>(i));
+    }
+
+    return result;
+}
+
+//TODO- make matrix and vector operators.
+// scalar matrix, scalar vector, matrix matrix, vector vector & matrix vector operations.
+
 template <unsigned int... Dimensions> struct Tensor
 {
     static constexpr unsigned int Order = sizeof...(Dimensions);
@@ -84,13 +95,9 @@ template <unsigned int... Dimensions> struct Tensor
     float& operator()(Indices... indices)
         requires(sizeof...(Indices) == Order && (std::integral<Indices> && ...))
     {
-        int indexArray[] = {indices...};
-
-        unsigned int flatIndex = 0;
-        for (int i = 0; i < Order; ++i)
-        {
-            flatIndex += indexArray[i] * Strides[i];
-        }
+        std::array<unsigned int, Order> indexArray{static_cast<unsigned int>(indices)...};
+        unsigned int flatIndex = Summation(0, Order - 1,
+            N::M::Function<int, unsigned int>{[&](const int i) { return indexArray[i] * Strides[i]; }});
 
         N::U::Log::Info(flatIndex);
         return m_Data[flatIndex];
@@ -107,7 +114,7 @@ template <unsigned int... Dimensions> struct Tensor
 
     static constexpr std::array<unsigned int, Order> GetStrides()
     {
-        constexpr unsigned int dimensions[] = {Dimensions...};
+        constexpr std::array<unsigned int, Order> dimensions = {Dimensions...};
         std::array<unsigned int, Order> strides{};
         unsigned int stride = 1;
 
@@ -156,26 +163,6 @@ template <unsigned int... Dimensions> struct Tensor
     }
 };
 
-inline void Test2()
-{
-    Tensor<2, 2> t(5, 2, 3, 6);
-    // t(0, 1) = 5;
-    N::U::Log::Info(t);
-}
-
-template <typename Output>
-Output Summation(const int start, const int end, const N::M::Function<float, Output>& f)
-{
-    Output result{};
-
-    for (int i = start; i <= end; ++i)
-    {
-        result += f(i);
-    }
-
-    return result;
-}
-
 template <unsigned int Row, unsigned int Column> struct Matrix
 {
     static constexpr unsigned int Size = Row * Column;
@@ -193,7 +180,7 @@ template <unsigned int Row, unsigned int Column> struct Matrix
     {
     }
 
-    float& operator()(const int row, const int col)
+    float& operator()(const int row, const int col) requires(row < Row && col < Column)
     {
         return m_Data[row][col];
     }
@@ -223,7 +210,7 @@ template <int Components> struct Vector
     {
     }
 
-    float& operator()(const int component)
+    float& operator()(const unsigned int component) requires(component < Components)
     {
         return m_Data[component];
     }
@@ -231,5 +218,12 @@ template <int Components> struct Vector
   private:
     std::array<float, Components> m_Data{0};
 };
+
+inline void Test()
+{
+    Tensor<2, 2> t(5, 2, 3, 6);
+    t(0, 1) = 5;
+    N::U::Log::Info(t);
+}
 
 } // namespace Sketch

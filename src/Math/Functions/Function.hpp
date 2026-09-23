@@ -416,5 +416,8 @@ template <typename Input, typename Output> struct Function
 
   private:
     std::function<Output(Input)> m_Func;
+
+  public:
+    inline static const Function Identity = {[](const Input& input) { return input; }};
 };
 } // namespace N::M
