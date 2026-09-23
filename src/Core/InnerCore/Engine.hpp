@@ -17,7 +17,6 @@ concept ModuleType = std::derived_from<T, Module>;
  */
 struct Engine
 {
-    GraphicsContext GraphicsContext{};
     Window Window;
     std::optional<World> World;
 

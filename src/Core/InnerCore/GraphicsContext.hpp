@@ -3,35 +3,30 @@
 #include "Utilities/Log.hpp"
 #include <glslang/Public/ShaderLang.h>
 
-namespace N
-{
 /** @brief Handles initialization and termination of graphics specific things
  * that need to run before window creation and everything else.
- * Created by Engine, constructed first, deconstructed last. that way it
- * prevents initialization errors.
  */
-struct GraphicsContext
+namespace N::GraphicsContext
 {
-    void Initialize()
+inline void Initialize()
+{
+    glfwSetErrorCallback(
+        [](const int error, const char* description) { U::Log::Error("[GLFW]", error, ": ", description); });
+
+    if (!glfwInit())
     {
-        glfwSetErrorCallback([](const int error, const char* description)
-            { U::Log::Error("[GLFW]", error, ": ", description); });
-
-        if (!glfwInit())
-        {
-            U::Log::Fatal("Failed to initialize GLFW");
-        }
-
-        if (!glslang::InitializeProcess())
-        {
-            U::Log::Fatal("Failed to initialize glslang");
-        }
+        U::Log::Fatal("Failed to initialize GLFW");
     }
 
-    void Terminate()
+    if (!glslang::InitializeProcess())
     {
-        glslang::FinalizeProcess();
-        glfwTerminate();
+        U::Log::Fatal("Failed to initialize glslang");
     }
-};
-} // namespace N
+}
+
+inline void Terminate()
+{
+    glslang::FinalizeProcess();
+    glfwTerminate();
+}
+} // namespace N::GraphicsContext

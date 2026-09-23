@@ -5,6 +5,10 @@
 
 namespace N
 {
+Window::~Window()
+{
+    Terminate();
+}
 void Window::Generate(const int width, const int height, const std::string& title)
 {
     SetHints();
@@ -29,7 +33,14 @@ void Window::Generate(const int width, const int height, const std::string& titl
 }
 void Window::Terminate()
 {
-    glfwDestroyWindow(m_GlfwWindow);
+    if (!IsTerminated())
+    {
+        glfwDestroyWindow(m_GlfwWindow);
+    }
+}
+bool Window::IsTerminated() const
+{
+    return m_GlfwWindow == nullptr;
 }
 
 float Window::GetAspectRatio() const

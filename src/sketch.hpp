@@ -83,7 +83,7 @@ Output Summation(const int start, const int end, const N::M::Function<float, Out
 {
     Output result{};
 
-    for (int i = start; i < end; ++i)
+    for (int i = start; i <= end; ++i)
     {
         result += f(i);
     }

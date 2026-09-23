@@ -81,7 +81,7 @@ void Engine::Configure()
 
 void Engine::Start()
 {
-    GraphicsContext.Initialize();
+    GraphicsContext::Initialize();
     Window.Generate(800, 600, "Nova");
     Configure();
     World.emplace();
@@ -224,6 +224,6 @@ void Engine::Stop()
     }
 
     Window.Terminate();
-    GraphicsContext.Terminate();
+    GraphicsContext::Terminate();
 }
 } // namespace N

@@ -13,6 +13,7 @@ namespace N
 struct Window
 {
     Window() = default;
+    ~Window();
 
     /**
     * @brief Generates a window.
@@ -22,6 +23,8 @@ struct Window
     */
     void Generate(int width, int height, const std::string& title);
     void Terminate();
+
+    bool IsTerminated() const;
 
     /** @brief Returns the window's width-to-height ratio. */
     [[nodiscard]] float GetAspectRatio() const;
