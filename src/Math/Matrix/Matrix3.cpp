@@ -306,7 +306,7 @@ Matrix3 Matrix3::operator-(const Matrix3& mat3) const
 
 Matrix3 Matrix3::operator*(const Matrix3& mat3) const
 {
-    Matrix3 result(0);
+    Matrix3 result = Zero;
 
     for (int row = 0; row < 3; ++row)
     {

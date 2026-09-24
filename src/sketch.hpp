@@ -71,8 +71,7 @@ Output Summation(const int start, const int end, const N::M::Function<Input, Out
     return result;
 }
 
-//TODO- make matrix and vector operators.
-// scalar matrix, scalar vector, matrix matrix, vector vector & matrix vector operations.
+//TODO- clone blender source code and check it out (check line count).
 
 template <unsigned int... Dimensions> struct Tensor
 {
@@ -163,39 +162,6 @@ template <unsigned int... Dimensions> struct Tensor
     }
 };
 
-template <unsigned int Row, unsigned int Column> struct Matrix
-{
-    static constexpr unsigned int Size = Row * Column;
-
-    Matrix() {}
-
-    explicit Matrix(float all)
-    {
-        m_Data.fill(all);
-    }
-
-    template <typename... Numbers>
-    requires(sizeof...(Numbers) == Size && (std::convertible_to<Numbers, float> && ...))
-    Matrix(Numbers... numbers) : m_Data{static_cast<float>(numbers)...}
-    {
-    }
-
-    float& operator()(const int row, const int col) requires(row < Row && col < Column)
-    {
-        return m_Data[row][col];
-    }
-
-    std::array<std::array<float, Column>, Row>& Data()
-    {
-        return m_Data;
-    }
-    void RotateZ() requires(Row == Column == 3) {}
-    void RotateZ() requires(Row == Column == 4) {}
-
-  private:
-    std::array<std::array<float, Column>, Row> m_Data;
-};
-
 template <int Components> struct Vector
 {
     Vector() {}
@@ -215,15 +181,179 @@ template <int Components> struct Vector
         return m_Data[component];
     }
 
+    const float& operator()(const unsigned int component) const requires(component < Components)
+    {
+        return m_Data[component];
+    }
+
+    inline static const Vector Zero{0};
+
   private:
     std::array<float, Components> m_Data{0};
 };
 
+template <unsigned int Row, unsigned int Column> struct Matrix
+{
+    static constexpr unsigned int Size = Row * Column;
+
+    Matrix() {}
+
+    explicit Matrix(float all)
+    {
+        for (auto& row : m_Data)
+        {
+            row.fill(all);
+        };
+    }
+
+    template <typename... Numbers>
+    requires(sizeof...(Numbers) == Size && (std::convertible_to<Numbers, float> && ...))
+    Matrix(Numbers... numbers) : m_Data{static_cast<float>(numbers)...}
+    {
+    }
+
+    float& operator()(const int row, const int col)
+    {
+        return m_Data[row][col];
+    }
+
+    const float& operator()(const int row, const int col) const
+    {
+        return m_Data[row][col];
+    }
+
+    std::array<std::array<float, Column>, Row>& Data()
+    {
+        return m_Data;
+    }
+
+    Matrix operator+(const Matrix& mat) const
+    {
+        Matrix result = Zero;
+
+        for (int row = 0; row < Row; ++row)
+        {
+            for (int col = 0; col < Column; ++col)
+            {
+                result(row, col) = (*this)(row, col) + mat(row, col);
+            }
+        }
+
+        return result;
+    }
+
+    Matrix operator-(const Matrix& mat) const
+    {
+        Matrix result = Zero;
+
+        for (int row = 0; row < Row; ++row)
+        {
+            for (int col = 0; col < Row; ++col)
+            {
+                result(row, col) = (*this)(row, col) - mat(row, col);
+            }
+        }
+
+        return result;
+    }
+
+    template <unsigned int R, unsigned int C>
+    Matrix<Row, C> operator*(const Matrix<R, C>& mat) requires(Column == R)
+    {
+        Matrix<Row, C> result = Matrix<Row, C>::Zero;
+        for (int row = 0; row < Row; ++row)
+        {
+            for (int col = 0; col < C; ++col)
+            {
+                result(row, col) = Summation(0, R - 1,
+                    N::M::Function<int, float>{[&](const int k) { return (*this)(row, k) * mat(k, col); }});
+            }
+        }
+
+        return result;
+    }
+
+    Vector<Row> operator*(const Vector<Column>& vec) const
+    {
+        Vector<Column> result = Vector<Column>::Zero;
+
+        for (int row = 0; row < Row; ++row)
+        {
+            for (int col = 0; col < Column; ++col)
+            {
+                result[row] += (*this)(row, col) * vec(col);
+            }
+        }
+
+        return result;
+    }
+
+    Matrix operator*(float scalar) const
+    {
+        Matrix result = Zero;
+
+        for (int row = 0; row < Row; ++row)
+        {
+            for (int col = 0; col < Column; ++col)
+            {
+                result(row, col) = (*this)(row, col) * scalar;
+            }
+        }
+
+        return result;
+    }
+    Matrix operator/(float scalar) const
+    {
+        Matrix result = Zero;
+
+        for (int row = 0; row < Row; ++row)
+        {
+            for (int col = 0; col < Column; ++col)
+            {
+                result(row, col) = (*this)(row, col) / scalar;
+            }
+        }
+
+        return result;
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const Matrix& matrix)
+    {
+        for (unsigned int row = 0; row < Row; ++row)
+        {
+            os << "[ ";
+
+            for (unsigned int col = 0; col < Column; ++col)
+            {
+                os << matrix(row, col);
+
+                if (col + 1 < Column)
+                    os << ", ";
+            }
+
+            os << " ]";
+
+            if (row + 1 < Row)
+                os << '\n';
+        }
+
+        return os;
+    }
+
+    void RotateZ() requires(Row == Column == 3) {}
+    void RotateZ() requires(Row == Column == 4) {}
+
+    inline static const Matrix Zero{0};
+
+  private:
+    std::array<std::array<float, Column>, Row> m_Data;
+};
+
 inline void Test()
 {
-    Tensor<2, 2> t(5, 2, 3, 6);
-    t(0, 1) = 5;
-    N::U::Log::Info(t);
+    Matrix<1000, 100> m1{5};
+    Matrix<100, 500> m2{3};
+    N::U::Log::Print(m1 * m2);
 }
 
 } // namespace Sketch

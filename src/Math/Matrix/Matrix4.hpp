@@ -220,9 +220,9 @@ struct Matrix4
 
     /** @brief 4x4 identity matrix. */
     static const Matrix4 Identity;
+
+    friend Matrix4 operator*(float scalar, const Matrix4& mat4);
+    friend std::ostream& operator<<(std::ostream& os, const Matrix4& mat4);
 };
 
-Matrix4 operator*(float scalar, const Matrix4& mat4);
-
-std::ostream& operator<<(std::ostream& os, const Matrix4& mat4);
 } // namespace N::M
