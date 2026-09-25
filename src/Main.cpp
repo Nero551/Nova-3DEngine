@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
     }
 
     Sketch::Test();
-    // return 0;
+    return 0;
 
     N::Engine engine;
     engine.Run();
