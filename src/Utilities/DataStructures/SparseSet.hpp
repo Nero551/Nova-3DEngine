@@ -20,7 +20,7 @@ template <typename T> struct SparseSet
     struct Entry
     {
         T Value;
-        SparseIndex Index;
+        SparseIndex SparseIndex;
     };
 
     template <bool Const> struct BasicIterator
@@ -81,110 +81,108 @@ template <typename T> struct SparseSet
         return {.Set = this, .Index = Size()};
     }
 
-    bool Contains(const SparseIndex s) const
+    bool Contains(const SparseIndex index) const
     {
-        return s < m_Sparse.size() && m_Sparse[s] != InvalidSparseIndex;
+        return index < m_Sparse.size() && m_Sparse[index] != InvalidSparseIndex;
     }
 
-    T& Get(const SparseIndex s)
+    T& At(const SparseIndex index)
     {
-        if (!Contains(s))
+        if (!Contains(index))
             Log::Fatal("SparseSet does not contain the specified sparse index.");
 
-        return m_Dense[m_Sparse[s]].Value;
+        return m_Dense[m_Sparse[index]].Value;
     }
 
-    T& GetUnchecked(const SparseIndex s)
+    const T& At(const SparseIndex index) const
     {
-        return m_Dense[m_Sparse[s]].Value;
+        if (!Contains(index))
+            Log::Fatal("SparseSet does not contain the specified sparse index.");
+
+        return m_Dense[m_Sparse[index]].Value;
     }
 
-    Iterator Find(const SparseIndex s)
+    T& operator[](const SparseIndex index)
     {
-        if (!Contains(s))
+        return m_Dense[m_Sparse[index]].Value;
+    }
+
+    const T& operator[](const SparseIndex index) const
+    {
+        return m_Dense[m_Sparse[index]].Value;
+    }
+
+    Entry& AtDense(const DenseIndex index)
+    {
+        if (index >= m_Dense.size())
+            Log::Fatal("SparseSet dense index out of bounds.");
+
+        return m_Dense[index];
+    }
+
+    const Entry& AtDense(const DenseIndex index) const
+    {
+        if (index >= m_Dense.size())
+            Log::Fatal("SparseSet dense index out of bounds.");
+
+        return m_Dense[index];
+    }
+
+    Iterator Find(const SparseIndex index)
+    {
+        if (!Contains(index))
             return end();
 
-        return {.Set = this, .Index = m_Sparse[s]};
+        return {.Set = this, .Index = m_Sparse[index]};
     }
 
-    T& GetByIndex(const DenseIndex index)
+    ConstIterator Find(const SparseIndex index) const
     {
-        if (index >= m_Dense.size())
-            U::Log::Fatal("SparseSet dense index out of bounds.");
+        if (!Contains(index))
+            return end();
 
-        return m_Dense[index].Value;
+        return {.Set = this, .Index = m_Sparse[index]};
     }
 
-    T& GetByIndexUnchecked(const DenseIndex index)
+    DenseIndex DenseIndexOf(const SparseIndex index) const
     {
-        return m_Dense[index].Value;
+        return m_Sparse[index];
     }
 
-    Entry& GetEntry(const SparseIndex s)
+    SparseIndex SparseIndexOf(const DenseIndex index) const
     {
-        if (!Contains(s))
-            U::Log::Fatal("SparseSet does not contain the specified sparse index.");
-
-        return m_Dense[m_Sparse[s]];
-    }
-
-    Entry& GetEntryUnchecked(const SparseIndex s)
-    {
-        return m_Dense[m_Sparse[s]];
-    }
-
-    Entry& GetEntryByIndex(const DenseIndex index)
-    {
-        if (index >= m_Dense.size())
-            U::Log::Fatal("SparseSet dense index out of bounds.");
-
-        return m_Dense[index];
-    }
-
-    Entry& GetEntryByIndexUnchecked(const DenseIndex index)
-    {
-        return m_Dense[index];
-    }
-
-    SparseIndex GetSparseIndex(const DenseIndex index) const
-    {
-        return m_Dense[index].Index;
-    }
-
-    DenseIndex GetDenseIndex(const SparseIndex s) const
-    {
-        return m_Sparse[s];
+        return m_Dense[index].SparseIndex;
     }
 
     /** @brief Adds a value if the sparse index is unused, otherwise returns the existing value. */
     template <typename U> requires std::constructible_from<T, U&&>
-    T& Push(const SparseIndex s, U&& value)
+    T& Push(const SparseIndex index, U&& value)
     {
-        if (!Contains(s))
+        if (!Contains(index))
         {
-            if (s >= m_Sparse.size())
-                m_Sparse.resize(s + 1, InvalidSparseIndex);
+            if (index >= m_Sparse.size())
+                m_Sparse.resize(index + 1, InvalidSparseIndex);
 
-            m_Sparse[s] = m_Dense.size();
-            m_Dense.push_back({std::forward<U>(value), s});
+            m_Sparse[index] = m_Dense.size();
+            m_Dense.push_back({.Value = std::forward<U>(value), .SparseIndex = index});
         }
 
-        return m_Dense[m_Sparse[s]].Value;
+        return m_Dense[m_Sparse[index]].Value;
     }
 
     /** @brief Constructs a value at the sparse index if it is unused. */
-    template <typename... Args> Iterator Emplace(const SparseIndex s, Args&&... args)
+    template <typename... Args> Iterator Emplace(const SparseIndex index, Args&&... args)
     {
-        if (!Contains(s))
+        if (!Contains(index))
         {
-            if (s >= m_Sparse.size())
-                m_Sparse.resize(s + 1, InvalidSparseIndex);
+            if (index >= m_Sparse.size())
+                m_Sparse.resize(index + 1, InvalidSparseIndex);
 
-            m_Sparse[s] = m_Dense.size();
-            m_Dense.emplace_back(Entry{.Value = T{std::forward<Args>(args)...}, .Index = s});
+            m_Sparse[index] = m_Dense.size();
+            m_Dense.emplace_back(Entry{.Value = T{std::forward<Args>(args)...}, .SparseIndex = index});
         }
 
-        return {.Set = this, .Index = m_Sparse[s]};
+        return {.Set = this, .Index = m_Sparse[index]};
     }
 
     /**
@@ -193,31 +191,31 @@ template <typename T> struct SparseSet
      * The last entry is moved into the erased entry's position, so dense
      * indices are not stable across erases.
      */
-    bool Erase(const SparseIndex s)
+    bool Erase(const SparseIndex index)
     {
-        if (!Contains(s))
+        if (!Contains(index))
             return false;
 
-        const DenseIndex index = m_Sparse[s];
+        const DenseIndex denseIndex = m_Sparse[index];
 
-        if (index != m_Dense.size() - 1)
+        if (denseIndex != m_Dense.size() - 1)
         {
-            Entry& lastDenseEntry = m_Dense.back();
+            Entry& lastEntry = m_Dense.back();
 
-            std::swap(m_Dense[index], lastDenseEntry);
+            std::swap(m_Dense[denseIndex], lastEntry);
 
-            m_Sparse[lastDenseEntry.Index] = index;
+            m_Sparse[lastEntry.SparseIndex] = denseIndex;
         }
 
         m_Dense.pop_back();
-        m_Sparse[s] = InvalidSparseIndex;
+        m_Sparse[index] = InvalidSparseIndex;
 
         return true;
     }
 
-    bool EraseByIndex(const DenseIndex index)
+    bool EraseByDense(const DenseIndex index)
     {
-        return Erase(m_Dense[index].Index);
+        return Erase(m_Dense[index].SparseIndex);
     }
 
     void Clear()

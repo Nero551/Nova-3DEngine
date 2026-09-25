@@ -17,14 +17,14 @@ namespace N::M
  */
 struct Vector4
 {
-    float x;
-    float y;
-    float z;
-    float w;
+    float x = 0;
+    float y = 0;
+    float z = 0;
+    float w = 0;
 
     static Vector4 FromHyperSpherical(const HyperSpherical& hyperSpherical);
 
-    constexpr Vector4() : x(0), y(0), z(0), w(0) {}
+    constexpr Vector4() {}
 
     explicit constexpr Vector4(const float all) : x(all), y(all), z(all), w(all) {}
 

@@ -28,7 +28,7 @@ struct ComponentPoolQuery
             m_ComponentPools.Emplace<T>(std::make_unique<ComponentPool<T>>());
         }
 
-        return static_cast<ComponentPool<T>&>(*m_ComponentPools.Get<T>());
+        return static_cast<ComponentPool<T>&>(*m_ComponentPools.At<T>());
     }
 
     /** @brief Stores the cached results and version of a component query. */
@@ -64,7 +64,7 @@ struct ComponentPoolQuery
             m_CachedQueries.Emplace<First, Rest...>();
         }
 
-        QueryCache& cache = m_CachedQueries.Get<First, Rest...>();
+        QueryCache& cache = m_CachedQueries.At<First, Rest...>();
 
         if (cache.Version == m_QueryVersion)
         {

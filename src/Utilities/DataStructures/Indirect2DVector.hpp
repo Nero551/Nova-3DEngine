@@ -99,7 +99,7 @@ template <typename T> struct Indirect2DVector
         return b < row.size() && row[b] != InvalidIndex;
     }
 
-    T& Get(Index a, Index b)
+    T& At(Index a, Index b)
     {
         if (!Contains(a, b))
         {
@@ -109,7 +109,7 @@ template <typename T> struct Indirect2DVector
         return m_Data[m_Lookup[a][b]];
     }
 
-    const T& Get(Index a, Index b) const
+    const T& At(Index a, Index b) const
     {
         if (!Contains(a, b))
         {

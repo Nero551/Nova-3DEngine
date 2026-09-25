@@ -1,6 +1,7 @@
 #pragma once
 #include "GraphicsContext.hpp"
 #include "Module.hpp"
+#include "Modules/Input/Enums/Keys.hpp"
 #include "Utilities/CheckedPtr.hpp"
 #include "Window.hpp"
 #include "World.hpp"
@@ -80,7 +81,7 @@ struct Engine
     {
         auto module = std::make_unique<T>();
         m_Modules.Emplace<T>(std::move(module));
-        return static_cast<T&>(*m_Modules.GetUnchecked<T>());
+        return static_cast<T&>(*m_Modules.Get<T>());
     }
 
     void Start();

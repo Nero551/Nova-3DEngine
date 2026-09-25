@@ -32,7 +32,7 @@ struct ResourceManager : Service
         if (const auto it = m_ResourceLookup.find(key); it != m_ResourceLookup.end())
         {
             // N::U::Logger::Warning("Resource: " + name + " Already Loaded.");
-            return static_cast<T&>(*m_Resources.Get(it->second));
+            return static_cast<T&>(*m_Resources.At(it->second));
         }
 
         auto resource = std::make_unique<T>(name, std::forward<Args>(args)...);

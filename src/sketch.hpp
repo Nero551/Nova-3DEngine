@@ -17,8 +17,15 @@ namespace Sketch
 
 //TODO- add operator[] for data structures instead of GetUnchecked.
 
-//TODO- clone blender source code and check it out (check line count).
 //TODO- add vector operators. for vector.
+
+//TODO- remove matrices from transform component
+// make render batches store sparse sets that map entity ids to normal/model matrices.
+// and only recompute matrices when global transform.IsChanged.
+
+//TODO- If converting a general Quaternion to a rotation quaternion proves
+// expensive in a hot path, introduce a specialized RotQuaternion (RQuaternion)
+// type and explicit conversion between the two. it will just be a unit quaternion with half angle representation.
 
 using Index = unsigned int;
 template <typename T, Index Size> struct Array
@@ -62,15 +69,15 @@ Output Summation(const int start, const int end, const N::M::Function<Input, Out
 
 template <int Components> struct Vector
 {
-    Vector() {}
-    explicit Vector(float all)
+    constexpr Vector() {}
+    constexpr explicit Vector(float all)
     {
         m_Data.fill(all);
     }
 
     template <typename... Numbers>
     requires(sizeof...(Numbers) == Components && (std::convertible_to<Numbers, float> && ...))
-    Vector(Numbers... numbers) : m_Data{static_cast<float>(numbers)...}
+    constexpr Vector(Numbers... numbers) : m_Data{static_cast<float>(numbers)...}
     {
     }
 
@@ -94,9 +101,9 @@ template <unsigned int Row, unsigned int Column> struct Matrix
 {
     static constexpr unsigned int Size = Row * Column;
 
-    Matrix() {}
+    constexpr Matrix() {}
 
-    explicit Matrix(float all)
+    constexpr explicit Matrix(float all)
     {
         for (auto& row : m_Data)
         {
@@ -106,7 +113,7 @@ template <unsigned int Row, unsigned int Column> struct Matrix
 
     template <typename... Numbers>
     requires(sizeof...(Numbers) == Size && (std::convertible_to<Numbers, float> && ...))
-    Matrix(Numbers... numbers) : m_Data{static_cast<float>(numbers)...}
+    constexpr Matrix(Numbers... numbers) : m_Data{static_cast<float>(numbers)...}
     {
     }
 
@@ -238,8 +245,8 @@ template <unsigned int Row, unsigned int Column> struct Matrix
         return os;
     }
 
-    void RotateZ() requires(Row == Column == 3) {}
-    void RotateZ() requires(Row == Column == 4) {}
+    void RotateZ() requires(Row == Column && Row == 3) {}
+    void RotateZ() requires(Row == Column && Row == 4) {}
 
     inline static const Matrix Zero{0};
 
@@ -252,15 +259,15 @@ template <unsigned int... Dimensions> struct Tensor
     static constexpr unsigned int Order = sizeof...(Dimensions);
     static constexpr unsigned int Size = (Dimensions * ...);
 
-    Tensor() {}
-    explicit Tensor(float all)
+    constexpr Tensor() {}
+    constexpr explicit Tensor(float all)
     {
         m_Data.fill(all);
     }
 
     template <typename... Numbers>
     requires(sizeof...(Numbers) == Size && (std::convertible_to<Numbers, float> && ...))
-    Tensor(Numbers... numbers) : m_Data{static_cast<float>(numbers)...}
+    constexpr Tensor(Numbers... numbers) : m_Data{static_cast<float>(numbers)...}
     {
     }
 
@@ -340,7 +347,10 @@ inline void Test()
     Vector<10> v;
     Matrix<1000, 100> m1{5};
     Matrix<100, 500> m2{3};
-    Tensor<2, 7, 3, 4, 8, 1, 7, 341, 7> t;
+    // Tensor<100, 100, 100,100> t; // dont do this, it blows up the stack and seg faults.
+    // auto bigT = std::make_unique<Tensor<100, 100, 100, 100, 100, 100>>(5); // this is 40 GB of memory right there.
+    //! tensors scale dangerously, a 100 10 dimensional tensor is 10^20 floats. thats more than the seconds since the big bang.
+
     Tensor<2, 1, 6> t2;
     N::U::Log::Print(m1 * m2);
 }

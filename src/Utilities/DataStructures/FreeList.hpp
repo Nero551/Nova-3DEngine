@@ -20,13 +20,18 @@ template <typename T> struct FreeList
         return index < m_Data.size() && m_Used[index] == true;
     }
 
-    T& Get(Index index)
+    T& At(Index index)
     {
         if (!Contains(index))
         {
             N::U::Log::Fatal("FreeList Doesn't contain specified index: ", index);
         }
 
+        return m_Data[index];
+    }
+
+    T& operator[](Index index)
+    {
         return m_Data[index];
     }
 

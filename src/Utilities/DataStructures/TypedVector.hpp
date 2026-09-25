@@ -80,7 +80,7 @@ template <typename T> struct TypedVector
         return typeId < m_Data.size();
     }
 
-    template <typename... Args> T& Get()
+    template <typename... Args> T& At()
     {
         if (!Contains<Args...>())
         {
@@ -90,7 +90,8 @@ template <typename T> struct TypedVector
         return m_Data[GetTypeId<Args...>()];
     }
 
-    template <typename... Args> T& GetUnchecked()
+    /** @brief its At() but without an implicit Contains() check. */
+    template <typename... Args> T& Get()
     {
         return m_Data[GetTypeId<Args...>()];
     }

@@ -49,7 +49,7 @@ template <ComponentType T> struct ComponentPool : IComponentPool
         /** @brief Returns the entity ID and corresponding component. */
         std::pair<unsigned int, T&> operator*() const
         {
-            return {Pool->m_Components.GetSparseIndex(Index), Pool->m_Components.GetByIndex(Index)};
+            return {Pool->m_Components.SparseIndexOf(Index), Pool->m_Components.AtDense(Index).Value};
         }
 
         /** @brief Advances the iterator to the next component. */
@@ -121,12 +121,12 @@ template <ComponentType T> struct ComponentPool : IComponentPool
      */
     T& GetComponentById(const unsigned int entityId)
     {
-        return m_Components.Get(entityId);
+        return m_Components.At(entityId);
     }
 
     T& GetComponentByIdUnchecked(const unsigned int entityId)
     {
-        return m_Components.GetUnchecked(entityId);
+        return m_Components[entityId];
     }
     void Reserve(size_t count)
     {
@@ -153,16 +153,6 @@ template <ComponentType T> struct ComponentPool : IComponentPool
     T& GetComponentByIndex(const unsigned int index)
     {
         return m_Components.GetByIndex(index);
-    }
-
-    T& GetComponentByIndexUnchecked(const unsigned int index)
-    {
-        return m_Components.GetByIndexUnchecked(index);
-    }
-
-    U::SparseSet<T>::Entry& GetComponentAndIdByIndexUnchecked(const unsigned int index)
-    {
-        return m_Components.GetEntryByIndexUnchecked(index);
     }
 
     /**
