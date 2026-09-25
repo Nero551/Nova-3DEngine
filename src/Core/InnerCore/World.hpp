@@ -79,7 +79,7 @@ struct World : SystemOwner
      */
     template <EntityType T> Entity& CreateEntity()
     {
-        const unsigned int id = m_AvailableIds.Acquire();
+        const unsigned int id = m_Ids.Acquire();
         T entity;
         entity.m_Id = id;
         entity.Initialize();
@@ -123,7 +123,7 @@ struct World : SystemOwner
 
   private:
     U::SparseSet<Entity> m_Entities{};
-    U::IndexPool<unsigned int> m_AvailableIds{};
+    U::IndexPool<unsigned int> m_Ids{};
 
     unsigned int m_Root{};
     unsigned int m_ActiveCamera{};

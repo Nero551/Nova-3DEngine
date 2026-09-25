@@ -2,26 +2,26 @@
 
 #include "Core/OuterCore/Resource.hpp"
 #include "Core/OuterCore/Service.hpp"
-#include "Utilities/DataStructures/IndexPool.hpp"
 #include "Utilities/DataStructures/SparseSet.hpp"
 
 namespace N
 {
+/** @brief Concept for types that can be managed as resources. */
 template <typename T>
-
-/** @brief Concept for all structs inheriting Resource , represents all objects loadable by ResourceManager */
 concept ResourceType = std::derived_from<T, Resource>;
 
-/** @brief Manages the lifetime and retrieval of resources. */
+/** @brief Manages the lifetime, storage, and retrieval of resources. */
 struct ResourceManager : Service
 {
     /**
-     * @brief Loads a resource or returns the already loaded instance.
-     * If a resource with the given name already exists, its existing instance
-     * is returned. Otherwise, a new instance is constructed and stored.
+     * @brief Loads a resource or returns an already loaded resource with the same type and name.
+     * If the resource already exists but the type doesn't match it will error.
+     * Do NOT request incorrect type.
+     *
      * @tparam T Resource type to load.
-     * @param name Unique name used to identify the resource.
-     * @param args Arguments passed to T's constructor after the resource name.
+     * @tparam Args Arguments passed to T's constructor after the resource name.
+     * @param name Name used to identify the resource.
+     * @param args Arguments passed to T's constructor.
      * @return Reference to the loaded resource.
      */
     template <ResourceType T, typename... Args>
@@ -29,24 +29,33 @@ struct ResourceManager : Service
         requires std::constructible_from<T, const std::string&, Args...>
     {
         std::string key = typeid(T).name() + name;
+
         if (const auto it = m_ResourceLookup.find(key); it != m_ResourceLookup.end())
         {
-            // N::U::Logger::Warning("Resource: " + name + " Already Loaded.");
-            return static_cast<T&>(*m_Resources[it->second]);
+            return static_cast<T&>(*m_Resources[it->second.Index]);
         }
 
         auto resource = std::make_unique<T>(name, std::forward<Args>(args)...);
         Resource::Handle handle = m_Handles.Acquire();
         resource->m_Handle = handle;
         resource->m_Name = name;
-        m_ResourceLookup.emplace(std::move(key), handle.Index);
+
+        m_ResourceLookup.emplace(std::move(key), handle);
+
         return static_cast<T&>(*m_Resources.Emplace(handle.Index, std::move(resource))->Value);
     }
 
-    void Unload(const Resource::Handle& handle)
+    /**
+     * @brief Unloads a resource using its handle.
+     * Does nothing if the handle is invalid or no longer refers to an acquired resource.
+     * @param handle Handle of the resource to unload.
+     */
+    void Unload(const Resource::Handle handle)
     {
         if (!m_Resources.Contains(handle.Index) || !m_Handles.IsAcquired(handle))
+        {
             return;
+        }
 
         Resource& resource = *m_Resources[handle.Index];
 
@@ -56,39 +65,98 @@ struct ResourceManager : Service
         m_Handles.Release(handle);
     }
 
-    template <typename T> T& Acquire(const Resource::Handle& handle) const
+    /**
+    * @brief Unloads a resource using its name & type. Does nothing if the name or type is invalid.
+    * @param name name of the resource to unload.
+    * @tparam T type of the resource to unload.
+    */
+    template <ResourceType T> void Unload(const std::string& name)
     {
-        if (!m_Handles.IsAcquired(handle))
-            U::Log::Fatal(
-                "Resource Handle: [", handle.Index, " | ", handle.Generation, "]", " Doesn't Exist.");
+        std::string key = typeid(T).name() + name;
 
-        return static_cast<T&>(*m_Resources[handle.Index]);
-    }
-
-    template <ResourceType T> T& Acquire(const std::string& name)
-    {
-        const auto it = m_ResourceLookup.find(typeid(T).name() + name);
-
+        const auto it = m_ResourceLookup.find(key);
         if (it == m_ResourceLookup.end())
         {
-            U::Log::Fatal("Resource Doesn't Exist: ", name);
+            return;
         }
 
-        return static_cast<T&>(*m_Resources[it->second]);
+        const Resource::Handle handle = it->second;
+
+        m_ResourceLookup.erase(it);
+        m_Resources.Erase(handle.Index);
+        m_Handles.Release(handle);
     }
+
+    /** @brief Unloads all resources and resets the resource manager. */
+    void UnloadAll()
+    {
+        m_Handles.Clear();
+        m_ResourceLookup.clear();
+        m_Resources.Clear();
+    }
+
+    /**
+     * @brief Retrieves a resource using its handle.
+     * The requested type must match the resource stored by the handle.
+     * Do NOT request incorrect type or handle. if u are unsure about the handle,
+     * use Exists() before this
+     *
+     * @tparam T Expected resource type.
+     * @param handle Handle of the resource to retrieve.
+     * @return Reference to the resource.
+     */
+    template <ResourceType T> T& Acquire(const Resource::Handle handle) const
+    {
+        return static_cast<T&>(*m_Resources[handle.Index]);
+    }
+    /**
+     * @brief Retrieves a resource by its type and name.
+     *
+     * The requested type must match the type used when the resource was loaded.
+     * Do NOT request incorrect type or name. if u are unsure about the type or name,
+     * use Exists() before this
+     *
+     * @tparam T Expected resource type.
+     * @param name Name of the resource.
+     * @return Reference to the resource.
+     */
+    template <ResourceType T> T& Acquire(const std::string& name)
+    {
+        return static_cast<T&>(*m_Resources[m_ResourceLookup.at(typeid(T).name() + name).Index]);
+    }
+
+    /**
+     * @brief Returns whether a resource with the specified type and name exists.
+     *
+     * @tparam T Resource type to check.
+     * @param name Name of the resource.
+     * @return True if the resource exists, otherwise false.
+     */
     template <ResourceType T> bool Exists(const std::string& name) const
     {
         return m_ResourceLookup.contains(typeid(T).name() + name);
     }
 
-    bool Exists(const Resource::Handle& handle) const
+    /**
+     * @brief Returns whether a handle currently refers to an existing resource.
+     *
+     * @param handle Handle to check.
+     * @return True if the handle refers to an acquired resource, otherwise false.
+     */
+    bool Exists(const Resource::Handle handle) const
     {
         return m_Resources.Contains(handle.Index) && m_Handles.IsAcquired(handle);
     }
 
+  protected:
+    void Stop() override
+    {
+        UnloadAll();
+    }
+
   private:
     U::SparseSet<std::unique_ptr<Resource>> m_Resources{};
-    std::unordered_map<std::string, unsigned int> m_ResourceLookup{};
+    std::unordered_map<std::string, Resource::Handle> m_ResourceLookup{};
     U::GIndexPool<> m_Handles{};
 };
 } // namespace N

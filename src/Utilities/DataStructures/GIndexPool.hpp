@@ -1,10 +1,23 @@
 #pragma once
+
 namespace N::U
 {
 
+/**
+ * @brief Manages reusable indices with generation-based handles.
+ *
+ * Released indices are reused, while their generation is incremented so that
+ * previously issued handles become invalid.
+ */
 template <std::unsigned_integral IndexType = unsigned int, std::unsigned_integral GenType = unsigned int>
 struct GIndexPool
 {
+    /**
+     * @brief Identifies an acquired index and its current generation.
+     *
+     * A handle is valid only while its index is acquired and its generation
+     * matches the generation stored by the pool.
+     */
     struct Handle
     {
         IndexType Index = 0;
@@ -20,12 +33,14 @@ struct GIndexPool
         }
     };
 
+    /** @brief Returns whether the handle currently refers to an acquired index. */
     bool IsAcquired(Handle handle) const
     {
         return handle.Index < m_Acquired.size() && m_Acquired[handle.Index] &&
             m_Generations[handle.Index] == handle.Generation;
     }
 
+    /** @brief Acquires an index and returns its current handle. */
     Handle Acquire()
     {
         if (m_Free.empty())
@@ -42,6 +57,7 @@ struct GIndexPool
         return {index, m_Generations[index]};
     }
 
+    /** @brief Releases an index, invalidating its current handle. */
     void Release(Handle handle)
     {
         if (!IsAcquired(handle))
@@ -60,13 +76,13 @@ struct GIndexPool
         return m_Acquired.size() - m_Free.size();
     }
 
-    /** @brief Returns the total number of indices ever allocated by the pool. */
+    /** @brief Returns the total number of indices owned by the pool. */
     IndexType FullSize() const
     {
         return m_Acquired.size();
     }
 
-    /** @brief Releases all acquired indices and resets the pool. */
+    /** @brief Releases all indices and resets the pool. */
     void Clear()
     {
         m_Acquired.clear();
