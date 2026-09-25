@@ -24,7 +24,7 @@ struct IndexBuffer
     void SetData(const std::vector<unsigned int>& indices);
 
     /** @brief Returns true when a valid OpenGL buffer ID has been generated. */
-    bool IsGenerated();
+    bool IsGenerated() const;
 
     /** @brief Releases the buffer and resets its ID to zero. */
     void Delete();

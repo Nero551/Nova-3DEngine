@@ -85,8 +85,8 @@ template <typename Input, typename Output> struct Function
      * @return The numerical derivative at x.
      * @note Only available for functions with a scalar Input type.
      */
-    Output Derivative(float x, float dx = 0.001f,
-        DifferentiationMethod method = DifferentiationMethod::Central) const requires IsScalar<Input>
+    Output Derivative(float x, const float dx = 0.001f,
+        const DifferentiationMethod method = DifferentiationMethod::Central) const requires IsScalar<Input>
     {
         return Differentiate(dx, method)(x);
     }
@@ -110,8 +110,8 @@ template <typename Input, typename Output> struct Function
      * @return The approximate value of the definite integral.
      * @note Only available for functions with a scalar Input type.
      */
-    Output Integral(float lowerBound, float upperBound, float dx = 0.001f,
-        IntegrationMethod method = IntegrationMethod::Midpoint) const requires IsScalar<Input>
+    Output Integral(const float lowerBound, float upperBound, const float dx = 0.001f,
+        const IntegrationMethod method = IntegrationMethod::Midpoint) const requires IsScalar<Input>
     {
         return Integrate(lowerBound, dx, method)(upperBound);
     }
@@ -183,7 +183,7 @@ template <typename Input, typename Output> struct Function
      * @return A function representing the Maclaurin polynomial approximation.
      * @note Only available for functions with a scalar Input type.
      */
-    Function<float, Output> Maclaurin(unsigned int terms) const requires IsScalar<Input>
+    Function<float, Output> Maclaurin(const unsigned int terms) const requires IsScalar<Input>
     {
         return Taylor(terms, 0.0f);
     }
@@ -197,7 +197,7 @@ template <typename Input, typename Output> struct Function
      * @note Requires a scalar-to-scalar function that is monotonic over the
      * given domain.
      */
-    float InverseEvaluate(float y, float domainMin, float domainMax) const
+    float InverseEvaluate(const float y, float domainMin, float domainMax) const
         requires IsScalar<Input> && IsScalar<Output>
     {
         float x = 0.0f;

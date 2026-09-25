@@ -20,7 +20,7 @@ void IndexBuffer::SetData(const std::vector<unsigned int>& indices)
         m_Id, indices.size() * sizeof(unsigned int), indices.data(), static_cast<GLenum>(Usage));
 }
 
-bool IndexBuffer::IsGenerated()
+bool IndexBuffer::IsGenerated() const
 {
     return m_Id != 0;
 }

@@ -99,7 +99,7 @@ template <typename T> struct Indirect2DVector
         return b < row.size() && row[b] != InvalidIndex;
     }
 
-    T& At(Index a, Index b)
+    T& At(const Index a, const Index b)
     {
         if (!Contains(a, b))
         {
@@ -109,7 +109,7 @@ template <typename T> struct Indirect2DVector
         return m_Data[m_Lookup[a][b]];
     }
 
-    const T& At(Index a, Index b) const
+    const T& At(const Index a, const Index b) const
     {
         if (!Contains(a, b))
         {
@@ -162,7 +162,7 @@ template <typename T> struct Indirect2DVector
      * @brief Removes a value using swap-and-pop.
      * The dense index of the last value may change as a result.
      */
-    void Erase(Index a, Index b)
+    void Erase(const Index a, const Index b)
     {
         if (!Contains(a, b))
         {
@@ -203,7 +203,7 @@ template <typename T> struct Indirect2DVector
     std::vector<T> m_Data{};
     std::vector<Key> m_Indices{};
 
-    std::vector<Index>& ResizeLookup(Index a, Index b)
+    std::vector<Index>& ResizeLookup(const Index a, const Index b)
     {
         if (m_Lookup.size() <= a)
         {

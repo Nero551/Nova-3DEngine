@@ -22,7 +22,7 @@ void ArrayBuffer::Generate()
     glCreateBuffers(1, &m_Id);
 }
 
-bool ArrayBuffer::IsGenerated()
+bool ArrayBuffer::IsGenerated() const
 {
     return m_Id != 0;
 }

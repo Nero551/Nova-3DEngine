@@ -5,15 +5,12 @@
 #include "Core/InnerCore/World.hpp"
 #include "Core/Services/ResourceManager.hpp"
 #include "Math/Complex/Complex.hpp"
-#include "Math/Functions/Function.hpp"
 #include "Modules/Input/Input.hpp"
 #include "Modules/Renderer/Components/MaterialComponent.hpp"
 #include "Modules/Renderer/Components/MeshComponent.hpp"
 #include "Modules/Renderer/Primitives/Primitives.hpp"
-#include "Utilities/DataStructures/IndexPool.hpp"
 #include "World/Components/Transform3DComponent.hpp"
 #include "World/Novas/MeshInstance3D.hpp"
-#include "sketch.hpp"
 
 namespace N
 {
@@ -81,7 +78,7 @@ void Physics::Start()
 static float time = 0;
 static M::Vector3 ExternalForces;
 
-void Physics::FixedUpdate(double fdt)
+void Physics::FixedUpdate(const double fdt)
 {
     time += fdt / 2;
 

@@ -34,7 +34,7 @@ struct Uniformbuffer : Resource
      * @param offset Byte offset within the buffer.
      * @param extraSize Additional bytes to write for alignment or padding.
      */
-    template <typename T> void Set(const T& value, int offset, int extraSize = 0)
+    template <typename T> void Set(const T& value, const int offset, const int extraSize = 0)
     {
         Generate();
         glNamedBufferSubData(m_Id, offset, sizeof(T) + extraSize, &value);

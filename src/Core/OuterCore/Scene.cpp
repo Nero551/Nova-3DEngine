@@ -2,7 +2,7 @@
 
 #include "Core/InnerCore/World.hpp"
 
-N::Entity& N::Scene::GetRoot()
+N::Entity& N::Scene::GetRoot() const
 {
     return World::Get().FindEntity(m_Root);
 }

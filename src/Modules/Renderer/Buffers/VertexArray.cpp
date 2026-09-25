@@ -17,7 +17,7 @@ void VertexArray::Generate()
     glCreateVertexArrays(1, &m_Id);
 }
 
-bool VertexArray::IsGenerated()
+bool VertexArray::IsGenerated() const
 {
     return m_Id != 0;
 }
@@ -44,7 +44,8 @@ void VertexArray::Unbind()
     glBindVertexArray(0);
 }
 
-void VertexArray::SetVertexBuffer(const ArrayBuffer& vbo, int bindingIndex, int stride, int offset)
+void VertexArray::SetVertexBuffer(
+    const ArrayBuffer& vbo, const int bindingIndex, const int stride, const int offset)
 {
     Generate();
     glVertexArrayVertexBuffer(m_Id, bindingIndex, vbo.GetId(), offset, stride);
@@ -56,8 +57,8 @@ void VertexArray::SetIndexBuffer(const IndexBuffer& ebo)
     glVertexArrayElementBuffer(m_Id, ebo.GetId());
 }
 
-void VertexArray::SetAttribPointer(
-    int index, int size, DataType type, int bindingIndex, size_t offset, bool normalized)
+void VertexArray::SetAttribPointer(const int index, const int size, DataType type, const int bindingIndex,
+    const size_t offset, const bool normalized)
 {
     Generate();
     glEnableVertexArrayAttrib(m_Id, index);
@@ -65,14 +66,14 @@ void VertexArray::SetAttribPointer(
     glVertexArrayAttribBinding(m_Id, index, bindingIndex);
 }
 
-void VertexArray::SetMatrix3AttribPointer(int startIndex, int offset, int bindingIndex)
+void VertexArray::SetMatrix3AttribPointer(const int startIndex, const int offset, const int bindingIndex)
 {
     SetAttribPointer(startIndex, 3, DataType::Float, bindingIndex, 0 + offset);
     SetAttribPointer(startIndex + 1, 3, DataType::Float, bindingIndex, sizeof(M::Vector3) + offset);
     SetAttribPointer(startIndex + 2, 3, DataType::Float, bindingIndex, 2 * sizeof(M::Vector3) + offset);
 }
 
-void VertexArray::SetMatrix4AttribPointer(int startIndex, int offset, int bindingIndex)
+void VertexArray::SetMatrix4AttribPointer(const int startIndex, const int offset, const int bindingIndex)
 {
     SetAttribPointer(startIndex, 4, DataType::Float, bindingIndex, 0 + offset);
     SetAttribPointer(startIndex + 1, 4, DataType::Float, bindingIndex, sizeof(M::Vector4) + offset);
@@ -80,7 +81,7 @@ void VertexArray::SetMatrix4AttribPointer(int startIndex, int offset, int bindin
     SetAttribPointer(startIndex + 3, 4, DataType::Float, bindingIndex, 3 * sizeof(M::Vector4) + offset);
 }
 
-void VertexArray::SetAttribDivisor(int bindingIndex, int divisor)
+void VertexArray::SetAttribDivisor(const int bindingIndex, const int divisor)
 {
     Generate();
     glVertexArrayBindingDivisor(m_Id, bindingIndex, divisor);

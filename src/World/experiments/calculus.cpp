@@ -69,7 +69,7 @@ void calculus::Start()
 
 static float multiplier = 1;
 
-void calculus::Update(double dt)
+void calculus::Update(const double dt)
 {
     auto& resourceManager = Service::Get<ResourceManager>();
     auto& input = Engine::Get().GetModule<Input>();
@@ -113,7 +113,7 @@ void calculus::Update(double dt)
     // Plot({ x, sin(x), 0 }, M::Color::Red);
 }
 
-void calculus::TwoDimensionalProjection(int increase)
+void calculus::TwoDimensionalProjection(const int increase)
 {
     points.reserve(M::Pow(360 / increase, 1));
     U::Log::Info(M::Pow(360 / increase, 1));
@@ -128,7 +128,7 @@ void calculus::TwoDimensionalProjection(int increase)
     }
 }
 
-void calculus::ThreeDimensionalProjection(int increase)
+void calculus::ThreeDimensionalProjection(const int increase)
 {
     // U::Log::Info(M::Pow(360 / increase, 2));
     points.reserve(M::Pow(360 / increase, 2));
@@ -145,7 +145,7 @@ void calculus::ThreeDimensionalProjection(int increase)
     }
 }
 
-void calculus::FourDimensionalProjection(int increase)
+void calculus::FourDimensionalProjection(const int increase)
 {
     points.reserve(M::Pow(360 / increase, 3));
     U::Log::Info(M::Pow(360 / increase, 3));

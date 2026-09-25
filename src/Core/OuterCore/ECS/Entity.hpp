@@ -75,13 +75,13 @@ struct Entity
     void ForEachAncestor(const std::function<void(unsigned int)>& callback) const;
 
     /** @brief Returns whether the specified entity is an ancestor. */
-    bool IsAncestorOf(unsigned int id) const;
+    bool IsAncestorOf(unsigned int entityId) const;
 
     /** @brief Returns whether the entity has the specified ancestor. */
     bool HasAncestor(unsigned int id) const;
 
     /** @brief Returns the entity's parent, or null if it has none. */
-    U::CheckedPtr<Entity> TryGetParent();
+    U::CheckedPtr<Entity> TryGetParent() const;
 
     /** @brief Returns the entity's parent. */
     Entity& GetParent() const;

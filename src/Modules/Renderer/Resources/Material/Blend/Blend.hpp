@@ -39,7 +39,7 @@ struct Blend
     /** @brief Constant color used by blend factors that reference a constant color. */
     M::Vector4 ConstantColor = {0, 0, 0, 0};
 
-    Blend(bool enabled) : Enabled(enabled) {}
+    Blend(const bool enabled) : Enabled(enabled) {}
 
     /** @brief Applies the configured blending state to the OpenGL context. */
     void Apply();

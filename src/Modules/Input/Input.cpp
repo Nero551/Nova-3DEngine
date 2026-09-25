@@ -61,7 +61,7 @@ MouseMode Input::GetMouseMode() const
     return m_MouseMode;
 }
 
-void Input::SetMouseMode(enum MouseMode mode)
+void Input::SetMouseMode(MouseMode mode)
 {
     m_MouseMode = mode;
     glfwSetInputMode(Engine::Get().Window.GetGlfwWindow(), GLFW_CURSOR, static_cast<int>(mode));

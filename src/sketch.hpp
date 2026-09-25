@@ -25,12 +25,10 @@ namespace Sketch
 // expensive in a hot path, introduce a specialized RotQuaternion (RQuaternion)
 // type and explicit conversion between the two. it will just be a unit quaternion with half angle representation.
 
-//TODO- make entities use GIndexPool instead of IndexPool.
-
 using Index = unsigned int;
 template <typename T, Index Size> struct Array
 {
-    static bool Contains(Index index)
+    static bool Contains(const Index index)
     {
         return index < Size;
     }
@@ -108,7 +106,7 @@ template <unsigned int Row, unsigned int Column> struct Matrix
         for (auto& row : m_Data)
         {
             row.fill(all);
-        };
+        }
     }
 
     template <typename... Numbers>
@@ -310,7 +308,7 @@ template <unsigned int... Dimensions> struct Tensor
 
     static void Print(std::ostream& os, const Tensor& tensor,
         const std::array<unsigned int, Order> dimensions, unsigned int dimension, unsigned int flatIndex,
-        unsigned int indent)
+        const unsigned int indent)
     {
         os << std::string(indent, ' ') << "[\n";
 

@@ -3,7 +3,7 @@
 
 namespace N
 {
-Texture::Texture(const std::string& name, TextureTarget target) : Resource(name), m_Target(target) {}
+Texture::Texture(const std::string& name, const TextureTarget target) : Resource(name), m_Target(target) {}
 
 Texture::~Texture()
 {
@@ -43,7 +43,7 @@ void Texture::Bind(const unsigned int unit)
     glBindTextureUnit(unit, m_Id);
 }
 
-void Texture::Unbind(unsigned int unit) const
+void Texture::Unbind(const unsigned int unit) const
 {
     glBindTextureUnit(unit, 0);
 }

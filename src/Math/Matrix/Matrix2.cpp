@@ -97,12 +97,12 @@ bool Matrix2::NearlyEquals(const Matrix2& mat2, const float epsilon) const
     return true;
 }
 
-float& Matrix2::operator()(int row, int col)
+float& Matrix2::operator()(const int row, const int col)
 {
     return m_Data[col][row];
 }
 
-const float& Matrix2::operator()(int row, int col) const
+const float& Matrix2::operator()(const int row, const int col) const
 {
     return m_Data[col][row];
 }

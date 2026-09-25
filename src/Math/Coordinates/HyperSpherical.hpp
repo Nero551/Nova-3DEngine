@@ -31,7 +31,8 @@ struct HyperSpherical
      * @param hyperAngle Angle determining the fourth-dimensional component, in radians.
      * @param magnitude Length of the represented vector.
      */
-    HyperSpherical(float elevation, float azimuth, float hyperAngle, float magnitude = 1)
+    HyperSpherical(
+        const float elevation, const float azimuth, const float hyperAngle, const float magnitude = 1)
         : Elevation(elevation), Azimuth(azimuth), HyperAngle(hyperAngle), Magnitude(magnitude)
     {
     }

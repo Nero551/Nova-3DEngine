@@ -3,7 +3,7 @@
 // Standard new
 // ============================================================================
 
-void* operator new(std::size_t count)
+void* operator new(const std::size_t count)
 {
     void* ptr = std::malloc(count);
 
@@ -16,7 +16,7 @@ void* operator new(std::size_t count)
     return ptr;
 }
 
-void* operator new[](std::size_t count)
+void* operator new[](const std::size_t count)
 {
     void* ptr = std::malloc(count);
 
@@ -85,7 +85,7 @@ void operator delete[](void* ptr) noexcept
 // Nothrow new
 // ============================================================================
 
-void* operator new(std::size_t count, const std::nothrow_t&) noexcept
+void* operator new(const std::size_t count, const std::nothrow_t&) noexcept
 {
     void* ptr = std::malloc(count);
 
@@ -97,7 +97,7 @@ void* operator new(std::size_t count, const std::nothrow_t&) noexcept
     return ptr;
 }
 
-void* operator new[](std::size_t count, const std::nothrow_t&) noexcept
+void* operator new[](const std::size_t count, const std::nothrow_t&) noexcept
 {
     void* ptr = std::malloc(count);
 
@@ -139,7 +139,7 @@ void operator delete[](void* ptr, const std::nothrow_t&) noexcept
 // Aligned new
 // ============================================================================
 
-void* operator new(std::size_t count, std::align_val_t alignment)
+void* operator new(const std::size_t count, std::align_val_t alignment)
 {
     const std::size_t align = static_cast<std::size_t>(alignment);
 
@@ -154,7 +154,7 @@ void* operator new(std::size_t count, std::align_val_t alignment)
     return ptr;
 }
 
-void* operator new[](std::size_t count, std::align_val_t alignment)
+void* operator new[](const std::size_t count, std::align_val_t alignment)
 {
     const std::size_t align = static_cast<std::size_t>(alignment);
 
@@ -225,7 +225,7 @@ void operator delete[](void* ptr, std::size_t, std::align_val_t) noexcept
 // Aligned nothrow new
 // ============================================================================
 
-void* operator new(std::size_t count, std::align_val_t alignment, const std::nothrow_t&) noexcept
+void* operator new(const std::size_t count, std::align_val_t alignment, const std::nothrow_t&) noexcept
 {
     const std::size_t align = static_cast<std::size_t>(alignment);
 
@@ -239,7 +239,7 @@ void* operator new(std::size_t count, std::align_val_t alignment, const std::not
     return ptr;
 }
 
-void* operator new[](std::size_t count, std::align_val_t alignment, const std::nothrow_t&) noexcept
+void* operator new[](const std::size_t count, std::align_val_t alignment, const std::nothrow_t&) noexcept
 {
     const std::size_t align = static_cast<std::size_t>(alignment);
 

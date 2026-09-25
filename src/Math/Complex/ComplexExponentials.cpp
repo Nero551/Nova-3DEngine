@@ -5,12 +5,12 @@
 
 namespace N::M
 {
-Complex CPow(float x, const Complex& z)
+Complex CPow(const float x, const Complex& z)
 {
     return CExp(Ln(x) * z);
 }
 
-Complex CPow(const Complex& z, float power)
+Complex CPow(const Complex& z, const float power)
 {
     Complex result;
 

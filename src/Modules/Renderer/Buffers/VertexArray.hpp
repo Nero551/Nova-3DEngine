@@ -22,7 +22,7 @@ struct VertexArray
     void Generate();
 
     /** @brief Returns true if the VAO has been generated. */
-    bool IsGenerated();
+    bool IsGenerated() const;
 
     /** @brief Deletes the VAO and resets its ID to zero. */
     void Delete();

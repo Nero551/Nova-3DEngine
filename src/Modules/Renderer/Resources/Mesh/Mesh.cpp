@@ -71,7 +71,7 @@ void Mesh::Draw()
     VAO.Unbind();
 }
 
-void Mesh::DrawInstanced(int instanceCount)
+void Mesh::DrawInstanced(const int instanceCount)
 {
     Generate();
 

@@ -17,7 +17,7 @@ struct Depth
     /** @brief Comparison function used by the depth test. */
     DepthFunction Function = DepthFunction::Less;
 
-    Depth(bool enabled) : Enabled(enabled) {}
+    Depth(const bool enabled) : Enabled(enabled) {}
 
     /** @brief Applies the configured depth state to the OpenGL context. */
     void Apply();

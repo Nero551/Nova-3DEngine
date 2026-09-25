@@ -314,21 +314,21 @@ TEST_CASE("Function construction and evaluation")
 {
     SECTION("Construct from lambda")
     {
-        auto f = Function<float, float>([](float x) { return x * x; });
+        auto f = Function<float, float>([](const float x) { return x * x; });
         REQUIRE(f(2.0f) == 4.0f);
         REQUIRE(f.Evaluate(3.0f) == 9.0f);
     }
 
     SECTION("Construct from std::function")
     {
-        std::function<float(float)> func = [](float x) { return 2.0f * x + 1.0f; };
+        std::function<float(float)> func = [](const float x) { return 2.0f * x + 1.0f; };
         Function<float, float> f(func);
         REQUIRE(f(1.5f) == 4.0f);
     }
 
     SECTION("Evaluate with const reference")
     {
-        Function<float, float> f = [](float x) { return x + 1.0f; };
+        Function<float, float> f = [](const float x) { return x + 1.0f; };
         const float input = 2.5f;
         REQUIRE(f.Evaluate(input) == 3.5f);
     }
@@ -336,8 +336,8 @@ TEST_CASE("Function construction and evaluation")
 
 TEST_CASE("Function composition")
 {
-    Function<float, float> f([](float x) { return x + 1.0f; });
-    Function<float, float> g([](float x) { return x * 2.0f; });
+    Function<float, float> f([](const float x) { return x + 1.0f; });
+    Function<float, float> g([](const float x) { return x * 2.0f; });
 
     SECTION("Compose member")
     {
@@ -353,15 +353,15 @@ TEST_CASE("Function composition")
 
     SECTION("Composition with non‑float type")
     {
-        Function<int, float> intToFloat = [](int x) { return static_cast<float>(x) + 0.5f; };
-        Function<float, int> floatToInt = [](float x) { return static_cast<int>(x); };
+        Function<int, float> intToFloat = [](const int x) { return static_cast<float>(x) + 0.5f; };
+        Function<float, int> floatToInt = [](const float x) { return static_cast<int>(x); };
         auto composed = intToFloat.Compose(floatToInt); // intToFloat(floatToInt(x))
     }
 }
 
 TEST_CASE("Function inverse (scalar‑to‑scalar)")
 {
-    auto f = Function<float, float>([](float x) { return 2.0f * x + 3.0f; });
+    auto f = Function<float, float>([](const float x) { return 2.0f * x + 3.0f; });
     SECTION("InverseEvaluate")
     {
         REQUIRE(f.InverseEvaluate(7.0f, -10.0f, 10.0f) == Approx(2.0f));
@@ -377,7 +377,7 @@ TEST_CASE("Function inverse (scalar‑to‑scalar)")
 
     SECTION("Non‑monotonic function throws? (not yet) but we test that it returns some value")
     {
-        auto g = Function<float, float>([](float x) { return x * x; });
+        auto g = Function<float, float>([](const float x) { return x * x; });
         // This is not monotonic over [-10,10], but binary search will still find something.
         // We just check it runs.
         auto invG = g.Inverse(0.0f, 10.0f); // restrict to positive domain
@@ -387,7 +387,7 @@ TEST_CASE("Function inverse (scalar‑to‑scalar)")
 
 TEST_CASE("Function numerical differentiation")
 {
-    auto f = Function<float, float>([](float x) { return x * x; });
+    auto f = Function<float, float>([](const float x) { return x * x; });
     const float dx = 0.001f;
 
     SECTION("Derivative method")
@@ -415,7 +415,7 @@ TEST_CASE("Function numerical differentiation")
 
 TEST_CASE("Function numerical integration")
 {
-    auto f = Function<float, float>([](float x) { return x * x; });
+    auto f = Function<float, float>([](const float x) { return x * x; });
     const float dx = 0.001f;
 
     SECTION("Integral method")
@@ -443,7 +443,7 @@ TEST_CASE("Function numerical integration")
 
 TEST_CASE("Function Taylor and Maclaurin")
 {
-    Function<float, float> f = [](float x) { return std::exp(x); };
+    Function<float, float> f = [](const float x) { return std::exp(x); };
 
     SECTION("Taylor")
     {
@@ -465,7 +465,7 @@ TEST_CASE("Function Taylor and Maclaurin")
 
     SECTION("Taylor of polynomial")
     {
-        auto p = Function<float, float>([](float x) { return 2.0f * x * x + 3.0f * x + 1.0f; });
+        auto p = Function<float, float>([](const float x) { return 2.0f * x * x + 3.0f * x + 1.0f; });
         auto taylor = p.Taylor(4, 1.0f);
         // Should match exactly
         REQUIRE(taylor(1.0f) == Approx(p(1.0f)));
@@ -474,8 +474,8 @@ TEST_CASE("Function Taylor and Maclaurin")
 
 TEST_CASE("Function arithmetic operations")
 {
-    Function<float, float> f = [](float x) { return x + 1.0f; };
-    Function<float, float> g = [](float x) { return 2.0f * x; };
+    Function<float, float> f = [](const float x) { return x + 1.0f; };
+    Function<float, float> g = [](const float x) { return 2.0f * x; };
 
     SECTION("Binary operators between functions")
     {
@@ -532,8 +532,8 @@ TEST_CASE("Function arithmetic operations")
 
 TEST_CASE("Function compound assignment operators")
 {
-    auto f = Function<float, float>([](float x) { return x + 1.0f; });
-    auto g = Function<float, float>([](float x) { return 2.0f * x; });
+    auto f = Function<float, float>([](const float x) { return x + 1.0f; });
+    auto g = Function<float, float>([](const float x) { return 2.0f * x; });
 
     SECTION("Between functions")
     {
@@ -579,7 +579,7 @@ TEST_CASE("Function compound assignment operators")
 TEST_CASE("Function with non‑scalar types (Vector2)")
 {
     // Define a function that takes float and returns Vector2
-    auto f = Function<float, Vector2>([](float t) { return Vector2(t, t * t); });
+    auto f = Function<float, Vector2>([](const float t) { return Vector2(t, t * t); });
     SECTION("Evaluate")
     {
         auto res = f(2.0f);
@@ -643,7 +643,7 @@ TEST_CASE("Function with non‑scalar types (Vector2)")
 
 TEST_CASE("Function with Complex type")
 {
-    auto f = Function<float, Complex>([](float t) { return Complex(t, t * t); });
+    auto f = Function<float, Complex>([](const float t) { return Complex(t, t * t); });
     SECTION("Evaluate")
     {
         auto res = f(2.0f);
@@ -666,7 +666,7 @@ TEST_CASE("Function with Complex type")
 
 TEST_CASE("Function friend operators (if implemented)")
 {
-    auto f = Function<float, float>([](float x) { return x + 1.0f; });
+    auto f = Function<float, float>([](const float x) { return x + 1.0f; });
     SECTION("With Output (float) – left-hand side")
     {
         auto h = 2.0f + f;
@@ -687,7 +687,7 @@ TEST_CASE("Function friend operators (if implemented)")
     }
 
     // For Vector2 left‑hand side (tested earlier)
-    Function<float, Vector2> fv = ([](float t) { return Vector2(t, t); });
+    Function<float, Vector2> fv = ([](const float t) { return Vector2(t, t); });
     auto hv = Vector2(1.0f, 2.0f) + fv;
     REQUIRE(hv(3.0f) == Vector2(4.0f, 5.0f));
 }

@@ -143,13 +143,13 @@ bool Entity::HasDescendant(const unsigned int id) const
     return IsAncestorOf(id);
 }
 
-bool Entity::IsDescendantOf(const unsigned int entityId) const
+bool Entity::IsDescendantOf(const unsigned int id) const
 {
     unsigned int current = m_Parent;
 
     while (current != 0)
     {
-        if (current == entityId)
+        if (current == id)
             return true;
 
         current = World::Get().FindEntity(current).m_Parent;
@@ -206,7 +206,7 @@ bool Entity::HasAncestor(const unsigned int id) const
     return IsDescendantOf(id);
 }
 
-U::CheckedPtr<Entity> Entity::TryGetParent()
+U::CheckedPtr<Entity> Entity::TryGetParent() const
 {
     if (m_Parent == 0)
     {

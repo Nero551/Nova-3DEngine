@@ -6,6 +6,6 @@ struct ComponentRemoved : Event<ComponentRemoved>
 {
     unsigned int EntityId;
 
-    ComponentRemoved(unsigned int entityId) : EntityId(entityId) {}
+    ComponentRemoved(const unsigned int entityId) : EntityId(entityId) {}
 };
 } // namespace N

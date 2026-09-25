@@ -26,7 +26,7 @@ struct Spherical
      * @param azimuth Angle around the vertical axis, in radians.
      * @param magnitude Length of the represented vector.
      */
-    Spherical(float elevation, float azimuth, float magnitude = 1)
+    Spherical(const float elevation, const float azimuth, const float magnitude = 1)
         : Elevation(elevation), Azimuth(azimuth), Magnitude(magnitude)
     {
     }

@@ -222,7 +222,7 @@ void Renderer::Render()
     PresentFramebuffer();
 }
 
-void Renderer::Update(double dt)
+void Renderer::Update(const double dt)
 {
     GetSystem<CameraSystem>().Update(dt);
 }

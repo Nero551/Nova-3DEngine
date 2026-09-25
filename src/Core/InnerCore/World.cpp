@@ -39,12 +39,12 @@ void World::RemoveEntity(const unsigned int id)
         m_Entities.Erase(descendant->GetId());
     }
 }
-void World::ReserveEntities(size_t count)
+void World::ReserveEntities(const size_t count)
 {
     m_Entities.Reserve(count);
 }
 
-Entity& World::FindEntity(unsigned int id)
+Entity& World::FindEntity(const unsigned int id)
 {
     if (!m_Entities.Contains(id))
     {
@@ -67,7 +67,7 @@ U::CheckedPtr<Entity> World::TryFindEntity(const unsigned int id)
 void World::Start()
 {
     AddSystem<Transform3DSystem>();
-    AddSystem<calculus>();
+    // AddSystem<calculus>();
 
     Engine::Get().GetModule<Input>().SetMouseMode(MouseMode::Disabled);
 

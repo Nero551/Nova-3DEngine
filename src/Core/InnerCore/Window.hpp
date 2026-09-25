@@ -35,7 +35,7 @@ struct Window
      * @brief Checks whether the window has been requested to close.
      * @return True if the window should close.
      */
-    bool ShouldClose();
+    bool ShouldClose() const;
 
     /** Swaps the front and back buffers. */
     void SwapBuffers();
@@ -68,7 +68,7 @@ struct Window
 
     void Close();
 
-    GLFWwindow* GetGlfwWindow();
+    GLFWwindow* GetGlfwWindow() const;
 
   private:
     GLFWwindow* m_GlfwWindow;

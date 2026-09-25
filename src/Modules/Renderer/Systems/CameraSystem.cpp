@@ -28,7 +28,7 @@ void CameraSystem::Update(const double dt)
         const float xOffset = M::Rad(-input.GetMouseDelta().x * cameraComponent.Sensitivity);
         const float yOffset = M::Rad(-input.GetMouseDelta().y * cameraComponent.Sensitivity);
 
-        const float maxPitch = M::Rad(89.9);
+        constexpr float maxPitch = M::Rad(89.9);
 
         cameraComponent.Yaw += xOffset;
         cameraComponent.Pitch += yOffset;

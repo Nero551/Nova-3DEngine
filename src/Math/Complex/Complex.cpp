@@ -6,7 +6,7 @@
 namespace N::M
 {
 
-Complex Complex::FromPolar(Polar polar)
+Complex Complex::FromPolar(const Polar polar)
 {
     return {polar.Magnitude * std::cos(polar.Angle), polar.Magnitude * std::sin(polar.Angle)};
 }
@@ -46,7 +46,7 @@ Polar Complex::ToPolar() const
     return {Argument(), Magnitude()};
 }
 
-bool Complex::NearlyEquals(const Complex& b, float epsilon) const
+bool Complex::NearlyEquals(const Complex& b, const float epsilon) const
 {
     return M::NearlyEquals(Real, b.Real, epsilon) && M::NearlyEquals(Imaginary, b.Imaginary, epsilon);
 }
@@ -120,52 +120,52 @@ Complex Complex::operator/(const float scalar) const
     return {Real / scalar, Imaginary / scalar};
 }
 
-Complex Complex::operator+(float scalar) const
+Complex Complex::operator+(const float scalar) const
 {
     return {Real + scalar, Imaginary};
 }
 
-Complex Complex::operator-(float scalar) const
+Complex Complex::operator-(const float scalar) const
 {
     return {Real - scalar, Imaginary};
 }
 
-Complex& Complex::operator*=(float scalar)
+Complex& Complex::operator*=(const float scalar)
 {
     return *this = *this * scalar;
 }
 
-Complex& Complex::operator/=(float scalar)
+Complex& Complex::operator/=(const float scalar)
 {
     return *this = *this / scalar;
 }
 
-Complex& Complex::operator+=(float scalar)
+Complex& Complex::operator+=(const float scalar)
 {
     return *this = *this + scalar;
 }
 
-Complex& Complex::operator-=(float scalar)
+Complex& Complex::operator-=(const float scalar)
 {
     return *this = *this - scalar;
 }
 
-Complex operator*(float scalar, const Complex& a)
+Complex operator*(const float scalar, const Complex& a)
 {
     return a * scalar;
 }
 
-Complex operator/(float scalar, const Complex& a)
+Complex operator/(const float scalar, const Complex& a)
 {
     return scalar * a.Inverse();
 }
 
-Complex operator+(float scalar, const Complex& a)
+Complex operator+(const float scalar, const Complex& a)
 {
     return a + scalar;
 }
 
-Complex operator-(float scalar, const Complex& a)
+Complex operator-(const float scalar, const Complex& a)
 {
     return {scalar - a.Real, -a.Imaginary};
 }

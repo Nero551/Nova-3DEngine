@@ -41,7 +41,7 @@ Image::Image(
     Pixels = pixels;
 }
 
-void Image::SaveToDiskPNG(const std::string& filepath, bool flip)
+void Image::SaveToDiskPNG(const std::string& filepath, const bool flip)
 {
     stbi_flip_vertically_on_write(flip);
     stbi_write_png(filepath.c_str(), Width, Height, static_cast<size_t>(Channels), Pixels.data(),

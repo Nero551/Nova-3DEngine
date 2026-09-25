@@ -53,7 +53,7 @@ void Window::MakeCurrentContext()
     glfwMakeContextCurrent(m_GlfwWindow);
 }
 
-bool Window::ShouldClose()
+bool Window::ShouldClose() const
 {
     return glfwWindowShouldClose(m_GlfwWindow);
 }
@@ -118,7 +118,7 @@ void Window::Close()
     glfwSetWindowShouldClose(m_GlfwWindow, GL_TRUE);
 }
 
-GLFWwindow* Window::GetGlfwWindow()
+GLFWwindow* Window::GetGlfwWindow() const
 {
     return m_GlfwWindow;
 }

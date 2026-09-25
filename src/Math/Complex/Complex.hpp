@@ -31,7 +31,7 @@ struct Complex
      * @param real The real component.
      * @param imaginary The imaginary component.
      */
-    constexpr Complex(float real, float imaginary) : Real(real), Imaginary(imaginary) {}
+    constexpr Complex(const float real, const float imaginary) : Real(real), Imaginary(imaginary) {}
 
     /**
      * @brief Constructs a complex number from polar coordinates.

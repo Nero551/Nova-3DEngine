@@ -7,6 +7,6 @@ struct ComponentAdded : Event<ComponentAdded>
 {
     unsigned int EntityId;
 
-    ComponentAdded(unsigned int entityId) : EntityId(entityId) {}
+    ComponentAdded(const unsigned int entityId) : EntityId(entityId) {}
 };
 } // namespace N

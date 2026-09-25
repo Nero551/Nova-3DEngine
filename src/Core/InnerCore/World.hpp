@@ -27,7 +27,7 @@ struct World : SystemOwner
 
     World() {}
 
-    void SetRoot(unsigned int id)
+    void SetRoot(const unsigned int id)
     {
         m_Root = id;
     }
@@ -42,7 +42,7 @@ struct World : SystemOwner
         return *root;
     }
 
-    void SetCamera(unsigned int id)
+    void SetCamera(const unsigned int id)
     {
         m_ActiveCamera = id;
     }

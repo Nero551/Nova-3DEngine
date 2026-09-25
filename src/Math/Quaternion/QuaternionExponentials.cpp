@@ -29,7 +29,7 @@ Quaternion QPow(const float x, const Quaternion& q)
     return QExp(Ln(x) * q);
 }
 
-Quaternion QPow(const Quaternion& q, float power)
+Quaternion QPow(const Quaternion& q, const float power)
 {
     float magnitude = Pow(q.Magnitude(), power);
     float theta = q.Angle();

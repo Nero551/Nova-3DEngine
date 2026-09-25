@@ -242,62 +242,62 @@ Quaternion& Quaternion::operator-=(const Quaternion& p)
     return *this = *this - p;
 }
 
-Quaternion Quaternion::operator*(float scalar) const
+Quaternion Quaternion::operator*(const float scalar) const
 {
     return {w * scalar, x * scalar, y * scalar, z * scalar};
 }
 
-Quaternion Quaternion::operator/(float scalar) const
+Quaternion Quaternion::operator/(const float scalar) const
 {
     return {w / scalar, x / scalar, y / scalar, z / scalar};
 }
 
-Quaternion Quaternion::operator+(float scalar) const
+Quaternion Quaternion::operator+(const float scalar) const
 {
     return {w + scalar, x, y, z};
 }
 
-Quaternion Quaternion::operator-(float scalar) const
+Quaternion Quaternion::operator-(const float scalar) const
 {
     return {w - scalar, x, y, z};
 }
 
-Quaternion& Quaternion::operator*=(float scalar)
+Quaternion& Quaternion::operator*=(const float scalar)
 {
     return *this = *this * scalar;
 }
 
-Quaternion& Quaternion::operator/=(float scalar)
+Quaternion& Quaternion::operator/=(const float scalar)
 {
     return *this = *this / scalar;
 }
 
-Quaternion& Quaternion::operator+=(float scalar)
+Quaternion& Quaternion::operator+=(const float scalar)
 {
     return *this = *this + scalar;
 }
 
-Quaternion& Quaternion::operator-=(float scalar)
+Quaternion& Quaternion::operator-=(const float scalar)
 {
     return *this = *this - scalar;
 }
 
-Quaternion operator*(float scalar, const Quaternion& q)
+Quaternion operator*(const float scalar, const Quaternion& q)
 {
     return q * scalar;
 }
 
-Quaternion operator/(float scalar, const Quaternion& q)
+Quaternion operator/(const float scalar, const Quaternion& q)
 {
     return scalar * q.Inverse();
 }
 
-Quaternion operator+(float scalar, const Quaternion& q)
+Quaternion operator+(const float scalar, const Quaternion& q)
 {
     return q + scalar;
 }
 
-Quaternion operator-(float scalar, const Quaternion& q)
+Quaternion operator-(const float scalar, const Quaternion& q)
 {
     return {scalar - q.w, -q.x, -q.y, -q.z};
 }
