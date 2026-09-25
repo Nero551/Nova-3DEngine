@@ -25,6 +25,23 @@ namespace Sketch
 // expensive in a hot path, introduce a specialized RotQuaternion (RQuaternion)
 // type and explicit conversion between the two. it will just be a unit quaternion with half angle representation.
 
+//TODO- organize types by module namespace.
+// Each module gets its own namespace and nests its categories:
+// N::R::C  - Renderer components
+// N::R::S  - Renderer systems
+// N::I::C  - Input components
+// N::I::S  - Input systems
+// N::P::C  - Physics components
+// N::P::S  - Physics systems
+// N::Cr::C - Core components
+// N::Cr::S - Core systems
+// N::Cr    - super core stuff, window, ecs, engine, etc.
+// Keep module-independent infrastructure directly in its module namespace,
+// e.g. N::M::Vector3, N::U::SparseSet.
+
+//TODO- u can easily rename using CLion replace (Ctrl + Shift + H) and selecting a directory scope.
+// replacing namespace N::something with N::something::something and stuff.
+
 using Index = unsigned int;
 template <typename T, Index Size> struct Array
 {
@@ -73,23 +90,31 @@ template <int Components> struct Vector
         m_Data.fill(all);
     }
 
+    constexpr const std::array<float, Components>& Data() const
+    {
+        return m_Data;
+    }
+
     template <typename... Numbers>
     requires(sizeof...(Numbers) == Components && (std::convertible_to<Numbers, float> && ...))
     constexpr Vector(Numbers... numbers) : m_Data{static_cast<float>(numbers)...}
     {
     }
 
-    float& operator()(const unsigned int component)
+    constexpr float& operator()(const unsigned int component)
     {
         return m_Data[component];
     }
 
-    const float& operator()(const unsigned int component) const
+    constexpr const float& operator()(const unsigned int component) const
     {
         return m_Data[component];
     }
 
-    inline static const Vector Zero{0};
+    static constexpr Vector Zero()
+    {
+        return Vector{0};
+    }
 
   private:
     std::array<float, Components> m_Data{0};
@@ -115,22 +140,22 @@ template <unsigned int Row, unsigned int Column> struct Matrix
     {
     }
 
-    float& operator()(const int row, const int col)
+    constexpr float& operator()(const int row, const int col)
     {
         return m_Data[row][col];
     }
 
-    const float& operator()(const int row, const int col) const
+    constexpr const float& operator()(const int row, const int col) const
     {
         return m_Data[row][col];
     }
 
-    std::array<std::array<float, Column>, Row>& Data()
+    constexpr const std::array<std::array<float, Column>, Row>& Data() const
     {
         return m_Data;
     }
 
-    Matrix operator+(const Matrix& mat) const
+    constexpr Matrix operator+(const Matrix& mat) const
     {
         Matrix result = Zero;
 
@@ -145,7 +170,7 @@ template <unsigned int Row, unsigned int Column> struct Matrix
         return result;
     }
 
-    Matrix operator-(const Matrix& mat) const
+    constexpr Matrix operator-(const Matrix& mat) const
     {
         Matrix result = Zero;
 
@@ -161,9 +186,9 @@ template <unsigned int Row, unsigned int Column> struct Matrix
     }
 
     template <unsigned int R, unsigned int C>
-    Matrix<Row, C> operator*(const Matrix<R, C>& mat) const requires(Column == R)
+    constexpr Matrix<Row, C> operator*(const Matrix<R, C>& mat) const requires(Column == R)
     {
-        Matrix<Row, C> result = Matrix<Row, C>::Zero;
+        Matrix<Row, C> result = Matrix<Row, C>::Zero();
         for (int row = 0; row < Row; ++row)
         {
             for (int col = 0; col < C; ++col)
@@ -176,7 +201,7 @@ template <unsigned int Row, unsigned int Column> struct Matrix
         return result;
     }
 
-    Vector<Row> operator*(const Vector<Column>& vec) const
+    constexpr Vector<Row> operator*(const Vector<Column>& vec) const
     {
         Vector<Row> result = Vector<Row>::Zero;
 
@@ -191,7 +216,7 @@ template <unsigned int Row, unsigned int Column> struct Matrix
         return result;
     }
 
-    Matrix operator*(float scalar) const
+    constexpr Matrix operator*(float scalar) const
     {
         Matrix result = Zero;
 
@@ -205,7 +230,7 @@ template <unsigned int Row, unsigned int Column> struct Matrix
 
         return result;
     }
-    Matrix operator/(float scalar) const
+    constexpr Matrix operator/(float scalar) const
     {
         Matrix result = Zero;
 
@@ -247,10 +272,22 @@ template <unsigned int Row, unsigned int Column> struct Matrix
         return os;
     }
 
-    void RotateZ() requires(Row == Column && Row == 3) {}
-    void RotateZ() requires(Row == Column && Row == 4) {}
+    static constexpr Matrix Zero()
+    {
+        return Matrix{0};
+    }
 
-    inline static const Matrix Zero{0};
+    static constexpr Matrix Identity() requires(Row == Column)
+    {
+        Matrix result{0};
+
+        for (unsigned int i = 0; i < Row; ++i)
+        {
+            result(i, i) = 1;
+        }
+
+        return result;
+    }
 
   private:
     std::array<std::array<float, Column>, Row> m_Data;
@@ -274,7 +311,7 @@ template <unsigned int... Dimensions> struct Tensor
     }
 
     template <typename... Indices>
-    float& operator()(Indices... indices)
+    constexpr float& operator()(Indices... indices)
         requires(sizeof...(Indices) == Order && (std::integral<Indices> && ...))
     {
         std::array<unsigned int, Order> indexArray{static_cast<unsigned int>(indices)...};

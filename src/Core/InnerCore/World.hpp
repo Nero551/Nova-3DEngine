@@ -4,14 +4,10 @@
 #include "Core/OuterCore/Service.hpp"
 #include "Core/Services/EventBus.hpp"
 #include "SystemOwner.hpp"
-#include "Utilities/DataStructures/IndexPool.hpp"
 #include "Utilities/Log.hpp"
 
 namespace N
 {
-template <typename T>
-concept EntityType = std::derived_from<T, Entity>;
-
 /**
  * @brief Owns and manages the runtime state of the engine world.
  * The World owns all entities. It is responsible for managing the lifecycle of
@@ -77,7 +73,7 @@ struct World : SystemOwner
      * @tparam T Entity type to create.
      * @return Reference to the newly created entity.
      */
-    template <EntityType T> Entity& CreateEntity()
+    template <typename T> Entity& CreateEntity() requires std::derived_from<T, Entity>
     {
         const unsigned int id = ++m_nextId;
         T entity;

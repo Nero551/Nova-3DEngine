@@ -1,6 +1,6 @@
 #pragma once
 #include "Math/Common/Exponentials.hpp"
-namespace N
+namespace N::M
 {
 
 struct QuadraticResult
@@ -24,4 +24,4 @@ inline QuadraticResult SolveQuadratic(const float a, const float b, const float 
 
     return {(-b + sqrtD) / denominator, (-b - sqrtD) / denominator, true};
 }
-} // namespace N
+} // namespace N::M
