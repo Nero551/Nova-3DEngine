@@ -71,7 +71,7 @@ void World::Start()
 {
     Query.SubscribeToEvents();
     AddSystem<Transform3DSystem>();
-    // AddSystem<calculus>();
+    AddSystem<calculus>();
 
     Engine::Get().GetModule<Input>().SetMouseMode(MouseMode::Disabled);
 

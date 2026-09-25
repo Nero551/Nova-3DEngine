@@ -1,8 +1,4 @@
 #include "FileSystem.hpp"
-
-#include <fstream>
-#include <sstream>
-
 #include "Utilities/Log.hpp"
 
 namespace N::U
@@ -10,13 +6,15 @@ namespace N::U
 std::string FileSystem::ReadFile(const std::string& path)
 {
     std::ifstream file(path);
+
+    if (!file)
+    {
+        Log::Error("Failed to read file: ", path);
+        return {};
+    }
+
     std::stringstream buffer;
     buffer << file.rdbuf();
-
-    if (buffer.str().empty())
-    {
-        Log::Error("File Doesn't Exist: " + path);
-    }
 
     return buffer.str();
 }
@@ -27,7 +25,7 @@ void FileSystem::WriteFile(const std::string& path, const std::string& content)
 
     if (!file)
     {
-        Log::Error("Failed to write file: " + path);
+        Log::Error("Failed to write file: ", path);
         return;
     }
 

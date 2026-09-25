@@ -15,8 +15,8 @@ int main(int argc, char* argv[])
         //? ex: "Nova --renderer vulkan"
     }
 
-    Sketch::Test();
-    return 0;
+    // Sketch::Test();
+    // return 0;
 
     N::Engine engine;
     engine.Run();

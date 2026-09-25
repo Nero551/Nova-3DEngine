@@ -72,7 +72,7 @@ void ShaderSource::Compile()
     if (!success)
     {
         glGetShaderInfoLog(m_Id, 512, nullptr, infoLog);
-        U::Log::Error(std::string("Shader:" + Name) + infoLog + " | " + Path);
+        U::Log::Error(std::string("Shader:" + GetName()) + infoLog + " | " + Path);
 
         if (m_Stage == ShaderStage::Fragment)
         {

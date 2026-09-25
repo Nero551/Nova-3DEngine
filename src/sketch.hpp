@@ -30,18 +30,18 @@ namespace Sketch
 using Index = unsigned int;
 template <typename T, Index Size> struct Array
 {
-    bool Contains(Index index)
+    static bool Contains(Index index)
     {
         return index < Size;
     }
 
     T& At(Index index)
     {
-        if (Contains(index))
+        if (!Contains(index))
         {
-            return m_Data[index];
+            N::U::Log::Fatal("Array: Out of bounds.");
         }
-        N::U::Log::Fatal("Array: Out of bounds.");
+        return m_Data[index];
     }
 
     T& operator[](Index index)
@@ -340,95 +340,6 @@ template <unsigned int... Dimensions> struct Tensor
         if (dimension != 0)
             os << '\n';
     }
-};
-
-template <std::unsigned_integral IndexType = unsigned int, std::unsigned_integral GenType = unsigned int>
-struct GenerationalIndexPool
-{
-    struct Handle
-    {
-        IndexType Index;
-        GenType Generation;
-
-        Handle(IndexType index, GenType gen) : Index(index), Generation(gen) {}
-
-        bool operator==(const Handle& other) const
-        {
-            return Index == other.Index && Generation == other.Generation;
-        }
-    };
-
-    bool IsAcquired(Handle handle) const
-    {
-        return handle.Index < m_Acquired.size() && m_Acquired[handle.Index] &&
-            m_Gens[handle.Index] == handle.Generation;
-    }
-
-    Handle Acquire()
-    {
-        if (m_Free.empty())
-        {
-            m_Acquired.push_back(true);
-            m_Gens.push_back(1);
-            return {FullSize() - 1, 1};
-        }
-
-        IndexType index = m_Free.back();
-        m_Free.pop_back();
-
-        m_Acquired[index] = true;
-        return {index, m_Gens[index]};
-    }
-
-    void Release(Handle handle)
-    {
-        if (!IsAcquired(handle))
-        {
-            return;
-        }
-
-        m_Acquired[handle.Index] = false;
-        m_Gens[handle.Index] += 1;
-        m_Free.push_back(handle.Index);
-    }
-
-    /** @brief Returns the number of currently acquired indices. */
-    IndexType AcquiredSize() const
-    {
-        return m_Acquired.size() - m_Free.size();
-    }
-
-    /** @brief Returns the total number of indices ever allocated by the pool. */
-    IndexType FullSize() const
-    {
-        return m_Acquired.size();
-    }
-
-    /** @brief Releases all acquired indices and resets the pool. */
-    void Clear()
-    {
-        m_Acquired.clear();
-        m_Gens.clear();
-        m_Free.clear();
-    }
-
-    /** @brief Returns whether no indices are currently acquired. */
-    bool Empty() const
-    {
-        return AcquiredSize() == 0;
-    }
-
-    /** @brief Reserves storage for the specified number of indices. */
-    void Reserve(IndexType capacity)
-    {
-        m_Acquired.reserve(capacity);
-        m_Gens.reserve(capacity);
-    }
-
-  private:
-    std::vector<bool> m_Acquired{};
-    std::vector<GenType> m_Gens;
-    std::vector<IndexType> m_Free{};
 };
 
 inline void Test()

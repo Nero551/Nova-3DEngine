@@ -197,8 +197,8 @@ void Renderer::RenderWorld()
 void Renderer::FillBatches(Transform3DComponent& transformComponent, MaterialComponent& materialComponent,
     MeshComponent& meshComponent)
 {
-    unsigned int materialId = materialComponent.Material->GetResourceId();
-    unsigned int meshId = meshComponent.Mesh->GetResourceId();
+    unsigned int materialId = materialComponent.Material->GetHandle().Index;
+    unsigned int meshId = meshComponent.Mesh->GetHandle().Index;
 
     auto batch = Batches.Find(materialId, meshId);
 

@@ -48,7 +48,7 @@ bool Framebuffer::IsComplete() const
 
     if (status != GL_FRAMEBUFFER_COMPLETE)
     {
-        U::Log::Error("Framebuffer: " + Name + " is not complete");
+        U::Log::Error("Framebuffer: " + GetName() + " is not complete");
         return false;
     }
 

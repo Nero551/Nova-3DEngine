@@ -11,3 +11,4 @@ RequiresClausePosition: WithPreceding
 AlignOperands: DontAlign
 ReflowComments: Never
 PointerAlignment: Left
+BreakBeforeTernaryOperators: false

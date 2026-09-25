@@ -77,7 +77,7 @@ void Shader::CreateProgram()
 
     if (m_Sources.empty())
     {
-        U::Log::Warning("Shader Program:" + Name + " Has No Sources");
+        U::Log::Warning("Shader Program:" + GetName() + " Has No Sources");
         return;
     }
 
@@ -99,7 +99,7 @@ void Shader::CreateProgram()
     if (!success)
     {
         glGetProgramInfoLog(m_Id, 512, nullptr, infoLog);
-        U::Log::Error(std::string("Shader Program: " + Name + " Linking Failed: ") + infoLog);
+        U::Log::Error(std::string("Shader Program: " + GetName() + " Linking Failed: ") + infoLog);
     }
 }
 

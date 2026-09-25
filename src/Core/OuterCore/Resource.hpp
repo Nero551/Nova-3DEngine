@@ -1,4 +1,5 @@
 #pragma once
+#include "Utilities/DataStructures/GIndexPool.hpp"
 
 namespace N
 {
@@ -11,11 +12,9 @@ namespace N
  */
 struct Resource
 {
-    using ResourceId = unsigned int;
+    using Handle = U::GIndexPool<>::Handle;
 
-    std::string Name;
-
-    Resource(std::string name) : Name(std::move(name)) {};
+    Resource(std::string name) : m_Name(std::move(name)) {};
 
     virtual ~Resource() = default;
 
@@ -27,13 +26,19 @@ struct Resource
 
     Resource& operator=(Resource&&) = default;
 
-    ResourceId GetResourceId() const
+    Handle GetHandle() const
     {
-        return m_ResourceId;
+        return m_Handle;
+    }
+
+    const std::string& GetName() const
+    {
+        return m_Name;
     }
 
   private:
     friend struct ResourceManager;
-    ResourceId m_ResourceId = 0;
+    Handle m_Handle;
+    std::string m_Name;
 };
 } // namespace N

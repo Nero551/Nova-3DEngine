@@ -11,6 +11,7 @@
 #include <flat_map>
 #include <flat_set>
 #include <format>
+#include <fstream>
 #include <functional>
 #include <iosfwd>
 #include <iostream>
@@ -23,6 +24,7 @@
 #include <ranges>
 #include <set>
 #include <span>
+#include <sstream>
 #include <string>
 #include <string_view>
 #include <typeindex>
