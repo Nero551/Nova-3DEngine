@@ -10,7 +10,7 @@
 #include "Modules/Renderer/Components/MaterialComponent.hpp"
 #include "Modules/Renderer/Components/MeshComponent.hpp"
 #include "Modules/Renderer/Primitives/Primitives.hpp"
-#include "Utilities/DataStructures/FreeList.hpp"
+#include "Utilities/DataStructures/IndexPool.hpp"
 #include "World/Components/Transform3DComponent.hpp"
 #include "World/Novas/MeshInstance3D.hpp"
 #include "sketch.hpp"

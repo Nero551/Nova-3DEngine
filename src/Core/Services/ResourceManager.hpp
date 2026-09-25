@@ -2,8 +2,8 @@
 
 #include "Core/OuterCore/Resource.hpp"
 #include "Core/OuterCore/Service.hpp"
+#include "Utilities/DataStructures/IndexPool.hpp"
 #include "Utilities/DataStructures/SparseSet.hpp"
-#include "Utilities/Log.hpp"
 
 namespace N
 {
@@ -32,14 +32,33 @@ struct ResourceManager : Service
         if (const auto it = m_ResourceLookup.find(key); it != m_ResourceLookup.end())
         {
             // N::U::Logger::Warning("Resource: " + name + " Already Loaded.");
-            return static_cast<T&>(*m_Resources.At(it->second));
+            return static_cast<T&>(*m_Resources[it->second]);
         }
 
         auto resource = std::make_unique<T>(name, std::forward<Args>(args)...);
-        Resource::ResourceId id = m_NextId++;
+        Resource::ResourceId id = AvailableIds.Acquire();
         resource->m_ResourceId = id;
         m_ResourceLookup.emplace(std::move(key), id);
         return static_cast<T&>(*m_Resources.Emplace(id, std::move(resource))->Value);
+    }
+
+    void Unload(const Resource::ResourceId id)
+    {
+        if (m_Resources.Contains(id))
+        {
+            m_Resources.Erase(id);
+            AvailableIds.Release(id);
+        }
+    }
+
+    template <typename T> T& Acquire(const Resource::ResourceId id) const
+    {
+        return static_cast<T&>(*m_Resources[id]);
+    }
+
+    template <typename T> T& Acquire(const std::string& name)
+    {
+        return static_cast<T&>(*m_Resources[m_ResourceLookup.at(typeid(T).name() + name)]);
     }
 
     template <ResourceType T> bool Exists(const std::string& name) const
@@ -47,9 +66,14 @@ struct ResourceManager : Service
         return m_ResourceLookup.contains(typeid(T).name() + name);
     }
 
+    bool Exists(const Resource::ResourceId id) const
+    {
+        return m_Resources.Contains(id);
+    }
+
   private:
-    U::SparseSet<std::unique_ptr<Resource>> m_Resources;
-    std::unordered_map<std::string, Resource::ResourceId> m_ResourceLookup;
-    Resource::ResourceId m_NextId = 0;
+    U::SparseSet<std::unique_ptr<Resource>> m_Resources{};
+    std::unordered_map<std::string, Resource::ResourceId> m_ResourceLookup{};
+    U::IndexPool<unsigned int> AvailableIds{};
 };
 } // namespace N
