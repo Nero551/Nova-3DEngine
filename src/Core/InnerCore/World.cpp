@@ -30,18 +30,16 @@ void World::RemoveEntity(const unsigned int id)
         entity->ClearParent();
     }
 
-    if (entity->GetId() == m_Root)
-    {
-        RemoveEntity(m_Root);
-    }
-
     Service::Get<EventBus>().Fire<EntityDestroyed>(*entity);
     m_Entities.Erase(id);
+    m_AvailableIds.Release(id);
 
     for (auto& descendant : descendants)
     {
         Service::Get<EventBus>().Fire<EntityDestroyed>(*descendant);
-        m_Entities.Erase(descendant->GetId());
+        unsigned int id = descendant->GetId();
+        m_Entities.Erase(id);
+        m_AvailableIds.Release(id);
     }
 }
 void World::ReserveEntities(size_t count)

@@ -36,7 +36,7 @@ struct ResourceManager : Service
         }
 
         auto resource = std::make_unique<T>(name, std::forward<Args>(args)...);
-        Resource::ResourceId id = AvailableIds.Acquire();
+        Resource::ResourceId id = m_AvailableIds.Acquire();
         resource->m_ResourceId = id;
         m_ResourceLookup.emplace(std::move(key), id);
         return static_cast<T&>(*m_Resources.Emplace(id, std::move(resource))->Value);
@@ -47,7 +47,7 @@ struct ResourceManager : Service
         if (m_Resources.Contains(id))
         {
             m_Resources.Erase(id);
-            AvailableIds.Release(id);
+            m_AvailableIds.Release(id);
         }
     }
 
@@ -74,6 +74,6 @@ struct ResourceManager : Service
   private:
     U::SparseSet<std::unique_ptr<Resource>> m_Resources{};
     std::unordered_map<std::string, Resource::ResourceId> m_ResourceLookup{};
-    U::IndexPool<unsigned int> AvailableIds{};
+    U::IndexPool<unsigned int> m_AvailableIds{};
 };
 } // namespace N

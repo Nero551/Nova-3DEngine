@@ -4,6 +4,7 @@
 #include "Core/OuterCore/Service.hpp"
 #include "Core/Services/EventBus.hpp"
 #include "SystemOwner.hpp"
+#include "Utilities/DataStructures/IndexPool.hpp"
 #include "Utilities/Log.hpp"
 
 namespace N
@@ -78,7 +79,7 @@ struct World : SystemOwner
      */
     template <EntityType T> Entity& CreateEntity()
     {
-        const unsigned int id = m_CurrentEntityId++;
+        const unsigned int id = m_AvailableIds.Acquire();
         T entity;
         entity.m_Id = id;
         entity.Initialize();
@@ -122,10 +123,9 @@ struct World : SystemOwner
 
   private:
     U::SparseSet<Entity> m_Entities{};
+    U::IndexPool<unsigned int> m_AvailableIds{};
+
     unsigned int m_Root{};
     unsigned int m_ActiveCamera{};
-
-    /** @brief ID assigned to the most recently created entity. */
-    unsigned int m_CurrentEntityId = 0;
 };
 } // namespace N

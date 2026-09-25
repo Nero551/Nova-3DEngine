@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 4.1.2)
+cmake_minimum_required(VERSION 4.3.1)
 project(UnitTests)
 
 file(GLOB_RECURSE ENGINE_SOURCES
