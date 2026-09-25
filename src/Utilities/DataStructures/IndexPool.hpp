@@ -11,57 +11,74 @@ namespace N::U
  */
 template <std::unsigned_integral IndexType = unsigned int> struct IndexPool
 {
-    using Index = IndexType;
-
     /** @brief Returns whether the index is currently being used. */
-    bool IsAcquired(Index index) const
+    bool IsAcquired(IndexType index) const
     {
-        return index < m_Used.size() && m_Used[index];
+        return index < m_Acquired.size() && m_Acquired[index];
     }
 
     /** @brief Acquires a new index or reuses a previously released one. */
-    Index Acquire()
+    IndexType Acquire()
     {
         if (m_Free.empty())
         {
-            m_Used.push_back(true);
+            m_Acquired.push_back(true);
             return FullSize() - 1;
         }
 
-        Index index = m_Free.back();
+        IndexType index = m_Free.back();
         m_Free.pop_back();
 
-        m_Used[index] = true;
+        m_Acquired[index] = true;
         return index;
     }
 
     /** @brief Releases an index, making it available for reuse. */
-    void Release(Index index)
+    void Release(IndexType index)
     {
         if (!IsAcquired(index))
         {
             return;
         }
 
-        m_Used[index] = false;
+        m_Acquired[index] = false;
         m_Free.push_back(index);
     }
 
     /** @brief Returns the number of currently acquired indices. */
-    Index Size() const
+    IndexType AcquiredSize() const
     {
-        return m_Used.size() - m_Free.size();
+        return m_Acquired.size() - m_Free.size();
     }
 
     /** @brief Returns the total number of indices ever allocated by the pool. */
-    Index FullSize() const
+    IndexType FullSize() const
     {
-        return m_Used.size();
+        return m_Acquired.size();
+    }
+
+    /** @brief Releases all acquired indices and resets the pool. */
+    void Clear()
+    {
+        m_Acquired.clear();
+        m_Free.clear();
+    }
+
+    /** @brief Returns whether no indices are currently acquired. */
+    bool Empty() const
+    {
+        return AcquiredSize() == 0;
+    }
+
+    /** @brief Reserves storage for the specified number of indices. */
+    void Reserve(IndexType capacity)
+    {
+        m_Acquired.reserve(capacity);
     }
 
   private:
-    std::vector<bool> m_Used;
-    std::vector<Index> m_Free;
+    std::vector<bool> m_Acquired;
+    std::vector<IndexType> m_Free;
 };
 
 } // namespace N::U
