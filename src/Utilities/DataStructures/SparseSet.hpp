@@ -89,7 +89,9 @@ template <typename T> struct SparseSet
     T& At(const SparseIndex index)
     {
         if (!Contains(index))
+        {
             Log::Fatal("SparseSet does not contain the specified sparse index.");
+        }
 
         return m_Dense[m_Sparse[index]].Value;
     }
@@ -97,7 +99,9 @@ template <typename T> struct SparseSet
     const T& At(const SparseIndex index) const
     {
         if (!Contains(index))
+        {
             Log::Fatal("SparseSet does not contain the specified sparse index.");
+        }
 
         return m_Dense[m_Sparse[index]].Value;
     }
@@ -115,7 +119,9 @@ template <typename T> struct SparseSet
     Entry& AtDense(const DenseIndex index)
     {
         if (index >= m_Dense.size())
+        {
             Log::Fatal("SparseSet dense index out of bounds.");
+        }
 
         return m_Dense[index];
     }
@@ -123,7 +129,9 @@ template <typename T> struct SparseSet
     const Entry& AtDense(const DenseIndex index) const
     {
         if (index >= m_Dense.size())
+        {
             Log::Fatal("SparseSet dense index out of bounds.");
+        }
 
         return m_Dense[index];
     }
@@ -131,7 +139,9 @@ template <typename T> struct SparseSet
     Iterator Find(const SparseIndex index)
     {
         if (!Contains(index))
+        {
             return end();
+        }
 
         return {.Set = this, .Index = m_Sparse[index]};
     }
@@ -139,7 +149,9 @@ template <typename T> struct SparseSet
     ConstIterator Find(const SparseIndex index) const
     {
         if (!Contains(index))
+        {
             return end();
+        }
 
         return {.Set = this, .Index = m_Sparse[index]};
     }
@@ -161,7 +173,9 @@ template <typename T> struct SparseSet
         if (!Contains(index))
         {
             if (index >= m_Sparse.size())
+            {
                 m_Sparse.resize(index + 1, InvalidSparseIndex);
+            }
 
             m_Sparse[index] = m_Dense.size();
             m_Dense.push_back({.Value = std::forward<U>(value), .SparseIndex = index});
@@ -176,10 +190,12 @@ template <typename T> struct SparseSet
         if (!Contains(index))
         {
             if (index >= m_Sparse.size())
+            {
                 m_Sparse.resize(index + 1, InvalidSparseIndex);
+            }
 
             m_Sparse[index] = m_Dense.size();
-            m_Dense.emplace_back(Entry{.Value = T{std::forward<Args>(args)...}, .SparseIndex = index});
+            m_Dense.emplace_back(Entry{.SparseIndex = index, .Value = T{std::forward<Args>(args)...}});
         }
 
         return {.Set = this, .Index = m_Sparse[index]};
@@ -194,7 +210,9 @@ template <typename T> struct SparseSet
     bool Erase(const SparseIndex index)
     {
         if (!Contains(index))
+        {
             return false;
+        }
 
         const DenseIndex denseIndex = m_Sparse[index];
 
@@ -223,7 +241,9 @@ template <typename T> struct SparseSet
         m_Dense.clear();
 
         for (DenseIndex& index : m_Sparse)
+        {
             index = InvalidSparseIndex;
+        }
     }
 
     void Reserve(const DenseIndex size)

@@ -21,12 +21,16 @@ constexpr float Exp(const float x)
 constexpr float Factorial(const int x)
 {
     if (x < 0)
+    {
         U::Log::Error("Factorial requires a non-negative integer");
+    }
 
     int result = 1;
 
     for (int i = x; i > 0; i--)
+    {
         result *= i;
+    }
 
     return result;
 }

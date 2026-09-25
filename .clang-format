@@ -12,3 +12,4 @@ AlignOperands: DontAlign
 ReflowComments: Never
 PointerAlignment: Left
 BreakBeforeTernaryOperators: false
+InsertBraces: true

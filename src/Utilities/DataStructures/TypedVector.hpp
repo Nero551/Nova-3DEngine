@@ -132,7 +132,7 @@ template <typename T> struct TypedVector
     }
 
     /** @brief Constructs a value for the specified type combination if it does not exist. */
-    template <typename... Args, typename... Parameters> Iterator Emplace(Parameters&&... parameters)
+    template <typename... Args, typename... Params> Iterator Emplace(Params&&... parameters)
     {
         const TypeId typeId = GetTypeId<Args...>();
 
@@ -143,7 +143,7 @@ template <typename T> struct TypedVector
                 m_Data.resize(typeId + 1);
             }
 
-            m_Data[typeId] = T(std::forward<Parameters>(parameters)...);
+            m_Data[typeId] = T{std::forward<Params>(parameters)...};
         }
 
         return {this, typeId};

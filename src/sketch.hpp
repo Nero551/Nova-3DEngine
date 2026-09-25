@@ -231,13 +231,17 @@ template <unsigned int Row, unsigned int Column> struct Matrix
                 os << matrix(row, col);
 
                 if (col + 1 < Column)
+                {
                     os << ", ";
+                }
             }
 
             os << " ]";
 
             if (row + 1 < Row)
+            {
                 os << '\n';
+            }
         }
 
         return os;
@@ -319,7 +323,9 @@ template <unsigned int... Dimensions> struct Tensor
                 os << std::string(indent + 4, ' ') << tensor.m_Data[flatIndex + i];
 
                 if (i + 1 < dimensions[dimension])
+                {
                     os << ' ';
+                }
             }
 
             os << '\n';
@@ -336,7 +342,9 @@ template <unsigned int... Dimensions> struct Tensor
         os << std::string(indent, ' ') << ']';
 
         if (dimension != 0)
+        {
             os << '\n';
+        }
     }
 };
 

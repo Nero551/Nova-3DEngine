@@ -150,7 +150,9 @@ bool Entity::IsDescendantOf(const unsigned int id) const
     while (current != 0)
     {
         if (current == id)
+        {
             return true;
+        }
 
         current = World::Get().FindEntity(current).m_Parent;
     }
@@ -190,12 +192,16 @@ bool Entity::IsAncestorOf(const unsigned int entityId) const
     for (auto [id, i] : m_Children)
     {
         if (id == entityId)
+        {
             return true;
+        }
 
         const Entity& child = World::Get().FindEntity(id);
 
         if (child.IsAncestorOf(entityId))
+        {
             return true;
+        }
     }
 
     return false;

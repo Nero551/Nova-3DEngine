@@ -117,7 +117,9 @@ void Engine::BeginFrame()
 
     World->BeginFrame(m_DeltaTime);
     for (auto& module : m_Modules)
+    {
         module->BeginFrame(m_DeltaTime);
+    }
 
     for (auto& service : Service::GetAll())
     {

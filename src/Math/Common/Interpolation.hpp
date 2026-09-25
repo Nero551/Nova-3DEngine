@@ -20,7 +20,9 @@ constexpr float EaseOutQuad(const float t)
 constexpr float EaseInOutQuad(const float t)
 {
     if (t < 0.5f)
+    {
         return 0.5f * EaseInQuad(t * 2.0f);
+    }
 
     return 0.5f + 0.5f * EaseOutQuad((t - 0.5f) * 2.0f);
 }
@@ -38,7 +40,9 @@ constexpr float EaseOutCubic(const float t)
 constexpr float EaseInOutCubic(const float t)
 {
     if (t < 0.5f)
+    {
         return 4 * EaseInCubic(t);
+    }
 
     return 0.5f + 0.5f * EaseOutCubic((t - 0.5f) * 2.0f);
 }

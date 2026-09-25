@@ -28,7 +28,9 @@ void Profiling::Update(const double dt)
         double sum = 0.0;
 
         for (double frame : FrameTimes)
+        {
             sum += frame;
+        }
 
         double averageFrameMs = sum / FrameTimes.size();
 

@@ -74,7 +74,9 @@ class TypeRegistry final
         const auto It = Types.find(Id);
 
         if (It == Types.end())
+        {
             return nullptr;
+        }
 
         return &It->second;
     }

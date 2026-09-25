@@ -207,9 +207,13 @@ template <typename Input, typename Output> struct Function
             x = (domainMin + domainMax) / 2.0f;
             const float value = Evaluate(x);
             if (value < y)
+            {
                 domainMin = x;
+            }
             else
+            {
                 domainMax = x;
+            }
         }
         return x;
     }
