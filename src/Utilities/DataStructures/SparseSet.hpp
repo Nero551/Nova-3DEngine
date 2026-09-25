@@ -19,8 +19,8 @@ template <typename T> struct SparseSet
 
     struct Entry
     {
-        T Value;
         SparseIndex SparseIndex;
+        T Value;
     };
 
     template <bool Const> struct BasicIterator

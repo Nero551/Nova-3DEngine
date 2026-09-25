@@ -31,6 +31,11 @@ struct GIndexPool
         {
             return Index == other.Index && Generation == other.Generation;
         }
+
+        friend std::ostream& operator<<(std::ostream& os, Handle handle)
+        {
+            return os << "[" << handle.Index << " | " << handle.Generation << "]";
+        }
     };
 
     /** @brief Returns whether the handle currently refers to an acquired index. */

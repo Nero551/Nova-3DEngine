@@ -3,6 +3,10 @@
 
 namespace N
 {
+unsigned int Entity::GetId() const
+{
+    return m_Id;
+}
 void Entity::DestroyChild(const unsigned int id)
 {
     if (!HasChild(id))
@@ -101,39 +105,9 @@ std::vector<U::CheckedPtr<Entity>> Entity::GetChildren()
 }
 void Entity::ForEachChild(const std::function<void(unsigned int)>& callback)
 {
-    for (auto [i, id] : m_Children)
+    for (auto [id, i] : m_Children)
     {
         callback(id);
-    }
-}
-
-std::vector<U::CheckedPtr<Entity>> Entity::GetDescendants()
-{
-    std::vector<U::CheckedPtr<Entity>> descendants;
-    descendants.reserve(m_Children.Size() * 3);
-
-    RecursiveChildren(descendants, *this);
-
-    return descendants;
-}
-void Entity::ForEachDescendant(const std::function<void(unsigned int)>& callback)
-{
-    ForEachChild(
-        [&](const unsigned int childId)
-        {
-            callback(childId);
-            World::Get().FindEntity(childId).ForEachDescendant(callback);
-        });
-}
-
-void Entity::RecursiveChildren(std::vector<U::CheckedPtr<Entity>>& entities, const Entity& entity)
-{
-    for (auto [i, id] : entity.m_Children)
-    {
-        Entity& child = World::Get().FindEntity(id);
-
-        entities.emplace_back(&child);
-        RecursiveChildren(entities, child);
     }
 }
 
@@ -143,6 +117,25 @@ void Entity::DestroyChildren()
     {
         DestroyChild(m_Children.begin()->Value);
     }
+}
+std::vector<U::CheckedPtr<Entity>> Entity::GetDescendants()
+{
+    std::vector<U::CheckedPtr<Entity>> descendants;
+    descendants.reserve(m_Children.Size() * 3);
+
+    RecursiveChildren(descendants, *this);
+
+    return descendants;
+}
+
+void Entity::ForEachDescendant(const std::function<void(unsigned int)>& callback)
+{
+    ForEachChild(
+        [&](const unsigned int childId)
+        {
+            callback(childId);
+            World::Get().FindEntity(childId).ForEachDescendant(callback);
+        });
 }
 
 bool Entity::HasDescendant(const unsigned int id) const
@@ -180,6 +173,7 @@ std::vector<U::CheckedPtr<Entity>> Entity::GetAncestors() const
 
     return ancestors;
 }
+
 void Entity::ForEachAncestor(const std::function<void(unsigned int)>& callback) const
 {
     unsigned int current = m_Parent;
@@ -191,10 +185,9 @@ void Entity::ForEachAncestor(const std::function<void(unsigned int)>& callback) 
         current = entity.m_Parent;
     }
 }
-
 bool Entity::IsAncestorOf(const unsigned int entityId) const
 {
-    for (auto [i, id] : m_Children)
+    for (auto [id, i] : m_Children)
     {
         if (id == entityId)
             return true;
@@ -260,5 +253,16 @@ Entity& Entity::GetRoot()
     }
 
     return *current;
+}
+
+void Entity::RecursiveChildren(std::vector<U::CheckedPtr<Entity>>& entities, const Entity& entity)
+{
+    for (auto [id, i] : entity.m_Children)
+    {
+        Entity& child = World::Get().FindEntity(id);
+
+        entities.emplace_back(&child);
+        RecursiveChildren(entities, child);
+    }
 }
 } // namespace N
