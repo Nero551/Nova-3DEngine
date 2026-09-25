@@ -8,8 +8,6 @@
 namespace Sketch
 {
 
-//TODO- pools/freelist for generating ids.
-//
 //TODO- the size of transform component is whats bottlenecking.
 // split it. atleast split transform from the matrices (model matrix, normal matrix)
 
@@ -26,6 +24,8 @@ namespace Sketch
 //TODO- If converting a general Quaternion to a rotation quaternion proves
 // expensive in a hot path, introduce a specialized RotQuaternion (RQuaternion)
 // type and explicit conversion between the two. it will just be a unit quaternion with half angle representation.
+
+//TODO- make entities use GIndexPool instead of IndexPool.
 
 using Index = unsigned int;
 template <typename T, Index Size> struct Array

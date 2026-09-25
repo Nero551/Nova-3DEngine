@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Utilities/CheckedPtr.hpp"
+#include "Utilities/DataStructures/GIndexPool.hpp"
 #include "Utilities/DataStructures/SparseSet.hpp"
 
 #include <unordered_set>
@@ -20,6 +21,7 @@ struct World;
   */
 struct Entity
 {
+
     virtual ~Entity() = default;
 
     Entity() = default;

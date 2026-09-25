@@ -15,6 +15,15 @@ namespace N
  */
 struct ComponentPoolQuery
 {
+
+    ComponentPoolQuery()
+    {
+        Service::Get<EventBus>().Sub<EntityDestroyed>([this](const EntityDestroyed&) { ++m_QueryVersion; });
+        Service::Get<EventBus>().Sub<EntityCreated>([this](const EntityCreated&) { ++m_QueryVersion; });
+        Service::Get<EventBus>().Sub<ComponentAdded>([this](const ComponentAdded&) { ++m_QueryVersion; });
+        Service::Get<EventBus>().Sub<ComponentRemoved>([this](const ComponentRemoved&) { ++m_QueryVersion; });
+    }
+
     /**
      * @brief Returns the component pool for a type, creating it if needed.
      *
@@ -120,24 +129,6 @@ struct ComponentPoolQuery
     {
         return {Pool<Args>()...};
     }
-
-    /**
-     * @brief Subscribes to events that can change query membership.
-     *
-     * Each relevant event increments the query version, causing cached
-     * entity lists to be rebuilt on their next use.
-     */
-    void SubscribeToEvents()
-    {
-        Service::Get<EventBus>().Sub<EntityDestroyed>([this](const EntityDestroyed&) { ++m_QueryVersion; });
-
-        Service::Get<EventBus>().Sub<EntityCreated>([this](const EntityCreated&) { ++m_QueryVersion; });
-
-        Service::Get<EventBus>().Sub<ComponentAdded>([this](const ComponentAdded&) { ++m_QueryVersion; });
-        Service::Get<EventBus>().Sub<ComponentRemoved>([this](const ComponentRemoved&) { ++m_QueryVersion; });
-    }
-
-    friend struct World;
 };
 
 } // namespace N
