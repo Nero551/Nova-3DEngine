@@ -412,10 +412,56 @@ inline std::string Superscript(int exponent)
     return result;
 };
 
-template <template <int> typename Derived, int Exp> struct Dimensional
+struct IDimensional
+{
+};
+
+template <template <int> typename Derived, int Exp> struct Dimensional : IDimensional
 {
     static constexpr int Exponent = Exp;
     template <int E> using WithExponent = Derived<E>;
+};
+
+template <typename A, typename B> struct OperationDimensional : IDimensional
+{
+    using Left = A;
+    using Right = B;
+
+    static std::ostream& Print(std::ostream& os)
+    {
+        if (A::Exponent < 0 && B::Exponent < 0)
+        {
+            os << "1/(";
+            A::template WithExponent<-A::Exponent>::Print(os);
+            B::template WithExponent<-B::Exponent>::Print(os);
+            os << ")";
+        }
+
+        if (A::Exponent < 0 && B::Exponent > 0)
+        {
+            B::Print(os);
+            os << "/";
+            A::template WithExponent<-A::Exponent>::Print(os);
+        }
+
+        if (A::Exponent > 0 && B::Exponent < 0)
+        {
+            A::Print(os);
+            os << "/";
+            B::template WithExponent<-B::Exponent>::Print(os);
+        }
+
+        if (A::Exponent > 0 && B::Exponent > 0)
+        {
+            A::Print(os);
+            B::Print(os);
+        }
+
+        return os;
+    }
+
+    template <int E> using WithExponent = OperationDimensional;
+    static constexpr int Exponent = 1;
 };
 
 template <int Exp> struct Time : Dimensional<Time, Exp>
@@ -425,20 +471,30 @@ template <int Exp> struct Time : Dimensional<Time, Exp>
         return os << "s" << Superscript(Exp);
     }
 };
-
-template <typename T, typename D> struct Dimension
+template <int Exp> struct Length : Dimensional<Length, Exp>
 {
-    T Value;
+    static std::ostream& Print(std::ostream& os)
+    {
+        return os << "m" << Superscript(Exp);
+    }
+};
 
-    constexpr Dimension() : Value(0) {}
+template <typename T, typename D> requires(std::derived_from<D, IDimensional>)
+struct Dimension
+{
+    T Value{0};
+
+    constexpr Dimension() {}
     constexpr Dimension(const T& value) : Value(value) {}
 
-    constexpr Dimension operator+(const Dimension& other)
+    template <typename O>
+    constexpr Dimension operator+(const Dimension<T, O>& other) requires(std::same_as<O, D>)
     {
         return {Value + other.Value};
     }
 
-    constexpr Dimension operator-(const Dimension& other)
+    template <typename O>
+    constexpr Dimension operator-(const Dimension<T, O>& other) requires(std::same_as<O, D>)
     {
         return {Value - other.Value};
     }
@@ -453,6 +509,18 @@ template <typename T, typename D> struct Dimension
     template <int E>
     constexpr Dimension<T, typename D::template WithExponent<D::Exponent - E>> operator/(
         const Dimension<T, typename D::template WithExponent<E>>& other)
+    {
+        return {Value / other.Value};
+    }
+
+    template <typename O> constexpr Dimension<T, OperationDimensional<D, O>> operator*(Dimension<T, O>& other)
+    {
+        return {Value * other.Value};
+    }
+
+    template <typename O>
+    constexpr Dimension<T, OperationDimensional<D, typename O::template WithExponent<-O::Exponent>>>
+    operator/(Dimension<T, O>& other)
     {
         return {Value / other.Value};
     }
@@ -475,8 +543,17 @@ template <typename T, typename D> struct Dimension
 
 inline void Test()
 {
-    Dimension<Vector<5>, Time<2>> t;
-    N::U::Log::Info(t);
+    //TODO- to fix this, add a normalize constexpr in operationDimensional.
+    // make operators use the Normalized version of the operational dimensional.
+    // so nested operations will work
+    // make ALL operators use the Normalized version of a dimensional.
+    // probably want nromal Dimensional to have this as well, its normalized is just itself.
+    using Velocity = OperationDimensional<Length<1>, Time<-1>>;
+    using Acceleration = OperationDimensional<Velocity, Time<-1>>;
+
+    Dimension<float, OperationDimensional<Length<1>, Time<-2>>> t{5};
+    Dimension<float, OperationDimensional<Velocity, Time<-1>>> l{2};
+    // N::U::Log::Info(l + t);
 }
 
 } // namespace Sketch
