@@ -416,45 +416,55 @@ struct IDimensional
 {
 };
 
+struct IOperationDimensional : IDimensional
+{
+};
+
 template <template <int> typename Derived, int Exp> struct Dimensional : IDimensional
 {
     static constexpr int Exponent = Exp;
     template <int E> using WithExponent = Derived<E>;
+    using Normalized = Derived<Exp>;
 };
 
-template <typename A, typename B> struct OperationDimensional : IDimensional
+template <typename A, typename B> struct OperationDimensional : IOperationDimensional
 {
-    using Left = A;
-    using Right = B;
+    using Left = A::Normalized;
+    using Right = B::Normalized;
+
+    using Normalized = std::conditional_t<
+        std::same_as<typename Left::template WithExponent<1>, typename Right::template WithExponent<1>>,
+        typename Left::template WithExponent<Left::Exponent + Right::Exponent>,
+        OperationDimensional<Left, Right>>;
 
     static std::ostream& Print(std::ostream& os)
     {
-        if (A::Exponent < 0 && B::Exponent < 0)
+        if (Left::Exponent < 0 && Right::Exponent < 0)
         {
             os << "1/(";
-            A::template WithExponent<-A::Exponent>::Print(os);
-            B::template WithExponent<-B::Exponent>::Print(os);
+            Left::template WithExponent<-Left::Exponent>::Print(os);
+            Right::template WithExponent<-Right::Exponent>::Print(os);
             os << ")";
         }
 
-        if (A::Exponent < 0 && B::Exponent > 0)
+        if (Left::Exponent < 0 && Right::Exponent > 0)
         {
-            B::Print(os);
+            Right::Print(os);
             os << "/";
-            A::template WithExponent<-A::Exponent>::Print(os);
+            Left::template WithExponent<-Left::Exponent>::Print(os);
         }
 
-        if (A::Exponent > 0 && B::Exponent < 0)
+        if (Left::Exponent > 0 && Right::Exponent < 0)
         {
-            A::Print(os);
+            Left::Print(os);
             os << "/";
-            B::template WithExponent<-B::Exponent>::Print(os);
+            Right::template WithExponent<-Right::Exponent>::Print(os);
         }
 
-        if (A::Exponent > 0 && B::Exponent > 0)
+        if (Left::Exponent > 0 && Right::Exponent > 0)
         {
-            A::Print(os);
-            B::Print(os);
+            Left::Print(os);
+            Right::Print(os);
         }
 
         return os;
@@ -488,13 +498,15 @@ struct Dimension
     constexpr Dimension(const T& value) : Value(value) {}
 
     template <typename O>
-    constexpr Dimension operator+(const Dimension<T, O>& other) requires(std::same_as<O, D>)
+    constexpr Dimension operator+(const Dimension<T, O>& other)
+        requires(std::same_as<typename O::Normalized, typename D::Normalized>)
     {
         return {Value + other.Value};
     }
 
     template <typename O>
-    constexpr Dimension operator-(const Dimension<T, O>& other) requires(std::same_as<O, D>)
+    constexpr Dimension operator-(const Dimension<T, O>& other)
+        requires(std::same_as<typename O::Normalized, typename D::Normalized>)
     {
         return {Value - other.Value};
     }
@@ -537,7 +549,7 @@ struct Dimension
     friend std::ostream& operator<<(std::ostream& os, Dimension dimension)
     {
         os << dimension.Value << ' ';
-        return D::Print(os);
+        return D::Normalized::Print(os);
     }
 };
 
@@ -547,13 +559,14 @@ inline void Test()
     // make operators use the Normalized version of the operational dimensional.
     // so nested operations will work
     // make ALL operators use the Normalized version of a dimensional.
-    // probably want nromal Dimensional to have this as well, its normalized is just itself.
+    // probably want normal Dimensional to have this as well, its normalized is just itself.
     using Velocity = OperationDimensional<Length<1>, Time<-1>>;
     using Acceleration = OperationDimensional<Velocity, Time<-1>>;
+    Dimension<float, OperationDimensional<Length<2>, Length<1>>> a;
+    Dimension<float, Length<3>> l2;
 
     Dimension<float, OperationDimensional<Length<1>, Time<-2>>> t{5};
-    Dimension<float, OperationDimensional<Velocity, Time<-1>>> l{2};
-    // N::U::Log::Info(l + t);
+    N::U::Log::Info(a + l2);
 }
 
 } // namespace Sketch
