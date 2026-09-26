@@ -7,10 +7,11 @@ namespace N::G
 {
 struct InstanceData
 {
-    M::Matrix4 ModelMatrix;
-    M::Matrix3 NormalMatrix;
+    M::Matrix<4, 4> ModelMatrix;
+    M::Matrix<3, 3> NormalMatrix;
 
-    InstanceData(const M::Matrix4& model, const M::Matrix3& normal) : ModelMatrix(model), NormalMatrix(normal)
+    InstanceData(const M::Matrix<4, 4>& model, const M::Matrix<3, 3>& normal)
+        : ModelMatrix(model), NormalMatrix(normal)
     {
     }
 };

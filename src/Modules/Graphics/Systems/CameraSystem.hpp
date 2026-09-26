@@ -7,6 +7,6 @@ namespace N::G
 struct CameraSystem : C::System
 {
     void Update(double dt) override;
-    M::Matrix4 GetViewMatrix();
+    M::Matrix<4, 4> GetViewMatrix();
 };
 } // namespace N::G

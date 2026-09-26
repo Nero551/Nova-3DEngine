@@ -2,14 +2,14 @@
 
 namespace N::M
 {
-Matrix4 Basis::GetInverseMatrix() const
+Matrix<4, 4> Basis::GetInverseMatrix() const
 {
     return GetMatrix().Transpose();
 }
 
-Matrix4 Basis::GetMatrix() const
+Matrix<4, 4> Basis::GetMatrix() const
 {
-    Matrix4 basisMatrix = Matrix4::Identity;
+    Matrix<4, 4> basisMatrix = Matrix<4, 4>::Identity();
 
     basisMatrix(0, 0) = Right.x;
     basisMatrix(1, 0) = Right.y;

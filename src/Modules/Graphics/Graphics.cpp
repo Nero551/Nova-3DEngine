@@ -160,10 +160,10 @@ void Graphics::RenderWorld()
     const auto& camera = C::World::Get().GetCamera();
     auto& query = C::World::Get().Query;
 
-    const M::Matrix4 projection =
+    const M::Matrix<4, 4> projection =
         query.Pool<CameraComponent>().GetComponentById(camera.GetId()).GetProjectionMatrix();
 
-    const M::Matrix4 view = GetSystem<CameraSystem>().GetViewMatrix();
+    const M::Matrix<4, 4> view = GetSystem<CameraSystem>().GetViewMatrix();
 
     GUniformbuffer->Set(view, 0);
     GUniformbuffer->Set(projection, 64);

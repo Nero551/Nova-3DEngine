@@ -1,4 +1,7 @@
 #pragma once
+#include "Math/Common/Comparison.hpp"
+#include "Math/Common/Interpolation.hpp"
+
 namespace N::M
 {
 template <unsigned int Components> struct Vector

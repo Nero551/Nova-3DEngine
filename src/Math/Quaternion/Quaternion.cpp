@@ -18,7 +18,7 @@ Quaternion Quaternion::FromQPolar(const QPolar& qPolar)
     return result;
 }
 
-Quaternion Quaternion::FromMatrix3(const Matrix3& mat3)
+Quaternion Quaternion::FromMatrix3(const Matrix<3, 3>& mat3)
 {
     const float trace = mat3(0, 0) + mat3(1, 1) + mat3(2, 2);
 
@@ -67,7 +67,7 @@ Quaternion Quaternion::FromMatrix3(const Matrix3& mat3)
 }
 Quaternion Quaternion::FromEulerXYZ(const Vector<3>& euler)
 {
-    Matrix3 rotation = Matrix3::Identity;
+    Matrix<3, 3> rotation = Matrix<3, 3>::Identity();
     rotation = rotation.Rotate(euler);
     return FromMatrix3(rotation);
 }
@@ -146,13 +146,13 @@ QPolar Quaternion::ToQPolar() const
     return {Axis(), Angle(), Magnitude()};
 }
 
-Matrix4 Quaternion::ToMatrix4() const
+Matrix<4, 4> Quaternion::ToMatrix4() const
 {
-    Matrix4 result = Matrix4::Identity;
+    Matrix<4, 4> result = Matrix<4, 4>::Identity();
 
     if (iszero(Angle()))
     {
-        return Matrix4::Identity;
+        return Matrix<4, 4>::Identity();
     }
 
     return result.RotateAroundAxis(Axis(), Angle());
@@ -160,7 +160,7 @@ Matrix4 Quaternion::ToMatrix4() const
 
 Vector<3> Quaternion::ToEulerXYZ() const
 {
-    const Matrix4 matrix = ToMatrix4();
+    const Matrix<4, 4> matrix = ToMatrix4();
     Vector<3> result;
 
     result.x = std::atan2(matrix(2, 1), matrix(2, 2));

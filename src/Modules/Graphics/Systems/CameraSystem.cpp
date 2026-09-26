@@ -70,7 +70,7 @@ void CameraSystem::Update(const double dt)
     }
 }
 
-M::Matrix4 CameraSystem::GetViewMatrix()
+M::Matrix<4, 4> CameraSystem::GetViewMatrix()
 {
     auto& world = C::World::Get();
     auto& camera = world.GetCamera();
@@ -80,6 +80,6 @@ M::Matrix4 CameraSystem::GetViewMatrix()
     const M::Vector<3> forward = transform.GetForward();
     const M::Vector<3> up = transform.GetUp();
 
-    return M::Matrix4::LookAt(pos, pos + forward, up);
+    return M::Matrix<4, 4>::LookAt(pos, pos + forward, up);
 }
 } // namespace N::G

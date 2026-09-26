@@ -698,19 +698,19 @@ TEST_CASE("Function friend operators (if implemented)")
 TEST_CASE("Basis matrix")
 {
     Basis basis;
-    Matrix4 m = basis.GetMatrix();
+    Matrix<4, 4> m = basis.GetMatrix();
 
-    REQUIRE(m == Matrix4::Identity);
+    REQUIRE(m == Matrix<4, 4>::Identity());
 
-    Matrix4 inv = basis.GetInverseMatrix();
-    REQUIRE(inv == Matrix4::Identity);
+    Matrix<4, 4> inv = basis.GetInverseMatrix();
+    REQUIRE(inv == Matrix<4, 4>::Identity());
 
     Vector<3> right(0, 1, 0);
     Vector<3> up(0, 0, 1);
     Vector<3> forward(1, 0, 0);
 
     Basis custom{right, up, forward};
-    Matrix4 mat = custom.GetMatrix();
+    Matrix<4, 4> mat = custom.GetMatrix();
 
     REQUIRE(mat(0, 0) == right.x);
     REQUIRE(mat(1, 0) == right.y);
@@ -732,34 +732,34 @@ TEST_CASE("Basis matrix")
 //==============================================================================
 TEST_CASE("Matrix2 construction and ops")
 {
-    Matrix2 m(1, 2, 3, 4);
+    Matrix<2, 2> m(1, 2, 3, 4);
 
     REQUIRE(m(0, 0) == 1);
     REQUIRE(m(1, 1) == 4);
 
-    Matrix2 id = Matrix2::Identity;
+    Matrix<2, 2> id = Matrix<2, 2>::Identity();
 
     REQUIRE(id(0, 0) == 1);
     REQUIRE(id(1, 1) == 1);
     REQUIRE(id(0, 1) == 0);
     REQUIRE(id(1, 0) == 0);
 
-    Matrix2 a(1, 2, 3, 4);
-    Matrix2 b(5, 6, 7, 8);
+    Matrix<2, 2> a(1, 2, 3, 4);
+    Matrix<2, 2> b(5, 6, 7, 8);
 
-    Matrix2 c = a + b;
+    Matrix<2, 2> c = a + b;
 
     REQUIRE(c(0, 0) == 6);
     REQUIRE(c(1, 1) == 12);
 
-    Matrix2 prod = a * b;
+    Matrix<2, 2> prod = a * b;
 
     REQUIRE(prod(0, 0) == 1 * 5 + 2 * 7);
     REQUIRE(prod(0, 1) == 1 * 6 + 2 * 8);
     REQUIRE(prod(1, 0) == 3 * 5 + 4 * 7);
     REQUIRE(prod(1, 1) == 3 * 6 + 4 * 8);
 
-    Matrix2 s = a * 2;
+    Matrix<2, 2> s = a * 2;
 
     REQUIRE(s(0, 0) == 2);
 
@@ -771,11 +771,11 @@ TEST_CASE("Matrix2 construction and ops")
 
     REQUIRE(a.Determinant() == 1 * 4 - 2 * 3);
 
-    Matrix2 inv = a.Inverse();
+    Matrix<2, 2> inv = a.Inverse();
 
-    REQUIRE((a * inv).NearlyEquals(Matrix2::Identity));
+    REQUIRE((a * inv).NearlyEquals(Matrix<2, 2>::Identity()));
 
-    Matrix2 at = a.Transpose();
+    Matrix<2, 2> at = a.Transpose();
 
     REQUIRE(at(0, 1) == 3);
     REQUIRE(at(1, 0) == 2);
@@ -783,14 +783,14 @@ TEST_CASE("Matrix2 construction and ops")
 
 TEST_CASE("Matrix2 identities")
 {
-    Matrix2 a(1, 2, 3, 5);
-    Matrix2 id = Matrix2::Identity;
+    Matrix<2, 2> a(1, 2, 3, 5);
+    Matrix<2, 2> id = Matrix<2, 2>::Identity()();
 
-    REQUIRE(a + Matrix2::Zero() == a);
-    REQUIRE(Matrix2::Zero() + a == a);
+    REQUIRE(a + Matrix<2, 2>::Zero() == a);
+    REQUIRE(Matrix<2, 2>::Zero() + a == a);
 
-    REQUIRE(a - Matrix2::Zero() == a);
-    REQUIRE(a - a == Matrix2::Zero());
+    REQUIRE(a - Matrix<2, 2>::Zero() == a);
+    REQUIRE(a - a == Matrix<2, 2>::Zero());
 
     REQUIRE((a * id).NearlyEquals(a));
     REQUIRE((id * a).NearlyEquals(a));
@@ -803,7 +803,7 @@ TEST_CASE("Matrix2 identities")
 
 TEST_CASE("Matrix3 construction and ops")
 {
-    Matrix3 m(1, 2, 3, 4, 5, 6, 7, 8, 9);
+    Matrix<3, 3> m(1, 2, 3, 4, 5, 6, 7, 8, 9);
 
     REQUIRE(m(0, 0) == 1);
     REQUIRE(m(0, 1) == 2);
@@ -815,48 +815,48 @@ TEST_CASE("Matrix3 construction and ops")
     REQUIRE(m(2, 1) == 8);
     REQUIRE(m(2, 2) == 9);
 
-    Matrix3 id = Matrix3::Identity;
+    Matrix<3, 3> id = Matrix<3, 3>::Identity();
 
     REQUIRE(id(0, 0) == 1);
     REQUIRE(id(1, 1) == 1);
     REQUIRE(id(2, 2) == 1);
 
-    Matrix3 a(1, 2, 3, 4, 5, 6, 7, 8, 9);
-    Matrix3 b(9, 8, 7, 6, 5, 4, 3, 2, 1);
+    Matrix<3, 3> a(1, 2, 3, 4, 5, 6, 7, 8, 9);
+    Matrix<3, 3> b(9, 8, 7, 6, 5, 4, 3, 2, 1);
 
-    Matrix3 c = a + b;
+    Matrix<3, 3> c = a + b;
 
     REQUIRE(c(0, 0) == 10);
     REQUIRE(c(2, 2) == 10);
 
-    Matrix3 prod = a * b;
+    Matrix<3, 3> prod = a * b;
 
     REQUIRE(prod(0, 0) == 1 * 9 + 2 * 6 + 3 * 3);
     REQUIRE(prod(1, 1) == 4 * 8 + 5 * 5 + 6 * 2);
 
     REQUIRE(a.Determinant() == 0.0f);
 
-    Matrix3 id2 = Matrix3::Identity;
+    Matrix<3, 3> id2 = Matrix<3, 3>::Identity();
 
     REQUIRE(id2.Determinant() == 1.0f);
 
-    Matrix3 rot = Matrix3::Identity.RotateZ(PI / 4);
-    Matrix3 inv = rot.Inverse();
+    Matrix<3, 3> rot = Matrix<3, 3>::Identity().RotateZ(PI / 4);
+    Matrix<3, 3> inv = rot.Inverse();
 
-    REQUIRE((rot * inv).NearlyEquals(Matrix3::Identity));
+    REQUIRE((rot * inv).NearlyEquals(Matrix<3, 3>::Identity()));
 }
 
 TEST_CASE("Matrix3 identities")
 {
-    Matrix3 a(1, 2, 3, 0, 1, 4, 5, 6, 0);
+    Matrix<3, 3> a(1, 2, 3, 0, 1, 4, 5, 6, 0);
 
-    Matrix3 id = Matrix3::Identity;
+    Matrix<3, 3> id = Matrix<3, 3>::Identity();
 
-    REQUIRE(a + Matrix3::Zero() == a);
-    REQUIRE(Matrix3::Zero() + a == a);
+    REQUIRE(a + Matrix<3, 3>::Zero() == a);
+    REQUIRE(Matrix<3, 3>::Zero() + a == a);
 
-    REQUIRE(a - Matrix3::Zero() == a);
-    REQUIRE(a - a == Matrix3::Zero());
+    REQUIRE(a - Matrix<3, 3>::Zero() == a);
+    REQUIRE(a - a == Matrix<3, 3>::Zero());
 
     REQUIRE((a * id).NearlyEquals(a));
     REQUIRE((id * a).NearlyEquals(a));
@@ -869,11 +869,11 @@ TEST_CASE("Matrix3 identities")
 
 TEST_CASE("Matrix3 transformations")
 {
-    Matrix3 m = Matrix3::Identity;
+    Matrix<3, 3> m = Matrix<3, 3>::Identity();
 
     Vector<3> v(1, 2, 3);
 
-    Matrix3 scaled = m.Scale(Vector<3>(2, 3, 4));
+    Matrix<3, 3> scaled = m.Scale(Vector<3>(2, 3, 4));
     Vector<3> v2 = scaled * v;
 
     REQUIRE(v2 == Vector<3>(2, 6, 12));
@@ -884,14 +884,14 @@ TEST_CASE("Matrix3 transformations")
 
     REQUIRE(v3.NearlyEquals(Vector<3>(0, 1, 0)));
 
-    m = Matrix3::Identity.Translate(Vector<2>(5, 6));
+    m = Matrix<3, 3>::Identity().Translate(Vector<2>(5, 6));
 
     Vector<3> v4 = m * Vector<3>(1, 2, 1);
 
     REQUIRE(v4.x == 6);
     REQUIRE(v4.y == 8);
 
-    m = Matrix3::Identity.Rotate(Vector<3>(PI / 2, 0, 0));
+    m = Matrix<3, 3>::Identity().Rotate(Vector<3>(PI / 2, 0, 0));
 
     Vector<3> v5 = m * Vector<3>(0, 1, 0);
 
@@ -901,7 +901,7 @@ TEST_CASE("Matrix3 transformations")
 TEST_CASE("Matrix3 transformation identities")
 {
     Vector<3> v(1.2f, -3.4f, 5.6f);
-    Matrix3 identity = Matrix3::Identity;
+    Matrix<3, 3> identity = Matrix<3, 3>::Identity();
 
     REQUIRE(identity.Scale(Vector<3>::One()) == identity);
     REQUIRE(identity.RotateZ(0.0f) == identity);
@@ -913,36 +913,36 @@ TEST_CASE("Matrix3 transformation identities")
 
 TEST_CASE("Matrix4 construction and ops")
 {
-    Matrix4 id = Matrix4::Identity;
+    Matrix<4, 4> id = Matrix<4, 4>::Identity();
 
     REQUIRE(id(0, 0) == 1);
     REQUIRE(id(3, 3) == 1);
 
-    Matrix4 a(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
+    Matrix<4, 4> a(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
 
     REQUIRE(a.Determinant() == Approx(0.0f));
 
-    Matrix4 rot = Matrix4::Identity.RotateX(PI / 3);
-    Matrix4 inv = rot.Inverse();
+    Matrix<4, 4> rot = Matrix<4, 4>::Identity().RotateX(PI / 3);
+    Matrix<4, 4> inv = rot.Inverse();
 
-    REQUIRE((rot * inv).NearlyEquals(Matrix4::Identity));
+    REQUIRE((rot * inv).NearlyEquals(Matrix<4, 4>::Identity()));
 
-    Matrix4 t = a.Transpose();
+    Matrix<4, 4> t = a.Transpose();
 
     REQUIRE(t(0, 1) == a(1, 0));
 }
 
 TEST_CASE("Matrix4 identities")
 {
-    Matrix4 a(1, 2, 3, 4, 0, 1, 4, 5, 5, 6, 0, 7, 1, 0, 2, 1);
+    Matrix<4, 4> a(1, 2, 3, 4, 0, 1, 4, 5, 5, 6, 0, 7, 1, 0, 2, 1);
 
-    Matrix4 id = Matrix4::Identity;
+    Matrix<4, 4> id = Matrix<4, 4>::Identity();
 
-    REQUIRE(a + Matrix4::Zero() == a);
-    REQUIRE(Matrix4::Zero() + a == a);
+    REQUIRE(a + Matrix<4, 4>::Zero() == a);
+    REQUIRE(Matrix<4, 4>::Zero() + a == a);
 
-    REQUIRE(a - Matrix4::Zero() == a);
-    REQUIRE(a - a == Matrix4::Zero());
+    REQUIRE(a - Matrix<4, 4>::Zero() == a);
+    REQUIRE(a - a == Matrix<4, 4>::Zero());
 
     REQUIRE((a * id).NearlyEquals(a));
     REQUIRE((id * a).NearlyEquals(a));
@@ -955,7 +955,7 @@ TEST_CASE("Matrix4 identities")
 
 TEST_CASE("Matrix4 transformations")
 {
-    Matrix4 m = Matrix4::Identity;
+    Matrix<4, 4> m = Matrix<4, 4>::Identity();
 
     Vector<4> v(1, 2, 3, 1);
 
@@ -965,34 +965,34 @@ TEST_CASE("Matrix4 transformations")
 
     REQUIRE(v2 == Vector<4>(6, 8, 10, 1));
 
-    m = Matrix4::Identity.Scale(Vector<3>(2, 3, 4));
+    m = Matrix<4, 4>::Identity().Scale(Vector<3>(2, 3, 4));
 
     Vector<4> v3 = m * v;
 
     REQUIRE(v3 == Vector<4>(2, 6, 12, 1));
 
-    m = Matrix4::Identity.RotateZ(PI / 2);
+    m = Matrix<4, 4>::Identity().RotateZ(PI / 2);
 
     Vector<4> v4 = m * Vector<4>(1, 0, 0, 1);
 
     REQUIRE(v4.NearlyEquals(Vector<4>(0, 1, 0, 1)));
 
-    Matrix4 proj = Matrix4::Perspective(PI / 3, 1.5f, 0.1f, 100.0f);
+    Matrix<4, 4> proj = Matrix<4, 4>::Perspective(PI / 3, 1.5f, 0.1f, 100.0f);
 
     REQUIRE(proj(3, 2) == -1.0f);
 
-    Matrix4 ortho = Matrix4::Orthographic(-1, 1, -1, 1, 0.1f, 10);
+    Matrix<4, 4> ortho = Matrix<4, 4>::Orthographic(-1, 1, -1, 1, 0.1f, 10);
 
     REQUIRE(ortho(0, 0) == Approx(1.0f));
 
-    Matrix4 view = Matrix4::LookAt(Vector<3>(0, 0, 5), Vector<3>::Zero(), Vector<3>::Up());
+    Matrix<4, 4> view = Matrix<4, 4>::LookAt(Vector<3>(0, 0, 5), Vector<3>::Zero(), Vector<3>::Up());
 
     Vector<4> pos = view * Vector<4>(0, 0, 5, 1);
 
     REQUIRE(pos.NearlyEquals(Vector<4>(0, 0, 0, 1)));
 
-    Matrix4 a = Matrix4::Identity.Translate(Vector<3>(1, 2, 3));
-    Matrix4 b = Matrix4::Identity.Scale(Vector<3>(2, 2, 2));
+    Matrix<4, 4> a = Matrix<4, 4>::Identity().Translate(Vector<3>(1, 2, 3));
+    Matrix<4, 4> b = Matrix<4, 4>::Identity().Scale(Vector<3>(2, 2, 2));
 
     Vector<4> u(1, 1, 1, 1);
 
@@ -1005,9 +1005,9 @@ TEST_CASE("Matrix-vector identities")
     Vector<3> v3(1.2f, -3.4f, 5.6f);
     Vector<4> v4(1.2f, -3.4f, 5.6f, -7.8f);
 
-    REQUIRE((Matrix2::Identity * v2) == v2);
-    REQUIRE((Matrix3::Identity * v3) == v3);
-    REQUIRE((Matrix4::Identity * v4) == v4);
+    REQUIRE((Matrix<2, 2>::Identity() * v2) == v2);
+    REQUIRE((Matrix<3, 3>::Identity() * v3) == v3);
+    REQUIRE((Matrix<4, 4>::Identity() * v4) == v4);
 }
 //==============================================================================
 // Quaternion
@@ -1113,8 +1113,8 @@ TEST_CASE(
 {
     Vector<3> euler(PI / 3, PI / 4, PI / 6);
     Quaternion q = Quaternion::FromEulerXYZ(euler);
-    Matrix3 mat = q.ToMatrix4().ToMatrix3();
-    Matrix3 matEuler = Matrix3::Identity.Rotate(euler);
+    Matrix<3, 3> mat = q.ToMatrix4().ToMatrix3();
+    Matrix<3, 3> matEuler = Matrix<3, 3>::Identity().Rotate(euler);
     REQUIRE(mat.NearlyEquals(matEuler));
     Vector<3> euler2 = q.ToEulerXYZ();
     REQUIRE(euler2.NearlyEquals(euler));

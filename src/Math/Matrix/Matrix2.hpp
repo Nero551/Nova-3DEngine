@@ -1,6 +1,8 @@
 #pragma once
-#include <iosfwd>
 
+#include "Math/Common/Comparison.hpp"
+#include "Math/Common/Constants.hpp"
+#include "Math/Matrix/Matrix.hpp"
 #include "Math/Vector/Vector2.hpp"
 
 namespace N::M
@@ -15,131 +17,78 @@ namespace N::M
  * - Transformations are composed through matrix multiplication.
  *
  * For column vectors, the rightmost transformation is applied first.
- *
- * Example:
- *     M * v
- *
- *     [ m00 m01 ] [ x ]   [ m00*x + m01*y ]
- *     [ m10 m11 ] [ y ] = [ m10*x + m11*y ]
  */
-struct Matrix2
+template <> struct Matrix<2, 2> : BasicMatrix<2, 2, Matrix<2, 2>>
 {
-  private:
-    std::array<std::array<float, 2>, 2> m_Data = {};
+    using BasicMatrix::BasicMatrix;
 
-  public:
-    /**
-     * @brief Creates a zero matrix.
-     */
-    Matrix2() = default;
-
-    /**
-     * @brief Creates a matrix with every element set to the same value.
-     *
-     * @param mAll Value assigned to every element.
-     */
-    explicit Matrix2(float mAll);
-
-    /**
-     * @brief Creates a matrix from its individual elements.
-     *
-     * Elements are specified in row-major order:
-     *
-     *     [ m00 m01 ]
-     *     [ m10 m11 ]
-     */
-    Matrix2(float m00, float m01, float m10, float m11);
-
-    const std::array<std::array<float, 2>, 2>& Data() const
+    /** @brief Applies a scale transformation. */
+    constexpr Matrix Scale(const Vector<2>& scale) const
     {
-        return m_Data;
-    };
+        Matrix scaleMatrix = Identity();
 
-    /**
-     * @brief Applies a scale transformation.
-     *
-     * @param scale X and Y scale factors.
-     * @return The matrix multiplied by the scale matrix.
-     */
-    [[nodiscard]] Matrix2 Scale(const Vector<2>& scale) const;
+        scaleMatrix(0, 0) = scale.x;
+        scaleMatrix(1, 1) = scale.y;
 
-    /**
-     * @brief Applies a counter-clockwise rotation.
-     *
-     * @param radian Rotation angle in radians.
-     * @return The matrix multiplied by the rotation matrix.
-     */
-    [[nodiscard]] Matrix2 Rotate(float radian) const;
+        return *this * scaleMatrix;
+    }
 
-    /**
-     * @brief Returns the inverse of this matrix.
-     *
-     * If the matrix is not invertible, Identity is returned and a warning is sent
-     */
-    [[nodiscard]] Matrix2 Inverse() const;
+    /** @brief Applies a counter-clockwise rotation. */
+    constexpr Matrix Rotate(const float radian) const
+    {
+        Matrix rotationMatrix = Identity();
 
-    /**
-     * @brief Calculates the determinant of this matrix.
-     */
-    [[nodiscard]] float Determinant() const;
+        rotationMatrix(0, 0) = std::cos(radian);
+        rotationMatrix(1, 0) = std::sin(radian);
+        rotationMatrix(0, 1) = -std::sin(radian);
+        rotationMatrix(1, 1) = std::cos(radian);
 
-    /**
-     * @brief Returns the transpose of this matrix.
-     */
-    [[nodiscard]] Matrix2 Transpose() const;
+        return *this * rotationMatrix;
+    }
 
-    /**
-     * @brief Compares two matrices using an absolute error tolerance.
-     *
-     * @param mat2 Matrix to compare against.
-     * @param epsilon Maximum allowed difference between corresponding elements.
-     */
-    [[nodiscard]] bool NearlyEquals(const Matrix2& mat2, float epsilon = EPSILON) const;
+    /** @brief Returns the determinant of the matrix. */
+    constexpr float Determinant() const
+    {
+        return (*this)(0, 0) * (*this)(1, 1) - (*this)(0, 1) * (*this)(1, 0);
+    }
 
-    float& operator()(int row, int col);
-    const float& operator()(int row, int col) const;
+    /** @brief Returns the inverse of the matrix. */
+    constexpr Matrix Inverse() const
+    {
+        const float determinant = Determinant();
 
-    Matrix2 operator+(const Matrix2& mat2) const;
-    Matrix2 operator-(const Matrix2& mat2) const;
-    Matrix2 operator*(const Matrix2& mat2) const;
+        if (std::abs(determinant) < EPSILON)
+        {
+            U::Log::Error("Matrix is not invertible");
+            return Identity();
+        }
 
-    Matrix2& operator+=(const Matrix2& mat2);
-    Matrix2& operator-=(const Matrix2& mat2);
-    Matrix2& operator*=(const Matrix2& mat2);
+        return Matrix((*this)(1, 1), -(*this)(0, 1), -(*this)(1, 0), (*this)(0, 0)) / determinant;
+    }
 
-    /**
-     * @brief Multiplies this matrix by a column vector.
-     */
-    Vector<2> operator*(const Vector<2>& vec2) const;
+    /** @brief Multiplies this matrix by another matrix. */
+    constexpr Matrix operator*(const Matrix& matrix) const
+    {
+        Matrix result{0};
 
-    Matrix2 operator*(float scalar) const;
-    Matrix2 operator/(float scalar) const;
+        for (unsigned int row = 0; row < 2; ++row)
+        {
+            for (unsigned int column = 0; column < 2; ++column)
+            {
+                for (unsigned int k = 0; k < 2; ++k)
+                {
+                    result(row, column) += (*this)(row, k) * matrix(k, column);
+                }
+            }
+        }
 
-    Matrix2& operator*=(float scalar);
-    Matrix2& operator/=(float scalar);
+        return result;
+    }
 
-    /**
-     * @brief Returns the additive inverse of this matrix.
-     */
-    Matrix2 operator-() const;
-
-    bool operator==(const Matrix2& mat2) const;
-    bool operator!=(const Matrix2& mat2) const;
-
-    /**
-     * @brief Matrix containing only zeros.
-     */
-    static const Matrix2 Zero;
-
-    /**
-     * @brief 2x2 identity matrix.
-     *
-     *     [ 1 0 ]
-     *     [ 0 1 ]
-     */
-    static const Matrix2 Identity;
-
-    friend Matrix2 operator*(float scalar, const Matrix2& mat2);
-    friend std::ostream& operator<<(std::ostream& os, const Matrix2& mat2);
+    /** @brief Multiplies this matrix by another matrix. */
+    constexpr Matrix operator*=(const Matrix& matrix)
+    {
+        return *this = *this * matrix;
+    }
 };
 } // namespace N::M

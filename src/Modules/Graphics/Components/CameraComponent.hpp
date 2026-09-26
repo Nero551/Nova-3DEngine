@@ -19,14 +19,15 @@ struct CameraComponent : C::Component
     float Pitch = 0;
     ProjectionMode ProjectionMode = ProjectionMode::Perspective;
 
-    [[nodiscard]] M::Matrix4 GetProjectionMatrix() const
+    [[nodiscard]] M::Matrix<4, 4> GetProjectionMatrix() const
     {
         // TODO- currently , orthographic doesn't fucking work
         if (ProjectionMode == ProjectionMode::Orthographic)
         {
-            return M::Matrix4::Orthographic(-AspectRatio, AspectRatio, -AspectRatio, AspectRatio, Near, Far);
+            return M::Matrix<4, 4>::Orthographic(
+                -AspectRatio, AspectRatio, -AspectRatio, AspectRatio, Near, Far);
         }
-        return M::Matrix4::Perspective(M::Rad(FOV), AspectRatio, Near, Far);
+        return M::Matrix<4, 4>::Perspective(M::Rad(FOV), AspectRatio, Near, Far);
     }
 };
 } // namespace N::G

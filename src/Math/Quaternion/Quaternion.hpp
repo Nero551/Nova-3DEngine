@@ -54,7 +54,7 @@ struct Quaternion
      * @param mat3 Rotation matrix.
      * @return Quaternion representing the same rotation.
      */
-    static Quaternion FromMatrix3(const Matrix3& mat3);
+    static Quaternion FromMatrix3(const Matrix<3, 3>& mat3);
 
     /**
      * @brief Constructs a quaternion from XYZ Euler angles.
@@ -134,7 +134,7 @@ struct Quaternion
      *
      * @return 4x4 matrix representing the quaternion's rotation.
      */
-    Matrix4 ToMatrix4() const;
+    Matrix<4, 4> ToMatrix4() const;
 
     /**
      * @brief Converts the quaternion to XYZ Euler angles.
