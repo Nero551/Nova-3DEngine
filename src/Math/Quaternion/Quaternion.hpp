@@ -3,7 +3,6 @@
 #include "../Coordinates/QPolar.hpp"
 #include "../Matrix/Matrix4.hpp"
 #include "../Vector/Vector3.hpp"
-#include "Math/Functions/Function.hpp"
 
 namespace N::M
 {
@@ -31,7 +30,10 @@ struct Quaternion
     // TODO: Investigate the principal branch of Quaternion Ln/Exp.
     //  Ln(Exp(q)) == q only when the imaginary-vector magnitude is within
     //  the principal range (< PI). Outside it, the logarithm wraps by 2*PI.
-    float w, x, y, z;
+    float w = 0;
+    float x = 0;
+    float y = 0;
+    float z = 0;
 
     /**
      * @brief Constructs a quaternion from quaternion polar coordinates.
@@ -68,10 +70,10 @@ struct Quaternion
     static Quaternion FromEulerXYZ(const Vector<3>& euler);
 
     /** @brief Constructs the zero quaternion. */
-    Quaternion();
+    constexpr Quaternion() {}
 
     /** @brief Constructs a quaternion with all components equal to `all`. */
-    explicit Quaternion(float all);
+    constexpr explicit Quaternion(const float all) : w(all), x(all), y(all), z(all) {}
 
     /**
      * @brief Constructs a quaternion from its four components.
@@ -80,7 +82,8 @@ struct Quaternion
      * @param y Coefficient of the `j` imaginary unit.
      * @param z Coefficient of the `k` imaginary unit.
      */
-    Quaternion(float w, float x, float y, float z);
+    constexpr Quaternion(const float w, const float x, const float y, const float z)
+        : w(w), x(x), y(y), z(z) {};
 
     /**
      * @brief Returns the quaternion conjugate.
@@ -160,6 +163,40 @@ struct Quaternion
 
     /** @brief Tests exact component-wise inequality. */
     bool operator!=(const Quaternion& p) const;
+
+    float& operator()(const unsigned int index)
+    {
+        switch (index)
+        {
+        case 0:
+            return x;
+        case 1:
+            return y;
+        case 2:
+            return z;
+        case 3:
+            return w;
+        default:
+            U::Log::Fatal("Complex Number doesn't have index ", index, " w + xi + yj + zk ");
+        }
+    }
+
+    const float& operator()(const unsigned int index) const
+    {
+        switch (index)
+        {
+        case 0:
+            return x;
+        case 1:
+            return y;
+        case 2:
+            return z;
+        case 3:
+            return w;
+        default:
+            U::Log::Fatal("Complex Number doesn't have index ", index, " w + xi + yj + zk ");
+        }
+    }
 
     /** @brief Returns the additive inverse: `-q = -w - xi - yj - zk`. */
     Quaternion operator-() const;
@@ -244,6 +281,9 @@ struct Quaternion
     friend std::ostream& operator<<(std::ostream& os, const Quaternion& q);
 
     /** @brief Multiplicative identity quaternion: `1 + 0i + 0j + 0k`. */
-    static const Quaternion Identity;
+    static constexpr Quaternion Identity()
+    {
+        return Quaternion{1, 0, 0, 0};
+    };
 };
 } // namespace N::M

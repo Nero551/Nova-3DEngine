@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Math/Matrix/Matrix.hpp"
+#include "Math/Matrix/Matrix2.hpp"
 #include "Math/Vector/Vector3.hpp"
 
 #include "Utilities/Log.hpp"
@@ -9,8 +10,8 @@ namespace N::M
 {
 template <> struct Matrix<3, 3> : BasicMatrix<3, 3, Matrix<3, 3>>
 {
-    using Base = BasicMatrix;
-    using Base::Base;
+    using BasicMatrix::BasicMatrix;
+    using BasicMatrix::operator*;
 
     /** @brief Applies a scale transformation. */
     constexpr Matrix Scale(const Vector<3>& scale) const

@@ -72,12 +72,6 @@ Quaternion Quaternion::FromEulerXYZ(const Vector<3>& euler)
     return FromMatrix3(rotation);
 }
 
-Quaternion::Quaternion() : w(0), x(0), y(0), z(0) {}
-
-Quaternion::Quaternion(const float all) : w(all), x(all), y(all), z(all) {}
-
-Quaternion::Quaternion(const float w, const float x, const float y, const float z) : w(w), x(x), y(y), z(z) {}
-
 Quaternion Quaternion::Conjugate() const
 {
     return Quaternion(w, -x, -y, -z);
@@ -335,6 +329,4 @@ std::ostream& operator<<(std::ostream& os, const Quaternion& q)
 
     return os;
 }
-
-Quaternion const Quaternion::Identity = Quaternion(1, 0, 0, 0);
 } // namespace N::M

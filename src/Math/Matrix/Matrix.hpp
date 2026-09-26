@@ -7,6 +7,7 @@ namespace N::M
 template <unsigned int Row, unsigned int Column> struct Matrix : BasicMatrix<Row, Column, Matrix<Row, Column>>
 {
     using BasicMatrix<Row, Column, Matrix>::BasicMatrix;
+    using BasicMatrix<Row, Column, Matrix>::operator*;
 
     /** @brief Multiplies this matrix by another matrix. */
     template <unsigned int R, unsigned int C>

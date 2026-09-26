@@ -393,7 +393,7 @@ TEST_CASE("Function numerical differentiation")
     SECTION("Derivative method")
     {
         REQUIRE(f.Derivative(2.0f, dx) == Approx(4.0f).margin(0.01f));
-        REQUIRE(f.Derivative(2.0f, dx, DifferentiationMethod::Forward()) == Approx(4.0f).margin(0.01f));
+        REQUIRE(f.Derivative(2.0f, dx, DifferentiationMethod::Forward) == Approx(4.0f).margin(0.01f));
         REQUIRE(f.Derivative(2.0f, dx, DifferentiationMethod::Backward) == Approx(4.0f).margin(0.01f));
     }
 
@@ -422,7 +422,7 @@ TEST_CASE("Function numerical integration")
     {
         REQUIRE(f.Integral(0.0f, 2.0f, dx) == Approx(8.0f / 3.0f).margin(0.01f));
         REQUIRE(f.Integral(0.0f, 2.0f, dx, IntegrationMethod::Left) == Approx(8.0f / 3.0f).margin(0.02f));
-        REQUIRE(f.Integral(0.0f, 2.0f, dx, IntegrationMethod::Right()) == Approx(8.0f / 3.0f).margin(0.02f));
+        REQUIRE(f.Integral(0.0f, 2.0f, dx, IntegrationMethod::Right) == Approx(8.0f / 3.0f).margin(0.02f));
         REQUIRE(
             f.Integral(0.0f, 2.0f, dx, IntegrationMethod::Trapezoid) == Approx(8.0f / 3.0f).margin(0.01f));
     }
@@ -784,7 +784,7 @@ TEST_CASE("Matrix2 construction and ops")
 TEST_CASE("Matrix2 identities")
 {
     Matrix<2, 2> a(1, 2, 3, 5);
-    Matrix<2, 2> id = Matrix<2, 2>::Identity()();
+    Matrix<2, 2> id = Matrix<2, 2>::Identity();
 
     REQUIRE(a + Matrix<2, 2>::Zero() == a);
     REQUIRE(Matrix<2, 2>::Zero() + a == a);
@@ -1023,7 +1023,7 @@ TEST_CASE(
     REQUIRE(q2.x == 2);
     REQUIRE(q2.y == 3);
     REQUIRE(q2.z == 4);
-    Quaternion id = Quaternion::Identity;
+    Quaternion id = Quaternion::Identity();
     REQUIRE(id == Quaternion(1, 0, 0, 0));
 }
 
@@ -1033,11 +1033,11 @@ TEST_CASE(
 {
     Quaternion q(1.2f, 2.0f, -0.7f, 3.1f);
 
-    REQUIRE((q * Quaternion::Identity).NearlyEquals(q));
-    REQUIRE((Quaternion::Identity * q).NearlyEquals(q));
+    REQUIRE((q * Quaternion::Identity()).NearlyEquals(q));
+    REQUIRE((Quaternion::Identity() * q).NearlyEquals(q));
 
-    REQUIRE((q * q.Inverse()).NearlyEquals(Quaternion::Identity));
-    REQUIRE((q.Inverse() * q).NearlyEquals(Quaternion::Identity));
+    REQUIRE((q * q.Inverse()).NearlyEquals(Quaternion::Identity()));
+    REQUIRE((q.Inverse() * q).NearlyEquals(Quaternion::Identity()));
 
     REQUIRE(q.Conjugate().Conjugate() == q);
 }
@@ -1094,7 +1094,7 @@ TEST_CASE(
 
     "Quaternion polar and angle/axis")
 {
-    Quaternion q = Quaternion::Identity;
+    Quaternion q = Quaternion::Identity();
     REQUIRE(q.Angle() == Approx(0.0f));
     q = Quaternion(0, 0.707f, 0.707f, 0);
     float ang = q.Angle();

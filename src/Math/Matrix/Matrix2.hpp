@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Math/Common/Comparison.hpp"
 #include "Math/Common/Constants.hpp"
 #include "Math/Matrix/Matrix.hpp"
 #include "Math/Vector/Vector2.hpp"
@@ -21,6 +20,7 @@ namespace N::M
 template <> struct Matrix<2, 2> : BasicMatrix<2, 2, Matrix<2, 2>>
 {
     using BasicMatrix::BasicMatrix;
+    using BasicMatrix::operator*;
 
     /** @brief Applies a scale transformation. */
     constexpr Matrix Scale(const Vector<2>& scale) const

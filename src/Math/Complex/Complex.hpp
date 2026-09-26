@@ -2,6 +2,7 @@
 
 #include "../Common/Constants.hpp"
 #include "../Coordinates/Polar.hpp"
+#include "Utilities/Log.hpp"
 
 namespace N::M
 {
@@ -108,6 +109,32 @@ struct Complex
 
     bool operator==(const Complex& b) const;
     bool operator!=(const Complex& b) const;
+
+    float& operator()(const unsigned int index)
+    {
+        switch (index)
+        {
+        case 0:
+            return Real;
+        case 1:
+            return Imaginary;
+        default:
+            U::Log::Fatal("Complex Number doesn't have index ", index, " a + bi");
+        }
+    }
+
+    const float& operator()(const unsigned int index) const
+    {
+        switch (index)
+        {
+        case 0:
+            return Real;
+        case 1:
+            return Imaginary;
+        default:
+            U::Log::Fatal("Complex Number doesn't have index ", index, " ", *this);
+        }
+    }
 
     Complex operator-() const;
     Complex operator*(const Complex& b) const;

@@ -23,6 +23,7 @@
 #include "Functions/Function.hpp"
 #include "Geometry/Basis.hpp"
 
+#include "Matrix/Matrix.hpp"
 #include "Matrix/Matrix2.hpp"
 #include "Matrix/Matrix3.hpp"
 #include "Matrix/Matrix4.hpp"
@@ -31,6 +32,7 @@
 #include "Quaternion/QuaternionExponentials.hpp"
 #include "Quaternion/QuaternionLogarithms.hpp"
 
+#include "Vector/Vector.hpp"
 #include "Vector/Vector2.hpp"
 #include "Vector/Vector3.hpp"
 #include "Vector/Vector4.hpp"

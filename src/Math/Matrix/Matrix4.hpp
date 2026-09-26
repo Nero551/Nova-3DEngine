@@ -9,8 +9,8 @@ namespace N::M
 {
 template <> struct Matrix<4, 4> : BasicMatrix<4, 4, Matrix<4, 4>>
 {
-    using Base = BasicMatrix<4, 4, Matrix<4, 4>>;
-    using Base::Base;
+    using BasicMatrix::BasicMatrix;
+    using BasicMatrix::operator*;
 
     /** @brief Applies a 3D translation. */
     constexpr Matrix Translate(const Vector<3>& translation) const
