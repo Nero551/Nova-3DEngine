@@ -92,7 +92,7 @@ template <unsigned int Row, unsigned int Column> struct Matrix : BasicMatrix<Row
     {
         const float determinant = Determinant();
 
-        if (std::abs(determinant) < EPSILON)
+        if (M::NearlyEquals(determinant, 0))
         {
             U::Log::Error("Matrix is not invertible");
             return Matrix::Identity();

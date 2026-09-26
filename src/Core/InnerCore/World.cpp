@@ -67,7 +67,7 @@ U::CheckedPtr<Entity> World::TryFindEntity(const unsigned int id)
 void World::Start()
 {
     AddSystem<Transform3DSystem>();
-    // AddSystem<calculus>();
+    AddSystem<calculus>();
 
     Engine::Get().GetModule<I::Input>().SetMouseMode(I::MouseMode::Disabled);
 

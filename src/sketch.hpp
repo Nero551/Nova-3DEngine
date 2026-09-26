@@ -8,7 +8,6 @@
 
 namespace Sketch
 {
-
 //TODO- the size of transform component is whats bottlenecking.
 // split it. atleast split transform from the matrices (model matrix, normal matrix)
 
@@ -201,15 +200,62 @@ template <template <int> typename Derived, int Exp> struct Dimensional : IDimens
     using Normalized = Derived<Exp>;
 };
 
+//TODO- use specializations to make this less of a mess
+template <typename A, typename B> struct OperationDimensional;
+
+template <typename Left, typename Right> struct OperationNormalization
+{
+    using Type = OperationDimensional<Left, Right>;
+};
+
+template <typename LeftTerm, typename RightTerm>
+requires(!std::derived_from<LeftTerm, IOperationDimensional> &&
+    !std::derived_from<RightTerm, IOperationDimensional>)
+struct OperationNormalization<LeftTerm, RightTerm>
+{
+    static constexpr bool Equal = std::same_as<typename LeftTerm::template WithExponent<1>,
+        typename RightTerm::template WithExponent<1>>;
+
+    using Type = std::conditional_t<Equal,
+        typename LeftTerm::template WithExponent<LeftTerm::Exponent + RightTerm::Exponent>,
+        OperationDimensional<LeftTerm, RightTerm>>;
+};
+
+template <typename LeftOp, typename RightTerm> requires(
+    std::derived_from<LeftOp, IOperationDimensional> && !std::derived_from<RightTerm, IOperationDimensional>)
+struct OperationNormalization<LeftOp, RightTerm>
+{
+    template <typename C, typename D>
+    static constexpr bool Equal =
+        std::same_as<typename C::template WithExponent<1>, typename D::template WithExponent<1>>;
+    template <typename C, typename D> using AddTerms = C::template WithExponent<C::Exponent + D::Exponent>;
+
+    using C1 = OperationDimensional<typename LeftOp::Left, AddTerms<typename LeftOp::Right, RightTerm>>;
+    using C2 = OperationDimensional<AddTerms<typename LeftOp::Left, RightTerm>, typename LeftOp::Right>;
+
+    using Type = std::conditional_t<Equal<typename LeftOp::Right, RightTerm>, C1,
+        std::conditional_t<Equal<typename LeftOp::Left, RightTerm>, C2,
+            OperationDimensional<LeftOp, RightTerm>>>;
+};
+
+template <typename LeftTerm, typename RightOp> requires(
+    !std::derived_from<LeftTerm, IOperationDimensional> && std::derived_from<RightOp, IOperationDimensional>)
+struct OperationNormalization<LeftTerm, RightOp>
+{
+};
+
+template <typename LeftOp, typename RightOp> requires(
+    std::derived_from<LeftOp, IOperationDimensional> && std::derived_from<RightOp, IOperationDimensional>)
+struct OperationNormalization<LeftOp, RightOp>
+{
+};
+
 template <typename A, typename B> struct OperationDimensional : IOperationDimensional
 {
     using Left = A::Normalized;
     using Right = B::Normalized;
 
-    using Normalized = std::conditional_t<
-        std::same_as<typename Left::template WithExponent<1>, typename Right::template WithExponent<1>>,
-        typename Left::template WithExponent<Left::Exponent + Right::Exponent>,
-        OperationDimensional<Left, Right>>;
+    using Normalized = OperationNormalization<Left, Right>::Type;
 
     static std::ostream& Print(std::ostream& os)
     {
@@ -285,16 +331,16 @@ struct Dimension
         return {Value - other.Value};
     }
 
-    template <int E>
+    template <typename O, int E>
     constexpr Dimension<T, typename D::template WithExponent<D::Exponent + E>> operator*(
-        const Dimension<T, typename D::template WithExponent<E>>& other)
+        const Dimension<T, O>& other) requires(std::same_as<typename O::Normalized, typename D::Normalized>)
     {
         return {Value * other.Value};
     }
 
-    template <int E>
+    template <typename O, int E>
     constexpr Dimension<T, typename D::template WithExponent<D::Exponent - E>> operator/(
-        const Dimension<T, typename D::template WithExponent<E>>& other)
+        const Dimension<T, O>& other) requires(std::same_as<typename O::Normalized, typename D::Normalized>)
     {
         return {Value / other.Value};
     }
@@ -335,15 +381,17 @@ inline void Test()
     // make ALL operators use the Normalized version of a dimensional.
     // probably want normal Dimensional to have this as well, its normalized is just itself.
     //
-    // using Velocity = OperationDimensional<Length<1>, Time<-1>>;
-    // using Acceleration = OperationDimensional<Velocity, Time<-1>>;
-    // Dimension<float, OperationDimensional<Length<2>, Length<1>>> a;
-    // Dimension<float, Length<3>> l2;
-    //
-    // Dimension<float, OperationDimensional<Length<1>, Time<-2>>> t{5};
-    // N::U::Log::Info(a + l2);
+    using Velocity = OperationDimensional<Length<1>, Time<-1>>;
+    using Acceleration = OperationDimensional<Velocity, Time<-1>>;
+    Dimension<float, OperationDimensional<Length<2>, Length<1>>> b;
+    Dimension<float, Length<3>> c;
 
-    N::M::Vector<4> v;
+    using Accel = OperationDimensional<OperationDimensional<Length<2>, Length<-1>>, Length<1>>;
+    Dimension<float, Accel> a{2};
+    Dimension<float, OperationDimensional<Length<2>, Time<-1>>> t2;
+    Dimension<float, Length<2>> t{5};
+
+    N::U::Log::Info(a + t);
 }
 
 } // namespace Sketch
