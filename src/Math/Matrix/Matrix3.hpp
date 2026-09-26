@@ -68,7 +68,7 @@ struct Matrix3
      *
      * @param scale X, Y, and Z scale factors.
      */
-    [[nodiscard]] Matrix3 Scale(const Vector3& scale) const;
+    [[nodiscard]] Matrix3 Scale(const Vector<3>& scale) const;
 
     /**
      * @brief Applies a rotation around the X axis.
@@ -99,7 +99,7 @@ struct Matrix3
      *
      * @param eulerRotation Rotation angles around X, Y, and Z in radians.
      */
-    [[nodiscard]] Matrix3 Rotate(const Vector3& eulerRotation) const;
+    [[nodiscard]] Matrix3 Rotate(const Vector<3>& eulerRotation) const;
 
     /**
      * @brief Applies a rotation around an arbitrary axis.
@@ -107,14 +107,14 @@ struct Matrix3
      * @param axis Axis of rotation.
      * @param radian Rotation angle in radians.
      */
-    [[nodiscard]] Matrix3 RotateAroundAxis(const Vector3& axis, float radian) const;
+    [[nodiscard]] Matrix3 RotateAroundAxis(const Vector<3>& axis, float radian) const;
 
     /**
      * @brief Applies a 2D translation using homogeneous coordinates.
      *
      * @param trans X and Y translation.
      */
-    [[nodiscard]] Matrix3 Translate(const Vector2& trans) const;
+    [[nodiscard]] Matrix3 Translate(const Vector<2>& trans) const;
 
     /**
      * @brief Calculates the determinant of this matrix.
@@ -167,7 +167,7 @@ struct Matrix3
     /**
      * @brief Multiplies this matrix by a column vector.
      */
-    Vector3 operator*(const Vector3& vec3) const;
+    Vector<3> operator*(const Vector<3>& vec3) const;
 
     Matrix3 operator*(float scalar) const;
     Matrix3 operator/(float scalar) const;

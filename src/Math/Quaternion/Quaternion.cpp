@@ -65,7 +65,7 @@ Quaternion Quaternion::FromMatrix3(const Matrix3& mat3)
     // to the full-angle quaternion representation.
     return rotation * rotation;
 }
-Quaternion Quaternion::FromEulerXYZ(const Vector3& euler)
+Quaternion Quaternion::FromEulerXYZ(const Vector<3>& euler)
 {
     Matrix3 rotation = Matrix3::Identity;
     rotation = rotation.Rotate(euler);
@@ -108,7 +108,7 @@ float Quaternion::Dot(const Quaternion& p) const
     return w * p.w + x * p.x + y * p.y + z * p.z;
 }
 
-Vector3 Quaternion::Transform(const Vector3& vec3) const
+Vector<3> Quaternion::Transform(const Vector<3>& vec3) const
 {
     Quaternion p = {0, vec3.x, vec3.y, vec3.z};
     Quaternion q = FromQPolar({Axis(), Angle() / 2, Magnitude()});
@@ -123,11 +123,11 @@ float Quaternion::Angle() const
     return std::acos(q.w);
 }
 
-Vector3 Quaternion::Axis() const
+Vector<3> Quaternion::Axis() const
 {
     Quaternion q = Normalized();
     float sine = std::sin(Angle());
-    Vector3 axis;
+    Vector<3> axis;
     if (sine != 0)
     {
         axis.x = q.x / sine;
@@ -158,10 +158,10 @@ Matrix4 Quaternion::ToMatrix4() const
     return result.RotateAroundAxis(Axis(), Angle());
 }
 
-Vector3 Quaternion::ToEulerXYZ() const
+Vector<3> Quaternion::ToEulerXYZ() const
 {
     const Matrix4 matrix = ToMatrix4();
-    Vector3 result;
+    Vector<3> result;
 
     result.x = std::atan2(matrix(2, 1), matrix(2, 2));
     result.y = std::asin(-matrix(2, 0));

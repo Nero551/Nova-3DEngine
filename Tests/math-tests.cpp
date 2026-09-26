@@ -260,7 +260,7 @@ TEST_CASE(
     "Polar conversion")
 {
     Polar p(PI / 4, 2.0f);
-    Vector2 v = Vector2::FromPolar(p);
+    Vector<2> v = Vector<2>::FromPolar(p);
     REQUIRE(v.x == Approx(2.0f * std::cos(PI / 4)));
     REQUIRE(v.y == Approx(2.0f * std::sin(PI / 4)));
     Polar back = v.ToPolar();
@@ -273,7 +273,7 @@ TEST_CASE(
     "Spherical conversion")
 {
     Spherical s(0.3f, 0.5f, 4.0f);
-    Vector3 v = Vector3::FromSpherical(s);
+    Vector<3> v = Vector<3>::FromSpherical(s);
     Spherical back = v.ToSpherical();
     REQUIRE(back.Elevation == Approx(s.Elevation));
     REQUIRE(back.Azimuth == Approx(s.Azimuth));
@@ -285,7 +285,7 @@ TEST_CASE(
     "HyperSpherical conversion")
 {
     HyperSpherical h(0.2f, 0.4f, 0.6f, 3.0f);
-    Vector4 v = Vector4::FromHyperSpherical(h);
+    Vector<4> v = Vector<4>::FromHyperSpherical(h);
     HyperSpherical back = v.ToHyperSpherical();
     REQUIRE(back.Elevation == Approx(h.Elevation));
     REQUIRE(back.Azimuth == Approx(h.Azimuth));
@@ -297,7 +297,7 @@ TEST_CASE(
 
     "QPolar conversion")
 {
-    Vector3 axis = Vector3(1, 1, 0).Normalized();
+    Vector<3> axis = Vector<3>(1, 1, 0).Normalized();
     QPolar qp(axis, 1.2f, 2.0f);
     Quaternion q = Quaternion::FromQPolar(qp);
     QPolar back = q.ToQPolar();
@@ -393,7 +393,7 @@ TEST_CASE("Function numerical differentiation")
     SECTION("Derivative method")
     {
         REQUIRE(f.Derivative(2.0f, dx) == Approx(4.0f).margin(0.01f));
-        REQUIRE(f.Derivative(2.0f, dx, DifferentiationMethod::Forward) == Approx(4.0f).margin(0.01f));
+        REQUIRE(f.Derivative(2.0f, dx, DifferentiationMethod::Forward()) == Approx(4.0f).margin(0.01f));
         REQUIRE(f.Derivative(2.0f, dx, DifferentiationMethod::Backward) == Approx(4.0f).margin(0.01f));
     }
 
@@ -422,7 +422,7 @@ TEST_CASE("Function numerical integration")
     {
         REQUIRE(f.Integral(0.0f, 2.0f, dx) == Approx(8.0f / 3.0f).margin(0.01f));
         REQUIRE(f.Integral(0.0f, 2.0f, dx, IntegrationMethod::Left) == Approx(8.0f / 3.0f).margin(0.02f));
-        REQUIRE(f.Integral(0.0f, 2.0f, dx, IntegrationMethod::Right) == Approx(8.0f / 3.0f).margin(0.02f));
+        REQUIRE(f.Integral(0.0f, 2.0f, dx, IntegrationMethod::Right()) == Approx(8.0f / 3.0f).margin(0.02f));
         REQUIRE(
             f.Integral(0.0f, 2.0f, dx, IntegrationMethod::Trapezoid) == Approx(8.0f / 3.0f).margin(0.01f));
     }
@@ -579,65 +579,65 @@ TEST_CASE("Function compound assignment operators")
 TEST_CASE("Function with non‑scalar types (Vector2)")
 {
     // Define a function that takes float and returns Vector2
-    auto f = Function<float, Vector2>([](const float t) { return Vector2(t, t * t); });
+    auto f = Function<float, Vector<2>>([](const float t) { return Vector<2>(t, t * t); });
     SECTION("Evaluate")
     {
         auto res = f(2.0f);
-        REQUIRE(res == Vector2(2.0f, 4.0f));
+        REQUIRE(res == Vector<2>(2.0f, 4.0f));
     }
 
     SECTION("Arithmetic with Output type (Vector2)")
     {
-        auto g = Function<float, Vector2>([](float t) { return Vector2(1.0f, 2.0f); });
+        auto g = Function<float, Vector<2>>([](float t) { return Vector<2>(1.0f, 2.0f); });
         auto h = f + g;
         auto res = h(2.0f);
-        REQUIRE(res == Vector2(3.0f, 6.0f));
+        REQUIRE(res == Vector<2>(3.0f, 6.0f));
         h = f - g;
         res = h(2.0f);
-        REQUIRE(res == Vector2(1.0f, 2.0f));
+        REQUIRE(res == Vector<2>(1.0f, 2.0f));
         h = f * g; // element-wise multiplication
         res = h(2.0f);
-        REQUIRE(res == Vector2(2.0f, 8.0f));
+        REQUIRE(res == Vector<2>(2.0f, 8.0f));
         // Unary minus
         h = -f;
         res = h(2.0f);
-        REQUIRE(res == Vector2(-2.0f, -4.0f));
+        REQUIRE(res == Vector<2>(-2.0f, -4.0f));
     }
 
     SECTION("Operators with Vector2 constant")
     {
-        auto h = f + Vector2(1.0f, 1.0f);
+        auto h = f + Vector<2>(1.0f, 1.0f);
         auto res = h(2.0f);
-        REQUIRE(res == Vector2(3.0f, 5.0f));
-        h = f - Vector2(1.0f, 1.0f);
+        REQUIRE(res == Vector<2>(3.0f, 5.0f));
+        h = f - Vector<2>(1.0f, 1.0f);
         res = h(2.0f);
-        REQUIRE(res == Vector2(1.0f, 3.0f));
-        h = f * Vector2(2.0f, 3.0f);
+        REQUIRE(res == Vector<2>(1.0f, 3.0f));
+        h = f * Vector<2>(2.0f, 3.0f);
         res = h(2.0f);
-        REQUIRE(res == Vector2(4.0f, 12.0f));
+        REQUIRE(res == Vector<2>(4.0f, 12.0f));
         // Left-hand side
-        h = Vector2(1.0f, 1.0f) + f;
+        h = Vector<2>(1.0f, 1.0f) + f;
         res = h(2.0f);
-        REQUIRE(res == Vector2(3.0f, 5.0f));
-        h = Vector2(1.0f, 1.0f) - f;
+        REQUIRE(res == Vector<2>(3.0f, 5.0f));
+        h = Vector<2>(1.0f, 1.0f) - f;
         res = h(2.0f);
-        REQUIRE(res == Vector2(-1.0f, -3.0f));
-        h = Vector2(2.0f, 3.0f) * f;
+        REQUIRE(res == Vector<2>(-1.0f, -3.0f));
+        h = Vector<2>(2.0f, 3.0f) * f;
         res = h(2.0f);
-        REQUIRE(res == Vector2(4.0f, 12.0f));
+        REQUIRE(res == Vector<2>(4.0f, 12.0f));
     }
 
     SECTION("Compound assignment with Vector2")
     {
-        Function<float, Vector2> h = f;
-        h += Vector2(1.0f, 1.0f);
-        REQUIRE(h(2.0f) == Vector2(3.0f, 5.0f));
+        Function<float, Vector<2>> h = f;
+        h += Vector<2>(1.0f, 1.0f);
+        REQUIRE(h(2.0f) == Vector<2>(3.0f, 5.0f));
         h = f;
-        h -= Vector2(1.0f, 1.0f);
-        REQUIRE(h(2.0f) == Vector2(1.0f, 3.0f));
+        h -= Vector<2>(1.0f, 1.0f);
+        REQUIRE(h(2.0f) == Vector<2>(1.0f, 3.0f));
         h = f;
-        h *= Vector2(2.0f, 3.0f);
-        REQUIRE(h(2.0f) == Vector2(4.0f, 12.0f));
+        h *= Vector<2>(2.0f, 3.0f);
+        REQUIRE(h(2.0f) == Vector<2>(4.0f, 12.0f));
     }
 }
 
@@ -687,9 +687,9 @@ TEST_CASE("Function friend operators (if implemented)")
     }
 
     // For Vector2 left‑hand side (tested earlier)
-    Function<float, Vector2> fv = ([](const float t) { return Vector2(t, t); });
-    auto hv = Vector2(1.0f, 2.0f) + fv;
-    REQUIRE(hv(3.0f) == Vector2(4.0f, 5.0f));
+    Function<float, Vector<2>> fv = ([](const float t) { return Vector<2>(t, t); });
+    auto hv = Vector<2>(1.0f, 2.0f) + fv;
+    REQUIRE(hv(3.0f) == Vector<2>(4.0f, 5.0f));
 }
 
 //==============================================================================
@@ -705,9 +705,9 @@ TEST_CASE("Basis matrix")
     Matrix4 inv = basis.GetInverseMatrix();
     REQUIRE(inv == Matrix4::Identity);
 
-    Vector3 right(0, 1, 0);
-    Vector3 up(0, 0, 1);
-    Vector3 forward(1, 0, 0);
+    Vector<3> right(0, 1, 0);
+    Vector<3> up(0, 0, 1);
+    Vector<3> forward(1, 0, 0);
 
     Basis custom{right, up, forward};
     Matrix4 mat = custom.GetMatrix();
@@ -763,8 +763,8 @@ TEST_CASE("Matrix2 construction and ops")
 
     REQUIRE(s(0, 0) == 2);
 
-    Vector2 v(2, 3);
-    Vector2 mv = a * v;
+    Vector<2> v(2, 3);
+    Vector<2> mv = a * v;
 
     REQUIRE(mv.x == 1 * 2 + 2 * 3);
     REQUIRE(mv.y == 3 * 2 + 4 * 3);
@@ -786,11 +786,11 @@ TEST_CASE("Matrix2 identities")
     Matrix2 a(1, 2, 3, 5);
     Matrix2 id = Matrix2::Identity;
 
-    REQUIRE(a + Matrix2::Zero == a);
-    REQUIRE(Matrix2::Zero + a == a);
+    REQUIRE(a + Matrix2::Zero() == a);
+    REQUIRE(Matrix2::Zero() + a == a);
 
-    REQUIRE(a - Matrix2::Zero == a);
-    REQUIRE(a - a == Matrix2::Zero);
+    REQUIRE(a - Matrix2::Zero() == a);
+    REQUIRE(a - a == Matrix2::Zero());
 
     REQUIRE((a * id).NearlyEquals(a));
     REQUIRE((id * a).NearlyEquals(a));
@@ -852,11 +852,11 @@ TEST_CASE("Matrix3 identities")
 
     Matrix3 id = Matrix3::Identity;
 
-    REQUIRE(a + Matrix3::Zero == a);
-    REQUIRE(Matrix3::Zero + a == a);
+    REQUIRE(a + Matrix3::Zero() == a);
+    REQUIRE(Matrix3::Zero() + a == a);
 
-    REQUIRE(a - Matrix3::Zero == a);
-    REQUIRE(a - a == Matrix3::Zero);
+    REQUIRE(a - Matrix3::Zero() == a);
+    REQUIRE(a - a == Matrix3::Zero());
 
     REQUIRE((a * id).NearlyEquals(a));
     REQUIRE((id * a).NearlyEquals(a));
@@ -871,42 +871,42 @@ TEST_CASE("Matrix3 transformations")
 {
     Matrix3 m = Matrix3::Identity;
 
-    Vector3 v(1, 2, 3);
+    Vector<3> v(1, 2, 3);
 
-    Matrix3 scaled = m.Scale(Vector3(2, 3, 4));
-    Vector3 v2 = scaled * v;
+    Matrix3 scaled = m.Scale(Vector<3>(2, 3, 4));
+    Vector<3> v2 = scaled * v;
 
-    REQUIRE(v2 == Vector3(2, 6, 12));
+    REQUIRE(v2 == Vector<3>(2, 6, 12));
 
     m = m.RotateZ(PI / 2);
 
-    Vector3 v3 = m * Vector3(1, 0, 0);
+    Vector<3> v3 = m * Vector<3>(1, 0, 0);
 
-    REQUIRE(v3.NearlyEquals(Vector3(0, 1, 0)));
+    REQUIRE(v3.NearlyEquals(Vector<3>(0, 1, 0)));
 
-    m = Matrix3::Identity.Translate(Vector2(5, 6));
+    m = Matrix3::Identity.Translate(Vector<2>(5, 6));
 
-    Vector3 v4 = m * Vector3(1, 2, 1);
+    Vector<3> v4 = m * Vector<3>(1, 2, 1);
 
     REQUIRE(v4.x == 6);
     REQUIRE(v4.y == 8);
 
-    m = Matrix3::Identity.Rotate(Vector3(PI / 2, 0, 0));
+    m = Matrix3::Identity.Rotate(Vector<3>(PI / 2, 0, 0));
 
-    Vector3 v5 = m * Vector3(0, 1, 0);
+    Vector<3> v5 = m * Vector<3>(0, 1, 0);
 
-    REQUIRE(v5.NearlyEquals(Vector3(0, 0, 1)));
+    REQUIRE(v5.NearlyEquals(Vector<3>(0, 0, 1)));
 }
 
 TEST_CASE("Matrix3 transformation identities")
 {
-    Vector3 v(1.2f, -3.4f, 5.6f);
+    Vector<3> v(1.2f, -3.4f, 5.6f);
     Matrix3 identity = Matrix3::Identity;
 
-    REQUIRE(identity.Scale(Vector3::One) == identity);
+    REQUIRE(identity.Scale(Vector<3>::One()) == identity);
     REQUIRE(identity.RotateZ(0.0f) == identity);
 
-    Vector3 transformed = identity * v;
+    Vector<3> transformed = identity * v;
 
     REQUIRE(transformed == v);
 }
@@ -938,11 +938,11 @@ TEST_CASE("Matrix4 identities")
 
     Matrix4 id = Matrix4::Identity;
 
-    REQUIRE(a + Matrix4::Zero == a);
-    REQUIRE(Matrix4::Zero + a == a);
+    REQUIRE(a + Matrix4::Zero() == a);
+    REQUIRE(Matrix4::Zero() + a == a);
 
-    REQUIRE(a - Matrix4::Zero == a);
-    REQUIRE(a - a == Matrix4::Zero);
+    REQUIRE(a - Matrix4::Zero() == a);
+    REQUIRE(a - a == Matrix4::Zero());
 
     REQUIRE((a * id).NearlyEquals(a));
     REQUIRE((id * a).NearlyEquals(a));
@@ -957,25 +957,25 @@ TEST_CASE("Matrix4 transformations")
 {
     Matrix4 m = Matrix4::Identity;
 
-    Vector4 v(1, 2, 3, 1);
+    Vector<4> v(1, 2, 3, 1);
 
-    m = m.Translate(Vector3(5, 6, 7));
+    m = m.Translate(Vector<3>(5, 6, 7));
 
-    Vector4 v2 = m * v;
+    Vector<4> v2 = m * v;
 
-    REQUIRE(v2 == Vector4(6, 8, 10, 1));
+    REQUIRE(v2 == Vector<4>(6, 8, 10, 1));
 
-    m = Matrix4::Identity.Scale(Vector3(2, 3, 4));
+    m = Matrix4::Identity.Scale(Vector<3>(2, 3, 4));
 
-    Vector4 v3 = m * v;
+    Vector<4> v3 = m * v;
 
-    REQUIRE(v3 == Vector4(2, 6, 12, 1));
+    REQUIRE(v3 == Vector<4>(2, 6, 12, 1));
 
     m = Matrix4::Identity.RotateZ(PI / 2);
 
-    Vector4 v4 = m * Vector4(1, 0, 0, 1);
+    Vector<4> v4 = m * Vector<4>(1, 0, 0, 1);
 
-    REQUIRE(v4.NearlyEquals(Vector4(0, 1, 0, 1)));
+    REQUIRE(v4.NearlyEquals(Vector<4>(0, 1, 0, 1)));
 
     Matrix4 proj = Matrix4::Perspective(PI / 3, 1.5f, 0.1f, 100.0f);
 
@@ -985,25 +985,25 @@ TEST_CASE("Matrix4 transformations")
 
     REQUIRE(ortho(0, 0) == Approx(1.0f));
 
-    Matrix4 view = Matrix4::LookAt(Vector3(0, 0, 5), Vector3::Zero, Vector3::Up);
+    Matrix4 view = Matrix4::LookAt(Vector<3>(0, 0, 5), Vector<3>::Zero(), Vector<3>::Up());
 
-    Vector4 pos = view * Vector4(0, 0, 5, 1);
+    Vector<4> pos = view * Vector<4>(0, 0, 5, 1);
 
-    REQUIRE(pos.NearlyEquals(Vector4(0, 0, 0, 1)));
+    REQUIRE(pos.NearlyEquals(Vector<4>(0, 0, 0, 1)));
 
-    Matrix4 a = Matrix4::Identity.Translate(Vector3(1, 2, 3));
-    Matrix4 b = Matrix4::Identity.Scale(Vector3(2, 2, 2));
+    Matrix4 a = Matrix4::Identity.Translate(Vector<3>(1, 2, 3));
+    Matrix4 b = Matrix4::Identity.Scale(Vector<3>(2, 2, 2));
 
-    Vector4 u(1, 1, 1, 1);
+    Vector<4> u(1, 1, 1, 1);
 
     REQUIRE((a * b * u).NearlyEquals(a * (b * u)));
 }
 
 TEST_CASE("Matrix-vector identities")
 {
-    Vector2 v2(1.2f, -3.4f);
-    Vector3 v3(1.2f, -3.4f, 5.6f);
-    Vector4 v4(1.2f, -3.4f, 5.6f, -7.8f);
+    Vector<2> v2(1.2f, -3.4f);
+    Vector<3> v3(1.2f, -3.4f, 5.6f);
+    Vector<4> v4(1.2f, -3.4f, 5.6f, -7.8f);
 
     REQUIRE((Matrix2::Identity * v2) == v2);
     REQUIRE((Matrix3::Identity * v3) == v3);
@@ -1099,7 +1099,7 @@ TEST_CASE(
     q = Quaternion(0, 0.707f, 0.707f, 0);
     float ang = q.Angle();
     REQUIRE(ang > 0);
-    Vector3 axis = q.Axis();
+    Vector<3> axis = q.Axis();
     REQUIRE(axis.Length() == Approx(1.0f));
     QPolar polar = q.ToQPolar();
     REQUIRE(polar.Magnitude == Approx(q.Magnitude()));
@@ -1111,12 +1111,12 @@ TEST_CASE(
 
     "Quaternion from Euler and matrix")
 {
-    Vector3 euler(PI / 3, PI / 4, PI / 6);
+    Vector<3> euler(PI / 3, PI / 4, PI / 6);
     Quaternion q = Quaternion::FromEulerXYZ(euler);
     Matrix3 mat = q.ToMatrix4().ToMatrix3();
     Matrix3 matEuler = Matrix3::Identity.Rotate(euler);
     REQUIRE(mat.NearlyEquals(matEuler));
-    Vector3 euler2 = q.ToEulerXYZ();
+    Vector<3> euler2 = q.ToEulerXYZ();
     REQUIRE(euler2.NearlyEquals(euler));
 }
 
@@ -1124,10 +1124,10 @@ TEST_CASE(
 
     "Quaternion transform vector")
 {
-    Quaternion q = Quaternion::FromEulerXYZ(Vector3(0, 0, PI / 2));
-    Vector3 v(1, 0, 0);
-    Vector3 res = q.Transform(v);
-    REQUIRE(res.NearlyEquals(Vector3(0, 1, 0)));
+    Quaternion q = Quaternion::FromEulerXYZ(Vector<3>(0, 0, PI / 2));
+    Vector<3> v(1, 0, 0);
+    Vector<3> res = q.Transform(v);
+    REQUIRE(res.NearlyEquals(Vector<3>(0, 1, 0)));
 }
 
 TEST_CASE(
@@ -1180,31 +1180,31 @@ TEST_CASE(
 
     "Vector2 construction and constants")
 {
-    Vector2 v(1, 2);
+    Vector<2> v(1, 2);
     REQUIRE(v.x == 1);
     REQUIRE(v.y == 2);
-    REQUIRE(Vector2::Zero == Vector2(0, 0));
-    REQUIRE(Vector2(5) == Vector2(5, 5));
+    REQUIRE(Vector<2>::Zero() == Vector<2>(0, 0));
+    REQUIRE(Vector<2>(5) == Vector<2>(5, 5));
 }
 
 TEST_CASE(
 
     "Vector2 identities")
 {
-    Vector2 v(1.2f, -2.3f);
+    Vector<2> v(1.2f, -2.3f);
 
-    REQUIRE(v + Vector2::Zero == v);
-    REQUIRE(Vector2::Zero + v == v);
+    REQUIRE(v + Vector<2>::Zero() == v);
+    REQUIRE(Vector<2>::Zero() + v == v);
 
-    REQUIRE(v - Vector2::Zero == v);
-    REQUIRE(v - v == Vector2::Zero);
+    REQUIRE(v - Vector<2>::Zero() == v);
+    REQUIRE(v - v == Vector<2>::Zero());
 
     REQUIRE(v * 1.0f == v);
     REQUIRE(1.0f * v == v);
 
     REQUIRE(v / 1.0f == v);
 
-    REQUIRE(v + (-v) == Vector2::Zero);
+    REQUIRE(v + (-v) == Vector<2>::Zero());
 
     REQUIRE(v.Dot(v) == Approx(v.LengthSquared()));
     REQUIRE(v.Length() * v.Length() == Approx(v.LengthSquared()));
@@ -1216,33 +1216,33 @@ TEST_CASE(
 
     "Vector2 operations")
 {
-    Vector2 a(1, 2), b(3, 4);
-    REQUIRE(a + b == Vector2(4, 6));
-    REQUIRE(a - b == Vector2(-2, -2));
-    REQUIRE(a * b == Vector2(3, 8));
-    REQUIRE(a + 2 == Vector2(3, 4));
-    REQUIRE(a * 2 == Vector2(2, 4));
-    REQUIRE(a / 2 == Vector2(0.5f, 1));
-    REQUIRE(-a == Vector2(-1, -2));
+    Vector<2> a(1, 2), b(3, 4);
+    REQUIRE(a + b == Vector<2>(4, 6));
+    REQUIRE(a - b == Vector<2>(-2, -2));
+    REQUIRE(a * b == Vector<2>(3, 8));
+    REQUIRE(a + 2 == Vector<2>(3, 4));
+    REQUIRE(a * 2 == Vector<2>(2, 4));
+    REQUIRE(a / 2 == Vector<2>(0.5f, 1));
+    REQUIRE(-a == Vector<2>(-1, -2));
     REQUIRE(a.Dot(b) == 1 * 3 + 2 * 4);
     REQUIRE(a.LengthSquared() == 5);
     REQUIRE(a.Length() == Approx(std::sqrt(5)));
     REQUIRE(a.Normalized().Length() == Approx(1.0f));
     REQUIRE(a.Distance(b) == Approx(std::sqrt(8)));
-    REQUIRE(a.Lerp(b, 0.5f) == Vector2(2, 3));
+    REQUIRE(a.Lerp(b, 0.5f) == Vector<2>(2, 3));
 }
 
 TEST_CASE(
 
     "Vector2 polar")
 {
-    Vector2 v(1, 1);
+    Vector<2> v(1, 1);
     float ang = v.Angle();
     REQUIRE(ang == Approx(PI / 4));
     Polar p = v.ToPolar();
     REQUIRE(p.Angle == Approx(PI / 4));
     REQUIRE(p.Magnitude == Approx(std::sqrt(2)));
-    Vector2 v2 = Vector2::FromPolar(p);
+    Vector<2> v2 = Vector<2>::FromPolar(p);
     REQUIRE(v2.NearlyEquals(v));
     float s = v.StereoProject();
     REQUIRE(s == Approx((std::sqrt(2) * 1) / (std::sqrt(2) - 1)));
@@ -1252,35 +1252,35 @@ TEST_CASE(
 
     "Vector3 construction and constants")
 {
-    Vector3 v(1, 2, 3);
+    Vector<3> v(1, 2, 3);
     REQUIRE(v.x == 1);
     REQUIRE(v.y == 2);
     REQUIRE(v.z == 3);
-    REQUIRE(Vector3::Zero == Vector3(0, 0, 0));
-    REQUIRE(Vector3::One == Vector3(1, 1, 1));
-    REQUIRE(Vector3::Right == Vector3(1, 0, 0));
-    REQUIRE(Vector3::Up == Vector3(0, 1, 0));
-    REQUIRE(Vector3::Forward == Vector3(0, 0, 1));
+    REQUIRE(Vector<3>::Zero() == Vector<3>(0, 0, 0));
+    REQUIRE(Vector<3>::One() == Vector<3>(1, 1, 1));
+    REQUIRE(Vector<3>::Right() == Vector<3>(1, 0, 0));
+    REQUIRE(Vector<3>::Up() == Vector<3>(0, 1, 0));
+    REQUIRE(Vector<3>::Forward() == Vector<3>(0, 0, 1));
 }
 
 TEST_CASE(
 
     "Vector3 identities")
 {
-    Vector3 v(1.2f, -2.3f, 4.5f);
+    Vector<3> v(1.2f, -2.3f, 4.5f);
 
-    REQUIRE(v + Vector3::Zero == v);
-    REQUIRE(Vector3::Zero + v == v);
+    REQUIRE(v + Vector<3>::Zero() == v);
+    REQUIRE(Vector<3>::Zero() + v == v);
 
-    REQUIRE(v - Vector3::Zero == v);
-    REQUIRE(v - v == Vector3::Zero);
+    REQUIRE(v - Vector<3>::Zero() == v);
+    REQUIRE(v - v == Vector<3>::Zero());
 
     REQUIRE(v * 1.0f == v);
     REQUIRE(1.0f * v == v);
 
     REQUIRE(v / 1.0f == v);
 
-    REQUIRE(v + (-v) == Vector3::Zero);
+    REQUIRE(v + (-v) == Vector<3>::Zero());
 
     REQUIRE(v.Dot(v) == Approx(v.LengthSquared()));
     REQUIRE(v.Length() * v.Length() == Approx(v.LengthSquared()));
@@ -1288,8 +1288,8 @@ TEST_CASE(
     REQUIRE(v.Normalized().Length() == Approx(1.0f));
 
     // A vector is perpendicular to its cross product.
-    Vector3 other(-0.7f, 3.1f, 2.2f);
-    Vector3 cross = v.Cross(other);
+    Vector<3> other(-0.7f, 3.1f, 2.2f);
+    Vector<3> cross = v.Cross(other);
 
     REQUIRE(v.Dot(cross) == Approx(0.0f).margin(1e-5f));
     REQUIRE(other.Dot(cross) == Approx(0.0f).margin(1e-5f));
@@ -1299,23 +1299,23 @@ TEST_CASE(
 
     "Vector3 operations")
 {
-    Vector3 a(1, 2, 3), b(4, 5, 6);
-    REQUIRE(a + b == Vector3(5, 7, 9));
-    REQUIRE(a - b == Vector3(-3, -3, -3));
-    REQUIRE(a * b == Vector3(4, 10, 18));
-    REQUIRE(a / b == Vector3(0.25f, 0.4f, 0.5f));
-    REQUIRE(a + 2 == Vector3(3, 4, 5));
-    REQUIRE(a * 2 == Vector3(2, 4, 6));
-    REQUIRE(-a == Vector3(-1, -2, -3));
+    Vector<3> a(1, 2, 3), b(4, 5, 6);
+    REQUIRE(a + b == Vector<3>(5, 7, 9));
+    REQUIRE(a - b == Vector<3>(-3, -3, -3));
+    REQUIRE(a * b == Vector<3>(4, 10, 18));
+    REQUIRE(a / b == Vector<3>(0.25f, 0.4f, 0.5f));
+    REQUIRE(a + 2 == Vector<3>(3, 4, 5));
+    REQUIRE(a * 2 == Vector<3>(2, 4, 6));
+    REQUIRE(-a == Vector<3>(-1, -2, -3));
     REQUIRE(a.Dot(b) == 32);
-    REQUIRE(a.Cross(b) == Vector3(2 * 6 - 3 * 5, 3 * 4 - 1 * 6, 1 * 5 - 2 * 4));
+    REQUIRE(a.Cross(b) == Vector<3>(2 * 6 - 3 * 5, 3 * 4 - 1 * 6, 1 * 5 - 2 * 4));
     REQUIRE(a.Length() == Approx(std::sqrt(14)));
     REQUIRE(a.Normalized().Length() == Approx(1.0f));
     REQUIRE(a.Distance(b) == Approx(std::sqrt(27)));
-    REQUIRE(a.Lerp(b, 0.5f) == Vector3(2.5f, 3.5f, 4.5f));
+    REQUIRE(a.Lerp(b, 0.5f) == Vector<3>(2.5f, 3.5f, 4.5f));
     REQUIRE(a.IsParallelTo(a * 2));
     REQUIRE_FALSE(a.IsParallelTo(b));
-    REQUIRE(a.IsPerpendicularTo(Vector3(0, -3, 2)));
+    REQUIRE(a.IsPerpendicularTo(Vector<3>(0, -3, 2)));
     REQUIRE_FALSE(a.IsPerpendicularTo(b));
 }
 
@@ -1323,7 +1323,7 @@ TEST_CASE(
 
     "Vector3 spherical")
 {
-    Vector3 v(1, 1, 0);
+    Vector<3> v(1, 1, 0);
     float elev = v.Elevation();
     float az = v.Azimuth();
     REQUIRE(elev == Approx(PI / 4));
@@ -1332,42 +1332,42 @@ TEST_CASE(
     REQUIRE(s.Elevation == Approx(PI / 4));
     REQUIRE(s.Azimuth == Approx(0));
     REQUIRE(s.Magnitude == Approx(std::sqrt(2)));
-    Vector3 v2 = Vector3::FromSpherical(s);
+    Vector<3> v2 = Vector<3>::FromSpherical(s);
     REQUIRE(v2.NearlyEquals(v));
-    Vector2 proj = v.StereoProject();
-    REQUIRE(proj == Vector2(1, 1));
+    Vector<2> proj = v.StereoProject();
+    REQUIRE(proj == Vector<2>(1, 1));
 }
 
 TEST_CASE(
 
     "Vector4 construction and constants")
 {
-    Vector4 v(1, 2, 3, 4);
+    Vector<4> v(1, 2, 3, 4);
     REQUIRE(v.x == 1);
     REQUIRE(v.y == 2);
     REQUIRE(v.z == 3);
     REQUIRE(v.w == 4);
-    REQUIRE(Vector4::Zero == Vector4(0, 0, 0, 0));
+    REQUIRE(Vector<4>::Zero() == Vector<4>(0, 0, 0, 0));
 }
 
 TEST_CASE(
 
     "Vector4 identities")
 {
-    Vector4 v(1.2f, -2.3f, 4.5f, -0.8f);
+    Vector<4> v(1.2f, -2.3f, 4.5f, -0.8f);
 
-    REQUIRE(v + Vector4::Zero == v);
-    REQUIRE(Vector4::Zero + v == v);
+    REQUIRE(v + Vector<4>::Zero() == v);
+    REQUIRE(Vector<4>::Zero() + v == v);
 
-    REQUIRE(v - Vector4::Zero == v);
-    REQUIRE(v - v == Vector4::Zero);
+    REQUIRE(v - Vector<4>::Zero() == v);
+    REQUIRE(v - v == Vector<4>::Zero());
 
     REQUIRE(v * 1.0f == v);
     REQUIRE(1.0f * v == v);
 
     REQUIRE(v / 1.0f == v);
 
-    REQUIRE(v + (-v) == Vector4::Zero);
+    REQUIRE(v + (-v) == Vector<4>::Zero());
 
     REQUIRE(v.Dot(v) == Approx(v.LengthSquared()));
     REQUIRE(v.Length() * v.Length() == Approx(v.LengthSquared()));
@@ -1379,25 +1379,25 @@ TEST_CASE(
 
     "Vector4 operations")
 {
-    Vector4 a(1, 2, 3, 4), b(5, 6, 7, 8);
-    REQUIRE(a + b == Vector4(6, 8, 10, 12));
-    REQUIRE(a - b == Vector4(-4, -4, -4, -4));
-    REQUIRE(a * b == Vector4(5, 12, 21, 32));
-    REQUIRE(a + 2 == Vector4(3, 4, 5, 6));
-    REQUIRE(a * 2 == Vector4(2, 4, 6, 8));
-    REQUIRE(-a == Vector4(-1, -2, -3, -4));
+    Vector<4> a(1, 2, 3, 4), b(5, 6, 7, 8);
+    REQUIRE(a + b == Vector<4>(6, 8, 10, 12));
+    REQUIRE(a - b == Vector<4>(-4, -4, -4, -4));
+    REQUIRE(a * b == Vector<4>(5, 12, 21, 32));
+    REQUIRE(a + 2 == Vector<4>(3, 4, 5, 6));
+    REQUIRE(a * 2 == Vector<4>(2, 4, 6, 8));
+    REQUIRE(-a == Vector<4>(-1, -2, -3, -4));
     REQUIRE(a.Dot(b) == 1 * 5 + 2 * 6 + 3 * 7 + 4 * 8);
     REQUIRE(a.Length() == Approx(std::sqrt(30)));
     REQUIRE(a.Normalized().Length() == Approx(1.0f));
     REQUIRE(a.Distance(b) == Approx(std::sqrt(4 * 4 + 4 * 4 + 4 * 4 + 4 * 4)));
-    REQUIRE(a.Lerp(b, 0.5f) == Vector4(3, 4, 5, 6));
+    REQUIRE(a.Lerp(b, 0.5f) == Vector<4>(3, 4, 5, 6));
 }
 
 TEST_CASE(
 
     "Vector4 hyperspherical")
 {
-    Vector4 v(1, 1, 1, 1);
+    Vector<4> v(1, 1, 1, 1);
     float elev = v.Elevation();
     float az = v.Azimuth();
     float hyper = v.HyperAngle();
@@ -1409,8 +1409,8 @@ TEST_CASE(
     REQUIRE(h.Azimuth == Approx(az));
     REQUIRE(h.HyperAngle == Approx(hyper));
     REQUIRE(h.Magnitude == Approx(2.0f));
-    Vector4 v2 = Vector4::FromHyperSpherical(h);
+    Vector<4> v2 = Vector<4>::FromHyperSpherical(h);
     REQUIRE(v2.NearlyEquals(v));
-    Vector3 proj = v.StereoProject();
-    REQUIRE(proj == Vector3(2, 2, 2));
+    Vector<3> proj = v.StereoProject();
+    REQUIRE(proj == Vector<3>(2, 2, 2));
 }

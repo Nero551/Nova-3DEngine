@@ -27,7 +27,7 @@ Matrix2::Matrix2(const float m00, const float m01, const float m10, const float 
 //? Operations
 
 //? Methods
-Matrix2 Matrix2::Scale(const Vector2& scale) const
+Matrix2 Matrix2::Scale(const Vector<2>& scale) const
 {
     Matrix2 scaleMatrix = Identity;
     scaleMatrix(0, 0) = scale.x;
@@ -172,7 +172,7 @@ Matrix2& Matrix2::operator*=(const Matrix2& mat2)
 }
 
 //* Vectors
-Vector2 Matrix2::operator*(const Vector2& vec2) const
+Vector<2> Matrix2::operator*(const Vector<2>& vec2) const
 {
     return {(*this)(0, 0) * vec2.x + (*this)(0, 1) * vec2.y, (*this)(1, 0) * vec2.x + (*this)(1, 1) * vec2.y};
 }

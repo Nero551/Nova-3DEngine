@@ -10,10 +10,10 @@ namespace N::G
 struct LightComponent : C::Component
 {
     LightType Type = LightType::Directional;
-    M::Vector3 Color = M::Vector3{1};
-    M::Vector3 Ambient = M::Vector3{0.8};
-    M::Vector3 Diffuse = M::Vector3{1};
-    M::Vector3 Specular = M::Vector3{1};
+    M::Vector<3> Color = M::Vector<3>{1};
+    M::Vector<3> Ambient = M::Vector<3>{0.8};
+    M::Vector<3> Diffuse = M::Vector<3>{1};
+    M::Vector<3> Specular = M::Vector<3>{1};
 
     float Intensity = 1;
     float Constant = 1.0f;

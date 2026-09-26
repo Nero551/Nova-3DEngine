@@ -65,7 +65,7 @@ struct Quaternion
      * @param euler Euler angles `(x, y, z)`.
      * @return Quaternion representing the composed rotation.
      */
-    static Quaternion FromEulerXYZ(const Vector3& euler);
+    static Quaternion FromEulerXYZ(const Vector<3>& euler);
 
     /** @brief Constructs the zero quaternion. */
     Quaternion();
@@ -112,7 +112,7 @@ struct Quaternion
      * @param vec3 Vector to transform.
      * @return Transformed vector.
      */
-    Vector3 Transform(const Vector3& vec3) const;
+    Vector<3> Transform(const Vector<3>& vec3) const;
 
     /** @brief Returns the quaternion polar angle `θ` from `q = cos(θ) + u sin(θ)`. */
     float Angle() const;
@@ -120,7 +120,7 @@ struct Quaternion
     /** @brief Returns the normalized imaginary-axis direction `u` from `q = m(cos(θ) + u
      * sin(θ)). if sin(angle) = 0, returns default axis {0, 0, -1}.
      */
-    Vector3 Axis() const;
+    Vector<3> Axis() const;
 
     /** @brief Converts the quaternion to polar representation containing its axis, angle,
      * and magnitude. */
@@ -144,7 +144,7 @@ struct Quaternion
      *
      * @return Euler angles `(x, y, z)` in radians.
      */
-    Vector3 ToEulerXYZ() const;
+    Vector<3> ToEulerXYZ() const;
 
     /**
      * @brief Compares two quaternions using an epsilon tolerance.

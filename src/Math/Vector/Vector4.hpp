@@ -1,6 +1,11 @@
 #pragma once
+
+#include "Math/Common/Comparison.hpp"
 #include "Math/Common/Constants.hpp"
+#include "Math/Common/Interpolation.hpp"
 #include "Math/Coordinates/HyperSpherical.hpp"
+#include "Utilities/Log.hpp"
+#include "Vector.hpp"
 #include "Vector3.hpp"
 
 namespace N::M
@@ -15,130 +20,305 @@ namespace N::M
  * Vector4 can be used as a general 4D mathematical vector or as a
  * homogeneous coordinate when used with Matrix4 transformations.
  */
-struct Vector4
+template <> struct Vector<4>
 {
     float x = 0;
     float y = 0;
     float z = 0;
     float w = 0;
 
-    static Vector4 FromHyperSpherical(const HyperSpherical& hyperSpherical);
+    /** @brief Returns a component by index. */
+    constexpr float& operator()(const unsigned int component)
+    {
+        switch (component)
+        {
+        case 0:
+            return x;
+        case 1:
+            return y;
+        case 2:
+            return z;
+        case 3:
+            return w;
+        default:
+            U::Log::Fatal("Index : ", component, " doesn't exist in vector(x, y, z, w)");
+        }
+    }
 
-    constexpr Vector4() {}
+    /** @brief Returns a component by index. */
+    constexpr const float& operator()(const unsigned int component) const
+    {
+        switch (component)
+        {
+        case 0:
+            return x;
+        case 1:
+            return y;
+        case 2:
+            return z;
+        case 3:
+            return w;
+        default:
+            U::Log::Fatal("Index : ", component, " doesn't exist in vector(x, y, z, w)");
+        }
+    }
 
-    explicit constexpr Vector4(const float all) : x(all), y(all), z(all), w(all) {}
+    /** @brief Returns the zero vector. */
+    static constexpr Vector Zero()
+    {
+        return Vector{0};
+    }
 
-    constexpr Vector4(const float x, const float y, const float z, const float w) : x(x), y(y), z(z), w(w) {};
+    /** @brief Returns the vector with all components set to one. */
+    static constexpr Vector One()
+    {
+        return Vector{1};
+    }
 
-    /**
-     * @brief Returns the squared magnitude of the vector.
-     *
-     * Equivalent to Dot(*this), but avoids the square root performed
-     * by Length().
-     *
-     * Useful when comparing vector magnitudes without needing the
-     * actual length.
-     */
-    [[nodiscard]] float LengthSquared() const;
+    /** @brief Constructs a zero vector. */
+    constexpr Vector() = default;
 
-    /**
-     * @brief Returns the magnitude (length) of the vector.
-     */
-    [[nodiscard]] float Length() const;
+    /** @brief Constructs a vector with all components set to the same value. */
+    explicit constexpr Vector(const float all) : x(all), y(all), z(all), w(all) {}
 
-    /**
-     * @brief Returns a normalized copy of the vector.
-     *
-     * The returned vector has a length of 1 while preserving the
-     * direction of the original vector.
-     */
-    [[nodiscard]] Vector4 Normalized() const;
+    /** @brief Constructs a vector from individual components. */
+    constexpr Vector(const float x, const float y, const float z, const float w) : x(x), y(y), z(z), w(w) {}
 
-    /**
-     * @brief Returns the dot product between two vectors.
-     */
-    [[nodiscard]] float Dot(const Vector4& vec4) const;
+    /** @brief Constructs a vector from hyperspherical coordinates. */
+    static constexpr Vector FromHyperSpherical(const HyperSpherical& hyperSpherical)
+    {
+        const float m = hyperSpherical.Magnitude;
 
-    /**
-     * @brief Linearly interpolates between this vector and another vector.
-     *
-     * A t value of 0 returns this vector.
-     * A t value of 1 returns vec4.
-     *
-     * Values outside [0, 1] extrapolate beyond the endpoints.
-     *
-     * @param vec4 Target vector.
-     * @param t Interpolation amount.
-     */
-    [[nodiscard]] Vector4 Lerp(const Vector4& vec4, float t) const;
+        Vector result;
 
-    /**
-     * @brief Returns the Euclidean distance between two vectors.
-     */
-    [[nodiscard]] float Distance(const Vector4& vec4) const;
+        result.x = m * std::cos(hyperSpherical.Elevation) * std::cos(hyperSpherical.Azimuth) *
+            std::cos(hyperSpherical.HyperAngle);
 
-    [[nodiscard]] Vector3 StereoProject() const;
+        result.y = m * std::sin(hyperSpherical.Elevation) * std::cos(hyperSpherical.HyperAngle);
 
-    [[nodiscard]] float Elevation() const;
-    [[nodiscard]] float Azimuth() const;
-    [[nodiscard]] float HyperAngle() const;
-    [[nodiscard]] HyperSpherical ToHyperSpherical() const;
+        result.z = m * std::cos(hyperSpherical.Elevation) * std::sin(hyperSpherical.Azimuth) *
+            std::cos(hyperSpherical.HyperAngle);
 
-    /**
-     * @brief Compares two vectors using an epsilon tolerance.
-     *
-     * Unlike operator==, this comparison is suitable for floating-point
-     * calculations where exact equality is unreliable.
-     *
-     * @param vec4 Vector to compare against.
-     * @param epsilon Maximum allowed component difference.
-     */
-    [[nodiscard]] bool NearlyEquals(const Vector4& vec4, float epsilon = EPSILON) const;
+        result.w = m * std::sin(hyperSpherical.HyperAngle);
 
-    Vector4 operator+(const Vector4& vec4) const;
+        return result;
+    }
 
-    Vector4 operator-(const Vector4& vec4) const;
+    /** @brief Returns the squared length of the vector. */
+    constexpr float LengthSquared() const
+    {
+        return x * x + y * y + z * z + w * w;
+    }
 
-    Vector4 operator*(const Vector4& vec4) const;
+    /** @brief Returns the length of the vector. */
+    constexpr float Length() const
+    {
+        return std::sqrt(LengthSquared());
+    }
 
-    Vector4& operator+=(const Vector4& vec4);
+    /** @brief Returns a normalized copy of the vector. */
+    constexpr Vector Normalized() const
+    {
+        const float length = Length();
 
-    Vector4& operator-=(const Vector4& vec4);
+        if (length == 0)
+        {
+            return Zero();
+        }
 
-    Vector4& operator*=(const Vector4& vec4);
+        return {x / length, y / length, z / length, w / length};
+    }
 
-    Vector4 operator+(float scalar) const;
+    /** @brief Returns the dot product with another vector. */
+    constexpr float Dot(const Vector& vector) const
+    {
+        return x * vector.x + y * vector.y + z * vector.z + w * vector.w;
+    }
 
-    Vector4 operator-(float scalar) const;
+    /** @brief Linearly interpolates between this vector and another vector. */
+    constexpr Vector Lerp(const Vector& vector, const float t) const
+    {
+        return {M::Lerp(x, vector.x, t), M::Lerp(y, vector.y, t), M::Lerp(z, vector.z, t),
+            M::Lerp(w, vector.w, t)};
+    }
 
-    Vector4 operator*(float scalar) const;
+    /** @brief Returns the distance to another vector. */
+    constexpr float Distance(const Vector& vector) const
+    {
+        return (*this - vector).Length();
+    }
 
-    Vector4 operator/(float scalar) const;
+    /** @brief Projects the vector stereographically onto a 3D space. */
+    constexpr Vector<3> StereoProject() const
+    {
+        const float r = Length();
 
-    Vector4& operator+=(float scalar);
+        return {r * x / (r - w), r * y / (r - w), r * z / (r - w)};
+    }
 
-    Vector4& operator-=(float scalar);
+    /** @brief Returns the elevation angle of the vector. */
+    constexpr float Elevation() const
+    {
+        return std::asin(Normalized().y / std::cos(HyperAngle()));
+    }
 
-    Vector4& operator*=(float scalar);
+    /** @brief Returns the azimuth angle of the vector. */
+    constexpr float Azimuth() const
+    {
+        return std::atan2(z, x);
+    }
 
-    Vector4& operator/=(float scalar);
+    /** @brief Returns the hyperspherical hyperangle of the vector. */
+    constexpr float HyperAngle() const
+    {
+        return std::asin(Normalized().w);
+    }
 
-    Vector4 operator-() const;
+    /** @brief Converts the vector to hyperspherical coordinates. */
+    constexpr HyperSpherical ToHyperSpherical() const
+    {
+        return {Elevation(), Azimuth(), HyperAngle(), Length()};
+    }
 
-    bool operator==(const Vector4& vec4) const;
+    /** @brief Compares the vector against another using an error tolerance. */
+    constexpr bool NearlyEquals(const Vector& vector, const float epsilon = EPSILON) const
+    {
+        return M::NearlyEquals(x, vector.x, epsilon) && M::NearlyEquals(y, vector.y, epsilon) &&
+            M::NearlyEquals(z, vector.z, epsilon) && M::NearlyEquals(w, vector.w, epsilon);
+    }
 
-    bool operator!=(const Vector4& vec4) const;
+    /** @brief Adds another vector component-wise. */
+    constexpr Vector operator+(const Vector& vector) const
+    {
+        return {x + vector.x, y + vector.y, z + vector.z, w + vector.w};
+    }
 
-    friend Vector4 operator+(float scalar, const Vector4& vec4);
+    /** @brief Subtracts another vector component-wise. */
+    constexpr Vector operator-(const Vector& vector) const
+    {
+        return {x - vector.x, y - vector.y, z - vector.z, w - vector.w};
+    }
 
-    friend Vector4 operator-(float scalar, const Vector4& vec4);
+    /** @brief Multiplies another vector component-wise. */
+    constexpr Vector operator*(const Vector& vector) const
+    {
+        return {x * vector.x, y * vector.y, z * vector.z, w * vector.w};
+    }
 
-    friend Vector4 operator*(float scalar, const Vector4& vec4);
+    /** @brief Adds another vector to this vector. */
+    constexpr Vector& operator+=(const Vector& vector)
+    {
+        return *this = *this + vector;
+    }
 
-    friend Vector4 operator/(float scalar, const Vector4& vec4);
+    /** @brief Subtracts another vector from this vector. */
+    constexpr Vector& operator-=(const Vector& vector)
+    {
+        return *this = *this - vector;
+    }
 
-    friend std::ostream& operator<<(std::ostream& os, const Vector4& vec4);
+    /** @brief Multiplies this vector component-wise by another vector. */
+    constexpr Vector& operator*=(const Vector& vector)
+    {
+        return *this = *this * vector;
+    }
 
-    static const Vector4 Zero;
+    /** @brief Adds a scalar to every component. */
+    constexpr Vector operator+(const float scalar) const
+    {
+        return {x + scalar, y + scalar, z + scalar, w + scalar};
+    }
+
+    /** @brief Subtracts a scalar from every component. */
+    constexpr Vector operator-(const float scalar) const
+    {
+        return {x - scalar, y - scalar, z - scalar, w - scalar};
+    }
+
+    /** @brief Multiplies every component by a scalar. */
+    constexpr Vector operator*(const float scalar) const
+    {
+        return {x * scalar, y * scalar, z * scalar, w * scalar};
+    }
+
+    /** @brief Divides every component by a scalar. */
+    constexpr Vector operator/(const float scalar) const
+    {
+        return {x / scalar, y / scalar, z / scalar, w / scalar};
+    }
+
+    /** @brief Adds a scalar to every component in place. */
+    constexpr Vector& operator+=(const float scalar)
+    {
+        return *this = *this + scalar;
+    }
+
+    /** @brief Subtracts a scalar from every component in place. */
+    constexpr Vector& operator-=(const float scalar)
+    {
+        return *this = *this - scalar;
+    }
+
+    /** @brief Multiplies every component by a scalar in place. */
+    constexpr Vector& operator*=(const float scalar)
+    {
+        return *this = *this * scalar;
+    }
+
+    /** @brief Divides every component by a scalar in place. */
+    constexpr Vector& operator/=(const float scalar)
+    {
+        return *this = *this / scalar;
+    }
+
+    /** @brief Returns the negated vector. */
+    constexpr Vector operator-() const
+    {
+        return -1 * *this;
+    }
+
+    /** @brief Compares two vectors for exact equality. */
+    constexpr bool operator==(const Vector& vector) const
+    {
+        return x == vector.x && y == vector.y && z == vector.z && w == vector.w;
+    }
+
+    /** @brief Compares two vectors for inequality. */
+    constexpr bool operator!=(const Vector& vector) const
+    {
+        return !(*this == vector);
+    }
+
+    /** @brief Adds a scalar to every component. */
+    friend constexpr Vector operator+(const float scalar, const Vector& vector)
+    {
+        return vector + scalar;
+    }
+
+    /** @brief Subtracts every vector component from a scalar. */
+    friend constexpr Vector operator-(const float scalar, const Vector& vector)
+    {
+        return {scalar - vector.x, scalar - vector.y, scalar - vector.z, scalar - vector.w};
+    }
+
+    /** @brief Multiplies every component by a scalar. */
+    friend constexpr Vector operator*(const float scalar, const Vector& vector)
+    {
+        return vector * scalar;
+    }
+
+    /** @brief Divides a scalar by every vector component. */
+    friend constexpr Vector operator/(const float scalar, const Vector& vector)
+    {
+        return {scalar / vector.x, scalar / vector.y, scalar / vector.z, scalar / vector.w};
+    }
+
+    /** @brief Writes the vector to an output stream. */
+    friend std::ostream& operator<<(std::ostream& os, const Vector& vector)
+    {
+        os << "(" << vector.x << ", " << vector.y << ", " << vector.z << ", " << vector.w << ")";
+
+        return os;
+    }
 };
 } // namespace N::M

@@ -44,7 +44,7 @@ Matrix4::Matrix4(const float m00, const float m01, const float m02, const float 
 
 //? Operations
 
-Matrix4 Matrix4::Translate(const Vector3& translation) const
+Matrix4 Matrix4::Translate(const Vector<3>& translation) const
 {
     Matrix4 result = *this;
 
@@ -54,7 +54,7 @@ Matrix4 Matrix4::Translate(const Vector3& translation) const
 
     return result;
 }
-Matrix4 Matrix4::Scale(const Vector3& scale) const
+Matrix4 Matrix4::Scale(const Vector<3>& scale) const
 {
     Matrix4 result = *this;
 
@@ -101,7 +101,7 @@ Matrix4 Matrix4::RotateZ(const float radian) const
     return *this * rotationMatrix;
 }
 
-Matrix4 Matrix4::Rotate(const Vector3& eulerRotation) const
+Matrix4 Matrix4::Rotate(const Vector<3>& eulerRotation) const
 {
     Matrix4 rotationMatrix = Identity;
     rotationMatrix = rotationMatrix.RotateZ(eulerRotation.z);
@@ -110,9 +110,9 @@ Matrix4 Matrix4::Rotate(const Vector3& eulerRotation) const
 
     return *this * rotationMatrix;
 }
-Matrix4 Matrix4::RotateAroundAxis(const Vector3& axis, const float radian) const
+Matrix4 Matrix4::RotateAroundAxis(const Vector<3>& axis, const float radian) const
 {
-    const Vector3 forward = axis.Normalized();
+    const Vector<3> forward = axis.Normalized();
 
     const float c = std::cos(radian);
     const float s = std::sin(radian);
@@ -178,14 +178,14 @@ Matrix4 Matrix4::Perspective(const float fovRad, const float aspectRatio, const 
     return matrix;
 }
 
-Matrix4 Matrix4::LookAt(const Vector3& pos, const Vector3& target, const Vector3& up)
+Matrix4 Matrix4::LookAt(const Vector<3>& pos, const Vector<3>& target, const Vector<3>& up)
 {
     Matrix4 trans = Identity;
     trans = trans.Translate(-pos);
 
-    Vector3 forward = (target - pos).Normalized();
-    Vector3 right = forward.Cross(up).Normalized();
-    Vector3 upCorrect = right.Cross(forward);
+    Vector<3> forward = (target - pos).Normalized();
+    Vector<3> right = forward.Cross(up).Normalized();
+    Vector<3> upCorrect = right.Cross(forward);
 
     Basis basis(right, upCorrect, -forward);
     return basis.GetInverseMatrix() * trans;
@@ -365,7 +365,7 @@ Matrix4& Matrix4::operator*=(const Matrix4& mat4)
     return *this = *this * mat4;
 }
 
-Vector4 Matrix4::operator*(const Vector4& vec4) const
+Vector<4> Matrix4::operator*(const Vector<4>& vec4) const
 {
     return {(*this)(0, 0) * vec4.x + (*this)(0, 1) * vec4.y + (*this)(0, 2) * vec4.z + (*this)(0, 3) * vec4.w,
 

@@ -30,7 +30,7 @@ Grid::Grid()
     // M::Rad(theta)}), 0);
 }
 
-void Grid::CreateGridLine(const M::Quaternion rotation, const M::Vector3 position)
+void Grid::CreateGridLine(const M::Quaternion rotation, const M::Vector<3> position)
 {
     auto& resourceManager = C::Service::Get<C::ResourceManager>();
     auto& shader = C::Service::Get<C::ResourceManager>().Load<G::Shader>("AxisShader");

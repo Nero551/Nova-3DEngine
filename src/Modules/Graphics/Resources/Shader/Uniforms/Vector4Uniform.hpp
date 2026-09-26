@@ -6,9 +6,9 @@ namespace N::G
 {
 struct Vector4Uniform : Uniform
 {
-    M::Vector4 Value;
+    M::Vector<4> Value;
 
-    Vector4Uniform(const std::string& name, const M::Vector4& value) : Uniform(name), Value(value) {}
+    Vector4Uniform(const std::string& name, const M::Vector<4>& value) : Uniform(name), Value(value) {}
 
     void Upload(const int location) override
     {

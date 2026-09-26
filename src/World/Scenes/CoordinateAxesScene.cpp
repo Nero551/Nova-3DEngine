@@ -33,12 +33,12 @@ CoordinateAxesScene::CoordinateAxesScene()
 
     auto& light = world.CreateEntity<G::Light>();
     query.Pool<Transform3DComponent>().GetComponentById(light.GetId()).Rotation =
-        M::Quaternion::FromEulerXYZ(M::Vector3{M::Rad(32.5)});
+        M::Quaternion::FromEulerXYZ(M::Vector<3>{M::Rad(32.5)});
     GetRoot().AttachChild(light);
 
     auto& light2 = world.CreateEntity<G::Light>();
     query.Pool<Transform3DComponent>().GetComponentById(light2.GetId()).Rotation =
-        M::Quaternion::FromEulerXYZ(M::Vector3{M::Rad(-32.5)});
+        M::Quaternion::FromEulerXYZ(M::Vector<3>{M::Rad(-32.5)});
     GetRoot().AttachChild(light2);
 
     auto& shader = resourceManager.Load<G::Shader>("AxisShader");

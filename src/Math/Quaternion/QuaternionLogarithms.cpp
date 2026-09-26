@@ -8,7 +8,7 @@ namespace N::M
 Quaternion QLn(const Quaternion& q)
 {
     Quaternion result;
-    Vector3 axis = q.Axis();
+    Vector<3> axis = q.Axis();
 
     // q.w is m * cos(rsin(x))
     // their arctan returns rsin. which is the original magnitude * sin(original angle)

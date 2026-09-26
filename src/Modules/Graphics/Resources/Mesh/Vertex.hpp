@@ -7,12 +7,12 @@ namespace N::G
 {
 struct Vertex
 {
-    M::Vector4 Position;
-    M::Vector4 Color;
-    M::Vector2 UV;
-    M::Vector3 Normal;
+    M::Vector<4> Position;
+    M::Vector<4> Color;
+    M::Vector<2> UV;
+    M::Vector<3> Normal;
 
-    Vertex(const M::Vector4 pos, const M::Vector4 col, const M::Vector2 uv, const M::Vector3 normal)
+    Vertex(const M::Vector<4> pos, const M::Vector<4> col, const M::Vector<2> uv, const M::Vector<3> normal)
         : Position(pos), Color(col), UV(uv), Normal(normal)
     {
     }

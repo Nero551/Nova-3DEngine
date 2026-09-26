@@ -61,12 +61,12 @@ void CameraSystem::Update(const double dt)
 
     if (input.IsKeyHeld(I::Key::Space))
     {
-        transform.Position += speed * M::Vector3(0, 1, 0);
+        transform.Position += speed * M::Vector<3>(0, 1, 0);
     }
 
     if (input.IsKeyHeld(I::Key::LeftShift))
     {
-        transform.Position -= speed * M::Vector3(0, 1, 0);
+        transform.Position -= speed * M::Vector<3>(0, 1, 0);
     }
 }
 
@@ -76,9 +76,9 @@ M::Matrix4 CameraSystem::GetViewMatrix()
     auto& camera = world.GetCamera();
     auto& transform = world.Query.Pool<Transform3DComponent>().GetComponentById(camera.GetId());
 
-    const M::Vector3 pos = transform.Position;
-    const M::Vector3 forward = transform.GetForward();
-    const M::Vector3 up = transform.GetUp();
+    const M::Vector<3> pos = transform.Position;
+    const M::Vector<3> forward = transform.GetForward();
+    const M::Vector<3> up = transform.GetUp();
 
     return M::Matrix4::LookAt(pos, pos + forward, up);
 }

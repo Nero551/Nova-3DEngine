@@ -22,11 +22,11 @@ struct Input : C::Module
 
     bool IsMouseButtonReleased(MouseButton button);
 
-    M::Vector2 GetMousePosition() const;
+    M::Vector<2> GetMousePosition() const;
 
-    M::Vector2 GetMouseDelta() const;
+    M::Vector<2> GetMouseDelta() const;
 
-    M::Vector2 GetScrollDelta() const;
+    M::Vector<2> GetScrollDelta() const;
 
     bool IsScrolling() const;
 
@@ -36,11 +36,11 @@ struct Input : C::Module
 
   private:
     MouseMode m_MouseMode = MouseMode::Normal;
-    M::Vector2 m_MousePosition = M::Vector2::Zero;
-    M::Vector2 m_PreviousMousePosition = M::Vector2::Zero;
+    M::Vector<2> m_MousePosition = M::Vector<2>::Zero();
+    M::Vector<2> m_PreviousMousePosition = M::Vector<2>::Zero();
     bool m_FirstMouse = true;
 
-    M::Vector2 m_ScrollOffset = M::Vector2::Zero;
+    M::Vector<2> m_ScrollOffset = M::Vector<2>::Zero();
 
     static constexpr unsigned int MouseButtonCount = GLFW_MOUSE_BUTTON_LAST + 1;
     static constexpr unsigned int KeyCount = GLFW_KEY_LAST + 1;

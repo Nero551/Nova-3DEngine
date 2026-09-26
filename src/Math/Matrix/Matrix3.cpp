@@ -35,7 +35,7 @@ Matrix3::Matrix3(const float m00, const float m01, const float m02, const float 
 
 //? Operations
 
-Matrix3 Matrix3::Scale(const Vector3& scale) const
+Matrix3 Matrix3::Scale(const Vector<3>& scale) const
 {
     Matrix3 result = *this;
     for (size_t row = 0; row < 3; ++row)
@@ -81,7 +81,7 @@ Matrix3 Matrix3::RotateZ(const float radian) const
     return *this * rotationMatrix;
 }
 
-Matrix3 Matrix3::Rotate(const Vector3& eulerRotation) const
+Matrix3 Matrix3::Rotate(const Vector<3>& eulerRotation) const
 {
     Matrix3 rotationMatrix = Identity;
     rotationMatrix = rotationMatrix.RotateZ(eulerRotation.z);
@@ -91,16 +91,16 @@ Matrix3 Matrix3::Rotate(const Vector3& eulerRotation) const
     return *this * rotationMatrix;
 }
 
-Matrix3 Matrix3::RotateAroundAxis(const Vector3& axis, const float radian) const
+Matrix3 Matrix3::RotateAroundAxis(const Vector<3>& axis, const float radian) const
 {
     Matrix3 rotationMatrix = Identity;
     rotationMatrix = rotationMatrix.RotateZ(radian);
 
-    Vector3 forward = axis.Normalized();
-    Vector3 helper = forward.IsParallelTo(Vector3::Up) ? Vector3::Right : Vector3::Up;
+    Vector<3> forward = axis.Normalized();
+    Vector<3> helper = forward.IsParallelTo(Vector<3>::Up()) ? Vector<3>::Right() : Vector<3>::Up();
 
-    Vector3 right = helper.Cross(forward);
-    Vector3 up = forward.Cross(right);
+    Vector<3> right = helper.Cross(forward);
+    Vector<3> up = forward.Cross(right);
 
     const Basis basis(right, up, forward);
     const Matrix3 basisMatrix = basis.GetMatrix().ToMatrix3();
@@ -110,7 +110,7 @@ Matrix3 Matrix3::RotateAroundAxis(const Vector3& axis, const float radian) const
     return *this * finalMatrix;
 }
 
-Matrix3 Matrix3::Translate(const Vector2& trans) const
+Matrix3 Matrix3::Translate(const Vector<2>& trans) const
 {
     Matrix3 transMatrix = Identity;
 
@@ -338,7 +338,7 @@ Matrix3& Matrix3::operator*=(const Matrix3& mat3)
 }
 
 //* Vectors
-Vector3 Matrix3::operator*(const Vector3& vec3) const
+Vector<3> Matrix3::operator*(const Vector<3>& vec3) const
 {
     return {(*this)(0, 0) * vec3.x + (*this)(0, 1) * vec3.y + (*this)(0, 2) * vec3.z,
         (*this)(1, 0) * vec3.x + (*this)(1, 1) * vec3.y + (*this)(1, 2) * vec3.z,

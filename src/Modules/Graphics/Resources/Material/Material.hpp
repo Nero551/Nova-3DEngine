@@ -33,19 +33,19 @@ struct Material : C::Resource
     U::CheckedPtr<Shader> Shader{"Material Has No Shader Assigned"};
 
     /** Base material color. */
-    M::Vector4 Color = M::Vector4{0.5};
+    M::Vector<4> Color = M::Vector<4>{0.5};
 
     /** Ambient lighting color. */
-    M::Vector3 Ambient = M::Vector3{0.7};
+    M::Vector<3> Ambient = M::Vector<3>{0.7};
 
     /** Diffuse lighting color. */
-    M::Vector3 Diffuse = M::Vector3{0.3};
+    M::Vector<3> Diffuse = M::Vector<3>{0.3};
 
     /** Specular lighting color. */
-    M::Vector3 Specular = M::Vector3{0.7};
+    M::Vector<3> Specular = M::Vector<3>{0.7};
 
     /** Emissive color of the material. */
-    M::Vector3 Emission = M::Vector3{0};
+    M::Vector<3> Emission = M::Vector<3>{0};
 
     /** Stencil testing and stencil buffer operations used by the material. */
     Stencil Stencil = true;

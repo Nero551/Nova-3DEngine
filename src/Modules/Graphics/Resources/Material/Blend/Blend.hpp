@@ -37,7 +37,7 @@ struct Blend
     BlendEquation EquationAlpha = BlendEquation::Add;
 
     /** @brief Constant color used by blend factors that reference a constant color. */
-    M::Vector4 ConstantColor = {0, 0, 0, 0};
+    M::Vector<4> ConstantColor = {0, 0, 0, 0};
 
     Blend(const bool enabled) : Enabled(enabled) {}
 

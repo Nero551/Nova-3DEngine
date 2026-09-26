@@ -17,16 +17,16 @@ static void ProcessVertices(std::vector<G::Vertex>& vertices, const aiMesh* mesh
 {
     for (unsigned int v = 0; v < mesh->mNumVertices; ++v)
     {
-        M::Vector4 pos = {mesh->mVertices[v].x, mesh->mVertices[v].y, mesh->mVertices[v].z, 1};
-        M::Vector3 normal = {mesh->mNormals[v].x, mesh->mNormals[v].y, mesh->mNormals[v].z};
-        M::Vector2 uv = {0, 0};
+        M::Vector<4> pos = {mesh->mVertices[v].x, mesh->mVertices[v].y, mesh->mVertices[v].z, 1};
+        M::Vector<3> normal = {mesh->mNormals[v].x, mesh->mNormals[v].y, mesh->mNormals[v].z};
+        M::Vector<2> uv = {0, 0};
 
         if (mesh->mTextureCoords[0])
         {
             uv = {mesh->mTextureCoords[0][v].x, mesh->mTextureCoords[0][v].y};
         }
 
-        vertices.emplace_back(pos, M::Vector4(1), uv, normal);
+        vertices.emplace_back(pos, M::Vector<4>(1), uv, normal);
     }
 }
 

@@ -2,6 +2,8 @@
 #include "Core/OuterCore/ECS/Component.hpp"
 #include "Math/Functions/Function.hpp"
 #include "Math/Matrix/Matrix3.hpp"
+#include "Math/Vector/Vector.hpp"
+#include "Math/Vector/Vector4.hpp"
 #include "Utilities/Log.hpp"
 
 namespace Sketch
@@ -65,61 +67,6 @@ Output Summation(const int start, const int end, const N::M::Function<Input, Out
 
     return result;
 }
-
-template <int Components> struct Vector
-{
-    constexpr Vector() {}
-    constexpr explicit Vector(float all)
-    {
-        m_Data.fill(all);
-    }
-
-    constexpr const std::array<float, Components>& Data() const
-    {
-        return m_Data;
-    }
-
-    template <typename... Numbers>
-    requires(sizeof...(Numbers) == Components && (std::convertible_to<Numbers, float> && ...))
-    constexpr Vector(Numbers... numbers) : m_Data{static_cast<float>(numbers)...}
-    {
-    }
-
-    constexpr float& operator()(const unsigned int component)
-    {
-        return m_Data[component];
-    }
-
-    constexpr const float& operator()(const unsigned int component) const
-    {
-        return m_Data[component];
-    }
-
-    static constexpr Vector Zero()
-    {
-        return Vector{0};
-    }
-
-    friend std::ostream& operator<<(std::ostream& os, const Vector& vec)
-    {
-        os << "(";
-
-        for (int i = 0; i < Components; ++i)
-        {
-            os << vec.m_Data[i];
-            if (i != Components - 1)
-            {
-                os << ", ";
-            }
-        }
-        os << ")";
-
-        return os;
-    }
-
-  private:
-    std::array<float, Components> m_Data{0};
-};
 
 template <unsigned int Row, unsigned int Column> struct Matrix
 {
@@ -202,9 +149,9 @@ template <unsigned int Row, unsigned int Column> struct Matrix
         return result;
     }
 
-    constexpr Vector<Row> operator*(const Vector<Column>& vec) const
+    constexpr N::M::Vector<Row> operator*(const N::M::Vector<Column>& vec) const
     {
-        Vector<Row> result = Vector<Row>::Zero;
+        N::M::Vector<Row> result = N::M::Vector<Row>::Zero;
 
         for (int row = 0; row < Row; ++row)
         {
@@ -560,13 +507,16 @@ inline void Test()
     // so nested operations will work
     // make ALL operators use the Normalized version of a dimensional.
     // probably want normal Dimensional to have this as well, its normalized is just itself.
-    using Velocity = OperationDimensional<Length<1>, Time<-1>>;
-    using Acceleration = OperationDimensional<Velocity, Time<-1>>;
-    Dimension<float, OperationDimensional<Length<2>, Length<1>>> a;
-    Dimension<float, Length<3>> l2;
+    //
+    // using Velocity = OperationDimensional<Length<1>, Time<-1>>;
+    // using Acceleration = OperationDimensional<Velocity, Time<-1>>;
+    // Dimension<float, OperationDimensional<Length<2>, Length<1>>> a;
+    // Dimension<float, Length<3>> l2;
+    //
+    // Dimension<float, OperationDimensional<Length<1>, Time<-2>>> t{5};
+    // N::U::Log::Info(a + l2);
 
-    Dimension<float, OperationDimensional<Length<1>, Time<-2>>> t{5};
-    N::U::Log::Info(a + l2);
+    N::M::Vector<4> v;
 }
 
 } // namespace Sketch

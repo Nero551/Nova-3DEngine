@@ -36,24 +36,24 @@ bool Input::IsMouseButtonReleased(const MouseButton button)
     return !m_CurrentMouseButtons[ToIndex(button)] && m_PreviousMouseButtons[ToIndex(button)];
 }
 
-M::Vector2 Input::GetMousePosition() const
+M::Vector<2> Input::GetMousePosition() const
 {
     return m_MousePosition;
 }
 
-M::Vector2 Input::GetMouseDelta() const
+M::Vector<2> Input::GetMouseDelta() const
 {
     return m_MousePosition - m_PreviousMousePosition;
 }
 
-M::Vector2 Input::GetScrollDelta() const
+M::Vector<2> Input::GetScrollDelta() const
 {
     return m_ScrollOffset;
 }
 
 bool Input::IsScrolling() const
 {
-    return m_ScrollOffset != M::Vector2::Zero;
+    return m_ScrollOffset != M::Vector<2>::Zero();
 }
 
 MouseMode Input::GetMouseMode() const

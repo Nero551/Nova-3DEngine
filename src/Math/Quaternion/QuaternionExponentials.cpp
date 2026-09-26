@@ -10,7 +10,7 @@ Quaternion M::QExp(const Quaternion& q)
 {
     float r = q.Magnitude();
     float theta = q.Angle();
-    Vector3 axis = q.Axis();
+    Vector<3> axis = q.Axis();
 
     float magnitude = Exp(r * std::cos(theta));
     float rsin = r * std::sin(theta);
@@ -33,7 +33,7 @@ Quaternion QPow(const Quaternion& q, const float power)
 {
     float magnitude = Pow(q.Magnitude(), power);
     float theta = q.Angle();
-    Vector3 axis = q.Axis();
+    Vector<3> axis = q.Axis();
     float sin = std::sin(theta * power);
 
     Quaternion result;

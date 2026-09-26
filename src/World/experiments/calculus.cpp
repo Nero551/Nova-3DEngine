@@ -13,7 +13,7 @@
 
 namespace N
 {
-static C::Entity& CreatePoint(M::Vector4 col)
+static C::Entity& CreatePoint(M::Vector<4> col)
 {
     auto& resourceManager = C::Service::Get<C::ResourceManager>();
     auto& mesh = G::Primitives::CreateQuad("point");
@@ -21,7 +21,7 @@ static C::Entity& CreatePoint(M::Vector4 col)
     auto& point = C::World::Get().CreateEntity<G::MeshInstance3D>();
     C::World::Get().Query.Pool<G::MeshComponent>().GetComponentById(point.GetId()).Mesh = &mesh;
     C::World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.GetId()).Scale =
-        M::Vector3{0.2};
+        M::Vector<3>{0.2};
 
     if (resourceManager.Exists<G::Material>(std::format("m{}{}{}", col.z, col.x, col.y)))
     {
@@ -50,7 +50,7 @@ static C::Entity& CreatePoint(M::Vector4 col)
 
 static std::vector<unsigned int> points = {};
 
-static C::Entity& Plot(const M::Vector3 vec3, const M::Vector4 col = {1, 1, 1, 1})
+static C::Entity& Plot(const M::Vector<3> vec3, const M::Vector<4> col = {1, 1, 1, 1})
 {
     auto& point = CreatePoint(col);
     auto& transform = C::World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.GetId());
@@ -122,7 +122,7 @@ void calculus::TwoDimensionalProjection(const int increase)
     U::Log::Info(M::Pow(360 / increase, 1));
     for (int theta = -180; theta < 180; theta += increase)
     {
-        M::Vector2 v2 = M::Vector2::FromPolar(M::Polar(M::Rad(theta)));
+        M::Vector<2> v2 = M::Vector<2>::FromPolar(M::Polar(M::Rad(theta)));
         float proj = v2.StereoProject();
         // auto& d2point = Plot({v2.x, v2.y, 0});
         auto& point = Plot({proj, 0, 0});
@@ -140,8 +140,8 @@ void calculus::ThreeDimensionalProjection(const int increase)
     {
         for (int phi = -180; phi < 180; phi += increase)
         {
-            M::Vector3 v3 = M::Vector3::FromSpherical(M::Spherical(M::Rad(theta), M::Rad(phi)));
-            M::Vector2 proj = v3.StereoProject();
+            M::Vector<3> v3 = M::Vector<3>::FromSpherical(M::Spherical(M::Rad(theta), M::Rad(phi)));
+            M::Vector<2> proj = v3.StereoProject();
             auto& point = Plot({proj.x, proj.y, 0});
             points.emplace_back(point.GetId());
         }
@@ -159,9 +159,9 @@ void calculus::FourDimensionalProjection(const int increase)
         {
             for (int h = -180; h < 180; h += increase)
             {
-                M::Vector4 v4 =
-                    M::Vector4::FromHyperSpherical(M::HyperSpherical(M::Rad(theta), M::Rad(phi), M::Rad(h)));
-                M::Vector3 proj = v4.StereoProject();
+                M::Vector<4> v4 = M::Vector<4>::FromHyperSpherical(
+                    M::HyperSpherical(M::Rad(theta), M::Rad(phi), M::Rad(h)));
+                M::Vector<3> proj = v4.StereoProject();
                 auto& point = Plot(proj);
                 points.emplace_back(point.GetId());
             }

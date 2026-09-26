@@ -8,8 +8,8 @@ namespace N
 {
 struct BodyComponent : C::Component
 {
-    M::Vector3 Velocity = {0, 0, 0};
-    M::Vector3 Force = M::Vector3::Zero;
+    M::Vector<3> Velocity = {0, 0, 0};
+    M::Vector<3> Force = M::Vector<3>::Zero();
     float Mass = Units::Kilogram;
 };
 } // namespace N

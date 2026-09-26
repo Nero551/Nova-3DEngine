@@ -3,7 +3,7 @@
 
 namespace N::M::Color
 {
-using Color = Vector4;
+using Color = Vector<4>;
 
 inline static constexpr Color Black = {0.0f, 0.0f, 0.0f, 1.0f};
 inline static constexpr Color Red = {1.0f, 0.0f, 0.0f, 1.0f};

@@ -61,7 +61,7 @@ struct Matrix2
      * @param scale X and Y scale factors.
      * @return The matrix multiplied by the scale matrix.
      */
-    [[nodiscard]] Matrix2 Scale(const Vector2& scale) const;
+    [[nodiscard]] Matrix2 Scale(const Vector<2>& scale) const;
 
     /**
      * @brief Applies a counter-clockwise rotation.
@@ -110,7 +110,7 @@ struct Matrix2
     /**
      * @brief Multiplies this matrix by a column vector.
      */
-    Vector2 operator*(const Vector2& vec2) const;
+    Vector<2> operator*(const Vector<2>& vec2) const;
 
     Matrix2 operator*(float scalar) const;
     Matrix2 operator/(float scalar) const;

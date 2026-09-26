@@ -72,14 +72,14 @@ struct Matrix4
      *
      * @param translation Translation along the X, Y, and Z axes.
      */
-    [[nodiscard]] Matrix4 Translate(const Vector3& translation) const;
+    [[nodiscard]] Matrix4 Translate(const Vector<3>& translation) const;
 
     /**
      * @brief Applies a 3D scale.
      *
      * @param scale Scale factors along the X, Y, and Z axes.
      */
-    [[nodiscard]] Matrix4 Scale(const Vector3& scale) const;
+    [[nodiscard]] Matrix4 Scale(const Vector<3>& scale) const;
 
     /**
      * @brief Applies a rotation around the X axis.
@@ -108,7 +108,7 @@ struct Matrix4
      * Rotations are applied in XYZ order: X, then Y, then Z.
      * @param eulerRotation Rotation angles around X, Y, and Z in radians.
      */
-    [[nodiscard]] Matrix4 Rotate(const Vector3& eulerRotation) const;
+    [[nodiscard]] Matrix4 Rotate(const Vector<3>& eulerRotation) const;
 
     /**
      * @brief Applies a rotation around an arbitrary axis.
@@ -116,7 +116,7 @@ struct Matrix4
      * @param axis Axis of rotation.
      * @param radian Rotation angle in radians.
      */
-    [[nodiscard]] Matrix4 RotateAroundAxis(const Vector3& axis, float radian) const;
+    [[nodiscard]] Matrix4 RotateAroundAxis(const Vector<3>& axis, float radian) const;
 
     /**
      * @brief Extracts the upper-left 3x3 portion of the matrix.
@@ -154,7 +154,7 @@ struct Matrix4
      * @param target Point the camera is looking toward.
      * @param up Approximate world-up direction.
      */
-    static Matrix4 LookAt(const Vector3& pos, const Vector3& target, const Vector3& up);
+    static Matrix4 LookAt(const Vector<3>& pos, const Vector<3>& target, const Vector<3>& up);
 
     /**
      * @brief Calculates the determinant of this matrix.
@@ -201,7 +201,7 @@ struct Matrix4
     Matrix4& operator*=(const Matrix4& mat4);
 
     /** @brief Multiplies this matrix by a column vector. */
-    Vector4 operator*(const Vector4& vec4) const;
+    Vector<4> operator*(const Vector<4>& vec4) const;
 
     Matrix4 operator*(float scalar) const;
     Matrix4 operator/(float scalar) const;

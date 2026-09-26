@@ -14,7 +14,7 @@
 
 namespace N
 {
-static C::Entity& CreatePoint(M::Vector4 col)
+static C::Entity& CreatePoint(M::Vector<4> col)
 {
     auto& resourceManager = C::Service::Get<C::ResourceManager>();
     auto& mesh = G::Primitives::CreateCube("point");
@@ -32,13 +32,13 @@ static C::Entity& CreatePoint(M::Vector4 col)
     C::World::Get().Query.Pool<G::MeshComponent>().GetComponentById(point.GetId()).Mesh = &mesh;
     C::World::Get().Query.Pool<G::MaterialComponent>().GetComponentById(point.GetId()).Material = &material;
     C::World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.GetId()).Scale =
-        M::Vector3{0.2};
+        M::Vector<3>{0.2};
     C::World::Get().GetRoot().AttachChild(point);
 
     return point;
 }
 
-static void Plot(const M::Vector3 vec3, const M::Vector4 col = {1, 1, 1, 1})
+static void Plot(const M::Vector<3> vec3, const M::Vector<4> col = {1, 1, 1, 1})
 {
     float max = 40;
     if (vec3.x < max && vec3.y < max && vec3.z < max)
@@ -77,7 +77,7 @@ void Physics::Start()
 }
 
 static float time = 0;
-static M::Vector3 ExternalForces;
+static M::Vector<3> ExternalForces;
 
 void Physics::FixedUpdate(const double fdt)
 {

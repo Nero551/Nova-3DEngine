@@ -1,7 +1,11 @@
 #pragma once
 
+#include "Math/Common/Comparison.hpp"
 #include "Math/Common/Constants.hpp"
+#include "Math/Common/Interpolation.hpp"
 #include "Math/Coordinates/Polar.hpp"
+#include "Utilities/Log.hpp"
+#include "Vector.hpp"
 
 namespace N::M
 {
@@ -14,176 +18,283 @@ namespace N::M
  *
  * Vectors are treated as column vectors when used with matrices.
  */
-struct Vector2
+template <> struct Vector<2>
 {
-    float x;
-    float y;
+    float x = 0;
+    float y = 0;
 
-    /**
-     * @brief Constructs a vector from polar coordinates (r,theta)
-     * @param polar Polar coords to use.
-     */
-    [[nodiscard]] static Vector2 FromPolar(const Polar& polar);
+    /** @brief Returns a component by index. */
+    constexpr float& operator()(const unsigned int component)
+    {
+        switch (component)
+        {
+        case 0:
+            return x;
+        case 1:
+            return y;
+        default:
+            U::Log::Fatal("Index : ", component, " doesn't exist in vector(x, y)");
+        }
+    }
 
-    /**
-     * @brief Creates a zero vector.
-     */
-    Vector2();
+    /** @brief Returns a component by index. */
+    constexpr const float& operator()(const unsigned int component) const
+    {
+        switch (component)
+        {
+        case 0:
+            return x;
+        case 1:
+            return y;
+        default:
+            U::Log::Fatal("Index : ", component, " doesn't exist in vector(x, y)");
+        }
+    }
 
-    /**
-     * @brief Creates a vector with both components set to the same value.
-     *
-     * @param all Value assigned to x and y.
-     */
-    explicit Vector2(float all);
+    /** @brief Returns the zero vector. */
+    static constexpr Vector Zero()
+    {
+        return Vector{0};
+    }
 
-    /**
-     * @brief Creates a vector from its individual components.
-     */
-    Vector2(float x, float y);
+    /** @brief Constructs a zero vector. */
+    constexpr Vector() = default;
 
-    /**
-     * @brief Returns the squared length of the vector.
-     *
-     * This avoids the square root performed by Length().
-     * Prefer this when only comparing vector lengths.
-     */
-    [[nodiscard]] float LengthSquared() const;
+    /** @brief Constructs a vector with all components set to the same value. */
+    explicit constexpr Vector(const float all) : x(all), y(all) {}
 
-    /**
-     * @brief Returns the length (magnitude) of the vector.
-     */
-    [[nodiscard]] float Length() const;
+    /** @brief Constructs a vector from individual components. */
+    constexpr Vector(const float x, const float y) : x(x), y(y) {}
 
-    /**
-     * @brief Returns the angle of the vector measured from the positive x-axis.
-     * @return The angle in radians, in the range [-PI, PI].
-     */
-    [[nodiscard]] float Angle() const;
+    /** @brief Constructs a vector from polar coordinates. */
+    static constexpr Vector FromPolar(const Polar& polar)
+    {
+        return {polar.Magnitude * std::cos(polar.Angle), polar.Magnitude * std::sin(polar.Angle)};
+    }
 
-    /**
-     * @brief Returns a normalized copy of the vector.
-     *
-     * The resulting vector has a length of 1.
-     */
-    [[nodiscard]] Vector2 Normalized() const;
+    /** @brief Returns the squared length of the vector. */
+    constexpr float LengthSquared() const
+    {
+        return x * x + y * y;
+    }
 
-    /**
-     * @brief Calculates the dot product with another vector.
-     */
-    [[nodiscard]] float Dot(const Vector2& vec2) const;
+    /** @brief Returns the length of the vector. */
+    constexpr float Length() const
+    {
+        return std::sqrt(LengthSquared());
+    }
 
-    /**
-     * @brief Linearly interpolates between this vector and another vector.
-     *
-     * A t value of 0 returns this vector.
-     * A t value of 1 returns vec3.
-     *
-     * Values outside [0, 1] extrapolate beyond the endpoints.
-     *
-     * @param vec2 Target vector.
-     * @param t Interpolation amount.
-     */
-    [[nodiscard]] Vector2 Lerp(const Vector2& vec2, float t) const;
+    /** @brief Returns the angle of the vector from the positive x-axis. */
+    constexpr float Angle() const
+    {
+        return std::atan2(y, x);
+    }
 
-    /**
-     * @brief Calculates the distance to another vector.
-     */
-    [[nodiscard]] float Distance(const Vector2& vec2) const;
+    /** @brief Returns a normalized copy of the vector. */
+    constexpr Vector Normalized() const
+    {
+        const float length = Length();
 
-    /**
-    * @brief Determines whether two non-zero vectors are parallel.
-    *
-    * Parallel vectors may point in the same or opposite direction.
-    *
-    * Zero vectors are never considered parallel.
-    */
-    [[nodiscard]] bool IsParallelTo(const Vector2& vec2) const;
+        if (length == 0)
+        {
+            return Zero();
+        }
 
-    /**
-     * @brief Determines whether two non-zero vectors are perpendicular.
-     *
-     * Zero vectors are never considered perpendicular.
-     */
-    [[nodiscard]] bool IsPerpendicularTo(const Vector2& vec2) const;
+        return {x / length, y / length};
+    }
 
-    /** @brief uses stereographic projection to project a 2d vector onto a 1d plane (line)
-     */
-    [[nodiscard]] float StereoProject() const;
+    /** @brief Returns the dot product with another vector. */
+    constexpr float Dot(const Vector& vector) const
+    {
+        return x * vector.x + y * vector.y;
+    }
 
-    /**
-     * @brief returns vector in polar coords
-     */
-    [[nodiscard]] Polar ToPolar() const;
+    /** @brief Linearly interpolates between this vector and another vector. */
+    constexpr Vector Lerp(const Vector& vector, const float t) const
+    {
+        return {M::Lerp(x, vector.x, t), M::Lerp(y, vector.y, t)};
+    }
 
-    /**
-     * @brief Compares two vectors using an absolute error tolerance.
-     *
-     * @param vec2 Vector to compare against.
-     * @param epsilon Maximum allowed difference between corresponding components.
-     */
-    [[nodiscard]] bool NearlyEquals(const Vector2& vec2, float epsilon = EPSILON) const;
+    /** @brief Returns the distance to another vector. */
+    constexpr float Distance(const Vector& vector) const
+    {
+        return (*this - vector).Length();
+    }
 
-    Vector2 operator+(const Vector2& vec2) const;
-    Vector2 operator-(const Vector2& vec2) const;
+    /** @brief Determines whether two non-zero vectors are parallel. */
+    constexpr bool IsParallelTo(const Vector& vector) const
+    {
+        if (NearlyEquals(Zero()) || vector.NearlyEquals(Zero()))
+        {
+            return false;
+        }
 
-    /**
-     * @brief Performs component-wise multiplication.
-     *
-     * This is not a dot or cross product.
-     *
-     * Example:
-     *     (2, 3) * (4, 5) = (8, 15)
-     */
-    Vector2 operator*(const Vector2& vec2) const;
+        return std::abs(x * vector.y - y * vector.x) < EPSILON;
+    }
 
-    Vector2& operator+=(const Vector2& vec2);
-    Vector2& operator-=(const Vector2& vec2);
-    Vector2& operator*=(const Vector2& vec2);
+    /** @brief Determines whether two non-zero vectors are perpendicular. */
+    constexpr bool IsPerpendicularTo(const Vector& vector) const
+    {
+        if (NearlyEquals(Zero()) || vector.NearlyEquals(Zero()))
+        {
+            return false;
+        }
 
-    /**
-     * @brief Adds a scalar to every component.
-     */
-    Vector2 operator+(float scalar) const;
+        return M::NearlyEquals(std::abs(Dot(vector)), 0);
+    }
 
-    /**
-     * @brief Subtracts a scalar from every component.
-     */
-    Vector2 operator-(float scalar) const;
+    /** @brief Projects the vector stereographically onto a line. */
+    constexpr float StereoProject() const
+    {
+        const float r = Length();
 
-    /**
-     * @brief Multiplies every component by a scalar.
-     */
-    Vector2 operator*(float scalar) const;
+        return r * x / (r - y);
+    }
 
-    /**
-     * @brief Divides every component by a scalar.
-     */
-    Vector2 operator/(float scalar) const;
+    /** @brief Converts the vector to polar coordinates. */
+    constexpr Polar ToPolar() const
+    {
+        return {Angle(), Length()};
+    }
 
-    Vector2& operator+=(float scalar);
-    Vector2& operator-=(float scalar);
-    Vector2& operator*=(float scalar);
-    Vector2& operator/=(float scalar);
+    /** @brief Compares the vector against another using an error tolerance. */
+    constexpr bool NearlyEquals(const Vector& vector, const float epsilon = EPSILON) const
+    {
+        return M::NearlyEquals(x, vector.x, epsilon) && M::NearlyEquals(y, vector.y, epsilon);
+    }
 
-    /**
-     * @brief Returns the negated vector.
-     */
-    Vector2 operator-() const;
+    /** @brief Adds another vector component-wise. */
+    constexpr Vector operator+(const Vector& vector) const
+    {
+        return {x + vector.x, y + vector.y};
+    }
 
-    bool operator==(const Vector2& vec2) const;
-    bool operator!=(const Vector2& vec2) const;
+    /** @brief Subtracts another vector component-wise. */
+    constexpr Vector operator-(const Vector& vector) const
+    {
+        return {x - vector.x, y - vector.y};
+    }
 
-    friend Vector2 operator+(float scalar, const Vector2& vec2);
-    friend Vector2 operator-(float scalar, const Vector2& vec2);
-    friend Vector2 operator*(float scalar, const Vector2& vec2);
-    friend Vector2 operator/(float scalar, const Vector2& vec2);
+    /** @brief Multiplies another vector component-wise. */
+    constexpr Vector operator*(const Vector& vector) const
+    {
+        return {x * vector.x, y * vector.y};
+    }
 
-    friend std::ostream& operator<<(std::ostream& os, const Vector2& vec2);
+    /** @brief Adds another vector to this vector. */
+    constexpr Vector& operator+=(const Vector& vector)
+    {
+        return *this = *this + vector;
+    }
 
-    /**
-     * @brief Zero vector (0, 0).
-     */
-    static const Vector2 Zero;
+    /** @brief Subtracts another vector from this vector. */
+    constexpr Vector& operator-=(const Vector& vector)
+    {
+        return *this = *this - vector;
+    }
+
+    /** @brief Multiplies this vector component-wise by another vector. */
+    constexpr Vector& operator*=(const Vector& vector)
+    {
+        return *this = *this * vector;
+    }
+
+    /** @brief Adds a scalar to every component. */
+    constexpr Vector operator+(const float scalar) const
+    {
+        return {x + scalar, y + scalar};
+    }
+
+    /** @brief Subtracts a scalar from every component. */
+    constexpr Vector operator-(const float scalar) const
+    {
+        return {x - scalar, y - scalar};
+    }
+
+    /** @brief Multiplies every component by a scalar. */
+    constexpr Vector operator*(const float scalar) const
+    {
+        return {x * scalar, y * scalar};
+    }
+
+    /** @brief Divides every component by a scalar. */
+    constexpr Vector operator/(const float scalar) const
+    {
+        return {x / scalar, y / scalar};
+    }
+
+    /** @brief Adds a scalar to every component in place. */
+    constexpr Vector& operator+=(const float scalar)
+    {
+        return *this = *this + scalar;
+    }
+
+    /** @brief Subtracts a scalar from every component in place. */
+    constexpr Vector& operator-=(const float scalar)
+    {
+        return *this = *this - scalar;
+    }
+
+    /** @brief Multiplies every component by a scalar in place. */
+    constexpr Vector& operator*=(const float scalar)
+    {
+        return *this = *this * scalar;
+    }
+
+    /** @brief Divides every component by a scalar in place. */
+    constexpr Vector& operator/=(const float scalar)
+    {
+        return *this = *this / scalar;
+    }
+
+    /** @brief Returns the negated vector. */
+    constexpr Vector operator-() const
+    {
+        return -1 * *this;
+    }
+
+    /** @brief Compares two vectors for exact equality. */
+    constexpr bool operator==(const Vector& vector) const
+    {
+        return x == vector.x && y == vector.y;
+    }
+
+    /** @brief Compares two vectors for inequality. */
+    constexpr bool operator!=(const Vector& vector) const
+    {
+        return !(*this == vector);
+    }
+
+    /** @brief Adds a scalar to every component. */
+    friend constexpr Vector operator+(const float scalar, const Vector& vector)
+    {
+        return vector + scalar;
+    }
+
+    /** @brief Subtracts every vector component from a scalar. */
+    friend constexpr Vector operator-(const float scalar, const Vector& vector)
+    {
+        return {scalar - vector.x, scalar - vector.y};
+    }
+
+    /** @brief Multiplies every component by a scalar. */
+    friend constexpr Vector operator*(const float scalar, const Vector& vector)
+    {
+        return vector * scalar;
+    }
+
+    /** @brief Divides a scalar by every vector component. */
+    friend constexpr Vector operator/(const float scalar, const Vector& vector)
+    {
+        return {scalar / vector.x, scalar / vector.y};
+    }
+
+    /** @brief Writes the vector to an output stream. */
+    friend std::ostream& operator<<(std::ostream& os, const Vector& vector)
+    {
+        os << "(" << vector.x << ", " << vector.y << ")";
+
+        return os;
+    }
 };
 } // namespace N::M
