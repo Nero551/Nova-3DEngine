@@ -5,10 +5,10 @@
 #include "Core/Services/ResourceManager.hpp"
 #include "Math/Color/Color.hpp"
 #include "Math/Common/Trigonometry.hpp"
+#include "Modules/Graphics/Novas/MeshInstance3D.hpp"
 #include "Modules/Graphics/Primitives/Primitives.hpp"
 #include "Modules/Graphics/Resources/Shader/Shader.hpp"
 #include "Modules/Graphics/Resources/Shader/ShaderSource.hpp"
-#include "World/Novas/MeshInstance3D.hpp"
 #include "World/Novas/Nova.hpp"
 
 namespace N
@@ -40,7 +40,7 @@ void Grid::CreateGridLine(const M::Quaternion rotation, const M::Vector3 positio
         "axisVert", "Assets/Shaders/axisShader.vert", G::ShaderStage::Vertex));
     auto& line = G::Primitives::CreateLine("Line");
 
-    auto& l = C::World::Get().CreateEntity<MeshInstance3D>();
+    auto& l = C::World::Get().CreateEntity<G::MeshInstance3D>();
     auto& materialComponent = C::World::Get().Query.Pool<G::MaterialComponent>().GetComponentById(l.GetId());
     auto& meshComponent = C::World::Get().Query.Pool<G::MeshComponent>().GetComponentById(l.GetId());
     auto& transformComponent = C::World::Get().Query.Pool<Transform3DComponent>().GetComponentById(l.GetId());

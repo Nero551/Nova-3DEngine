@@ -1,8 +1,8 @@
 #pragma once
+#include "../../../World/Novas/Nova3D.hpp"
 #include "Modules/Graphics/Components/CameraComponent.hpp"
-#include "Nova3D.hpp"
 
-namespace N
+namespace N::G
 {
 struct Camera : Nova3D
 {
@@ -12,4 +12,4 @@ struct Camera : Nova3D
         C::World::Get().Query.Pool<G::CameraComponent>().Add(GetId());
     }
 };
-} // namespace N
+} // namespace N::G

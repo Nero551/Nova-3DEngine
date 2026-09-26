@@ -1,11 +1,11 @@
 #pragma once
 #include "Core/OuterCore/Event.hpp"
-namespace N
+namespace N::C
 {
-struct ComponentRemoved : C::Event<ComponentRemoved>
+struct ComponentRemoved : Event<ComponentRemoved>
 {
     unsigned int EntityId;
 
     ComponentRemoved(const unsigned int entityId) : EntityId(entityId) {}
 };
-} // namespace N
+} // namespace N::C

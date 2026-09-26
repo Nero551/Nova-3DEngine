@@ -1,9 +1,9 @@
 #pragma once
 #include "Modules/Graphics/Components/MaterialComponent.hpp"
 #include "Modules/Graphics/Components/MeshComponent.hpp"
-#include "Nova3D.hpp"
+#include "World/Novas/Nova3D.hpp"
 
-namespace N
+namespace N::G
 {
 struct MeshInstance3D : Nova3D
 {
@@ -14,4 +14,4 @@ struct MeshInstance3D : Nova3D
         C::World::Get().Query.Pool<G::MeshComponent>().Add(GetId());
     }
 };
-} // namespace N
+} // namespace N::G

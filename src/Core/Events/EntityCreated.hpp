@@ -2,12 +2,12 @@
 #include "Core/OuterCore/ECS/Entity.hpp"
 #include "Core/OuterCore/Event.hpp"
 
-namespace N
+namespace N::C
 {
-struct EntityCreated : C::Event<EntityCreated>
+struct EntityCreated : Event<EntityCreated>
 {
     C::Entity& entity;
 
     EntityCreated(C::Entity& entity) : entity(entity) {}
 };
-} // namespace N
+} // namespace N::C

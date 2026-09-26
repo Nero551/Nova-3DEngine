@@ -6,10 +6,10 @@
 #include "Math/Color/Color.hpp"
 #include "Modules/Graphics/Components/MaterialComponent.hpp"
 #include "Modules/Graphics/Components/MeshComponent.hpp"
+#include "Modules/Graphics/Novas/Camera.hpp"
+#include "Modules/Graphics/Novas/Light.hpp"
+#include "Modules/Graphics/Novas/MeshInstance3D.hpp"
 #include "Modules/Graphics/Primitives/Primitives.hpp"
-#include "World/Novas/Camera.hpp"
-#include "World/Novas/Light.hpp"
-#include "World/Novas/MeshInstance3D.hpp"
 #include "World/Novas/Nova3D.hpp"
 
 namespace N
@@ -31,12 +31,12 @@ CoordinateAxesScene::CoordinateAxesScene()
     auto& lightMaterial = resourceManager.Load<G::Material>("lightMaterial");
     lightMaterial.Shader = &lightShader;
 
-    auto& light = world.CreateEntity<Light>();
+    auto& light = world.CreateEntity<G::Light>();
     query.Pool<Transform3DComponent>().GetComponentById(light.GetId()).Rotation =
         M::Quaternion::FromEulerXYZ(M::Vector3{M::Rad(32.5)});
     GetRoot().AttachChild(light);
 
-    auto& light2 = world.CreateEntity<Light>();
+    auto& light2 = world.CreateEntity<G::Light>();
     query.Pool<Transform3DComponent>().GetComponentById(light2.GetId()).Rotation =
         M::Quaternion::FromEulerXYZ(M::Vector3{M::Rad(-32.5)});
     GetRoot().AttachChild(light2);
@@ -49,7 +49,7 @@ CoordinateAxesScene::CoordinateAxesScene()
 
     auto& line = G::Primitives::CreateLine("Line");
 
-    auto& xAxis = world.CreateEntity<MeshInstance3D>();
+    auto& xAxis = world.CreateEntity<G::MeshInstance3D>();
     query.Pool<G::MeshComponent>().GetComponentById(xAxis.GetId()).Mesh = &line;
     auto& xMaterial = query.Pool<G::MaterialComponent>().GetComponentById(xAxis.GetId());
     xMaterial.Material = &resourceManager.Load<G::Material>("X-Axis Material");
@@ -62,7 +62,7 @@ CoordinateAxesScene::CoordinateAxesScene()
 
     GetRoot().AttachChild(xAxis);
 
-    auto& yAxis = world.CreateEntity<MeshInstance3D>();
+    auto& yAxis = world.CreateEntity<G::MeshInstance3D>();
     query.Pool<G::MeshComponent>().GetComponentById(yAxis.GetId()).Mesh = &line;
     auto& yMaterial = query.Pool<G::MaterialComponent>().GetComponentById(yAxis.GetId());
     yMaterial.Material = &resourceManager.Load<G::Material>("Y-Axis Material");
@@ -75,7 +75,7 @@ CoordinateAxesScene::CoordinateAxesScene()
 
     GetRoot().AttachChild(yAxis);
 
-    auto& zAxis = world.CreateEntity<MeshInstance3D>();
+    auto& zAxis = world.CreateEntity<G::MeshInstance3D>();
     query.Pool<G::MeshComponent>().GetComponentById(zAxis.GetId()).Mesh = &line;
     auto& zMaterial = query.Pool<G::MaterialComponent>().GetComponentById(zAxis.GetId());
     zMaterial.Material = &resourceManager.Load<G::Material>("Z-Axis Material");

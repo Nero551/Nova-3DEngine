@@ -6,8 +6,8 @@
 
 #include "Core/InnerCore/Engine.hpp"
 #include "Core/Services/ResourceManager.hpp"
+#include "Modules/Graphics/Novas/MeshInstance3D.hpp"
 #include "Modules/Graphics/Resources/Texture/Texture2D.hpp"
-#include "World/Novas/MeshInstance3D.hpp"
 
 namespace N
 {

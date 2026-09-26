@@ -1,8 +1,8 @@
 #include "FirstScene.hpp"
 
 #include "AssimpScene.hpp"
+#include "Modules/Graphics/Novas/MeshInstance3D.hpp"
 #include "Modules/Graphics/Resources/Shader/Uniforms/Vector3Uniform.hpp"
-#include "World/Novas/MeshInstance3D.hpp"
 
 namespace N
 {

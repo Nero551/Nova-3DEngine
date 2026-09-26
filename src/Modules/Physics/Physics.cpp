@@ -7,10 +7,10 @@
 #include "Math/Complex/Complex.hpp"
 #include "Modules/Graphics/Components/MaterialComponent.hpp"
 #include "Modules/Graphics/Components/MeshComponent.hpp"
+#include "Modules/Graphics/Novas/MeshInstance3D.hpp"
 #include "Modules/Graphics/Primitives/Primitives.hpp"
 #include "Modules/Input/Input.hpp"
 #include "World/Components/Transform3DComponent.hpp"
-#include "World/Novas/MeshInstance3D.hpp"
 
 namespace N
 {
@@ -28,7 +28,7 @@ static C::Entity& CreatePoint(M::Vector4 col)
         "pointFrag", "Assets/Shaders/shader.frag", G::ShaderStage::Fragment));
     material.Shader = &shader;
 
-    auto& point = C::World::Get().CreateEntity<MeshInstance3D>();
+    auto& point = C::World::Get().CreateEntity<G::MeshInstance3D>();
     C::World::Get().Query.Pool<G::MeshComponent>().GetComponentById(point.GetId()).Mesh = &mesh;
     C::World::Get().Query.Pool<G::MaterialComponent>().GetComponentById(point.GetId()).Material = &material;
     C::World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.GetId()).Scale =
@@ -68,7 +68,7 @@ void Physics::Start()
     auto& objectMaterial = resourceManager.Load<G::Material>("cubeMaterial");
     objectMaterial.Shader = &objectShader;
 
-    auto& cube = C::World::Get().CreateEntity<MeshInstance3D>();
+    auto& cube = C::World::Get().CreateEntity<G::MeshInstance3D>();
     query.Pool<G::MeshComponent>().GetComponentById(cube.GetId()).Mesh = &mesh;
     query.Pool<G::MaterialComponent>().GetComponentById(cube.GetId()).Material = &objectMaterial;
     query.Pool<BodyComponent>().Add(cube.GetId());
@@ -86,7 +86,7 @@ void Physics::FixedUpdate(const double fdt)
     float g = -9.8;
 
     auto& resourceManager = C::Service::Get<C::ResourceManager>();
-    auto& input = C::Engine::Get().GetModule<Input>();
+    auto& input = C::Engine::Get().GetModule<I::Input>();
     auto& query = C::World::Get().Query;
     auto& transform = query.Pool<Transform3DComponent>().GetComponentById(cubeId);
     auto& body = query.Pool<BodyComponent>().GetComponentById(cubeId);
@@ -94,21 +94,21 @@ void Physics::FixedUpdate(const double fdt)
     // ExternalForces = M::Vector3{0};
     // M::Vector3 friction = {-body.Velocity.x * M::PHI, 0, -body.Velocity.z * M::PHI};
     //
-    // if (input.IsKeyPressed(Key::E))
+    // if (input.IsKeyPressed(I::Key::E))
     // {
     //     body.Velocity = {15, 10, 0};
     // }
     //
-    // if (input.IsKeyHeld(Key::Up))
+    // if (input.IsKeyHeld(I::Key::Up))
     //     ExternalForces.y += 50;
     //
-    // if (input.IsKeyHeld(Key::Down))
+    // if (input.IsKeyHeld(I::Key::Down))
     //     ExternalForces.y -= 50;
     //
-    // if (input.IsKeyHeld(Key::Left))
+    // if (input.IsKeyHeld(I::Key::Left))
     //     ExternalForces.x -= 50;
     //
-    // if (input.IsKeyHeld(Key::Right))
+    // if (input.IsKeyHeld(I::Key::Right))
     //     ExternalForces.x += 50;
     //
     // body.Force = M::Vector3{0, -9.8, 0} + ExternalForces + friction;

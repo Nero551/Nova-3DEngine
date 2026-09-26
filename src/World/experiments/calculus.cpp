@@ -6,10 +6,10 @@
 #include "Math/Common/Exponentials.hpp"
 #include "Math/Quaternion/Quaternion.hpp"
 #include "Math/Vector/Vector4.hpp"
+#include "Modules/Graphics/Novas/MeshInstance3D.hpp"
 #include "Modules/Graphics/Primitives/Primitives.hpp"
 #include "Modules/Graphics/Resources/Texture/Cubemap.hpp"
 #include "Modules/Input/Input.hpp"
-#include "World/Novas/MeshInstance3D.hpp"
 
 namespace N
 {
@@ -18,7 +18,7 @@ static C::Entity& CreatePoint(M::Vector4 col)
     auto& resourceManager = C::Service::Get<C::ResourceManager>();
     auto& mesh = G::Primitives::CreateQuad("point");
 
-    auto& point = C::World::Get().CreateEntity<MeshInstance3D>();
+    auto& point = C::World::Get().CreateEntity<G::MeshInstance3D>();
     C::World::Get().Query.Pool<G::MeshComponent>().GetComponentById(point.GetId()).Mesh = &mesh;
     C::World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.GetId()).Scale =
         M::Vector3{0.2};
@@ -75,7 +75,7 @@ static float multiplier = 1;
 void calculus::Update(const double dt)
 {
     auto& resourceManager = C::Service::Get<C::ResourceManager>();
-    auto& input = C::Engine::Get().GetModule<Input>();
+    auto& input = C::Engine::Get().GetModule<I::Input>();
     //
     // x += step;
     // if (x >= xRange)
@@ -83,11 +83,11 @@ void calculus::Update(const double dt)
     //     return;
     // }
 
-    if (input.IsKeyHeld(Key::Left))
+    if (input.IsKeyHeld(I::Key::Left))
     {
         multiplier -= 5 * dt;
     }
-    if (input.IsKeyHeld(Key::Right))
+    if (input.IsKeyHeld(I::Key::Right))
     {
         multiplier += 5 * dt;
     }

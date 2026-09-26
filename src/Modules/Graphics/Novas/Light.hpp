@@ -1,8 +1,8 @@
 #pragma once
+#include "../../../World/Novas/Nova3D.hpp"
 #include "Modules/Graphics/Components/LightComponent.hpp"
-#include "Nova3D.hpp"
 
-namespace N
+namespace N::G
 {
 struct Light : Nova3D
 {
@@ -12,4 +12,4 @@ struct Light : Nova3D
         C::World::Get().Query.Pool<G::LightComponent>().Add(GetId());
     }
 };
-} // namespace N
+} // namespace N::G

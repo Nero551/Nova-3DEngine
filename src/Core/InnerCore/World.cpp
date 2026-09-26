@@ -1,10 +1,10 @@
 #include "World.hpp"
 
+#include "Core/Events/EntityDestroyed.hpp"
 #include "Engine.hpp"
+#include "Modules/Graphics/Novas/Camera.hpp"
 #include "Modules/Input/Enums/Keys.hpp"
 #include "Modules/Input/Input.hpp"
-#include "World/Events/EntityDestroyed.hpp"
-#include "World/Novas/Camera.hpp"
 #include "World/Scenes/CoordinateAxesScene.hpp"
 #include "World/Scenes/FirstScene.hpp"
 #include "World/Systems/Transform3DSystem.hpp"
@@ -69,11 +69,11 @@ void World::Start()
     AddSystem<Transform3DSystem>();
     // AddSystem<calculus>();
 
-    Engine::Get().GetModule<Input>().SetMouseMode(MouseMode::Disabled);
+    Engine::Get().GetModule<I::Input>().SetMouseMode(I::MouseMode::Disabled);
 
     SetRoot(CreateEntity<Nova>().GetId());
 
-    auto& camera = CreateEntity<Camera>();
+    auto& camera = CreateEntity<G::Camera>();
     Query.Pool<Transform3DComponent>().GetComponentById(camera.GetId()).Position = {0, 0, 10};
     GetRoot().AttachChild(camera);
     SetCamera(camera.GetId());
@@ -92,24 +92,24 @@ void World::Start()
 
 void World::Update(const double dt)
 {
-    if (Engine::Get().GetModule<Input>().IsKeyHeld(Key::Escape))
+    if (Engine::Get().GetModule<I::Input>().IsKeyHeld(I::Key::Escape))
     {
         Engine::Get().Shutdown();
     }
 
-    if (Engine::Get().GetModule<Input>().IsKeyReleased(Key::Q))
+    if (Engine::Get().GetModule<I::Input>().IsKeyReleased(I::Key::Q))
     {
-        if (Engine::Get().GetModule<Input>().GetMouseMode() == MouseMode::Disabled)
+        if (Engine::Get().GetModule<I::Input>().GetMouseMode() == I::MouseMode::Disabled)
         {
-            Engine::Get().GetModule<Input>().SetMouseMode(MouseMode::Normal);
+            Engine::Get().GetModule<I::Input>().SetMouseMode(I::MouseMode::Normal);
         }
         else
         {
-            Engine::Get().GetModule<Input>().SetMouseMode(MouseMode::Disabled);
+            Engine::Get().GetModule<I::Input>().SetMouseMode(I::MouseMode::Disabled);
         }
     }
 
-    if (Engine::Get().GetModule<Input>().IsKeyPressed(Key::T))
+    if (Engine::Get().GetModule<I::Input>().IsKeyPressed(I::Key::T))
     {
         U::Log::Info(m_Entities.Size());
     }

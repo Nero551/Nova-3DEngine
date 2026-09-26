@@ -4,7 +4,7 @@
 
 #include "Core/InnerCore/Engine.hpp"
 
-namespace N
+namespace N::I
 {
 bool Input::IsKeyHeld(const Key key)
 {
@@ -123,4 +123,4 @@ void Input::EndFrame(double dt)
     m_PreviousKeys = m_CurrentKeys;
     m_PreviousMouseButtons = m_CurrentMouseButtons;
 }
-} // namespace N
+} // namespace N::I

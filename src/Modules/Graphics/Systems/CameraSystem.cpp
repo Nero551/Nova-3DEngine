@@ -12,7 +12,7 @@ void CameraSystem::Update(const double dt)
 {
     auto& world = C::World::Get();
     auto& query = world.Query;
-    auto& input = C::Engine::Get().GetModule<Input>();
+    auto& input = C::Engine::Get().GetModule<I::Input>();
     auto& camera = world.GetCamera();
 
     auto& transform = query.Pool<Transform3DComponent>().GetComponentById(camera.GetId());
@@ -20,7 +20,7 @@ void CameraSystem::Update(const double dt)
 
     cameraComponent.AspectRatio = C::Engine::Get().Window.GetAspectRatio();
 
-    if (input.GetMouseMode() == MouseMode::Disabled)
+    if (input.GetMouseMode() == I::MouseMode::Disabled)
     {
         cameraComponent.Speed += input.GetScrollDelta().y / 3;
         cameraComponent.Speed = std::clamp(cameraComponent.Speed, 1.0f, 50.0f);
@@ -39,32 +39,32 @@ void CameraSystem::Update(const double dt)
 
     const float speed = cameraComponent.Speed * static_cast<float>(dt);
 
-    if (input.IsKeyHeld(Key::W))
+    if (input.IsKeyHeld(I::Key::W))
     {
         transform.Position += speed * transform.GetForward();
     }
 
-    if (input.IsKeyHeld(Key::S))
+    if (input.IsKeyHeld(I::Key::S))
     {
         transform.Position -= speed * transform.GetForward();
     }
 
-    if (input.IsKeyHeld(Key::A))
+    if (input.IsKeyHeld(I::Key::A))
     {
         transform.Position -= speed * transform.GetRight();
     }
 
-    if (input.IsKeyHeld(Key::D))
+    if (input.IsKeyHeld(I::Key::D))
     {
         transform.Position += speed * transform.GetRight();
     }
 
-    if (input.IsKeyHeld(Key::Space))
+    if (input.IsKeyHeld(I::Key::Space))
     {
         transform.Position += speed * M::Vector3(0, 1, 0);
     }
 
-    if (input.IsKeyHeld(Key::LeftShift))
+    if (input.IsKeyHeld(I::Key::LeftShift))
     {
         transform.Position -= speed * M::Vector3(0, 1, 0);
     }

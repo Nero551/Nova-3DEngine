@@ -1,8 +1,8 @@
 #pragma once
 
 #include "ComponentPool.hpp"
+#include "Core/Events/EntityCreated.hpp"
 #include "Utilities/DataStructures/TypedVector.hpp"
-#include "World/Events/EntityCreated.hpp"
 
 namespace N::C
 {

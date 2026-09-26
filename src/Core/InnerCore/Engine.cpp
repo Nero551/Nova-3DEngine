@@ -73,7 +73,7 @@ void Engine::Configure()
     Service::Add<EventBus>();
     Service::Add<ResourceManager>();
 
-    AddModule<Input>();
+    AddModule<I::Input>();
     AddModule<G::Graphics>();
     AddModule<Profiling>();
     AddModule<Physics>();

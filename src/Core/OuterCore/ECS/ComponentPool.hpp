@@ -2,11 +2,11 @@
 
 #include "Component.hpp"
 
+#include "Core/Events/ComponentAdded.hpp"
+#include "Core/Events/ComponentRemoved.hpp"
+#include "Core/Events/EntityDestroyed.hpp"
 #include "Core/Services/EventBus.hpp"
 #include "Utilities/DataStructures/SparseSet.hpp"
-#include "World/Events/ComponentAdded.hpp"
-#include "World/Events/ComponentRemoved.hpp"
-#include "World/Events/EntityDestroyed.hpp"
 
 namespace N::C
 {

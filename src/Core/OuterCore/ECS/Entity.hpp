@@ -5,8 +5,6 @@
 
 namespace N::C
 {
-struct World;
-
 /** @brief Represents an entity and its parent-child hierarchy. */
 struct Entity
 {
@@ -101,7 +99,6 @@ struct Entity
     /** @brief Returns the root entity of the hierarchy. */
     Entity& GetRoot();
 
-  protected:
     /** @brief Initializes the entity. */
     virtual void Initialize() {}
 
