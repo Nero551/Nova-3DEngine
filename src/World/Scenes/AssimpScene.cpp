@@ -13,7 +13,7 @@ namespace N
 {
 static Assimp::Importer importer;
 
-static void ProcessVertices(std::vector<Vertex>& vertices, const aiMesh* mesh)
+static void ProcessVertices(std::vector<G::Vertex>& vertices, const aiMesh* mesh)
 {
     for (unsigned int v = 0; v < mesh->mNumVertices; ++v)
     {
@@ -43,19 +43,19 @@ static void ProcessFaces(std::vector<unsigned int>& indices, const aiMesh* mesh)
     }
 }
 
-static Material& ProcessMaterial(const aiScene* scene, const aiMesh* mesh, const std::string& directory)
+static G::Material& ProcessMaterial(const aiScene* scene, const aiMesh* mesh, const std::string& directory)
 {
     auto& resourceManager = C::Service::Get<C::ResourceManager>();
 
-    auto& material = resourceManager.Load<Material>("material_" + std::to_string(mesh->mMaterialIndex));
+    auto& material = resourceManager.Load<G::Material>("material_" + std::to_string(mesh->mMaterialIndex));
 
-    material.Shader = &resourceManager.Load<Shader>("s");
-
-    material.Shader->AssignSource(
-        resourceManager.Load<ShaderSource>("s", "Assets/Shaders/shader.frag", ShaderStage::Fragment));
+    material.Shader = &resourceManager.Load<G::Shader>("s");
 
     material.Shader->AssignSource(
-        resourceManager.Load<ShaderSource>("s", "Assets/Shaders/shader.vert", ShaderStage::Vertex));
+        resourceManager.Load<G::ShaderSource>("s", "Assets/Shaders/shader.frag", G::ShaderStage::Fragment));
+
+    material.Shader->AssignSource(
+        resourceManager.Load<G::ShaderSource>("s", "Assets/Shaders/shader.vert", G::ShaderStage::Vertex));
 
     aiMaterial* aiMat = scene->mMaterials[mesh->mMaterialIndex];
 
@@ -64,7 +64,7 @@ static Material& ProcessMaterial(const aiScene* scene, const aiMesh* mesh, const
         aiString str;
         aiMat->GetTexture(aiTextureType_DIFFUSE, t, &str);
 
-        auto& diffuseMap = resourceManager.Load<Texture2D>("diffuse" + std::to_string(t));
+        auto& diffuseMap = resourceManager.Load<G::Texture2D>("diffuse" + std::to_string(t));
         diffuseMap.UseImage(U::Image{std::filesystem::path(directory) / str.C_Str(), true});
 
         material.DiffuseMap = &diffuseMap;
@@ -75,7 +75,7 @@ static Material& ProcessMaterial(const aiScene* scene, const aiMesh* mesh, const
         aiString str;
         aiMat->GetTexture(aiTextureType_SPECULAR, t, &str);
 
-        auto& specularMap = resourceManager.Load<Texture2D>("specular" + std::to_string(t));
+        auto& specularMap = resourceManager.Load<G::Texture2D>("specular" + std::to_string(t));
         specularMap.UseImage(U::Image{std::filesystem::path(directory) / str.C_Str(), true});
 
         material.SpecularMap = &specularMap;
@@ -93,12 +93,12 @@ static void ProcessNode(
 
     auto& entity = world.CreateEntity<Nova3D>();
 
-    auto& meshPool = query.Pool<MeshComponent>();
-    auto& materialPool = query.Pool<MaterialComponent>();
+    auto& meshPool = query.Pool<G::MeshComponent>();
+    auto& materialPool = query.Pool<G::MaterialComponent>();
 
     for (unsigned int m = 0; m < node->mNumMeshes; ++m)
     {
-        std::vector<Vertex> vertices;
+        std::vector<G::Vertex> vertices;
         std::vector<unsigned int> indices;
 
         aiMesh* mesh = scene->mMeshes[node->mMeshes[m]];
@@ -108,7 +108,7 @@ static void ProcessNode(
 
         auto& material = ProcessMaterial(scene, mesh, directory);
 
-        auto& meshResource = resourceManager.Load<Mesh>("mesh_" + std::to_string(node->mMeshes[m]));
+        auto& meshResource = resourceManager.Load<G::Mesh>("mesh_" + std::to_string(node->mMeshes[m]));
         meshResource.Vertices = vertices;
         meshResource.Indices = indices;
 

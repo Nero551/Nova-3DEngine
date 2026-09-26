@@ -10,7 +10,7 @@
 #include "Topology.hpp"
 #include "Vertex.hpp"
 
-namespace N
+namespace N::G
 {
 /**
  * @brief Represents a renderable mesh resource.
@@ -113,4 +113,4 @@ struct Mesh : C::Resource
      */
     void ApplyCulling() const;
 };
-} // namespace N
+} // namespace N::G

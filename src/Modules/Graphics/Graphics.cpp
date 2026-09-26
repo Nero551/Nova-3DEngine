@@ -16,7 +16,7 @@
 #include "Systems/LightingSystem.hpp"
 #include <tracy/Tracy.hpp>
 
-namespace N
+namespace N::G
 {
 void Graphics::SetupFramebuffer()
 {
@@ -243,4 +243,4 @@ void Graphics::Stop()
     U::Image image = {texture->Width, texture->Height, U::Image::ColorChannels::RGB, pixels};
     image.SaveToDiskPNG("Assets/LastFrame.png", true);
 }
-} // namespace N
+} // namespace N::G

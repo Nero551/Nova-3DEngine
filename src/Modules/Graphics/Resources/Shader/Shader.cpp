@@ -5,7 +5,7 @@
 #include "Uniforms/FloatUniform.hpp"
 #include "Utilities/Log.hpp"
 
-namespace N
+namespace N::G
 {
 Shader::Shader(const std::string& name) : C::Resource(name) {}
 
@@ -137,4 +137,4 @@ void Shader::UploadUniforms()
         }
     }
 }
-} // namespace N
+} // namespace N::G

@@ -1,7 +1,7 @@
 #pragma once
 #include "OpenGL.hpp"
 
-namespace N
+namespace N::G
 {
 enum class DepthFunction
 {
@@ -14,4 +14,4 @@ enum class DepthFunction
     GreaterEqual = GL_GEQUAL,
     Always = GL_ALWAYS
 };
-} // namespace N
+} // namespace N::G

@@ -2,7 +2,7 @@
 
 #include <OpenGL.hpp>
 
-namespace N
+namespace N::G
 {
 Mesh::Mesh(const std::string& name) : C::Resource(name) {}
 
@@ -113,4 +113,4 @@ void Mesh::ApplyCulling() const
         glCullFace(static_cast<GLenum>(CullMode));
     }
 }
-} // namespace N
+} // namespace N::G

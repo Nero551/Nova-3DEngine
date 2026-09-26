@@ -1,7 +1,7 @@
 #include "../Primitives.hpp"
 #include "Core/Services/ResourceManager.hpp"
 
-namespace N
+namespace N::G
 {
 Mesh& Primitives::CreateQuad(const std::string& name)
 {
@@ -25,4 +25,4 @@ Mesh& Primitives::CreateQuad(const std::string& name)
 
     return mesh;
 }
-} // namespace N
+} // namespace N::G

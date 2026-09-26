@@ -5,7 +5,7 @@
 #include "Math/Matrix/Matrix4.hpp"
 #include "Modules/Graphics/Enums/ProjectionMode.hpp"
 
-namespace N
+namespace N::G
 {
 struct CameraComponent : C::Component
 {
@@ -29,4 +29,4 @@ struct CameraComponent : C::Component
         return M::Matrix4::Perspective(M::Rad(FOV), AspectRatio, Near, Far);
     }
 };
-} // namespace N
+} // namespace N::G

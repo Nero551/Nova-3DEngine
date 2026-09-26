@@ -10,8 +10,8 @@ struct MeshInstance3D : Nova3D
     void Initialize() override
     {
         Nova3D::Initialize();
-        C::World::Get().Query.Pool<MaterialComponent>().Add(GetId());
-        C::World::Get().Query.Pool<MeshComponent>().Add(GetId());
+        C::World::Get().Query.Pool<G::MaterialComponent>().Add(GetId());
+        C::World::Get().Query.Pool<G::MeshComponent>().Add(GetId());
     }
 };
 } // namespace N

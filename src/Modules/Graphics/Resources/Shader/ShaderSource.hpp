@@ -6,7 +6,7 @@
 #include "Core/OuterCore/Resource.hpp"
 #include "ShaderStage.hpp"
 
-namespace N
+namespace N::G
 {
 /**
  * @brief Represents a shader source file and its OpenGL shader object.
@@ -60,4 +60,4 @@ struct ShaderSource : C::Resource
     void PreprocessIncludes(
         const std::string& path, std::string& code, std::unordered_set<std::string>& includesProcessing);
 };
-} // namespace N
+} // namespace N::G

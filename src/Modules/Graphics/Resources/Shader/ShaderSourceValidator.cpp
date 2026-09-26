@@ -2,7 +2,7 @@
 #include "ShaderSource.hpp"
 #include <glslang/Public/ResourceLimits.h>
 
-namespace N
+namespace N::G
 {
 EShLanguage ShaderSourceValidator::ToEShLanguage(const ShaderStage& stage)
 {
@@ -48,4 +48,4 @@ ShaderValidationResult ShaderSourceValidator::Validate(const ShaderSource& sourc
 
     return result;
 }
-} // namespace N
+} // namespace N::G

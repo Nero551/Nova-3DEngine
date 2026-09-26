@@ -1,7 +1,7 @@
 #pragma once
 #include "Texture.hpp"
 
-namespace N
+namespace N::G
 {
 /** @brief Represents a multisampled two-dimensional OpenGL texture resource. */
 struct Texture2DMultisample : Texture
@@ -15,4 +15,4 @@ struct Texture2DMultisample : Texture
     /** @brief Generates the OpenGL multisample texture object. */
     void Generate() override;
 };
-} // namespace N
+} // namespace N::G

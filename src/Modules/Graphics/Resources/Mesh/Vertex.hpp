@@ -3,7 +3,7 @@
 #include "Math/Vector/Vector3.hpp"
 #include "Math/Vector/Vector4.hpp"
 
-namespace N
+namespace N::G
 {
 struct Vertex
 {
@@ -17,4 +17,4 @@ struct Vertex
     {
     }
 };
-} // namespace N
+} // namespace N::G

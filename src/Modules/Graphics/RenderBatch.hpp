@@ -3,7 +3,7 @@
 #include "Resources/Material/Material.hpp"
 #include "Resources/Mesh/Mesh.hpp"
 
-namespace N
+namespace N::G
 {
 struct InstanceData
 {
@@ -59,4 +59,4 @@ struct RenderBatch
         }
     };
 };
-} // namespace N
+} // namespace N::G

@@ -2,7 +2,7 @@
 
 #include "Modules/Graphics/Enums/BufferBit.hpp"
 
-namespace N
+namespace N::G
 {
 Framebuffer::Framebuffer(const std::string& name) : C::Resource(name) {}
 
@@ -116,4 +116,4 @@ unsigned int Framebuffer::GetId() const
 {
     return m_Id;
 }
-} // namespace N
+} // namespace N::G

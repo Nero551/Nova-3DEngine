@@ -2,7 +2,7 @@
 #include "Core/Services/ResourceManager.hpp"
 #include "Math/Color/Color.hpp"
 
-namespace N
+namespace N::G
 {
 Mesh& Primitives::CreateUVSphere(
     const std::string& name, const float radius, const int sectors, const int stacks)
@@ -74,4 +74,4 @@ Mesh& Primitives::CreateUVSphere(
 
     return mesh;
 }
-} // namespace N
+} // namespace N::G

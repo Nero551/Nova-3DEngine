@@ -3,7 +3,7 @@
 #include "Core/Services/ResourceManager.hpp"
 #include "Math/Color/Color.hpp"
 
-namespace N
+namespace N::G
 {
 Mesh& Primitives::CreateLine(const std::string& name)
 {
@@ -24,4 +24,4 @@ Mesh& Primitives::CreateLine(const std::string& name)
 
     return mesh;
 }
-} // namespace N
+} // namespace N::G

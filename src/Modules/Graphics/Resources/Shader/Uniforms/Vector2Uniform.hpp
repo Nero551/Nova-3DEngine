@@ -2,7 +2,7 @@
 #include "Math/Vector/Vector2.hpp"
 #include "Uniform.hpp"
 
-namespace N
+namespace N::G
 {
 struct Vector2Uniform : Uniform
 {
@@ -15,4 +15,4 @@ struct Vector2Uniform : Uniform
         glUniform2fv(location, 1, &Value.x);
     }
 };
-} // namespace N
+} // namespace N::G

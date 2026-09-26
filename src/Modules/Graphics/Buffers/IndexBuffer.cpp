@@ -1,6 +1,6 @@
 #include "IndexBuffer.hpp"
 
-namespace N
+namespace N::G
 {
 IndexBuffer::IndexBuffer() {}
 
@@ -51,4 +51,4 @@ unsigned int IndexBuffer::GetId() const
 {
     return m_Id;
 }
-} // namespace N
+} // namespace N::G

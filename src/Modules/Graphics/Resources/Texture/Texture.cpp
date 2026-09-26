@@ -1,7 +1,7 @@
 #include "Texture.hpp"
 #include "OpenGL.hpp"
 
-namespace N
+namespace N::G
 {
 Texture::Texture(const std::string& name, const TextureTarget target) : C::Resource(name), m_Target(target) {}
 
@@ -47,4 +47,4 @@ void Texture::Unbind(const unsigned int unit) const
 {
     glBindTextureUnit(unit, 0);
 }
-} // namespace N
+} // namespace N::G

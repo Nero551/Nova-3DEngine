@@ -1,6 +1,6 @@
 #pragma once
 
-namespace N
+namespace N::G
 {
 enum class LightType
 {
@@ -8,4 +8,4 @@ enum class LightType
     Point = 1,
     Spot = 2
 };
-} // namespace N
+} // namespace N::G

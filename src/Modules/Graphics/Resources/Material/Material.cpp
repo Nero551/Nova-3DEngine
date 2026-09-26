@@ -7,7 +7,7 @@
 #include "../Shader/Uniforms/Vector4Uniform.hpp"
 #include "Utilities/Log.hpp"
 
-namespace N
+namespace N::G
 {
 Material::Material(const std::string& name) : C::Resource(name)
 {
@@ -67,4 +67,4 @@ void Material::SetProperties() const
     Shader->SetUniform(IntUniform("MATERIAL.EmissionMap", 14));
     EmissionMap->Bind(14);
 }
-} // namespace N
+} // namespace N::G

@@ -1,7 +1,7 @@
 #pragma once
 #include "ArrayBuffer.hpp"
 
-namespace N
+namespace N::G
 {
 /** @brief OpenGL element buffer containing unsigned integer indices for indexed drawing.
  */
@@ -44,4 +44,4 @@ struct IndexBuffer
   private:
     unsigned int m_Id = 0;
 };
-} // namespace N
+} // namespace N::G

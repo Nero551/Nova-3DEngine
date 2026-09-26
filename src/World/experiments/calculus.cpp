@@ -16,30 +16,32 @@ namespace N
 static C::Entity& CreatePoint(M::Vector4 col)
 {
     auto& resourceManager = C::Service::Get<C::ResourceManager>();
-    auto& mesh = Primitives::CreateQuad("point");
+    auto& mesh = G::Primitives::CreateQuad("point");
 
     auto& point = C::World::Get().CreateEntity<MeshInstance3D>();
-    C::World::Get().Query.Pool<MeshComponent>().GetComponentById(point.GetId()).Mesh = &mesh;
+    C::World::Get().Query.Pool<G::MeshComponent>().GetComponentById(point.GetId()).Mesh = &mesh;
     C::World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.GetId()).Scale =
         M::Vector3{0.2};
 
-    if (resourceManager.Exists<Material>(std::format("m{}{}{}", col.z, col.x, col.y)))
+    if (resourceManager.Exists<G::Material>(std::format("m{}{}{}", col.z, col.x, col.y)))
     {
-        auto& material = resourceManager.Load<Material>(std::format("m{}{}{}", col.z, col.x, col.y));
-        C::World::Get().Query.Pool<MaterialComponent>().GetComponentById(point.GetId()).Material = &material;
+        auto& material = resourceManager.Load<G::Material>(std::format("m{}{}{}", col.z, col.x, col.y));
+        C::World::Get().Query.Pool<G::MaterialComponent>().GetComponentById(point.GetId()).Material =
+            &material;
     }
     else
     {
-        auto& material = resourceManager.Load<Material>(std::format("m{}{}{}", col.z, col.x, col.y));
+        auto& material = resourceManager.Load<G::Material>(std::format("m{}{}{}", col.z, col.x, col.y));
         material.Color = col;
-        auto& shader = resourceManager.Load<Shader>("pointShader");
+        auto& shader = resourceManager.Load<G::Shader>("pointShader");
 
-        shader.AssignSource(resourceManager.Load<ShaderSource>(
-            "pointVert", "Assets/Shaders/shader.vert", ShaderStage::Vertex));
-        shader.AssignSource(resourceManager.Load<ShaderSource>(
-            "pointFrag", "Assets/Shaders/shader.frag", ShaderStage::Fragment));
+        shader.AssignSource(resourceManager.Load<G::ShaderSource>(
+            "pointVert", "Assets/Shaders/shader.vert", G::ShaderStage::Vertex));
+        shader.AssignSource(resourceManager.Load<G::ShaderSource>(
+            "pointFrag", "Assets/Shaders/shader.frag", G::ShaderStage::Fragment));
         material.Shader = &shader;
-        C::World::Get().Query.Pool<MaterialComponent>().GetComponentById(point.GetId()).Material = &material;
+        C::World::Get().Query.Pool<G::MaterialComponent>().GetComponentById(point.GetId()).Material =
+            &material;
     }
 
     C::World::Get().GetRoot().AttachChild(point);

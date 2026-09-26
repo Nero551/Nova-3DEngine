@@ -5,7 +5,7 @@
 #include "Math/Vector/Vector3.hpp"
 #include "Math/Vector/Vector4.hpp"
 
-namespace N
+namespace N::G
 {
 VertexArray& VertexArray::operator=(VertexArray&& Other) noexcept {}
 void VertexArray::Generate()
@@ -91,4 +91,4 @@ unsigned int VertexArray::GetId() const
 {
     return m_Id;
 }
-} // namespace N
+} // namespace N::G

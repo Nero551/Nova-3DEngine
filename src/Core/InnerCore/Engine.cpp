@@ -74,7 +74,7 @@ void Engine::Configure()
     Service::Add<ResourceManager>();
 
     AddModule<Input>();
-    AddModule<Graphics>();
+    AddModule<G::Graphics>();
     AddModule<Profiling>();
     AddModule<Physics>();
 }

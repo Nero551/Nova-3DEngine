@@ -1,6 +1,6 @@
 #pragma once
 
-namespace N
+namespace N::G
 {
 
 /**
@@ -25,4 +25,4 @@ enum class Topology
     LineStrip = GL_LINE_STRIP,
 };
 
-} // namespace N
+} // namespace N::G

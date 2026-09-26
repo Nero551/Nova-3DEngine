@@ -1,6 +1,6 @@
 #pragma once
 
-namespace N
+namespace N::G
 {
 /**
  * @brief Specifies which framebuffer target is affected by framebuffer operations.
@@ -19,4 +19,4 @@ enum class FrameBufferTarget
     /** The framebuffer used as the destination for draw operations. */
     Draw = GL_DRAW_FRAMEBUFFER
 };
-} // namespace N
+} // namespace N::G

@@ -7,7 +7,7 @@
 #include "TextureWrap.hpp"
 #include "Utilities/Image/Image.hpp"
 
-namespace N
+namespace N::G
 {
 /**
  * @brief Represents a two-dimensional OpenGL texture resource.
@@ -78,4 +78,4 @@ struct Texture2D : Texture
     /** @brief Configures the texture's wrapping and filtering parameters. */
     void SetParameters() const;
 };
-} // namespace N
+} // namespace N::G

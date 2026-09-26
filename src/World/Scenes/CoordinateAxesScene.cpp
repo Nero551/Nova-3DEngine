@@ -22,13 +22,13 @@ CoordinateAxesScene::CoordinateAxesScene()
 
     SetRoot(world.CreateEntity<Nova>());
 
-    auto& lightShader = resourceManager.Load<Shader>("lightShader");
-    lightShader.AssignSource(resourceManager.Load<ShaderSource>(
-        "lightFrag", "Assets/Shaders/lightShader.frag", ShaderStage::Fragment));
-    lightShader.AssignSource(resourceManager.Load<ShaderSource>(
-        "lightVert", "Assets/Shaders/lightShader.vert", ShaderStage::Vertex));
+    auto& lightShader = resourceManager.Load<G::Shader>("lightShader");
+    lightShader.AssignSource(resourceManager.Load<G::ShaderSource>(
+        "lightFrag", "Assets/Shaders/lightShader.frag", G::ShaderStage::Fragment));
+    lightShader.AssignSource(resourceManager.Load<G::ShaderSource>(
+        "lightVert", "Assets/Shaders/lightShader.vert", G::ShaderStage::Vertex));
 
-    auto& lightMaterial = resourceManager.Load<Material>("lightMaterial");
+    auto& lightMaterial = resourceManager.Load<G::Material>("lightMaterial");
     lightMaterial.Shader = &lightShader;
 
     auto& light = world.CreateEntity<Light>();
@@ -41,19 +41,18 @@ CoordinateAxesScene::CoordinateAxesScene()
         M::Quaternion::FromEulerXYZ(M::Vector3{M::Rad(-32.5)});
     GetRoot().AttachChild(light2);
 
-    auto& shader = resourceManager.Load<Shader>("AxisShader");
-    shader.AssignSource(resourceManager.Load<ShaderSource>(
-        "axisFrag", "Assets/Shaders/axisShader.frag", ShaderStage::Fragment));
-    shader.AssignSource(resourceManager.Load<ShaderSource>(
-        "axisVert", "Assets/Shaders/axisShader.vert", ShaderStage::Vertex));
+    auto& shader = resourceManager.Load<G::Shader>("AxisShader");
+    shader.AssignSource(resourceManager.Load<G::ShaderSource>(
+        "axisFrag", "Assets/Shaders/axisShader.frag", G::ShaderStage::Fragment));
+    shader.AssignSource(resourceManager.Load<G::ShaderSource>(
+        "axisVert", "Assets/Shaders/axisShader.vert", G::ShaderStage::Vertex));
 
-    auto& line = Primitives::CreateLine("Line");
+    auto& line = G::Primitives::CreateLine("Line");
 
     auto& xAxis = world.CreateEntity<MeshInstance3D>();
-    query.Pool<MeshComponent>().GetComponentById(xAxis.GetId()).Mesh = &line;
-
-    auto& xMaterial = query.Pool<MaterialComponent>().GetComponentById(xAxis.GetId());
-    xMaterial.Material = &resourceManager.Load<Material>("X-Axis Material");
+    query.Pool<G::MeshComponent>().GetComponentById(xAxis.GetId()).Mesh = &line;
+    auto& xMaterial = query.Pool<G::MaterialComponent>().GetComponentById(xAxis.GetId());
+    xMaterial.Material = &resourceManager.Load<G::Material>("X-Axis Material");
     xMaterial.Material->Shader = &shader;
 
     query.Pool<Transform3DComponent>().GetComponentById(xAxis.GetId()).Rotation =
@@ -64,10 +63,9 @@ CoordinateAxesScene::CoordinateAxesScene()
     GetRoot().AttachChild(xAxis);
 
     auto& yAxis = world.CreateEntity<MeshInstance3D>();
-    query.Pool<MeshComponent>().GetComponentById(yAxis.GetId()).Mesh = &line;
-
-    auto& yMaterial = query.Pool<MaterialComponent>().GetComponentById(yAxis.GetId());
-    yMaterial.Material = &resourceManager.Load<Material>("Y-Axis Material");
+    query.Pool<G::MeshComponent>().GetComponentById(yAxis.GetId()).Mesh = &line;
+    auto& yMaterial = query.Pool<G::MaterialComponent>().GetComponentById(yAxis.GetId());
+    yMaterial.Material = &resourceManager.Load<G::Material>("Y-Axis Material");
     yMaterial.Material->Shader = &shader;
 
     query.Pool<Transform3DComponent>().GetComponentById(yAxis.GetId()).Rotation =
@@ -78,10 +76,9 @@ CoordinateAxesScene::CoordinateAxesScene()
     GetRoot().AttachChild(yAxis);
 
     auto& zAxis = world.CreateEntity<MeshInstance3D>();
-    query.Pool<MeshComponent>().GetComponentById(zAxis.GetId()).Mesh = &line;
-
-    auto& zMaterial = query.Pool<MaterialComponent>().GetComponentById(zAxis.GetId());
-    zMaterial.Material = &resourceManager.Load<Material>("Z-Axis Material");
+    query.Pool<G::MeshComponent>().GetComponentById(zAxis.GetId()).Mesh = &line;
+    auto& zMaterial = query.Pool<G::MaterialComponent>().GetComponentById(zAxis.GetId());
+    zMaterial.Material = &resourceManager.Load<G::Material>("Z-Axis Material");
     zMaterial.Material->Shader = &shader;
 
     query.Pool<Transform3DComponent>().GetComponentById(zAxis.GetId()).Scale = {1, 1, 200};

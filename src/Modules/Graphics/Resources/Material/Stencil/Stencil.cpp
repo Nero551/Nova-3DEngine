@@ -1,6 +1,6 @@
 #include "Stencil.hpp"
 
-namespace N
+namespace N::G
 {
 void Stencil::Apply()
 {
@@ -19,4 +19,4 @@ void Stencil::Apply()
     glStencilMask(WriteMask);
     glStencilFunc(static_cast<GLenum>(Function), Ref, FunctionMask);
 }
-} // namespace N
+} // namespace N::G

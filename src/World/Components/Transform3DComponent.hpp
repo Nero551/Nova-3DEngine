@@ -5,6 +5,12 @@
 #include "Math/Matrix/Matrix4.hpp"
 #include "Math/Quaternion/Quaternion.hpp"
 
+namespace N::G
+{
+struct CameraSystem;
+struct Graphics;
+} // namespace N::G
+
 namespace N
 {
 //
@@ -78,7 +84,7 @@ struct Transform3DComponent : C::Component
     C::Track<M::Quaternion> GlobalRotation = M::Quaternion::Identity;
     C::Track<M::Vector3> GlobalScale = M::Vector3::One;
     friend struct Transform3DSystem;
-    friend struct Graphics;
-    friend struct CameraSystem;
+    friend struct G::Graphics;
+    friend struct G::CameraSystem;
 };
 } // namespace N

@@ -3,7 +3,7 @@
 
 #include "Utilities/Log.hpp"
 
-namespace N
+namespace N::G
 {
 void Texture2D::Generate()
 {
@@ -70,4 +70,4 @@ void Texture2D::SetParameters() const
     glTextureParameteri(m_Id, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(MinFilter));
     glTextureParameteri(m_Id, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(MagFilter));
 }
-} // namespace N
+} // namespace N::G

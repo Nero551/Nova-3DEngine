@@ -3,7 +3,7 @@
 #include "Modules/Graphics/Buffers/ArrayBuffer.hpp"
 #include "OpenGL.hpp"
 
-namespace N
+namespace N::G
 {
 /**
  * @brief Represents an OpenGL Uniform Buffer Object.
@@ -59,4 +59,4 @@ struct Uniformbuffer : C::Resource
     /** OpenGL uniform buffer object ID. */
     unsigned int m_Id = 0;
 };
-} // namespace N
+} // namespace N::G

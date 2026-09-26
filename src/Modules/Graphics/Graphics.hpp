@@ -11,7 +11,7 @@
 #include "Utilities/DataStructures/Indirect2DVector.hpp"
 #include "World/Components/Transform3DComponent.hpp"
 
-namespace N
+namespace N::G
 {
 struct Graphics : C::Module
 {
@@ -43,4 +43,4 @@ struct Graphics : C::Module
 
     void Stop() override;
 };
-} // namespace N
+} // namespace N::G

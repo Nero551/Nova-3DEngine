@@ -3,7 +3,7 @@
 #include "Modules/Graphics/Resources/Texture/Texture2D.hpp"
 #include "Primitives.hpp"
 
-namespace N
+namespace N::G
 {
 Texture& Primitives::CreateWhiteTexture()
 {
@@ -40,4 +40,4 @@ Texture& Primitives::CreateBlackTexture()
 
     return blackTexture;
 }
-} // namespace N
+} // namespace N::G

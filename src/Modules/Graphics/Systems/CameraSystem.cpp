@@ -6,7 +6,7 @@
 #include "Modules/Input/Input.hpp"
 #include "World/Components/Transform3DComponent.hpp"
 
-namespace N
+namespace N::G
 {
 void CameraSystem::Update(const double dt)
 {
@@ -82,4 +82,4 @@ M::Matrix4 CameraSystem::GetViewMatrix()
 
     return M::Matrix4::LookAt(pos, pos + forward, up);
 }
-} // namespace N
+} // namespace N::G

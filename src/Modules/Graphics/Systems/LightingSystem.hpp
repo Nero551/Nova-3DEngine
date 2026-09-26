@@ -3,7 +3,7 @@
 #include "Modules/Graphics/Resources/Uniformbuffer/Uniformbuffer.hpp"
 #include "Utilities/CheckedPtr.hpp"
 
-namespace N
+namespace N::G
 {
 struct LightingSystem : C::System
 {
@@ -12,4 +12,4 @@ struct LightingSystem : C::System
     void Start() override;
     void Render() override;
 };
-} // namespace N
+} // namespace N::G

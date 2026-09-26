@@ -5,7 +5,7 @@
 #include "Math/Common/Trigonometry.hpp"
 #include "Math/Vector/Vector3.hpp"
 
-namespace N
+namespace N::G
 {
 struct LightComponent : C::Component
 {
@@ -22,4 +22,4 @@ struct LightComponent : C::Component
     float InnerCutOff = M::Rad(7.5);
     float OuterCutOff = M::Rad(17.5);
 };
-} // namespace N
+} // namespace N::G

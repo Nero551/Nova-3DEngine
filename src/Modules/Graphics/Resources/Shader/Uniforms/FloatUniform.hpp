@@ -2,7 +2,7 @@
 #include "Core/InnerCore/Engine.hpp"
 #include "Uniform.hpp"
 
-namespace N
+namespace N::G
 {
 struct FloatUniform : Uniform
 {
@@ -15,4 +15,4 @@ struct FloatUniform : Uniform
         glUniform1f(location, Value);
     }
 };
-} // namespace N
+} // namespace N::G

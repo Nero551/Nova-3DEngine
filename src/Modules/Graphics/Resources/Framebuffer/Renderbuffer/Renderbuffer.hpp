@@ -3,7 +3,7 @@
 #include "../../Texture/TextureInternalFormat.hpp"
 #include "Core/OuterCore/Resource.hpp"
 
-namespace N
+namespace N::G
 {
 /**
  * @brief Represents an OpenGL renderbuffer resource.
@@ -76,4 +76,4 @@ struct Renderbuffer : C::Resource
     // OpenGL renderbuffer object ID. Zero indicates that no renderbuffer exists.
     unsigned int m_Id = 0;
 };
-} // namespace N
+} // namespace N::G

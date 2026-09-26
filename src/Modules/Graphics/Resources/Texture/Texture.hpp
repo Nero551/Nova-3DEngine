@@ -4,7 +4,7 @@
 #include "TextureInternalFormat.hpp"
 #include "TextureTarget.hpp"
 
-namespace N
+namespace N::G
 {
 /**
  * @brief Base class for OpenGL texture resources.
@@ -98,4 +98,4 @@ struct Texture : C::Resource
     /** OpenGL texture target associated with this texture type. */
     TextureTarget m_Target;
 };
-} // namespace N
+} // namespace N::G

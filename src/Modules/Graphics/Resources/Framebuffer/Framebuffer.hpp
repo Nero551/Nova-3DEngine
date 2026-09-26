@@ -8,7 +8,7 @@
 #include "Renderbuffer/Renderbuffer.hpp"
 #include "Utilities/CheckedPtr.hpp"
 
-namespace N
+namespace N::G
 {
 /**
  * @brief Represents an OpenGL framebuffer object.
@@ -147,4 +147,4 @@ struct Framebuffer : C::Resource
     /// OpenGL framebuffer object ID. Zero indicates that no framebuffer exists.
     unsigned int m_Id = 0;
 };
-} // namespace N
+} // namespace N::G

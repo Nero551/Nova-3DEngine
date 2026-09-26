@@ -4,7 +4,7 @@
 #include "BlendFactor.hpp"
 #include "Math/Vector/Vector4.hpp"
 
-namespace N
+namespace N::G
 {
 /**
  * @brief Controls color blending for rendered fragments.
@@ -44,4 +44,4 @@ struct Blend
     /** @brief Applies the configured blending state to the OpenGL context. */
     void Apply();
 };
-} // namespace N
+} // namespace N::G

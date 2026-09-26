@@ -2,7 +2,7 @@
 #include "Core/InnerCore/Engine.hpp"
 #include "Core/Services/ResourceManager.hpp"
 
-namespace N
+namespace N::G
 {
 Mesh& Primitives::CreateCube(const std::string& name)
 {
@@ -56,4 +56,4 @@ Mesh& Primitives::CreateCube(const std::string& name)
 
     return mesh;
 }
-} // namespace N
+} // namespace N::G

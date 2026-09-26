@@ -7,7 +7,7 @@
 #include "../Resources/Shader/Uniforms/Vector3Uniform.hpp"
 #include "Core/Services/ResourceManager.hpp"
 
-namespace N
+namespace N::G
 {
 void LightingSystem::Start()
 {
@@ -56,4 +56,4 @@ void LightingSystem::Render()
 
     LightingBuffer->Bind();
 }
-} // namespace N
+} // namespace N::G

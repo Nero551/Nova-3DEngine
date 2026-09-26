@@ -1,7 +1,7 @@
 #pragma once
 #include "OpenGL.hpp"
 
-namespace N
+namespace N::G
 {
 struct Uniform
 {
@@ -12,4 +12,4 @@ struct Uniform
 
     virtual void Upload(int location) {};
 };
-} // namespace N
+} // namespace N::G

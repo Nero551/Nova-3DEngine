@@ -1,6 +1,6 @@
 #pragma once
 
-namespace N
+namespace N::G
 {
 /**
  * @brief Defines the vertex winding order considered front-facing.
@@ -16,4 +16,4 @@ enum class FrontFace
     /** @brief Considers counter-clockwise-wound triangles front-facing. */
     CounterClockwise = GL_CCW
 };
-} // namespace N
+} // namespace N::G

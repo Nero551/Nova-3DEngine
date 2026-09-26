@@ -10,7 +10,7 @@
 #include "Stencil/Stencil.hpp"
 #include "Utilities/CheckedPtr.hpp"
 
-namespace N
+namespace N::G
 {
 /**
  * @brief Represents the rendering properties and textures of a surface.
@@ -103,4 +103,4 @@ struct Material : C::Resource
      */
     void SetProperties() const;
 };
-} // namespace N
+} // namespace N::G

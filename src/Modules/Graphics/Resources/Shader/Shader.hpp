@@ -5,7 +5,7 @@
 #include "Uniforms/Uniform.hpp"
 #include "Utilities/CheckedPtr.hpp"
 
-namespace N
+namespace N::G
 {
 template <typename T>
 
@@ -104,4 +104,4 @@ struct Shader : C::Resource
 
     void UploadUniforms();
 };
-} // namespace N
+} // namespace N::G

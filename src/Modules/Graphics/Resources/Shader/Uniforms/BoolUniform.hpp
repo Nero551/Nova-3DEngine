@@ -2,7 +2,7 @@
 #include "OpenGL.hpp"
 #include "Uniform.hpp"
 
-namespace N
+namespace N::G
 {
 struct BoolUniform : Uniform
 {
@@ -15,4 +15,4 @@ struct BoolUniform : Uniform
         glUniform1i(location, Value);
     }
 };
-} // namespace N
+} // namespace N::G

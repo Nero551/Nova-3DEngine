@@ -2,7 +2,7 @@
 #include "StencilAction.hpp"
 #include "StencilFunction.hpp"
 
-namespace N
+namespace N::G
 {
 /**
  * @brief Controls stencil testing and stencil buffer operations.
@@ -38,4 +38,4 @@ struct Stencil
     /** @brief Applies the configured stencil state to the OpenGL context. */
     void Apply();
 };
-} // namespace N
+} // namespace N::G

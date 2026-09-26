@@ -1,6 +1,6 @@
 #include "Renderbuffer.hpp"
 
-namespace N
+namespace N::G
 {
 Renderbuffer::Renderbuffer(const std::string& name) : C::Resource(name) {}
 
@@ -49,4 +49,4 @@ unsigned int Renderbuffer::GetId() const
 {
     return m_Id;
 }
-} // namespace N
+} // namespace N::G

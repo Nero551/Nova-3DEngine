@@ -2,7 +2,7 @@
 #include "../Resources/Mesh/Mesh.hpp"
 #include "../Resources/Texture/Texture.hpp"
 
-namespace N::Primitives
+namespace N::G::Primitives
 {
 Mesh& CreateCube(const std::string& name);
 
@@ -15,4 +15,4 @@ Mesh& CreateLine(const std::string& name);
 Texture& CreateWhiteTexture();
 
 Texture& CreateBlackTexture();
-} // namespace N::Primitives
+} // namespace N::G::Primitives
