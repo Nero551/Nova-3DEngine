@@ -1,7 +1,7 @@
 #pragma once
 namespace N::M
 {
-template <int Components> struct Vector
+template <unsigned int Components> struct Vector
 {
     constexpr Vector() {}
     constexpr explicit Vector(float all)
@@ -125,6 +125,201 @@ template <int Components> struct Vector
             }
         }
         return true;
+    }
+
+    /** @brief Adds another vector component-wise. */
+    constexpr Vector operator+(const Vector& vector) const
+    {
+        Vector result;
+        for (int i = 0; i < Components; ++i)
+        {
+            result(i) = (*this)(i) + vector(i);
+        }
+        return result;
+    }
+
+    /** @brief Subtracts another vector component-wise. */
+    constexpr Vector operator-(const Vector& vector) const
+    {
+        Vector result;
+        for (int i = 0; i < Components; ++i)
+        {
+            result(i) = (*this)(i)-vector(i);
+        }
+        return result;
+    }
+
+    /** @brief Multiplies another vector component-wise. */
+    constexpr Vector operator*(const Vector& vector) const
+    {
+        Vector result;
+        for (int i = 0; i < Components; ++i)
+        {
+            result(i) = (*this)(i)*vector(i);
+        }
+        return result;
+    }
+
+    /** @brief Divides another vector component-wise. */
+    constexpr Vector operator/(const Vector& vector) const
+    {
+        Vector result;
+        for (int i = 0; i < Components; ++i)
+        {
+            result(i) = (*this)(i) / vector(i);
+        }
+        return result;
+    }
+
+    /** @brief Adds another vector to this vector. */
+    constexpr Vector& operator+=(const Vector& vector)
+    {
+        return *this = *this + vector;
+    }
+
+    /** @brief Subtracts another vector from this vector. */
+    constexpr Vector& operator-=(const Vector& vector)
+    {
+        return *this = *this - vector;
+    }
+
+    /** @brief Multiplies this vector component-wise by another vector. */
+    constexpr Vector& operator*=(const Vector& vector)
+    {
+        return *this = *this * vector;
+    }
+
+    /** @brief Divides this vector component-wise by another vector. */
+    constexpr Vector& operator/=(const Vector& vector)
+    {
+        return *this = *this / vector;
+    }
+
+    /** @brief Adds a scalar to every component. */
+    constexpr Vector operator+(const float scalar) const
+    {
+        Vector result;
+        for (int i = 0; i < Components; ++i)
+        {
+            result(i) = (*this)(i) + scalar;
+        }
+        return result;
+    }
+
+    /** @brief Subtracts a scalar from every component. */
+    constexpr Vector operator-(const float scalar) const
+    {
+        Vector result;
+        for (int i = 0; i < Components; ++i)
+        {
+            result(i) = (*this)(i)-scalar;
+        }
+        return result;
+    }
+
+    /** @brief Multiplies every component by a scalar. */
+    constexpr Vector operator*(const float scalar) const
+    {
+        Vector result;
+        for (int i = 0; i < Components; ++i)
+        {
+            result(i) = (*this)(i)*scalar;
+        }
+        return result;
+    }
+
+    /** @brief Divides every component by a scalar. */
+    constexpr Vector operator/(const float scalar) const
+    {
+        Vector result;
+        for (int i = 0; i < Components; ++i)
+        {
+            result(i) = (*this)(i) / scalar;
+        }
+        return result;
+    }
+
+    /** @brief Adds a scalar to every component in place. */
+    constexpr Vector& operator+=(const float scalar)
+    {
+        return *this = *this + scalar;
+    }
+
+    /** @brief Subtracts a scalar from every component in place. */
+    constexpr Vector& operator-=(const float scalar)
+    {
+        return *this = *this - scalar;
+    }
+
+    /** @brief Multiplies every component by a scalar in place. */
+    constexpr Vector& operator*=(const float scalar)
+    {
+        return *this = *this * scalar;
+    }
+
+    /** @brief Divides every component by a scalar in place. */
+    constexpr Vector& operator/=(const float scalar)
+    {
+        return *this = *this / scalar;
+    }
+
+    /** @brief Returns the negated vector. */
+    constexpr Vector operator-() const
+    {
+        return -1 * *this;
+    }
+
+    /** @brief Compares two vectors for exact equality. */
+    constexpr bool operator==(const Vector& vector) const
+    {
+        for (int i = 0; i < Components; ++i)
+        {
+            if ((*this)(i) != vector(i))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /** @brief Compares two vectors for inequality. */
+    constexpr bool operator!=(const Vector& vector) const
+    {
+        return !(*this == vector);
+    }
+
+    /** @brief Adds a scalar to every component. */
+    friend constexpr Vector operator+(const float scalar, const Vector& vector)
+    {
+        return vector + scalar;
+    }
+
+    /** @brief Subtracts every vector component from a scalar. */
+    friend constexpr Vector operator-(const float scalar, const Vector& vector)
+    {
+        Vector result;
+        for (int i = 0; i < Components; ++i)
+        {
+            result(i) = scalar - vector(i);
+        }
+        return result;
+    }
+
+    /** @brief Multiplies every component by a scalar. */
+    friend constexpr Vector operator*(const float scalar, const Vector& vector)
+    {
+        return vector * scalar;
+    }
+
+    /** @brief Divides a scalar by every vector component. */
+    friend constexpr Vector operator/(const float scalar, const Vector& vector)
+    {
+        Vector result;
+        for (int i = 0; i < Components; ++i)
+        {
+            result(i) = scalar / vector(i);
+        }
+        return result;
     }
 
     friend std::ostream& operator<<(std::ostream& os, const Vector& vec)
