@@ -1,4 +1,7 @@
 #pragma once
+#include "Math/Common/Exponentials.hpp"
+
+#include <glad/glad.h>
 
 /**
  * @namespace N::Units
@@ -29,4 +32,6 @@ constexpr float Millisecond = 1e-3f * Second;
 constexpr float Minute = 60.0f * Second;
 constexpr float Hour = 60.0f * Minute;
 constexpr float Day = 24.0f * Hour;
+
+// constexpr float Newton = Kilogram * (Meter / M::Pow(Second, 2.0f));
 } // namespace N::Units

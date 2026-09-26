@@ -2,7 +2,7 @@
 
 #include "Core/InnerCore/Module.hpp"
 namespace N {
-struct Module : Module {
+struct Module : C::Module {
 protected:
    void OnStart() override;
    void OnUpdate(double dt) override;

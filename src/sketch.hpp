@@ -4,43 +4,27 @@
 #include "Math/Matrix/Matrix3.hpp"
 #include "Utilities/Log.hpp"
 
-#include <concepts>
 namespace Sketch
 {
 
 //TODO- the size of transform component is whats bottlenecking.
 // split it. atleast split transform from the matrices (model matrix, normal matrix)
 
-//TODO- add operator<< to all custom data structures. clean up data structure code.
-
-//TODO- add operator[] for data structures instead of GetUnchecked.
+//TODO- add operator<< to all custom data structures. clean up datHa structure code.
 
 //TODO- add vector operators. for vector.
+//
+//TODO- If converting a general Quaternion to a rotation quaternion proves
+// expensive in a hot path, introduce a specialized RotQuaternion (RQuaternion)
+// type and explicit conversion between the two. it will just be a unit quaternion with half angle representation.
 
 //TODO- remove matrices from transform component
 // make render batches store sparse sets that map entity ids to normal/model matrices.
 // and only recompute matrices when global transform.IsChanged.
 
-//TODO- If converting a general Quaternion to a rotation quaternion proves
-// expensive in a hot path, introduce a specialized RotQuaternion (RQuaternion)
-// type and explicit conversion between the two. it will just be a unit quaternion with half angle representation.
+//TODO- play minecraft in the redstone modpack i made for understanding logic gates.
 
-//TODO- organize types by module namespace.
-// Each module gets its own namespace and nests its categories:
-// N::R::C  - Renderer components
-// N::R::S  - Renderer systems
-// N::I::C  - Input components
-// N::I::S  - Input systems
-// N::P::C  - Physics components
-// N::P::S  - Physics systems
-// N::Cr::C - Core components
-// N::Cr::S - Core systems
-// N::Cr    - super core stuff, window, ecs, engine, etc.
-// Keep module-independent infrastructure directly in its module namespace,
-// e.g. N::M::Vector3, N::U::SparseSet.
-
-//TODO- u can easily rename using CLion replace (Ctrl + Shift + H) and selecting a directory scope.
-// replacing namespace N::something with N::something::something and stuff.
+//TODO- rework dimensional analysis system
 
 using Index = unsigned int;
 template <typename T, Index Size> struct Array
@@ -114,6 +98,23 @@ template <int Components> struct Vector
     static constexpr Vector Zero()
     {
         return Vector{0};
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const Vector& vec)
+    {
+        os << "(";
+
+        for (int i = 0; i < Components; ++i)
+        {
+            os << vec.m_Data[i];
+            if (i != Components - 1)
+            {
+                os << ", ";
+            }
+        }
+        os << ")";
+
+        return os;
     }
 
   private:
@@ -385,17 +386,97 @@ template <unsigned int... Dimensions> struct Tensor
     }
 };
 
+inline std::string Superscript(int exponent)
+{
+    static constexpr std::string_view Digits[] = {"⁰", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹"};
+    if (exponent == 1)
+    {
+        return "";
+    }
+
+    std::string result;
+
+    if (exponent < 0)
+    {
+        result += "⁻";
+        exponent = -exponent;
+    }
+
+    std::string digits = std::to_string(exponent);
+
+    for (char digit : digits)
+    {
+        result += Digits[digit - '0'];
+    }
+
+    return result;
+};
+
+template <template <int> typename Derived, int Exp> struct Dimensional
+{
+    static constexpr int Exponent = Exp;
+    template <int E> using WithExponent = Derived<E>;
+};
+
+template <int Exp> struct Time : Dimensional<Time, Exp>
+{
+    static std::ostream& Print(std::ostream& os)
+    {
+        return os << "s" << Superscript(Exp);
+    }
+};
+
+template <typename T, typename D> struct Dimension
+{
+    T Value;
+
+    constexpr Dimension() : Value(0) {}
+    constexpr Dimension(const T& value) : Value(value) {}
+
+    constexpr Dimension operator+(const Dimension& other)
+    {
+        return {Value + other.Value};
+    }
+
+    constexpr Dimension operator-(const Dimension& other)
+    {
+        return {Value - other.Value};
+    }
+
+    template <int E>
+    constexpr Dimension<T, typename D::template WithExponent<D::Exponent + E>> operator*(
+        const Dimension<T, typename D::template WithExponent<E>>& other)
+    {
+        return {Value * other.Value};
+    }
+
+    template <int E>
+    constexpr Dimension<T, typename D::template WithExponent<D::Exponent - E>> operator/(
+        const Dimension<T, typename D::template WithExponent<E>>& other)
+    {
+        return {Value / other.Value};
+    }
+
+    constexpr T& operator()()
+    {
+        return Value;
+    }
+    constexpr const T& operator()() const
+    {
+        return Value;
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, Dimension dimension)
+    {
+        os << dimension.Value << ' ';
+        return D::Print(os);
+    }
+};
+
 inline void Test()
 {
-    Vector<10> v;
-    Matrix<1000, 100> m1{5};
-    Matrix<100, 500> m2{3};
-    // Tensor<100, 100, 100,100> t; // dont do this, it blows up the stack and seg faults.
-    // auto bigT = std::make_unique<Tensor<100, 100, 100, 100, 100, 100>>(5); // this is 40 GB of memory right there.
-    //! tensors scale dangerously, a 100 10 dimensional tensor is 10^20 floats. thats more than the seconds since the big bang.
-
-    Tensor<2, 1, 6> t2;
-    N::U::Log::Print(m1 * m2);
+    Dimension<Vector<5>, Time<2>> t;
+    N::U::Log::Info(t);
 }
 
 } // namespace Sketch

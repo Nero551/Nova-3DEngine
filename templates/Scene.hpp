@@ -3,7 +3,7 @@
 #include "Core/OuterCore/Scene.hpp"
 
 namespace N {
-struct Scene : Scene {
+struct Scene : C::Scene {
    Scene();
    
 };

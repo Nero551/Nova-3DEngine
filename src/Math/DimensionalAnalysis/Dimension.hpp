@@ -31,6 +31,9 @@ struct Dimension : IDimension
     // cuz rn the system thinks a x b^-1 and a/b are different. will also make printing easier.
     // it will unify operations overall.
 
+    //TODO- also some things are not fundamental dimensionals but have their own unit( wut i print).
+    // ex: force, its mass / acceleration, but its represented with Newton (N).
+
     ValueType Value;
 
     /** @brief Constructs a dimension from a numerical value. */
