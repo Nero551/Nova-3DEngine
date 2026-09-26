@@ -4,7 +4,7 @@
 
 namespace N
 {
-struct Physics : Module
+struct Physics : C::Module
 {
   protected:
     void Start() override;

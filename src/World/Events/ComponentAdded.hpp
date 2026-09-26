@@ -3,7 +3,7 @@
 
 namespace N
 {
-struct ComponentAdded : Event<ComponentAdded>
+struct ComponentAdded : C::Event<ComponentAdded>
 {
     unsigned int EntityId;
 

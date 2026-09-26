@@ -6,7 +6,7 @@
 #include "SystemOwner.hpp"
 #include "Utilities/Log.hpp"
 
-namespace N
+namespace N::C
 {
 /**
  * @brief Owns and manages the runtime state of the engine world.
@@ -124,4 +124,4 @@ struct World : SystemOwner
     unsigned int m_Root{};
     unsigned int m_ActiveCamera{};
 };
-} // namespace N
+} // namespace N::C

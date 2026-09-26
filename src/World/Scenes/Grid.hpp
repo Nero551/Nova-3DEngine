@@ -6,7 +6,7 @@
 
 namespace N
 {
-struct Grid : Scene
+struct Grid : C::Scene
 {
     Grid();
 

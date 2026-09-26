@@ -4,7 +4,7 @@
 
 namespace N
 {
-struct CoordinateAxesScene : Scene
+struct CoordinateAxesScene : C::Scene
 {
     CoordinateAxesScene();
 };

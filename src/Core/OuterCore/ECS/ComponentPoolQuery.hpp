@@ -4,7 +4,7 @@
 #include "Utilities/DataStructures/TypedVector.hpp"
 #include "World/Events/EntityCreated.hpp"
 
-namespace N
+namespace N::C
 {
 /**
  * @brief Provides cached queries over component pools.
@@ -131,4 +131,4 @@ struct ComponentPoolQuery
     }
 };
 
-} // namespace N
+} // namespace N::C

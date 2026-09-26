@@ -4,7 +4,7 @@
 
 namespace N
 {
-struct Transform3DSystem : System
+struct Transform3DSystem : C::System
 {
     void Update(double fdt) override;
 };

@@ -5,9 +5,9 @@
 #include "Core/Services/ResourceManager.hpp"
 #include "Math/Color/Color.hpp"
 #include "Math/Common/Trigonometry.hpp"
-#include "Modules/Renderer/Primitives/Primitives.hpp"
-#include "Modules/Renderer/Resources/Shader/Shader.hpp"
-#include "Modules/Renderer/Resources/Shader/ShaderSource.hpp"
+#include "Modules/Graphics/Primitives/Primitives.hpp"
+#include "Modules/Graphics/Resources/Shader/Shader.hpp"
+#include "Modules/Graphics/Resources/Shader/ShaderSource.hpp"
 #include "World/Novas/MeshInstance3D.hpp"
 #include "World/Novas/Nova.hpp"
 
@@ -15,7 +15,7 @@ namespace N
 {
 Grid::Grid()
 {
-    SetRoot(World::Get().CreateEntity<Nova>());
+    SetRoot(C::World::Get().CreateEntity<Nova>());
 
     CreateXY();
     // CreateXZ();
@@ -32,18 +32,18 @@ Grid::Grid()
 
 void Grid::CreateGridLine(const M::Quaternion rotation, const M::Vector3 position)
 {
-    auto& resourceManager = Service::Get<ResourceManager>();
-    auto& shader = Service::Get<ResourceManager>().Load<Shader>("AxisShader");
+    auto& resourceManager = C::Service::Get<C::ResourceManager>();
+    auto& shader = C::Service::Get<C::ResourceManager>().Load<Shader>("AxisShader");
     shader.AssignSource(resourceManager.Load<ShaderSource>(
         "axisFrag", "Assets/Shaders/axisShader.frag", ShaderStage::Fragment));
     shader.AssignSource(resourceManager.Load<ShaderSource>(
         "axisVert", "Assets/Shaders/axisShader.vert", ShaderStage::Vertex));
     auto& line = Primitives::CreateLine("Line");
 
-    auto& l = World::Get().CreateEntity<MeshInstance3D>();
-    auto& materialComponent = World::Get().Query.Pool<MaterialComponent>().GetComponentById(l.GetId());
-    auto& meshComponent = World::Get().Query.Pool<MeshComponent>().GetComponentById(l.GetId());
-    auto& transformComponent = World::Get().Query.Pool<Transform3DComponent>().GetComponentById(l.GetId());
+    auto& l = C::World::Get().CreateEntity<MeshInstance3D>();
+    auto& materialComponent = C::World::Get().Query.Pool<MaterialComponent>().GetComponentById(l.GetId());
+    auto& meshComponent = C::World::Get().Query.Pool<MeshComponent>().GetComponentById(l.GetId());
+    auto& transformComponent = C::World::Get().Query.Pool<Transform3DComponent>().GetComponentById(l.GetId());
     meshComponent.Mesh = &line;
     materialComponent.Material = &resourceManager.Load<Material>("GridLine Material");
     materialComponent.Material->Shader = &shader;

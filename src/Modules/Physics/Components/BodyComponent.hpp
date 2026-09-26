@@ -6,7 +6,7 @@
 
 namespace N
 {
-struct BodyComponent : Component
+struct BodyComponent : C::Component
 {
     M::Vector3 Velocity = {0, 0, 0};
     M::Vector3 Force = M::Vector3::Zero;

@@ -6,7 +6,7 @@
 
 #include "Core/InnerCore/Engine.hpp"
 #include "Core/Services/ResourceManager.hpp"
-#include "Modules/Renderer/Resources/Texture/Texture2D.hpp"
+#include "Modules/Graphics/Resources/Texture/Texture2D.hpp"
 #include "World/Novas/MeshInstance3D.hpp"
 
 namespace N
@@ -45,7 +45,7 @@ static void ProcessFaces(std::vector<unsigned int>& indices, const aiMesh* mesh)
 
 static Material& ProcessMaterial(const aiScene* scene, const aiMesh* mesh, const std::string& directory)
 {
-    auto& resourceManager = Service::Get<ResourceManager>();
+    auto& resourceManager = C::Service::Get<C::ResourceManager>();
 
     auto& material = resourceManager.Load<Material>("material_" + std::to_string(mesh->mMaterialIndex));
 
@@ -85,11 +85,11 @@ static Material& ProcessMaterial(const aiScene* scene, const aiMesh* mesh, const
 }
 
 static void ProcessNode(
-    const aiNode* node, const aiScene* scene, const std::string& directory, Entity& parent)
+    const aiNode* node, const aiScene* scene, const std::string& directory, C::Entity& parent)
 {
-    auto& world = World::Get();
+    auto& world = C::World::Get();
     auto& query = world.Query;
-    auto& resourceManager = Service::Get<ResourceManager>();
+    auto& resourceManager = C::Service::Get<C::ResourceManager>();
 
     auto& entity = world.CreateEntity<Nova3D>();
 
@@ -126,7 +126,7 @@ static void ProcessNode(
 
 AssimpScene::AssimpScene(const std::string& filepath)
 {
-    SetRoot(World::Get().CreateEntity<Nova3D>());
+    SetRoot(C::World::Get().CreateEntity<Nova3D>());
 
     const aiScene* scene = importer.ReadFile(filepath, aiProcess_Triangulate | aiProcess_FlipUVs);
 

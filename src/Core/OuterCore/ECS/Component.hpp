@@ -1,6 +1,6 @@
 #pragma once
 
-namespace N
+namespace N::C
 {
 struct Component
 {
@@ -13,4 +13,4 @@ struct Component
     Component(Component&&) noexcept = default;
     Component& operator=(Component&&) noexcept = default;
 };
-} // namespace N
+} // namespace N::C

@@ -3,7 +3,7 @@
 
 namespace N
 {
-struct FirstScene : Scene
+struct FirstScene : C::Scene
 {
     FirstScene();
 };

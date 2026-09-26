@@ -3,7 +3,7 @@
 
 #include "Utilities/Image/Image.hpp"
 
-namespace N
+namespace N::C
 {
 /**
  * @brief Wrapper around a GLFW window.
@@ -75,4 +75,4 @@ struct Window
 
     void SetHints();
 };
-} // namespace N
+} // namespace N::C

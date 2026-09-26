@@ -1,7 +1,7 @@
 #pragma once
 #include "Utilities/DataStructures/GIndexPool.hpp"
 
-namespace N
+namespace N::C
 {
 /**
  * @brief Base class for resources managed by ResourceManager.
@@ -41,4 +41,4 @@ struct Resource
     Handle m_Handle;
     std::string m_Name;
 };
-} // namespace N
+} // namespace N::C

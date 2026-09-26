@@ -4,9 +4,9 @@
 #include "Core/Services/ResourceManager.hpp"
 #include "Grid.hpp"
 #include "Math/Color/Color.hpp"
-#include "Modules/Renderer/Components/MaterialComponent.hpp"
-#include "Modules/Renderer/Components/MeshComponent.hpp"
-#include "Modules/Renderer/Primitives/Primitives.hpp"
+#include "Modules/Graphics/Components/MaterialComponent.hpp"
+#include "Modules/Graphics/Components/MeshComponent.hpp"
+#include "Modules/Graphics/Primitives/Primitives.hpp"
 #include "World/Novas/Camera.hpp"
 #include "World/Novas/Light.hpp"
 #include "World/Novas/MeshInstance3D.hpp"
@@ -16,9 +16,9 @@ namespace N
 {
 CoordinateAxesScene::CoordinateAxesScene()
 {
-    auto& world = World::Get();
+    auto& world = C::World::Get();
     auto& query = world.Query;
-    auto& resourceManager = Service::Get<ResourceManager>();
+    auto& resourceManager = C::Service::Get<C::ResourceManager>();
 
     SetRoot(world.CreateEntity<Nova>());
 

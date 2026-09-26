@@ -5,18 +5,18 @@
 #include "Core/InnerCore/World.hpp"
 #include "Core/Services/ResourceManager.hpp"
 #include "Math/Complex/Complex.hpp"
+#include "Modules/Graphics/Components/MaterialComponent.hpp"
+#include "Modules/Graphics/Components/MeshComponent.hpp"
+#include "Modules/Graphics/Primitives/Primitives.hpp"
 #include "Modules/Input/Input.hpp"
-#include "Modules/Renderer/Components/MaterialComponent.hpp"
-#include "Modules/Renderer/Components/MeshComponent.hpp"
-#include "Modules/Renderer/Primitives/Primitives.hpp"
 #include "World/Components/Transform3DComponent.hpp"
 #include "World/Novas/MeshInstance3D.hpp"
 
 namespace N
 {
-static Entity& CreatePoint(M::Vector4 col)
+static C::Entity& CreatePoint(M::Vector4 col)
 {
-    auto& resourceManager = Service::Get<ResourceManager>();
+    auto& resourceManager = C::Service::Get<C::ResourceManager>();
     auto& mesh = Primitives::CreateCube("point");
     auto& material = resourceManager.Load<Material>(std::format("m{}{}{}", col.z, col.x, col.y));
     material.Color = col;
@@ -28,11 +28,12 @@ static Entity& CreatePoint(M::Vector4 col)
         resourceManager.Load<ShaderSource>("pointFrag", "Assets/Shaders/shader.frag", ShaderStage::Fragment));
     material.Shader = &shader;
 
-    auto& point = World::Get().CreateEntity<MeshInstance3D>();
-    World::Get().Query.Pool<MeshComponent>().GetComponentById(point.GetId()).Mesh = &mesh;
-    World::Get().Query.Pool<MaterialComponent>().GetComponentById(point.GetId()).Material = &material;
-    World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.GetId()).Scale = M::Vector3{0.2};
-    World::Get().GetRoot().AttachChild(point);
+    auto& point = C::World::Get().CreateEntity<MeshInstance3D>();
+    C::World::Get().Query.Pool<MeshComponent>().GetComponentById(point.GetId()).Mesh = &mesh;
+    C::World::Get().Query.Pool<MaterialComponent>().GetComponentById(point.GetId()).Material = &material;
+    C::World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.GetId()).Scale =
+        M::Vector3{0.2};
+    C::World::Get().GetRoot().AttachChild(point);
 
     return point;
 }
@@ -43,7 +44,7 @@ static void Plot(const M::Vector3 vec3, const M::Vector4 col = {1, 1, 1, 1})
     if (vec3.x < max && vec3.y < max && vec3.z < max)
     {
         auto& point = CreatePoint(col);
-        auto& transform = World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.GetId());
+        auto& transform = C::World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.GetId());
         transform.Position().x = vec3.x;
         transform.Position().y = vec3.y;
         transform.Position().z = vec3.z;
@@ -54,8 +55,8 @@ static unsigned int cubeId = 0;
 
 void Physics::Start()
 {
-    auto& resourceManager = Service::Get<ResourceManager>();
-    auto& query = World::Get().Query;
+    auto& resourceManager = C::Service::Get<C::ResourceManager>();
+    auto& query = C::World::Get().Query;
     auto& mesh = Primitives::CreateCube("mesh");
     auto& objectShader = resourceManager.Load<Shader>("objectShader");
 
@@ -67,12 +68,12 @@ void Physics::Start()
     auto& objectMaterial = resourceManager.Load<Material>("cubeMaterial");
     objectMaterial.Shader = &objectShader;
 
-    auto& cube = World::Get().CreateEntity<MeshInstance3D>();
+    auto& cube = C::World::Get().CreateEntity<MeshInstance3D>();
     query.Pool<MeshComponent>().GetComponentById(cube.GetId()).Mesh = &mesh;
     query.Pool<MaterialComponent>().GetComponentById(cube.GetId()).Material = &objectMaterial;
     query.Pool<BodyComponent>().Add(cube.GetId());
     cubeId = cube.GetId();
-    World::Get().GetRoot().AttachChild(cube);
+    C::World::Get().GetRoot().AttachChild(cube);
 }
 
 static float time = 0;
@@ -84,9 +85,9 @@ void Physics::FixedUpdate(const double fdt)
 
     float g = -9.8;
 
-    auto& resourceManager = Service::Get<ResourceManager>();
-    auto& input = Engine::Get().GetModule<Input>();
-    auto& query = World::Get().Query;
+    auto& resourceManager = C::Service::Get<C::ResourceManager>();
+    auto& input = C::Engine::Get().GetModule<Input>();
+    auto& query = C::World::Get().Query;
     auto& transform = query.Pool<Transform3DComponent>().GetComponentById(cubeId);
     auto& body = query.Pool<BodyComponent>().GetComponentById(cubeId);
 

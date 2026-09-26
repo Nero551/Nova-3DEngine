@@ -2,7 +2,7 @@
 #include "Core/OuterCore/Event.hpp"
 namespace N
 {
-struct ComponentRemoved : Event<ComponentRemoved>
+struct ComponentRemoved : C::Event<ComponentRemoved>
 {
     unsigned int EntityId;
 

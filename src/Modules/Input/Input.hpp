@@ -8,7 +8,7 @@
 
 namespace N
 {
-struct Input : Module
+struct Input : C::Module
 {
     bool IsKeyHeld(Key key);
 

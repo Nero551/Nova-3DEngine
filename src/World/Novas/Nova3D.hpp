@@ -9,7 +9,7 @@ struct Nova3D : Nova
     void Initialize() override
     {
         Nova::Initialize();
-        World::Get().Query.Pool<Transform3DComponent>().Add(GetId());
+        C::World::Get().Query.Pool<Transform3DComponent>().Add(GetId());
     }
 };
 } // namespace N

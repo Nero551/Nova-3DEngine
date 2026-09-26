@@ -1,6 +1,6 @@
 #include "EventBus.hpp"
 
-namespace N
+namespace N::C
 {
 void EventBus::EmptyFireQueue()
 {
@@ -24,4 +24,4 @@ void EventBus::EndFrame()
 {
     EmptyFireQueue();
 }
-} // namespace N
+} // namespace N::C

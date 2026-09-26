@@ -14,11 +14,11 @@ namespace N
 // a WorldTransform3DComponent, containing the global versions of the transform.
 // a Transform3DMatricesComponent, containing the matrices.
 // transform system will be the one who keeps all 3 datas in sync.
-struct Transform3DComponent : Component
+struct Transform3DComponent : C::Component
 {
-    Track<M::Vector3> Position = M::Vector3::Zero;
-    Track<M::Quaternion> Rotation = M::Quaternion::Identity;
-    Track<M::Vector3> Scale = M::Vector3::One;
+    C::Track<M::Vector3> Position = M::Vector3::Zero;
+    C::Track<M::Quaternion> Rotation = M::Quaternion::Identity;
+    C::Track<M::Vector3> Scale = M::Vector3::One;
 
     bool InheritTransform = true;
 
@@ -74,11 +74,11 @@ struct Transform3DComponent : Component
 
   private:
     // TODO-this is temporary until i have a proper change detection system (reflection)
-    Track<M::Vector3> GlobalPosition = M::Vector3::Zero;
-    Track<M::Quaternion> GlobalRotation = M::Quaternion::Identity;
-    Track<M::Vector3> GlobalScale = M::Vector3::One;
+    C::Track<M::Vector3> GlobalPosition = M::Vector3::Zero;
+    C::Track<M::Quaternion> GlobalRotation = M::Quaternion::Identity;
+    C::Track<M::Vector3> GlobalScale = M::Vector3::One;
     friend struct Transform3DSystem;
-    friend struct Renderer;
+    friend struct Graphics;
     friend struct CameraSystem;
 };
 } // namespace N

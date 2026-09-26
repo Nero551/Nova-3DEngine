@@ -8,7 +8,7 @@
 #include "World/Events/ComponentRemoved.hpp"
 #include "World/Events/EntityDestroyed.hpp"
 
-namespace N
+namespace N::C
 {
 
 /**
@@ -182,4 +182,4 @@ template <ComponentType T> struct ComponentPool : IComponentPool
     U::SparseSet<T> m_Components{};
 };
 
-} // namespace N
+} // namespace N::C

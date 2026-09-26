@@ -6,26 +6,27 @@
 #include "Math/Common/Exponentials.hpp"
 #include "Math/Quaternion/Quaternion.hpp"
 #include "Math/Vector/Vector4.hpp"
+#include "Modules/Graphics/Primitives/Primitives.hpp"
+#include "Modules/Graphics/Resources/Texture/Cubemap.hpp"
 #include "Modules/Input/Input.hpp"
-#include "Modules/Renderer/Primitives/Primitives.hpp"
-#include "Modules/Renderer/Resources/Texture/Cubemap.hpp"
 #include "World/Novas/MeshInstance3D.hpp"
 
 namespace N
 {
-static Entity& CreatePoint(M::Vector4 col)
+static C::Entity& CreatePoint(M::Vector4 col)
 {
-    auto& resourceManager = Service::Get<ResourceManager>();
+    auto& resourceManager = C::Service::Get<C::ResourceManager>();
     auto& mesh = Primitives::CreateQuad("point");
 
-    auto& point = World::Get().CreateEntity<MeshInstance3D>();
-    World::Get().Query.Pool<MeshComponent>().GetComponentById(point.GetId()).Mesh = &mesh;
-    World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.GetId()).Scale = M::Vector3{0.2};
+    auto& point = C::World::Get().CreateEntity<MeshInstance3D>();
+    C::World::Get().Query.Pool<MeshComponent>().GetComponentById(point.GetId()).Mesh = &mesh;
+    C::World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.GetId()).Scale =
+        M::Vector3{0.2};
 
     if (resourceManager.Exists<Material>(std::format("m{}{}{}", col.z, col.x, col.y)))
     {
         auto& material = resourceManager.Load<Material>(std::format("m{}{}{}", col.z, col.x, col.y));
-        World::Get().Query.Pool<MaterialComponent>().GetComponentById(point.GetId()).Material = &material;
+        C::World::Get().Query.Pool<MaterialComponent>().GetComponentById(point.GetId()).Material = &material;
     }
     else
     {
@@ -38,19 +39,19 @@ static Entity& CreatePoint(M::Vector4 col)
         shader.AssignSource(resourceManager.Load<ShaderSource>(
             "pointFrag", "Assets/Shaders/shader.frag", ShaderStage::Fragment));
         material.Shader = &shader;
-        World::Get().Query.Pool<MaterialComponent>().GetComponentById(point.GetId()).Material = &material;
+        C::World::Get().Query.Pool<MaterialComponent>().GetComponentById(point.GetId()).Material = &material;
     }
 
-    World::Get().GetRoot().AttachChild(point);
+    C::World::Get().GetRoot().AttachChild(point);
     return point;
 }
 
 static std::vector<unsigned int> points = {};
 
-static Entity& Plot(const M::Vector3 vec3, const M::Vector4 col = {1, 1, 1, 1})
+static C::Entity& Plot(const M::Vector3 vec3, const M::Vector4 col = {1, 1, 1, 1})
 {
     auto& point = CreatePoint(col);
-    auto& transform = World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.GetId());
+    auto& transform = C::World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point.GetId());
     transform.Position().x = vec3.x;
     transform.Position().y = vec3.y;
     transform.Position().z = vec3.z;
@@ -71,8 +72,8 @@ static float multiplier = 1;
 
 void calculus::Update(const double dt)
 {
-    auto& resourceManager = Service::Get<ResourceManager>();
-    auto& input = Engine::Get().GetModule<Input>();
+    auto& resourceManager = C::Service::Get<C::ResourceManager>();
+    auto& input = C::Engine::Get().GetModule<Input>();
     //
     // x += step;
     // if (x >= xRange)
@@ -93,7 +94,7 @@ void calculus::Update(const double dt)
     {
         for (auto& point : points)
         {
-            auto& transform = World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point);
+            auto& transform = C::World::Get().Query.Pool<Transform3DComponent>().GetComponentById(point);
             transform.Position *= multiplier;
         }
     }
@@ -149,7 +150,7 @@ void calculus::FourDimensionalProjection(const int increase)
 {
     points.reserve(M::Pow(360 / increase, 3));
     U::Log::Info(M::Pow(360 / increase, 3));
-    World::Get().ReserveEntities(M::Pow(360 / increase, 3));
+    C::World::Get().ReserveEntities(M::Pow(360 / increase, 3));
     for (int theta = -180; theta < 180; theta += increase)
     {
         for (int phi = -180; phi < 180; phi += increase)

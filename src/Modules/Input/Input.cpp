@@ -64,7 +64,7 @@ MouseMode Input::GetMouseMode() const
 void Input::SetMouseMode(MouseMode mode)
 {
     m_MouseMode = mode;
-    glfwSetInputMode(Engine::Get().Window.GetGlfwWindow(), GLFW_CURSOR, static_cast<int>(mode));
+    glfwSetInputMode(C::Engine::Get().Window.GetGlfwWindow(), GLFW_CURSOR, static_cast<int>(mode));
     m_PreviousMousePosition = m_MousePosition;
 }
 
@@ -80,18 +80,18 @@ constexpr unsigned int Input::ToIndex(MouseButton button)
 
 void Input::Start()
 {
-    Window& window = Engine::Get().Window;
+    C::Window& window = C::Engine::Get().Window;
     glfwSetCursorPosCallback(window.GetGlfwWindow(),
         [](GLFWwindow*, const double xPos, const double yPos)
         {
-            Engine::Get().GetModule<Input>().m_MousePosition = {
+            C::Engine::Get().GetModule<Input>().m_MousePosition = {
                 static_cast<float>(xPos), static_cast<float>(yPos)};
         });
 
     glfwSetScrollCallback(window.GetGlfwWindow(),
         [](GLFWwindow*, const double xOffset, const double yOffset)
         {
-            Engine::Get().GetModule<Input>().m_ScrollOffset = {
+            C::Engine::Get().GetModule<Input>().m_ScrollOffset = {
                 static_cast<float>(xOffset), static_cast<float>(yOffset)};
         });
 }
@@ -104,7 +104,7 @@ void Input::BeginFrame(double dt)
         m_FirstMouse = false;
     }
 
-    GLFWwindow* window = Engine::Get().Window.GetGlfwWindow();
+    GLFWwindow* window = C::Engine::Get().Window.GetGlfwWindow();
     for (int key = GLFW_KEY_SPACE; key <= GLFW_KEY_LAST; ++key)
     {
         m_CurrentKeys[key] = glfwGetKey(window, key) == GLFW_PRESS;

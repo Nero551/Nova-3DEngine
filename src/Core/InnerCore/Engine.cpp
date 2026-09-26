@@ -2,7 +2,7 @@
 
 #include <OpenGL.hpp>
 
-#include "../../Modules/Renderer/Renderer.hpp"
+#include "../../Modules/Graphics/Graphics.hpp"
 #include "../OuterCore/Service.hpp"
 #include "Core/Services/ResourceManager.hpp"
 #include "Modules/Input/Input.hpp"
@@ -11,7 +11,7 @@
 #include "tracy/Tracy.hpp"
 #include "tracy/TracyOpenGL.hpp"
 
-namespace N
+namespace N::C
 {
 Engine::Engine()
 {
@@ -74,7 +74,7 @@ void Engine::Configure()
     Service::Add<ResourceManager>();
 
     AddModule<Input>();
-    AddModule<Renderer>();
+    AddModule<Graphics>();
     AddModule<Profiling>();
     AddModule<Physics>();
 }
@@ -227,4 +227,4 @@ void Engine::Stop()
     GraphicsContext::Terminate();
     Service::TerminateServices();
 }
-} // namespace N
+} // namespace N::C

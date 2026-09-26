@@ -8,7 +8,7 @@ namespace N
 {
 void Transform3DSystem::Update(double fdt)
 {
-    auto& world = World::Get();
+    auto& world = C::World::Get();
     auto& query = world.Query;
     auto& transformPool = query.Pool<Transform3DComponent>();
 

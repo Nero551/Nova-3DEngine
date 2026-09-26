@@ -7,7 +7,7 @@
 #include "World.hpp"
 
 /** @brief Root namespace for Nova engine functionality. */
-namespace N
+namespace N::C
 {
 template <typename T>
 concept ModuleType = std::derived_from<T, Module>;
@@ -92,4 +92,4 @@ struct Engine
     void EndFrame();
     void Stop();
 };
-} // namespace N
+} // namespace N::C

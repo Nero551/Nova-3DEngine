@@ -1,7 +1,7 @@
 #pragma once
 #include "Event.hpp"
 
-namespace N
+namespace N::C
 {
 
 template <typename T> struct Track
@@ -136,4 +136,4 @@ template <typename T> struct Track
     bool m_Changed = false;
 };
 
-} // namespace N
+} // namespace N::C

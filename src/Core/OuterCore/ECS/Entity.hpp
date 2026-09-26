@@ -3,7 +3,7 @@
 #include "Utilities/CheckedPtr.hpp"
 #include "Utilities/DataStructures/SparseSet.hpp"
 
-namespace N
+namespace N::C
 {
 struct World;
 
@@ -114,4 +114,4 @@ struct Entity
 
     friend struct World;
 };
-} // namespace N
+} // namespace N::C

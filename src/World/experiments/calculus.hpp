@@ -4,7 +4,7 @@
 
 namespace N
 {
-struct calculus : System
+struct calculus : C::System
 {
     void Start() override;
 

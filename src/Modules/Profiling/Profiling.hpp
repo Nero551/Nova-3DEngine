@@ -6,7 +6,7 @@
 
 namespace N
 {
-struct Profiling : Module
+struct Profiling : C::Module
 {
     double FrameMs;
     int FrameCount;

@@ -3,11 +3,11 @@
 
 namespace N
 {
-struct Nova : Entity
+struct Nova : C::Entity
 {
     void Initialize() override
     {
-        Entity::Initialize();
+        C::Entity::Initialize();
     }
 };
 } // namespace N

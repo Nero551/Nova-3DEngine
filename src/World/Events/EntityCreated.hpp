@@ -4,10 +4,10 @@
 
 namespace N
 {
-struct EntityCreated : Event<EntityCreated>
+struct EntityCreated : C::Event<EntityCreated>
 {
-    Entity& entity;
+    C::Entity& entity;
 
-    EntityCreated(Entity& entity) : entity(entity) {}
+    EntityCreated(C::Entity& entity) : entity(entity) {}
 };
 } // namespace N

@@ -34,7 +34,7 @@ void Profiling::Update(const double dt)
 
         double averageFrameMs = sum / FrameTimes.size();
 
-        Engine::Get().Window.SetTitle("FPS: " + std::to_string(FrameCount) + " | " +
+        C::Engine::Get().Window.SetTitle("FPS: " + std::to_string(FrameCount) + " | " +
             "AVG: " + std::to_string(averageFrameMs) + " ms" + " | " + std::to_string(FrameMs) + " ms");
 
         // N::U::Logger::Info(

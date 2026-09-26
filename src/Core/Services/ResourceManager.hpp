@@ -4,7 +4,7 @@
 #include "Core/OuterCore/Service.hpp"
 #include "Utilities/DataStructures/SparseSet.hpp"
 
-namespace N
+namespace N::C
 {
 /** @brief Concept for types that can be managed as resources. */
 template <typename T>
@@ -159,4 +159,4 @@ struct ResourceManager : Service
     std::unordered_map<std::string, Resource::Handle> m_ResourceLookup{};
     U::GIndexPool<> m_Handles{};
 };
-} // namespace N
+} // namespace N::C

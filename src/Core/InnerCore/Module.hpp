@@ -2,7 +2,7 @@
 
 #include "SystemOwner.hpp"
 
-namespace N
+namespace N::C
 {
 /**
  * @brief Base class for all engine modules.
@@ -87,4 +87,4 @@ struct Module : SystemOwner
 
     friend struct Engine;
 };
-} // namespace N
+} // namespace N::C

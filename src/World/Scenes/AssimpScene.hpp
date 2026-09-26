@@ -4,7 +4,7 @@
 
 namespace N
 {
-struct AssimpScene : Scene
+struct AssimpScene : C::Scene
 {
     AssimpScene(const std::string& filepath);
 };

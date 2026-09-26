@@ -15,10 +15,10 @@ int main(const int argc, char* argv[])
         //? ex: "Nova --renderer vulkan"
     }
 
-    Sketch::Test();
-    return 0;
+    // Sketch::Test();
+    // return 0;
 
-    N::Engine engine;
+    N::C::Engine engine;
     engine.Run();
     return 0;
 }
